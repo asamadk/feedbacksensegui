@@ -1,24 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Route, Routes } from "react-router-dom";
 import './App.css';
+import Header from './Components/Header';
+import MainBody from './Layout/MainBody';
+import OrgSettings from './Layout/OrgSettings';
+import SurveySettings from './Layout/SurveySettings';
+
+const globalBodyStyle = {
+  backgroundColor: '#1E1E1E',
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={globalBodyStyle} className="App">
+      <Header />
+      <Routes>
+        <Route path='/' element={<MainBody />} />
+        <Route path='/org/general' element={<OrgSettings tabset={0} />} />
+        <Route path='/org/teammates' element={<OrgSettings tabset={1} />} />
+        <Route path='/org/subscription' element={<OrgSettings tabset={2} />} />
+        <Route path='/survey/global/settings/general' element={<SurveySettings tabset={0} />} />
+        <Route path='/survey/global/settings/web' element={<SurveySettings tabset={1} />} />
+      </Routes>
     </div>
   );
 }
