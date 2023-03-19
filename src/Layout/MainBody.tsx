@@ -18,7 +18,7 @@ function MainBody() {
     return (
         <div style={{
             backgroundColor: '#1E1E1E',
-            height : 'calc(100vh - 78px)'
+            height : 'calc(100vh - 58px)'
         }} >
             {isEmpty && <ShowEmptyBody />}
             {!isEmpty && <SurveyListPage />}

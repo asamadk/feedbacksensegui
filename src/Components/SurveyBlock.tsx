@@ -10,6 +10,7 @@ import SingleSurveyAction from './SingleSurveyAction';
 import GenericModal from '../Modals/GenericModal';
 import ChangeFolderModal from '../Modals/ChangeFolderModal';
 import CustomChip from './CustomChip';
+import { useNavigate } from 'react-router';
 
 const surveyBlockMainContainer = {
     border: '1px #454545 solid',
@@ -19,6 +20,8 @@ const surveyBlockMainContainer = {
 }
 
 function SurveyBlock() {
+
+    let navigation = useNavigate();
 
     const [genericModalObj, setGenericModalObj] = React.useState<Types.genericModalData>();
     const [showTitle, setShowTitile] = React.useState(false);
@@ -67,12 +70,17 @@ function SurveyBlock() {
         setShowChangeFolderModal(true);
     }
 
+    const handleOpenSurvey = () => {
+        let surveyId = 122;
+        navigation('/survey/detail/create/'+surveyId);
+    }
+
     return (
         <Box sx={surveyBlockMainContainer} >
             <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid' }} >
                 <Typography sx={{ paddingTop: '10px' }} >Survey one</Typography>
                 <Box>
-                    <IconButton onMouseEnter={handleShowEditTitle} onMouseLeave={handleHideEditTitle} color='warning' sx={{ color: '#f1f1f1' }} >
+                    <IconButton onClick={handleOpenSurvey} onMouseEnter={handleShowEditTitle} onMouseLeave={handleHideEditTitle} color='warning' sx={{ color: '#f1f1f1' }} >
                         <EditIcon />
                     </IconButton>
                     <Popover open={showEditTitle} text={'Edit survey'}/>
