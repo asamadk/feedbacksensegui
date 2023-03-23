@@ -3,6 +3,7 @@ import React from 'react'
 import DynamicComponentIcon from './DynamicComponentIcon'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import Popover from '../Components/Popover';
 
 const commonLogoStyle = {
     marginTop: '20px',
@@ -25,28 +26,33 @@ const deleteButton = {
 
 function NodeComponent(props : any) {
 
-    const handleDeleteButtonClick = () => {
-        console.log('handleDeleteButtonClick');
+    const [showDeleteText , setShowDeleteText] = React.useState(false);
+    const [showEditText , setShowEditText] = React.useState(false);
+
+    const handleDeleteButtonClick = (e : any) => {
+        props.delete(props.uniqueId);
     }
 
     const handleEditButtonClick = () => {
-        console.log('handleEdiButtonClick')
+        props.edit(props.uniqueId,props.compId);
     }
 
   return (
-    <Box textAlign={'start'} display={'flex'}>
-        <Box  onClick={handleDeleteButtonClick} sx={deleteButton} >
+    <Box textAlign={'start'} display={'flex'} overflow={'hidden'} >
+        <Box onMouseEnter={() => setShowDeleteText(true)} onMouseLeave={() => setShowDeleteText(false)} onClick={handleDeleteButtonClick} sx={deleteButton} >
             <DeleteRoundedIcon/>
+            <Popover open={showDeleteText} text={'Delete'}/>
         </Box>
-        <Box  onClick={handleEditButtonClick} sx={editButton} >
+        <Box onMouseEnter={() => setShowEditText(true)} onMouseLeave={() => setShowEditText(false)}  onClick={handleEditButtonClick} sx={editButton} >
             <EditRoundedIcon/>
+            <Popover open={showEditText} text={'Edit'}/>
         </Box>
         <Box sx={commonLogoStyle} >
             <DynamicComponentIcon id={props.compId} />
         </Box>
         <Box>
             <Typography>{props.label}</Typography>
-            <Typography sx={{color : '#454545', fontSize : '12px'}} >{props.description}</Typography>
+            <Typography sx={{color : '#454545', fontSize : '12px'}} >{props.description?.substring(0,83)+'...'}</Typography>
         </Box>
     </Box>
   )

@@ -3,7 +3,7 @@ export const modalStyle = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '40%',
+    width: '50%',
     bgcolor: '#181818',
     border: '2px solid #454545',
     boxShadow: 24,
@@ -19,4 +19,11 @@ export const modalHeaderStyle = {
 
 export const modalButtonContainerStyle = {
     textAlign : 'end'
+}
+
+export const modalBodyContainerStyle = {
+    marginTop : '10px',
+    marginBotton : '10px',
+    maxHeight : '200px',
+    overflowY : 'scroll'
 }

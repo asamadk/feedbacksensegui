@@ -5,6 +5,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import Popover from '../Components/Popover';
 import NotificationModal from '../Components/NotificationModal';
 import SettingsModal from '../Components/SettingsModal';
+import { useNavigate } from 'react-router';
 
 const iconStyle: {} = {
     color: '#f1f1f1',
@@ -14,6 +15,8 @@ const iconStyle: {} = {
 }
 
 function MainHeaderIcons() {
+
+    const navigate = useNavigate();
 
     const [showNotificationModal, setShowNotificationModal] = React.useState<Boolean>();
     const [showSettingsModal, setShowSettingsModal] = React.useState<Boolean>();
@@ -28,6 +31,10 @@ function MainHeaderIcons() {
     const handleNotificationBellClick = () => {
         closeAllModals();
         setShowNotificationModal(!showNotificationModal);
+    }
+
+    const handleUserProfileClick = () => {
+        navigate('/org/general');
     }
 
     const handleSettingsBellClick = () => {
@@ -56,6 +63,7 @@ function MainHeaderIcons() {
                 onMouseEnter={handleShowProfileTitle}
                 onMouseLeave={handleHideProfileTitle}
                 style={iconStyle}
+                onClick={handleUserProfileClick}
             />
             <Popover open={showProfileTitle} text={'Profile'} />
 

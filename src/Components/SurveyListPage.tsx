@@ -1,16 +1,29 @@
 import { Button, Typography } from '@mui/material';
-import React from 'react'
+import React, { useEffect } from 'react'
 import InviteMemberModal from '../Modals/InviteMemberModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import CreateFolder from '../Modals/CreateFolder';
 import SurveysPanel from './SurveysPanel';
+import * as Endpoints from '../Utils/Endpoints';
+import * as FeedbackUtils from '../Utils/FeedbackUtils'
+import axios from 'axios';
 
 
 const surveyPageMainContainer = {
     display: 'flex',
     height: '100%',
     color: '#f1f1f1'
+}
+
+const allSurveyFolder = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '10px',
+    paddingBottom: '10px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    backgroundColor : '#454545'
 }
 
 const surveyFolderText = {
@@ -43,17 +56,83 @@ const allFolderData = [
 
 
 function SurveyListPage() {
-
+    
+    const [folderList, setFolderList] = React.useState<any[]>([]);
     const [openInviteModal, setOpeninviteModal] = React.useState(false);
     const [openCreateFolderModal, setopenCreateFolderModal] = React.useState(false);
+    const [totalSurveyCount , setTotalSurveyCount] = React.useState(0);
+    const [subscriptionDetails , setSubscriptionDetail] = React.useState<any>();
+    const [selectedFolder , setSelectedFolder] = React.useState<string>('All Surveys');
+    const [selectedFolderId , setSelectedFolderId] = React.useState<number>(0);
 
+    useEffect(() => {
+        getFolders();
+        getSubscriptionDetails();
+    },[]);
 
-    const handleFolderClick = (e: any) => {
+    const getSubscriptionDetails = async () => {
+        let res = await axios.get(Endpoints.getSubscriptionDetail());
+        const isValidated = FeedbackUtils.validateAPIResponse(res);
+        if(isValidated === false){
+            return;
+        }
 
+        let resData : any[] = res.data;
+        if(resData != null){
+            setSubscriptionDetail(resData);
+        }
+    }
+
+    const getFolders = async () => {
+        let folderRes = await axios.get(Endpoints.getFolders());
+        const isValidated = FeedbackUtils.validateAPIResponse(folderRes);
+        if(isValidated === false){
+            //something went wrong
+            return;
+        } 
+
+        let resData : any[] = folderRes.data;
+        if(resData != null){
+            setFolderList(resData);
+        }
+
+        let totalSurveysCount = 0;
+        resData?.forEach(data => {
+            totalSurveysCount += data.count;
+        });
+
+        setTotalSurveyCount(totalSurveysCount);
+    }
+
+    const handleAllFolderClick = (e : any) => {
+        let className :string= e.target.className;
+        if(className.toLowerCase() !== 'all-folders-data'){
+            return;
+        }
+
+        setSelectedFolder('All Surveys');
+        setSelectedFolderId(0);
+
+        document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
+            element.style.background = '#1E1E1E';
+        });
+
+        e.target.style.background = '#323533';
+
+    }
+
+    const handleFolderClick = (e: any, folderName : string, folderId : number) => {
         let className :string= e.target.className;
         if(className.toLowerCase() !== 'folders-data'){
             return;
         }
+
+        setSelectedFolder(folderName);
+        setSelectedFolderId(folderId);
+
+        document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
+            element.style.background = '#1E1E1E';
+        })
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
             element.style.background = '#1E1E1E';
@@ -80,9 +159,9 @@ function SurveyListPage() {
         <div style={surveyPageMainContainer} >
             <div style={{ display: 'flex', width: '15%', flexDirection: 'column', borderRight: '1px #454545 solid', justifyContent: 'space-between', padding: '10px 30px' }} >
                 <div style={{ width: '100%', overflowY : 'scroll' }} >
-                    <div style={surveyFolderText} className="folders-data" onClick={handleFolderClick} >
+                    <div style={allSurveyFolder} className="all-folders-data" onClick={handleAllFolderClick} >
                         <Typography variant='subtitle2' >All Surveys</Typography>
-                        <Typography variant='subtitle2' >5</Typography>
+                        <Typography variant='subtitle2' >{totalSurveyCount}</Typography>
                     </div>
                     <div style={folderText}>
                         <Typography variant='subtitle2' >FOLDERS</Typography>
@@ -97,9 +176,9 @@ function SurveyListPage() {
                     </div>
 
                     {
-                        allFolderData.map(folder => {
+                        folderList.map(folder => {
                             return (
-                                <div key={folder.name} className="folders-data" style={surveyFolderText} onClick={handleFolderClick} >
+                                <div key={folder.id} className="folders-data" style={surveyFolderText} onClick={(e) => handleFolderClick(e,folder.name,folder.id)} >
                                     <Typography variant='subtitle2' >{folder.name}</Typography>
                                     <Typography variant='subtitle2' >{folder.count}</Typography>
                                 </div>
@@ -112,9 +191,12 @@ function SurveyListPage() {
                     <div style={{color: '#323533',paddingTop : '10px'}}>
                         <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Subscription</Typography>
                     </div>
-                    <Typography style={{ textAlign: 'start', paddingBottom : '30px' }} variant='subtitle2' >Free</Typography>
+                    <Typography style={{ textAlign: 'start', paddingBottom : '30px' }} variant='subtitle2' >{subscriptionDetails?.subscriptionType}</Typography>
                     <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Active survey limit</Typography>
-                    <LinearProgressWithLabel value={10} text={'0/1'}/>
+                    <LinearProgressWithLabel 
+                        value={subscriptionDetails?.totalActiveSurvey / subscriptionDetails?.activeSurveyLimit * 100} 
+                        text={subscriptionDetails?.totalActiveSurvey + '/'+ subscriptionDetails?.activeSurveyLimit}
+                    />
                     <div style={{marginTop : '40px'}} ></div>
                     <Button sx={ButtonStyles.containedButton} variant="contained">Upgrade plan</Button>
                     <Button sx={ButtonStyles.outlinedButton} onClick={handleOpenInviteModal} variant="outlined">Invite teammates</Button>
@@ -122,7 +204,10 @@ function SurveyListPage() {
                 </div>
             </div>
             <div style={{ width: '85%' }} >
-                <SurveysPanel/>
+                <SurveysPanel 
+                    folder={selectedFolder} 
+                    folderId = {selectedFolderId}
+                />
             </div>
             <InviteMemberModal open={openInviteModal}  close={handleCloseInviteModal} />
             <CreateFolder open={openCreateFolderModal} close={handleCloseCreateFolderModal} />

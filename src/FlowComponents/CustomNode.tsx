@@ -13,7 +13,14 @@ export default memo(({ data, isConnectable } : any) => {
         isConnectable={isConnectable}
       />
       <div>
-        <NodeComponent label={data.label} description={data.description} compId={data.compId} />
+        <NodeComponent 
+          delete={data.onDelete} 
+          uniqueId={data.uId}  
+          label={data.label} 
+          description={data.description} 
+          compId={data.compId} 
+          edit={data.onEdit}
+        />
       </div>
       
       <Handle

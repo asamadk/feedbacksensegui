@@ -19,7 +19,6 @@ function Header() {
 
 
     React.useEffect(() => {
-        console.log('Current url = ', location.pathname);
         let currentPath: string = location.pathname;
         if (currentPath.includes('/survey/detail/')) {
             setShowSurveyDetailHeader(true);

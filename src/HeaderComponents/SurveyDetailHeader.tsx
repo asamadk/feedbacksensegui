@@ -3,6 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Box, Button, IconButton } from '@mui/material';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import CustomTabSet from '../Components/CustomTabSet';
+import { useNavigate } from 'react-router';
 
 const makeButtonUp = {
     position: 'relative',
@@ -23,12 +24,28 @@ const tabsetList = [
 ]
 
 function SurveyDetailHeader(props :any) {
+    
+    let navigate = useNavigate();
+
+    const handleRouteToHome = () => {
+        navigate('/');
+    }
 
     const [tabset, setTabset] = React.useState(parseInt(props.tabset))
 
     const changetabset = (value: number) => {
-        console.log('Tab cahnging ',value);
         setTabset(value);
+        if(value === 0){
+            navigate('/survey/detail/create/122');
+        }else if(value === 1){
+            navigate('/survey/detail/design');
+        }else if(value === 2){
+            navigate('/survey/detail/configure');
+        }else if(value === 3){
+            navigate('/survey/detail/share');
+        }else if(value === 4){
+            navigate('/survey/detail/analyze');
+        }
     }
 
     return (
@@ -40,7 +57,7 @@ function SurveyDetailHeader(props :any) {
                 <Box sx={makeButtonUp} >
                     <Button style={{ width: 'fit-content' }} sx={ButtonStyles.outlinedBlackButton} variant="contained">Next</Button>
                 </Box>
-                <IconButton sx={makeIconsUp} color='warning' ><CloseIcon sx={{ color: '#f1f1f1' }} /></IconButton>
+                <IconButton onClick={handleRouteToHome} sx={makeIconsUp} color='warning' ><CloseIcon sx={{ color: '#f1f1f1' }} /></IconButton>
             </Box>
         </Box>
     )

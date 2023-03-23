@@ -19,10 +19,11 @@ const surveyBlockMainContainer = {
     cursor: 'pointer'
 }
 
-function SurveyBlock() {
+function SurveyBlock(props : any) {
 
     let navigation = useNavigate();
 
+    const [survey , setSurvey] = React.useState<any>(props.survey);
     const [genericModalObj, setGenericModalObj] = React.useState<Types.genericModalData>();
     const [showTitle, setShowTitile] = React.useState(false);
     const [showEditTitle, setShowEditTitle] = React.useState(false);
@@ -71,14 +72,14 @@ function SurveyBlock() {
     }
 
     const handleOpenSurvey = () => {
-        let surveyId = 122;
+        let surveyId = survey.id;
         navigation('/survey/detail/create/'+surveyId);
     }
 
     return (
         <Box sx={surveyBlockMainContainer} >
             <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid' }} >
-                <Typography sx={{ paddingTop: '10px' }} >Survey one</Typography>
+                <Typography sx={{ paddingTop: '10px' }} >{survey?.name}</Typography>
                 <Box>
                     <IconButton onClick={handleOpenSurvey} onMouseEnter={handleShowEditTitle} onMouseLeave={handleHideEditTitle} color='warning' sx={{ color: '#f1f1f1' }} >
                         <EditIcon />
@@ -94,11 +95,13 @@ function SurveyBlock() {
             </Box>
             <Box sx={{ padding: '15px', paddingBottom: '10px' }} >
                 <Box sx={{ display: 'flex' }} >
-                    <Avatar sx={{ bgcolor: '#D81159', width: 24, height: 24, fontSize: 14 }}>N</Avatar>
-                    <Typography variant='subtitle1' sx={{ fontSize: 14, marginLeft: '5px', color: '#454545' }} >Created 2 days ago</Typography>
+                    <Avatar sx={{ bgcolor: '#D81159', width: 24, height: 24, fontSize: 14 }}>{survey?.createdBy[0]}</Avatar>
+                    <Typography variant='subtitle1' sx={{ fontSize: 14, marginLeft: '5px', color: '#454545' }} >
+                        {new Date(survey?.createdDate).toDateString()}
+                    </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', marginTop: '50px', justifyContent: 'space-between' }} >
-                    <CustomChip />
+                    <CustomChip status={survey?.isActive === true ? 'success' : 'failed'} />
                     <Box sx={{ display: 'flex' }} >
                         <EqualizerIcon />
                         <Typography

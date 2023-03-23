@@ -17,3 +17,10 @@ export const globalSettingSubContainers = {
     padding: '20px',
     marginTop: '20px'
 }
+
+export const localSurveyNavbar = {
+    borderBottom: '1px #454545 solid',
+    paddingBottom: '10px',
+    textAlign: 'end',
+    paddingRight: '10px'
+}

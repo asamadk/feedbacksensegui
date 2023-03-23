@@ -81,6 +81,7 @@ export default function SettingsModal(props : any) {
           style={singleElementStyle}
           id="Subscription"
           primary="Subscription"
+          onClick={() => navigation('/org/subscription')}
         />
       </ListItem>
       <ListItem>
@@ -90,6 +91,7 @@ export default function SettingsModal(props : any) {
           style={singleElementStyle}
           id="Invite-Teammates"
           primary="Invite Teammates"
+          onClick={() => navigation('/org/teammates')}
         />
       </ListItem>
 
@@ -107,6 +109,7 @@ export default function SettingsModal(props : any) {
           style={singleElementStyle}
           id="Profile-&-Password"
           primary="Profile & Password"
+          onClick={() => navigation('/org/general')}
         />
       </ListItem>
       <ListItem>
