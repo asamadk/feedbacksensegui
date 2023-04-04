@@ -1,14 +1,12 @@
 import { Box, Button, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
-import React from 'react'
-import * as ButtonStyles from '../Styles/ButtonStyle'
+import React, { useRef } from 'react'
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import LaptopIcon from '@mui/icons-material/Laptop';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
-import * as LayoutStyles from '../Styles/LayoutStyles'
 import CustomTabSet from '../Components/CustomTabSet';
-import { useNavigate } from 'react-router';
 import SurveyThemeSelector from '../Components/SurveyThemeSelector';
 import EmailSurveyTemplate from '../Components/EmailSurveyTemplate';
+import Notification from '../Utils/Notification';
 
 const tabsetList = [
     { id: 1, name: 'THEMES' },

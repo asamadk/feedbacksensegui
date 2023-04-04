@@ -69,30 +69,30 @@ const componentList = [
         header: 'NPS',
         description: 'Measure brand loyalty on a scale from 0 to 10 and get a predictor of repurchases & referrals.'
     },
-    {
-        id: 9,
-        bgColor: '#C1AEFC',
-        header: 'Dropdown List',
-        description: 'Let people pick one answer from a dropdown list of choices. Great for space-saving reasons.'
-    },
-    {
-        id: 10,
-        bgColor: '#D1FFF3',
-        header: 'Matrix',
-        description: 'Provide one or multiple row answers and the same set of column choices to evaluate them with.'
-    },
+    // {
+    //     id: 9,
+    //     bgColor: '#C1AEFC',
+    //     header: 'Dropdown List',
+    //     description: 'Let people pick one answer from a dropdown list of choices. Great for space-saving reasons.'
+    // },
+    // {
+    //     id: 10,
+    //     bgColor: '#D1FFF3',
+    //     header: 'Matrix',
+    //     description: 'Provide one or multiple row answers and the same set of column choices to evaluate them with.'
+    // },
     {
         id: 11,
         bgColor: '#0F6292',
         header: 'Contact form',
         description: 'Collect contact information such as name, email, then create contacts in your CRM if .'
     },
-    {
-        id: 12,
-        bgColor: '#CD5888',
-        header: 'Ranking answer',
-        description: 'Ask people to rank multiple answer choices in the order of preference or importance.'
-    },
+    // {
+    //     id: 12,
+    //     bgColor: '#CD5888',
+    //     header: 'Ranking answer',
+    //     description: 'Ask people to rank multiple answer choices in the order of preference or importance.'
+    // },
     {
         id: 13,
         bgColor: '#9E4784',

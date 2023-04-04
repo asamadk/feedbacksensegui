@@ -4,9 +4,75 @@ import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import * as InputStyles from '../Styles/InputStyles';
-import React from 'react'
+import React, { useEffect } from 'react'
+import { getOrgId } from '../Utils/FeedbackUtils';
+import * as FeedbackUtils from '../Utils/FeedbackUtils'
+import * as Endpoints from '../Utils/Endpoints';
+import axios from 'axios';
 
 function ChangeFolderModal(props: any) {
+
+    const [folderList, setFolderList] = React.useState<any[]>([]);
+    const [selectedFolder, setSelectedFolder] = React.useState<string>('0');
+
+
+    useEffect(() => {
+        getFolders();
+    },[]);
+
+    const getFolders = async () => {
+        let orgId = getOrgId();
+        if (orgId == null) {
+            //TODO show error
+        }
+
+        let folderRes = await axios.get(Endpoints.getFolders(orgId));
+        const isValidated = FeedbackUtils.validateAPIResponse(folderRes);
+        if (isValidated === false) {
+            //something went wrong
+            return;
+        }
+
+        let resData: any = folderRes.data;
+        if (resData == null) {
+            return;
+        }
+
+        if(resData.statusCode !== 200){
+            //TODO show error
+            return;
+        }
+
+        setFolderList(resData.data);
+    }
+
+    const handleFolderChange = async () => {
+        if(selectedFolder === '0'){
+            //TODO show error
+            return;
+        }
+        let surveyId = props.surveyId;
+        console.log('Survey id ', surveyId);
+        console.log('Folder id ', selectedFolder);
+
+        let { data } = await axios.post(Endpoints.moveSurveyFolder(surveyId,selectedFolder));
+
+        if(FeedbackUtils.validateAPIResponse(data) === false){
+            //TODO show error
+            return;
+        }
+
+        let surveyData = data.data;
+        console.log('Survey data',surveyData);
+        props.callback(surveyData);
+        props.close();
+    }
+
+    const handleDropdownChange = (event : any) => {
+        let tempSearchText: string = event.target.value;
+        setSelectedFolder(tempSearchText);
+    }
+
     return (
         <>
             <Modal
@@ -26,17 +92,23 @@ function ChangeFolderModal(props: any) {
                     </Box>
 
                     <Box sx={{ marginTop: '20px', marginBottom: '20px' }}>
-                    <Select sx={InputStyles.muiSelectStyle} style={{width : '100%'}} value={10} size='small' >
-                        <MenuItem disabled value={10}>Select a folder</MenuItem>
-                        <MenuItem value={12}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                    <Select 
+                        onChange={handleDropdownChange} 
+                        sx={InputStyles.muiSelectStyle} 
+                        style={{width : '100%'}} 
+                        value={selectedFolder} 
+                        size='small'
+                    >
+                        <MenuItem value={'0'}>Select a folder</MenuItem>
+                        {folderList.map(folder => {
+                            return(<MenuItem key={folder.id} value={folder.id}>{folder.name}</MenuItem>)
+                        })}
                     </Select>
                     </Box>
 
                     <Box sx={ModalStyles.modalButtonContainerStyle} >
                         <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
-                        <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained">Move to folder</Button>
+                        <Button style={{ width: 'fit-content' }} onClick={handleFolderChange} sx={ButtonStyles.containedButton} variant="contained">Move to folder</Button>
                     </Box>
                 </Box>
             </Modal>

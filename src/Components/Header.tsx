@@ -3,6 +3,7 @@ import { Typography } from '@mui/material'
 import { useLocation, useNavigate } from 'react-router';
 import MainHeaderIcons from '../HeaderComponents/MainHeaderIcons';
 import SurveyDetailHeader from '../HeaderComponents/SurveyDetailHeader';
+import { SURVEY_LOCAL_KEY } from '../Utils/Constants';
 
 const bodyStyle: {} = {
     backgroundColor: '#1E1E1E',
@@ -10,7 +11,7 @@ const bodyStyle: {} = {
     borderBottom: '1px #454545 solid'
 }
 
-function Header() {
+function Header(props : any) {
 
     let navigate = useNavigate();
     let location = useLocation();
@@ -30,6 +31,7 @@ function Header() {
 
 
     const handleRouteToHome = () => {
+        localStorage.removeItem(SURVEY_LOCAL_KEY);
         navigate('/');
     }
 
@@ -42,8 +44,8 @@ function Header() {
                     <Typography style={{ color: '#FFA500', fontSize: '30px' }} variant='h4'>Sense</Typography>
                 </div>
 
-                {showSurveyDetailHeader === false && <div><MainHeaderIcons /></div>}
-                {showSurveyDetailHeader === true && <div><SurveyDetailHeader tabset={0} /></div>}
+                {props.loggedIn && showSurveyDetailHeader === false && <div><MainHeaderIcons /></div>}
+                {props.loggedIn && showSurveyDetailHeader === true && <div><SurveyDetailHeader tabset={0} /></div>}
 
             </div>
 

@@ -4,6 +4,8 @@ import * as Constants from '../Utils/Constants';
 import React from 'react'
 import { CopyBlock, dracula } from 'react-code-blocks'
 import { styled } from '@mui/system';
+import { getShareSurveyLink } from '../Utils/Endpoints';
+import { useParams } from 'react-router';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -40,6 +42,8 @@ let integrationCode = `<!-- Start of feedbacksense (www.feedbacksense.com) code 
 
 function ShareSurvey() {
 
+  const { surveyId } = useParams();
+
   const [surveyType, setSurveyType] = React.useState<string>(Constants.EMAIL_LINK_SURVEY_TYPE);
   const [headerText, setHeaderText] = React.useState('Survey Link');
   const [open, setOpen] = React.useState(false);
@@ -61,7 +65,7 @@ function ShareSurvey() {
 
   const handleCopyButton = () => {
     setOpen(true);
-    navigator.clipboard.writeText('https://survey.survicate.com/23f07e97a34bd4a5/?p=anonymous');
+    navigator.clipboard.writeText(getShareSurveyLink(window.location.host,surveyId));
   }
 
   return (
@@ -82,7 +86,7 @@ function ShareSurvey() {
                 size='small'
                 sx={{ input: { color: 'white' } }}
                 id="outlined-basic"
-                value={'https://survey.survicate.com/23f07e97a34bd4a5/?p=anonymous'}
+                value={getShareSurveyLink(window.location.host,surveyId)}
                 variant="outlined"
                 style={{ width: '60%' }}
               />

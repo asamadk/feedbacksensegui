@@ -4,7 +4,6 @@ import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, styled, TextField, Typography } from '@mui/material';
 
-
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
         color: '#FFA500',
@@ -26,13 +25,16 @@ const CssTextField = styled(TextField)({
     color: 'white'
 });
 
-function TextAnswerModal(props: any) {
-
+function SmileyScaleModal(props : any) {
     const [question , setQuestion] = useState('');
+    const [leftText , setLeftText] = useState('');
+    const [rightText , setRightText] = useState('');
 
     const handleSave = () => {
         let obj = {
-            question : question
+            question : question,
+            leftText : leftText,
+            rightText : rightText
         }
 
         if (verifyComponent() === false) {
@@ -77,6 +79,27 @@ function TextAnswerModal(props: any) {
                         />
                     </Box>
 
+                    <Box sx={{display : 'flex', justifyContent : 'space-between', width : '100%', marginTop : '20px'}} >
+                    <CssTextField
+                            sx={{ input: { color: 'white' } }}
+                            id="outlined-basic"
+                            placeholder='Text on the very left'
+                            variant="outlined"
+                            size={'small'}
+                            value={leftText}
+                            onChange={(e) => setLeftText(e.target.value)}
+                        />
+                        <CssTextField
+                            sx={{ input: { color: 'white' } }}
+                            id="outlined-basic"
+                            placeholder='Text on the very right'
+                            variant="outlined"
+                            size={'small'}
+                            value={rightText}
+                            onChange={(e) => setRightText(e.target.value)}
+                        />
+                    </Box>
+
                     <Box sx={ModalStyles.modalButtonContainerStyle} >
                         <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
                         <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
@@ -87,4 +110,4 @@ function TextAnswerModal(props: any) {
     )
 }
 
-export default TextAnswerModal
+export default SmileyScaleModal

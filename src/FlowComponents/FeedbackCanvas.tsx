@@ -15,8 +15,13 @@ const nodeTypes = {
 
 function FeedbackCanvas(props: any) {
 
+    const [surveyFlow , setSurveyFlow] = React.useState<any>(props.surveyDetail);
+
     useEffect(() => {
         onRestore();
+        if(props?.surveyDetail?.workflows != null && props?.surveyDetail?.workflows.length > 0){
+            setSurveyFlow(props?.surveyDetail?.workflows[0]);
+        }
     }, [props.surveyDetail]);
 
     const reactFlowWrapper: any = useRef(null);
@@ -69,12 +74,13 @@ function FeedbackCanvas(props: any) {
 
 
     const onRestore = useCallback(() => {
-        console.log('onRestore')
+        // console.log('onRestore',surveyFlow?.json);
         const restoreFlow = async () => {
-            if(props.surveyDetail == null || props.surveyDetail.flowJSON == null){
+            if(props.surveyDetail == null || surveyFlow == null){
                 return;
             }
-            const flow: any = JSON.parse(props.surveyDetail.flowJSON);
+            const tempSurFlow = JSON.parse(surveyFlow?.json);
+            const flow: any = tempSurFlow;
             if (flow) {
                 let nodeList : any[] = flow.nodes;
                 for(let i =0;i<nodeList.length;i++){
@@ -148,6 +154,8 @@ function FeedbackCanvas(props: any) {
                 maxZoom={3}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
+                panOnScroll
+                selectionOnDrag
             >
                 {/* <MiniMap nodeColor={'#454545'} color={'#1E1E1E'} /> */}
                 <Background />

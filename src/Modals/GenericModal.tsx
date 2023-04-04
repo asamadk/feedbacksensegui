@@ -10,6 +10,10 @@ function GenericModal(props: any) {
 
     let payload: Types.genericModalData = props.payload;
 
+    const handleSuccessButtonClick = () => {
+        props.callback();
+    }
+
     return (
         <>
             <Modal
@@ -50,7 +54,9 @@ function GenericModal(props: any) {
                         <Button
                             style={{ width: 'fit-content' }}
                             sx={ButtonStyles.containedButton}
-                            variant="contained">
+                            variant="contained"
+                            onClick={handleSuccessButtonClick}
+                            >
                             {payload?.successButtonText}
                         </Button>
                     </Box>

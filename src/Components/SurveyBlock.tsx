@@ -11,6 +11,8 @@ import GenericModal from '../Modals/GenericModal';
 import ChangeFolderModal from '../Modals/ChangeFolderModal';
 import CustomChip from './CustomChip';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
+import { deleteSurvey } from '../Utils/Endpoints';
 
 const surveyBlockMainContainer = {
     border: '1px #454545 solid',
@@ -30,6 +32,8 @@ function SurveyBlock(props : any) {
     const [showSurveyAction, setShowSurveyAction] = React.useState(false);
     const [showGenericModal , setShowGenericModal] = React.useState(false);
     const [showChangeFolderModal , setShowChangeFolderModal] = React.useState(false);
+    const [changeFolderSurveyId, setChangeFolderSurveyId] = React.useState('')
+    const [deleteSurveyId , setDeleteSurveyId] = React.useState('');
 
     const handleTextHighlight = (e: any) => {
         e.target.style.color = '#FFA500';
@@ -51,16 +55,17 @@ function SurveyBlock(props : any) {
         setShowSurveyAction(!showSurveyAction);
     }
 
-    const handleDeleteOptionClick = () => {
+    const handleDeleteOptionClick = (surveyId : string) => {
         handleMoreOptionsClick();
         setShowGenericModal(true);
-
+        setDeleteSurveyId(surveyId);
         let genDeleteObj : Types.genericModalData = {
             header : 'Do you really want to delete this survey?',
             warning : 'Warning: There\'s no turning back! I acknowledge that',
             successButtonText : 'Delete',
             cancelButtonText : 'Cancel',
-            description : 'The entire survey will be removed. | All the responses collected so far will be deleted.'
+            description : 'The entire survey will be removed. | All the responses collected so far will be deleted.',
+            type : 'delete'
         }
 
         setGenericModalObj(genDeleteObj);
@@ -69,12 +74,35 @@ function SurveyBlock(props : any) {
     const handleChangeFolderClick = () => {
         handleMoreOptionsClick();
         setShowChangeFolderModal(true);
+        setChangeFolderSurveyId(survey.id);
     }
 
     const handleOpenSurvey = () => {
         let surveyId = survey.id;
         navigation('/survey/detail/create/'+surveyId);
     }
+
+    const handleSuccessButtonClick = () => {
+        setShowGenericModal(false);
+        if(genericModalObj?.type === 'delete'){
+            handleDeleteSurvey();
+        }
+    }
+
+    const handleDeleteSurvey = async () => {
+        let { data } = await axios.post(deleteSurvey(deleteSurveyId));
+        if(data.statusCode !== 200){
+            //TODO show error
+            console.log('Something went wrong');
+        }
+        props.delete(deleteSurveyId);
+    }
+
+    const handleSuccessChangeFolder = (newSurveyData : any) => {
+        props.survey.folder_id = newSurveyData.folder_id;
+        props.rerender();
+    }
+
 
     return (
         <Box sx={surveyBlockMainContainer} >
@@ -89,19 +117,25 @@ function SurveyBlock(props : any) {
                     <IconButton onClick={handleMoreOptionsClick} onMouseEnter={handleShowTitle} onMouseLeave={handleHideTitle} color='warning' sx={{ color: '#f1f1f1' }} >
                         <MoreHorizIcon />
                     </IconButton>
-                    <SingleSurveyAction changeFolder={handleChangeFolderClick} delete={handleDeleteOptionClick} open={showSurveyAction}/>
+                    <SingleSurveyAction 
+                        changeFolder={handleChangeFolderClick} 
+                        delete={handleDeleteOptionClick} 
+                        open={showSurveyAction}
+                        survey={survey}
+                        close={() => setShowSurveyAction(false)}
+                    />
                     <Popover open={showTitle} text={'Disable,delete and more..'}/>
                 </Box>
             </Box>
             <Box sx={{ padding: '15px', paddingBottom: '10px' }} >
                 <Box sx={{ display: 'flex' }} >
-                    <Avatar sx={{ bgcolor: '#D81159', width: 24, height: 24, fontSize: 14 }}>{survey?.createdBy[0]}</Avatar>
+                    <Avatar sx={{ bgcolor: '#D81159', width: 24, height: 24, fontSize: 14 }}>{survey?.user_id}</Avatar>
                     <Typography variant='subtitle1' sx={{ fontSize: 14, marginLeft: '5px', color: '#454545' }} >
-                        {new Date(survey?.createdDate).toDateString()}
+                        {new Date(survey?.created_at).toDateString()}
                     </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', marginTop: '50px', justifyContent: 'space-between' }} >
-                    <CustomChip status={survey?.isActive === true ? 'success' : 'failed'} />
+                    <CustomChip status={survey?.is_published === 1 ? 'success' : 'failed'} />
                     <Box sx={{ display: 'flex' }} >
                         <EqualizerIcon />
                         <Typography
@@ -114,8 +148,13 @@ function SurveyBlock(props : any) {
                     </Box>
                 </Box>
             </Box>
-            <GenericModal payload={genericModalObj} close={() => setShowGenericModal(false)} open={showGenericModal} />
-            <ChangeFolderModal close={() => setShowChangeFolderModal(false)}  open={showChangeFolderModal} />
+            <GenericModal 
+                payload={genericModalObj} 
+                close={() => setShowGenericModal(false)} 
+                open={showGenericModal} 
+                callback={handleSuccessButtonClick}
+            />
+            <ChangeFolderModal callback={handleSuccessChangeFolder} surveyId={changeFolderSurveyId} close={() => setShowChangeFolderModal(false)}  open={showChangeFolderModal} />
         </Box>
     )
 }

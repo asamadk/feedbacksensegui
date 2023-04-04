@@ -4,6 +4,7 @@ import { Box, Button, IconButton } from '@mui/material';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import CustomTabSet from '../Components/CustomTabSet';
 import { useNavigate } from 'react-router';
+import { SURVEY_LOCAL_KEY } from '../Utils/Constants';
 
 const makeButtonUp = {
     position: 'relative',
@@ -28,6 +29,7 @@ function SurveyDetailHeader(props :any) {
     let navigate = useNavigate();
 
     const handleRouteToHome = () => {
+        localStorage.removeItem(SURVEY_LOCAL_KEY);
         navigate('/');
     }
 
@@ -35,16 +37,22 @@ function SurveyDetailHeader(props :any) {
 
     const changetabset = (value: number) => {
         setTabset(value);
+        let surveyData = localStorage.getItem(SURVEY_LOCAL_KEY);
+        if(surveyData == null){
+            navigate('/');
+            return;
+        }
+        const surveyDataObj = JSON.parse(surveyData);
         if(value === 0){
-            navigate('/survey/detail/create/122');
+            navigate('/survey/detail/create/'+surveyDataObj.id);
         }else if(value === 1){
-            navigate('/survey/detail/design');
+            navigate('/survey/detail/design/'+surveyDataObj.id);
         }else if(value === 2){
-            navigate('/survey/detail/configure');
+            navigate('/survey/detail/configure/'+surveyDataObj.id);
         }else if(value === 3){
-            navigate('/survey/detail/share');
+            navigate('/survey/detail/share/'+surveyDataObj.id);
         }else if(value === 4){
-            navigate('/survey/detail/analyze');
+            navigate('/survey/detail/analyze/'+surveyDataObj.id);
         }
     }
 

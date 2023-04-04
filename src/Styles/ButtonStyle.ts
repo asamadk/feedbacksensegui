@@ -5,6 +5,7 @@ export const containedButton = {
     backgroundColor: '#D81159',
     width : '100%',
     marginTop: '10px',
+    color : '#f1f1f1',
     textTransform : 'none'
 }
 

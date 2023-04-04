@@ -2,7 +2,7 @@ import React from 'react'
 
 function AnalyzeSurvey() {
   return (
-    <div>AnalyzeSurvey</div>
+    <div style={{color : 'white'}} >AnalyzeSurvey</div>
   )
 }
 

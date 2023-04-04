@@ -3,9 +3,22 @@ export type genericModalData = {
     description : string,
     warning : string,
     successButtonText : string,
-    cancelButtonText : string 
+    cancelButtonText : string,
+    type : string
 }
 
 export type orgSettingUrlParam = {
     tabset : number
+}
+
+export type authUser = {
+    id : string,
+    name : string,
+    email : string,
+    oauth_provider : string
+    oauth_id : string
+    organization_id : string
+    created_at : Date,
+    updated_at : Date,
+    emailVerified : boolean
 }

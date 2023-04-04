@@ -19,6 +19,8 @@ export const globalSettingSubContainers = {
 }
 
 export const localSurveyNavbar = {
+    display : 'flex',
+    justifyContent : 'space-between',
     borderBottom: '1px #454545 solid',
     paddingBottom: '10px',
     textAlign: 'end',

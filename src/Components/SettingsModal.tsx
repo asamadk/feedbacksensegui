@@ -4,6 +4,9 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import { useNavigate } from "react-router";
+import * as Endpoint from '../Utils/Endpoints'
+import axios from "axios";
+
 
 const settingsMainStyle = {
   width: "100%",
@@ -37,6 +40,15 @@ export default function SettingsModal(props : any) {
   const handleSettingsRouting = (path : string) => {
     props.close();
     navigation(path);
+  }
+
+  const handleLogout = async () => {
+    // let res = await axios.get(Endpoint.logout())
+    // console.log('Handle logout ',  res);
+    window.open(
+      Endpoint.logout(),
+      "_self"
+  );
   }
 
   return (
@@ -118,6 +130,7 @@ export default function SettingsModal(props : any) {
           onMouseLeave={revertBackground}
           style={singleElementStyle}
           id="Logout"
+          onClick={handleLogout}
           primary="Logout"
         />
       </ListItem>
