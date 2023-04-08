@@ -5,6 +5,7 @@ import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, Select, Slider, styled, TextField, Typography } from '@mui/material';
 import { getCompConfig } from '../Utils/FeedbackUtils';
+import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -31,15 +32,15 @@ function ContactFormModal(props: any) {
 
     useEffect(() => {
         populateCompConfig();
-    },[]);
+    }, []);
 
     const [answerChoiceList, setAnswerChoiceList] = useState<string[]>(['']);
     const [questionText, setQuestionText] = useState('');
 
     const populateCompConfig = () => {
         const compConfig = getCompConfig(props);
-        setQuestionText(compConfig.question);
-        if(compConfig?.answerList != null){
+        setQuestionText(compConfig?.question);
+        if (compConfig?.answerList != null) {
             setAnswerChoiceList([...compConfig?.answerList]);
         }
     }
@@ -94,67 +95,79 @@ function ContactFormModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyle}>
-                    <Box sx={ModalStyles.modalHeaderStyle} >
-                        <Typography id="modal-modal-title" variant="h5" component="h2">
-                            {props.header}
-                        </Typography>
-                        <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
-                            <CloseIcon onClick={props.close} />
-                        </IconButton>
-                    </Box>
-
-                    <Box sx={ModalStyles.modalBodyContainerStyle} >
-
-                        <CssTextField
-                            value={questionText}
-                            onChange={(e) => setQuestionText(e.target.value)}
-                            sx={{ input: { color: 'white' } }}
-                            id="outlined-basic"
-                            placeholder='Enter your question here'
-                            variant="outlined"
-                            size={'small'}
-                            style={{ width: '100%' }}
-                        />
-
-                        <Box marginTop={'20px'} >
-                            <Typography sx={{ color: '#f1f1f1' }} >Answer choices</Typography>
-                            {
-                                answerChoiceList.map((answer, index) => {
-                                    return (
-                                        <Box key={index} display={'flex'} >
-                                            <CssTextField
-                                                onChange={(e) => handleAnswerChange(e, index)}
-                                                value={answer}
-                                                sx={{ input: { color: 'white' }, marginTop: '10px' }}
-                                                id="outlined-basic"
-                                                placeholder='Field label'
-                                                variant="outlined"
-                                                size={'small'}
-                                                style={{ width: '100%' }}
-                                            />
-                                            <IconButton onClick={() => handleTextFieldRemove(index)} >
-                                                <RemoveCircleIcon sx={{ color: '#f1f1f1' }} />
-                                            </IconButton>
-                                        </Box>
-                                    )
-                                })
-                            }
-
-                            <Typography
-                                sx={{ color: '#454545', fontSize: '13px', textDecoration: 'underline', cursor: 'pointer', marginTop: '20px' }}
-                                onClick={handleAddAnswerChoice}
-                            >
-                                Add an answer choice
+                <Box sx={ModalStyles.modalStyleComponents}>
+                    <Box width={'40%'} marginRight={10} >
+                        <Box sx={ModalStyles.modalHeaderStyle} >
+                            <Typography id="modal-modal-title" variant="h5" component="h2">
+                                {props.header}
                             </Typography>
+                            <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+                                <CloseIcon onClick={props.close} />
+                            </IconButton>
+                        </Box>
+
+                        <Box sx={ModalStyles.modalBodyContainerStyle} >
+
+                            <CssTextField
+                                value={questionText}
+                                onChange={(e) => setQuestionText(e.target.value)}
+                                sx={{ input: { color: 'white' } }}
+                                id="outlined-basic"
+                                placeholder='Enter your question here'
+                                variant="outlined"
+                                size={'small'}
+                                style={{ width: '100%' }}
+                            />
+
+                            <Box marginTop={'20px'} >
+                                <Typography sx={{ color: '#f1f1f1' }} >Answer choices</Typography>
+                                {
+                                    answerChoiceList.map((answer, index) => {
+                                        return (
+                                            <Box key={index} display={'flex'} >
+                                                <CssTextField
+                                                    onChange={(e) => handleAnswerChange(e, index)}
+                                                    value={answer}
+                                                    sx={{ input: { color: 'white' }, marginTop: '10px' }}
+                                                    id="outlined-basic"
+                                                    placeholder='Field label'
+                                                    variant="outlined"
+                                                    size={'small'}
+                                                    style={{ width: '100%' }}
+                                                />
+                                                <IconButton onClick={() => handleTextFieldRemove(index)} >
+                                                    <RemoveCircleIcon sx={{ color: '#f1f1f1' }} />
+                                                </IconButton>
+                                            </Box>
+                                        )
+                                    })
+                                }
+
+                                <Typography
+                                    sx={{ color: '#454545', fontSize: '13px', textDecoration: 'underline', cursor: 'pointer', marginTop: '20px' }}
+                                    onClick={handleAddAnswerChoice}
+                                >
+                                    Add an answer choice
+                                </Typography>
+
+                            </Box>
 
                         </Box>
 
+                        <Box sx={ModalStyles.modalButtonContainerStyle} >
+                            <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
+                            <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
+                        </Box>
                     </Box>
-
-                    <Box sx={ModalStyles.modalButtonContainerStyle} >
-                        <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
-                        <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
+                    <Box sx={{ backgroundColor: '#f1f1f1', width: '55%' }} >
+                        <DynamicComponentDisplay
+                            data={{
+                                question: questionText,
+                                answerList: answerChoiceList,
+                                type: props.type
+                            }}
+                            compId={props.compId}
+                        />
                     </Box>
                 </Box>
             </Modal>

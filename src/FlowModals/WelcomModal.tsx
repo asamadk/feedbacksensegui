@@ -60,7 +60,7 @@ function WelcomModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyle}>
+                <Box sx={ModalStyles.modalStyleComponents}>
                     <Box width={'40%'} marginRight={10} >
                         <Box sx={ModalStyles.modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">

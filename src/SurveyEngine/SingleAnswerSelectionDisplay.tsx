@@ -34,7 +34,7 @@ function SingleAnswerSelectionDisplay(props: any) {
                                 }
                             </FormGroup>
                     }
-            <Button style={{ width: 'fit-content' }} sx={containedButton} variant="contained" >Submit</Button>
+                    <Button style={{ width: 'fit-content' }} sx={containedButton} variant="contained" >Submit</Button>
                 </Box>
             </Box>
         </Box>
