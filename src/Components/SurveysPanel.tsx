@@ -235,6 +235,7 @@ function SurveysPanel(props: any) {
                             survey={survey}
                             delete={deleteSurvey}
                             rerender={rerenderAfterFolderChange}
+                            update={props.update}
                         />
                     </Grid>
                 ))}

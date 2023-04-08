@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, styled, TextField, Typography } from '@mui/material';
+import { getCompConfig } from '../Utils/FeedbackUtils';
+import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 
 const CssTextField = styled(TextField)({
@@ -28,11 +30,20 @@ const CssTextField = styled(TextField)({
 
 function TextAnswerModal(props: any) {
 
-    const [question , setQuestion] = useState('');
+    useEffect(() => {
+        populateCompConfig();
+    }, []);
+
+    const [question, setQuestion] = useState('');
+
+    const populateCompConfig = () => {
+        const compConfig = getCompConfig(props);
+        setQuestion(compConfig?.question);
+    }
 
     const handleSave = () => {
         let obj = {
-            question : question
+            question: question
         }
 
         if (verifyComponent() === false) {
@@ -55,31 +66,39 @@ function TextAnswerModal(props: any) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={ModalStyles.modalStyle}>
-                    <Box sx={ModalStyles.modalHeaderStyle} >
-                        <Typography id="modal-modal-title" variant="h5" component="h2">
-                            {props.header}
-                        </Typography>
-                        <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
-                            <CloseIcon onClick={props.close} />
-                        </IconButton>
-                    </Box>
+                    <Box width={'40%'} marginRight={10} >
+                        <Box sx={ModalStyles.modalHeaderStyle} >
+                            <Typography id="modal-modal-title" variant="h5" component="h2">
+                                {props.header}
+                            </Typography>
+                            <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+                                <CloseIcon onClick={props.close} />
+                            </IconButton>
+                        </Box>
 
-                    <Box sx={ModalStyles.modalBodyContainerStyle} >
-                        <CssTextField
-                            sx={{ input: { color: 'white' } }}
-                            id="outlined-basic"
-                            placeholder='Enter your question here'
-                            variant="outlined"
-                            size={'small'}
-                            value={question}
-                            style={{ width: '100%' }}
-                            onChange={(e) => setQuestion(e.target.value)}
+                        <Box sx={ModalStyles.modalBodyContainerStyle} >
+                            <CssTextField
+                                sx={{ input: { color: 'white' } }}
+                                id="outlined-basic"
+                                placeholder='Enter your question here'
+                                variant="outlined"
+                                size={'small'}
+                                value={question}
+                                style={{ width: '100%' }}
+                                onChange={(e) => setQuestion(e.target.value)}
+                            />
+                        </Box>
+
+                        <Box sx={ModalStyles.modalButtonContainerStyle} >
+                            <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
+                            <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
+                        </Box>
+                    </Box>
+                    <Box sx={{ backgroundColor: '#f1f1f1', width: '55%' }} >
+                        <DynamicComponentDisplay
+                            data={{ question: question }}
+                            compId={props.compId}
                         />
-                    </Box>
-
-                    <Box sx={ModalStyles.modalButtonContainerStyle} >
-                        <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
-                        <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
                     </Box>
                 </Box>
             </Modal>

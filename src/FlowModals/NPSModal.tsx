@@ -1,34 +1,48 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, Select, Slider, styled, TextField, Typography } from '@mui/material';
+import { getCompConfig } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-      color: '#FFA500',
+  '& label.Mui-focused': {
+    color: '#FFA500',
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: '#FFA500',
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#454545',
     },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#FFA500',
+    '&:hover fieldset': {
+      borderColor: '#FFA500',
     },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: '#454545',
-      },
-      '&:hover fieldset': {
-        borderColor: '#FFA500',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: '#FFA500',
-      },
+    '&.Mui-focused fieldset': {
+      borderColor: '#FFA500',
     },
-    color: 'white'
-  });
+  },
+  color: 'white'
+});
 
-function NPSModal(props : any) {
-    const [question, setQuestion] = useState('');
-    const [leftText, setLeftText] = useState('');
-    const [rightText, setRightText] = useState('');
+function NPSModal(props: any) {
+
+  useEffect(() => {
+    populateCompConfig();
+  }, []);
+
+  const [question, setQuestion] = useState('');
+  const [leftText, setLeftText] = useState('');
+  const [rightText, setRightText] = useState('');
+
+  const populateCompConfig = () => {
+    const compConfig = getCompConfig(props);
+    console.log("🚀 ~ file: NPSModal.tsx:41 ~ populateCompConfig ~ compConfig:", compConfig)
+    setQuestion(compConfig?.question);
+    setLeftText(compConfig?.leftText);
+    setRightText(compConfig?.rightText);
+}
 
   const handleSave = () => {
     let obj = {

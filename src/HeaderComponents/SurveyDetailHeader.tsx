@@ -62,9 +62,9 @@ function SurveyDetailHeader(props :any) {
                 <CustomTabSet tabsetList={tabsetList} change={(value: number) => changetabset(value)} index={props.tabset} />
             </Box>
             <Box sx={{display : 'flex'}} >
-                <Box sx={makeButtonUp} >
+                {/* <Box sx={makeButtonUp} >
                     <Button style={{ width: 'fit-content' }} sx={ButtonStyles.outlinedBlackButton} variant="contained">Next</Button>
-                </Box>
+                </Box> */}
                 <IconButton onClick={handleRouteToHome} sx={makeIconsUp} color='warning' ><CloseIcon sx={{ color: '#f1f1f1' }} /></IconButton>
             </Box>
         </Box>

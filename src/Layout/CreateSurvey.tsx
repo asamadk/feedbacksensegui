@@ -1,4 +1,4 @@
-import { Alert, Box, Button, IconButton, Snackbar, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, IconButton, Snackbar, styled, TextField, Typography } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import FeedbackCanvas from '../FlowComponents/FeedbackCanvas'
 import 'reactflow/dist/style.css';
@@ -10,19 +10,42 @@ import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutl
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import DynamicComponentModal from '../FlowComponents/DynamicComponentModal';
 import { useParams } from 'react-router';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import { SURVEY_LOCAL_KEY } from '../Utils/Constants';
 import Notification from '../Utils/Notification';
 
+const CssTextField = styled(TextField)({
+  '& label.Mui-focused': {
+    color: '#FFA500',
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: '#FFA500',
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#454545',
+    },
+    '&:hover fieldset': {
+      borderColor: '#FFA500',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#FFA500',
+    },
+  },
+  color: 'white'
+});
 
 function CreateSurvey() {
 
-  const snackbarRef = useRef(null);
+  const snackbarRef: any = useRef(null);
   const { surveyId } = useParams();
 
   const [openEditModal, setOpenEditModal] = React.useState(false);
   const [componentId, setComponentId] = React.useState<string>();
   const [comUiId, setCompUiId] = React.useState<string>('');
+  const [surveyFlow, setSurveyFlow] = React.useState<any>();
   const [componentConfig, setComponentConfig] = React.useState<Map<string, object>>(new Map());
   const [surveyDetail, setSurveyDetail] = React.useState<any>();
   const [showSurveyName, setShowSurveyName] = React.useState(true);
@@ -39,6 +62,9 @@ function CreateSurvey() {
     }
     if (data != null) {
       setSurveyDetail(data.data);
+      if (data?.data?.workflows != null && data?.data.workflows.length > 0) {
+        setSurveyFlow(data?.data?.workflows[0]);
+      }
       localStorage.setItem(SURVEY_LOCAL_KEY, JSON.stringify(data.data));
     }
   }
@@ -50,54 +76,57 @@ function CreateSurvey() {
   }
 
   const handleSavecomponentConfig = (data: any) => {
-    const currRef :any= snackbarRef?.current;
-    currRef?.show('Saved.','success');
     let tempMap = componentConfig;
+    const validatedComp = FeedbackUtils.validateFlowComponent(JSON.parse(data), componentId);
+    if (validatedComp !== null) {
+      snackbarRef?.current?.show(validatedComp, 'error');
+      return;
+    }
     tempMap?.set(comUiId, data);
     setComponentConfig(tempMap);
-    setOpenEditModal(false)
+    setOpenEditModal(false);
+    snackbarRef?.current?.show('Saved.', 'success');
   }
 
   const handleSaveFlow = (flow: any) => {
-    if (flow == null || flow.length < 1) {
-      return;
-    }
-
-    if (componentConfig.size < 1) {
-      saveFlow(flow);
-      return;
-    }
-
-    for (const key in flow) {
-      if (key.toLowerCase() !== 'nodes') {
-        continue;
+    try {
+      if (flow == null || flow.length < 1) {
+        return;
       }
-      let nodeList: any[] = flow[key];
-      nodeList.forEach(n => {
-        if (componentConfig.has(n.id)) {
-          n.data.compConfig = componentConfig.get(n.id);
+      if (componentConfig.size < 1) {
+        saveFlow(flow);
+        return;
+      }
+      for (const key in flow) {
+        if (key.toLowerCase() !== 'nodes') {
+          continue;
         }
-      });
+        let nodeList: any[] = flow[key];
+        nodeList.forEach(n => {
+          if (componentConfig.has(n.id)) {
+            n.data.compConfig = componentConfig.get(n.id);
+          }
+        });
+      }
+      saveFlow(flow);
+    } catch (error) {
+      console.log('Exception :: handleSaveFlow :: ', error);
+      snackbarRef?.current?.show('Something went wrong.', 'error');
     }
-    saveFlow(flow);
 
   }
 
   const saveFlow = async (flow: any) => {
-    const saveFlowTemp = JSON.stringify(flow);
-    console.log('Flow = ',saveFlowTemp);
-    const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyDetail.id),flow);
+    const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyDetail.id), flow);
     const isValidated = FeedbackUtils.validateAPIResponse(data);
-    if(isValidated === false){
+    if (isValidated === false) {
       return;
     }
 
-    console.log('saveFlow :: data',data);
-
-    if(data.statusCode === 200){
-      const currRef :any= snackbarRef?.current;
-      currRef?.show('Configuration saved.','success');
+    if (data.statusCode === 200) {
+      snackbarRef?.current?.show('Configuration saved.', 'success');
     }
+
     //TODO show saved alerts
   }
 
@@ -105,35 +134,66 @@ function CreateSurvey() {
     setShowSurveyName(false);
   }
 
+  const handleCloseEditName = () => {
+    setShowSurveyName(true);
+  }
+
+  const handleSaveNameClick = () => {
+    snackbarRef?.current?.show('Survey name updated.', 'success');
+    handleCloseEditName();
+  }
+
+  const handleFlowNameChange = (e : any) => {
+    let tempSurveyDetail = surveyDetail;
+    tempSurveyDetail.name = e.target.value;
+    setSurveyDetail(tempSurveyDetail);
+  }
+
   return (
     <Box sx={{ backgroundColor: '#1E1E1E', height: 'calc(100vh - 69px)' }} >
       <Box sx={LayoutStyles.localSurveyNavbar} >
         <Box display={'flex'} >
-          <Typography
-            style={{ position: 'relative', top: '15px', paddingLeft: '10px', cursor: 'pointer', fontSize: '17px' }}
-            color={'#f1f1f1'} >
-            {surveyDetail?.name}
-          </Typography>
+          {showSurveyName &&
+            <Typography
+              style={{ position: 'relative', top: '15px', paddingLeft: '10px', cursor: 'pointer', fontSize: '17px' }}
+              color={'#f1f1f1'} >
+              {surveyDetail?.name}
+            </Typography>
+          }
           {showSurveyName &&
             <IconButton onClick={handleEditNameClick} size='small' style={{ padding: '0px', paddingTop: '10px', paddingLeft: '10px' }} >
               <ModeEditOutlineOutlinedIcon sx={{ color: '#f1f1f1' }} />
             </IconButton>}
-            {/* {showSurveyName === false &&
-              <CssTextField
-                sx={{ input: { color: 'white' } }}
-                id="outlined-basic"
-                value={surveyDetail?.name}
-                variant="outlined"
-                size='small'
-                style={{ width: '100%' }}
-          />
-            } */}
+          {showSurveyName === false &&
+            <CssTextField
+              sx={{ input: { color: 'white' } }}
+              id="outlined-basic"
+              value={surveyDetail?.name}
+              variant="outlined"
+              size='small'
+              onChange={(e) => handleFlowNameChange(e)}
+              style={{ width: '300px', paddingTop : '10px', paddingLeft : '10px' }}
+            />
+          }
+          {
+            showSurveyName === false &&
+            <IconButton onClick={handleSaveNameClick} size='small' style={{ padding: '0px', paddingTop: '10px', paddingLeft: '10px' }} >
+              <SaveAltIcon sx={{ color: '#f1f1f1' }} />
+            </IconButton>
+          }
+          {
+            showSurveyName === false &&
+            <IconButton onClick={handleCloseEditName} size='small' style={{ padding: '0px', paddingTop: '10px', paddingLeft: '10px' }} >
+              <CloseIcon sx={{ color: '#f1f1f1' }} />
+            </IconButton>
+          }
         </Box>
         <Button style={{ width: '110px' }} sx={ButtonStyles.containedButton} variant="contained">Preview</Button>
       </Box>
       <Box display={'flex'} >
         <Box width={'77%'} >
           <FeedbackCanvas
+            flow={surveyFlow}
             surveyDetail={surveyDetail}
             onEdit={handleComponentEditClick}
             performSave={handleSaveFlow}
@@ -150,9 +210,10 @@ function CreateSurvey() {
         uiId={comUiId}
         compId={componentId}
         save={handleSavecomponentConfig}
+        flow={surveyFlow}
       />
 
-      <Notification ref={snackbarRef}/>
+      <Notification ref={snackbarRef} />
     </Box>
   )
 }

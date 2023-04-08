@@ -15,7 +15,7 @@ const nodeTypes = {
 
 function FeedbackCanvas(props: any) {
 
-    const [surveyFlow , setSurveyFlow] = React.useState<any>(props.surveyDetail);
+    const [surveyFlow , setSurveyFlow] = React.useState<any>(props.flow);
 
     useEffect(() => {
         onRestore();
@@ -74,7 +74,6 @@ function FeedbackCanvas(props: any) {
 
 
     const onRestore = useCallback(() => {
-        // console.log('onRestore',surveyFlow?.json);
         const restoreFlow = async () => {
             if(props.surveyDetail == null || surveyFlow == null){
                 return;

@@ -40,10 +40,6 @@ function CreateSurveyModal(props: any) {
         }
 
         if (data.data != null) {
-            data.data.unshift({
-                id: '0',
-                label: 'All survey type'
-            });
             setSurveyTypes(data.data);
         }
     }
@@ -67,8 +63,6 @@ function CreateSurveyModal(props: any) {
         if(isValidated === false){
             return;
         }
-
-        console.log('Survey create = ', data);
 
         props.surveys.push(data.data);
         props.close();

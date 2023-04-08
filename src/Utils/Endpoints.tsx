@@ -68,6 +68,14 @@ export const getSurveyConfigData = (surveyId : string) => {
     return BASE_URL + `/survey/config/detail/${surveyId}`;
 }
 
+export const getSubscriptionDetailHome = (userId : string) => {
+    return BASE_URL + `/subscription/sub/details/${userId}`;
+}
+
+export const getAllPlanList = () => {
+    return BASE_URL + `/plan/list/all`;
+}
+
 // ********
 
 export const getSubscriptionDetail = (): string => {

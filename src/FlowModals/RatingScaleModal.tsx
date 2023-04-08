@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, Select, Slider, styled, TextField, Typography } from '@mui/material';
+import { getCompConfig } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -26,17 +27,31 @@ const CssTextField = styled(TextField)({
 });
 
 function RatingScale(props: any) {
+
+  useEffect(() => {
+    populateCompConfig();
+  }, []);
+
   const [question, setQuestion] = useState('');
-  const [range , setRange] = useState(7);
+  const [range, setRange] = useState(1);
   const [leftText, setLeftText] = useState('');
   const [rightText, setRightText] = useState('');
+
+  const populateCompConfig = () => {
+    const compConfig = getCompConfig(props);
+    setQuestion(compConfig?.question);
+    setLeftText(compConfig?.leftText);
+    setRightText(compConfig?.rightText);
+    setRange(compConfig?.range);
+    console.log("🚀 ~ file: RatingScaleModal.tsx:47 ~ populateCompConfig ~ compConfig?.range:", compConfig?.range)
+  }
 
   const handleSave = () => {
     let obj = {
       question: question,
       leftText: leftText,
       rightText: rightText,
-      range : range
+      range: range
     }
 
     if (verifyComponent() === false) {
@@ -50,7 +65,7 @@ function RatingScale(props: any) {
     return true;
   }
 
-  const handleSilderChange = (e : any) => {
+  const handleSilderChange = (e: any) => {
     let range = e.target.value;
     setRange(range);
   }
@@ -85,9 +100,9 @@ function RatingScale(props: any) {
               onChange={(e) => setQuestion(e.target.value)}
             />
 
-            <Box sx={{marginTop : '10px'}} >
+            <Box sx={{ marginTop: '10px' }} >
               <Typography color={'#454545'} >Select range</Typography>
-              <Slider onChange={handleSilderChange} sx={{width : '95%',marginLeft : '10px'}} defaultValue={range} valueLabelDisplay="auto" step={1} marks min={1} max={10}/>
+              <Slider onChange={handleSilderChange} sx={{ width: '95%', marginLeft: '10px' }} value={range} valueLabelDisplay="auto" step={1} marks min={1} max={10} />
             </Box>
 
           </Box>

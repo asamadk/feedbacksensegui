@@ -1,7 +1,8 @@
 import { Box, Typography } from '@mui/material'
 import axios from 'axios'
-import React from 'react'
+import React, { useRef } from 'react'
 import { disableSurvey, enableSurvey, shareSurvey } from '../Utils/Endpoints'
+import Notification from '../Utils/Notification'
 import CustomAlert from './CustomAlert'
 
 const surveyActionContainer = {
@@ -16,6 +17,9 @@ const surveyActionContainer = {
 }
 
 function SingleSurveyAction(props: any) {
+
+    const snackbarRef: any = useRef(null);
+
 
     const highlightTextBackGround = (e: any) => {
         e.target.style.borderRadius = '5px'
@@ -33,19 +37,31 @@ function SingleSurveyAction(props: any) {
         }
 
         if (props?.survey?.is_published === 1) {
-            let { data } = await axios.post(disableSurvey(props?.survey?.id));
-            if (data.statusCode !== 200) {
-                //TODO something went wrong 
-                return;
+            try {
+                let { data } = await axios.post(disableSurvey(props?.survey?.id));
+                if (data.statusCode !== 200) {                
+                    snackbarRef?.current?.show(data.message, 'error');
+                    return;
+                }
+                snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
+                surveyData.is_published = 0;
+            } catch (error) {
+                snackbarRef?.current?.show('Something went wrong', 'error');
             }
-            surveyData.is_published = 0;
         } else {
-            let { data } = await axios.post(enableSurvey(props?.survey?.id));
-            if (data.statusCode !== 200) {
-                //TODO something went wrong 
-                return;
+            try {
+                let { data } = await axios.post(enableSurvey(props?.survey?.id));
+                if (data.statusCode !== 200) {
+                    snackbarRef?.current?.show(data.message, 'error');
+                    return;
+                }
+                snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
+                if(data.success === true){
+                    surveyData.is_published = 1;
+                }
+            } catch (error) {
+                snackbarRef?.current?.show('Something went wrong', 'error');
             }
-            surveyData.is_published = 1;
         }
         props.close();
     }
@@ -78,9 +94,9 @@ function SingleSurveyAction(props: any) {
                         Share
                     </Typography>
                     <Typography
-                        onMouseEnter={highlightTextBackGround}
-                        onMouseLeave={unhighlightTextBackGround}
-                        sx={{ color: '#f1f1f1', padding: '5px' }} >
+                        // onMouseEnter={highlightTextBackGround}
+                        // onMouseLeave={unhighlightTextBackGround}
+                        sx={{ color: '#f1f1f1', padding: '5px', cursor : 'not-allowed' }} >
                         Duplicate
                     </Typography>
                     <Typography
@@ -101,6 +117,7 @@ function SingleSurveyAction(props: any) {
                     </Typography>
                 </Box>
             }
+          <Notification ref={snackbarRef} />
         </>
     )
 }

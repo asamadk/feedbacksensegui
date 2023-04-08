@@ -43,8 +43,6 @@ export default function SettingsModal(props : any) {
   }
 
   const handleLogout = async () => {
-    // let res = await axios.get(Endpoint.logout())
-    // console.log('Handle logout ',  res);
     window.open(
       Endpoint.logout(),
       "_self"
@@ -93,7 +91,7 @@ export default function SettingsModal(props : any) {
           style={singleElementStyle}
           id="Subscription"
           primary="Subscription"
-          onClick={() => navigation('/org/subscription')}
+          onClick={() => handleSettingsRouting('/org/subscription')}
         />
       </ListItem>
       <ListItem>
@@ -103,7 +101,7 @@ export default function SettingsModal(props : any) {
           style={singleElementStyle}
           id="Invite-Teammates"
           primary="Invite Teammates"
-          onClick={() => navigation('/org/teammates')}
+          onClick={() => handleSettingsRouting('/org/teammates')}
         />
       </ListItem>
 
@@ -121,7 +119,7 @@ export default function SettingsModal(props : any) {
           style={singleElementStyle}
           id="Profile-&-Password"
           primary="Profile & Password"
-          onClick={() => navigation('/org/general')}
+          onClick={() => handleSettingsRouting('/org/general')}
         />
       </ListItem>
       <ListItem>

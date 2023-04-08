@@ -53,7 +53,7 @@ function InviteMemberModal(props: any) {
                         </IconButton>
                     </Box>
 
-                    <Box sx={textFieldStyle} >
+                    {/* <Box sx={textFieldStyle} >
                         <InputLabel style={{ color: '#f1f1f1' }} htmlFor="component-simple">Email</InputLabel>
                         <CssTextField
                             sx={{ input: { color: 'white' } }}
@@ -66,11 +66,12 @@ function InviteMemberModal(props: any) {
                         <Box sx={swtichContainerstyle} >
                           <FormControlLabel control={<Switch defaultChecked color="warning" />} label="Allow to modify subscription & billing" />
                         </Box>
-                    </Box>
+                    </Box> */}
+                    <InviteCommingSoon/>
 
                     <Box sx={ModalStyles.modalButtonContainerStyle} >
                         <Button style={{width : 'fit-content', marginRight : '15px'}} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
-                        <Button style={{width : 'fit-content'}} sx={ButtonStyles.containedButton} variant="contained">Invite</Button>
+                        {/* <Button style={{width : 'fit-content'}} sx={ButtonStyles.containedButton} variant="contained">Invite</Button> */}
                     </Box>
                 </Box>
             </Modal>
@@ -79,3 +80,20 @@ function InviteMemberModal(props: any) {
 }
 
 export default InviteMemberModal
+
+function InviteCommingSoon(){
+    return(
+        <Box height={150} >
+            <Typography fontSize={30} paddingTop={'20px'} >
+                Comming <span style={{color : '#FFA500'}} >soon</span>
+            </Typography>
+            <Typography color={'#454545'} paddingBottom={'20px'} >
+                Exciting News! Team Feature Coming Soon! Stay tuned for the new team feature that 
+                will enhance collaboration and streamline your workflow. Get ready to level up your teamwork!
+            </Typography>
+            <Typography style={{color : '#FFA500'}} >
+                #TeamworkMakesTheDreamWork
+            </Typography>
+        </Box>
+    )
+}

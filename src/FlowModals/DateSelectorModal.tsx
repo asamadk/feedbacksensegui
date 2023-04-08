@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, Select, Slider, styled, TextField, Typography } from '@mui/material';
+import { getCompConfig } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -26,7 +27,17 @@ const CssTextField = styled(TextField)({
 });
 
 function DateSelectorModal(props: any) {
+
+  useEffect(() => {
+    populateCompConfig();
+  }, []);
+
   const [question, setQuestion] = useState('');
+
+  const populateCompConfig = () => {
+    const compConfig = getCompConfig(props);
+    setQuestion(compConfig?.question);
+  }
 
   const handleSave = () => {
     let obj = {

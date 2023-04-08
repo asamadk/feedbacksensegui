@@ -15,6 +15,7 @@ import OrgSettings from './Layout/OrgSettings';
 import ShareSurvey from './Layout/ShareSurvey';
 import SurveySettings from './Layout/SurveySettings';
 import { SURVEY_LOCAL_KEY, USER_LOCAL_KEY } from './Utils/Constants';
+import UpgradeSubscription from './Layout/UpgradeSubscription';
 
 const globalBodyStyle = {
   backgroundColor: '#1E1E1E',
@@ -63,6 +64,7 @@ function App() {
         <Route path='/survey/detail/share/:surveyId' element={user ? <ShareSurvey />  : <Navigate to={'/login'}/>  } />
         <Route path='/survey/detail/analyze/:surveyId' element={ user ? <AnalyzeSurvey /> : <Navigate to={'/login'}/>   } />
         <Route path='/survey/detail/configure/:surveyId' element={ user ? <ConfigureSurvey /> : <Navigate to={'/login'}/>    } />
+        <Route path='/upgrade/plan' element={ user ? <UpgradeSubscription /> : <Navigate to={'/login'}/>    } />
       </Routes>
     </div>
   );

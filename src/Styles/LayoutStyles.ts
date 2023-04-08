@@ -1,7 +1,8 @@
 export const settingLayoutStyle = {
     backgroundColor: '#1E1E1E',
     height: 'calc(100vh - 158px)',
-    padding: '50px 70px'
+    padding: '50px 70px',
+    overflowY : 'scroll'
 }
 
 export const settingsHeaderTextStyle = {

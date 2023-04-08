@@ -11,6 +11,7 @@ import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { USER_LOCAL_KEY } from '../Utils/Constants';
 import CustomAlert from './CustomAlert';
+import { useNavigate } from 'react-router';
 
 
 const surveyPageMainContainer = {
@@ -46,19 +47,10 @@ const folderText = {
     paddingBottom: '15px'
 }
 
-const allFolderData = [
-    {
-        name: 'Evening Survey',
-        count: 3
-    },
-    {
-        name: 'Morning Survey',
-        count: 2
-    }
-]
-
 
 function SurveyListPage() {
+
+    let navigate = useNavigate();
 
     const [folderList, setFolderList] = React.useState<any[]>([]);
     const [openInviteModal, setOpeninviteModal] = React.useState(false);
@@ -76,14 +68,15 @@ function SurveyListPage() {
     }, []);
 
     const getSubscriptionDetails = async () => {
-        let res = await axios.get(Endpoints.getSubscriptionDetail());
-        const isValidated = FeedbackUtils.validateAPIResponse(res);
+        let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(FeedbackUtils.getUserId()));
+        const isValidated = FeedbackUtils.validateAPIResponse(data);
         if (isValidated === false) {
             return;
         }
-
-        let resData: any[] = res.data;
+        
+        let resData: any[] = data.data;
         if (resData != null) {
+            // console.log("🚀 ~ file: SurveyListPage.tsx:76 ~ getSubscriptionDetails ~ resData:", resData)
             setSubscriptionDetail(resData);
         }
     }
@@ -162,6 +155,7 @@ function SurveyListPage() {
     const handleCloseInviteModal = () => setOpeninviteModal(false);
 
     const handleOpenCreateFolderModal = () => setopenCreateFolderModal(true);
+
     const handleCloseCreateFolderModal = (type: string) => {
         setopenCreateFolderModal(false)
         if (type === 'save') {
@@ -181,6 +175,13 @@ function SurveyListPage() {
         console.log('handleDeleteFolderClick', folderId);
     }
 
+    const handleUpdateComponent = () => {
+        getSubscriptionDetails();
+    }
+
+    const handleUpgradePlanClick = () => {
+        navigate('/upgrade/plan');
+    }
 
     return (
         <>
@@ -224,14 +225,20 @@ function SurveyListPage() {
                         <div style={{ color: '#323533', paddingTop: '10px' }}>
                             <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Subscription</Typography>
                         </div>
-                        <Typography style={{ textAlign: 'start', paddingBottom: '30px' }} variant='subtitle2' >{subscriptionDetails?.subscriptionType}</Typography>
+                        <Typography style={{ textAlign: 'start' }} variant='subtitle2' >{subscriptionDetails?.name}</Typography>
+
+                        <div style={{ color: '#323533', paddingTop: '10px' }}>
+                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Billing cycle</Typography>
+                        </div>
+                        <Typography style={{ textAlign: 'start', paddingBottom: '30px' }} variant='subtitle2' >{subscriptionDetails?.billingCycle}</Typography>
+
                         <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Active survey limit</Typography>
                         <LinearProgressWithLabel
-                            value={subscriptionDetails?.totalActiveSurvey / subscriptionDetails?.activeSurveyLimit * 100}
-                            text={subscriptionDetails?.totalActiveSurvey + '/' + subscriptionDetails?.activeSurveyLimit}
+                            value={subscriptionDetails?.surveyLimitUsed / subscriptionDetails?.totalSurveyLimit * 100}
+                            text={subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}
                         />
                         <div style={{ marginTop: '40px' }} ></div>
-                        <Button sx={ButtonStyles.containedButton} variant="contained">Upgrade plan</Button>
+                        <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade plan</Button>
                         <Button sx={ButtonStyles.outlinedButton} onClick={handleOpenInviteModal} variant="outlined">Invite teammates</Button>
 
                     </div>
@@ -240,6 +247,7 @@ function SurveyListPage() {
                     <SurveysPanel
                         folder={selectedFolder}
                         folderId={selectedFolderId}
+                        update={handleUpdateComponent}
                     />
                 </div>
                 <InviteMemberModal open={openInviteModal} close={handleCloseInviteModal} />

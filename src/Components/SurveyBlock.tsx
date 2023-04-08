@@ -96,6 +96,7 @@ function SurveyBlock(props : any) {
             console.log('Something went wrong');
         }
         props.delete(deleteSurveyId);
+        props.update();
     }
 
     const handleSuccessChangeFolder = (newSurveyData : any) => {
@@ -103,6 +104,10 @@ function SurveyBlock(props : any) {
         props.rerender();
     }
 
+    const handleCloseSingleSurveyAction = () => {
+        setShowSurveyAction(false);
+        props.update();
+    }
 
     return (
         <Box sx={surveyBlockMainContainer} >
@@ -122,12 +127,12 @@ function SurveyBlock(props : any) {
                         delete={handleDeleteOptionClick} 
                         open={showSurveyAction}
                         survey={survey}
-                        close={() => setShowSurveyAction(false)}
+                        close={handleCloseSingleSurveyAction}
                     />
                     <Popover open={showTitle} text={'Disable,delete and more..'}/>
                 </Box>
             </Box>
-            <Box sx={{ padding: '15px', paddingBottom: '10px' }} >
+            <Box onClick={handleOpenSurvey} sx={{ padding: '15px', paddingBottom: '10px' }} >
                 <Box sx={{ display: 'flex' }} >
                     <Avatar sx={{ bgcolor: '#D81159', width: 24, height: 24, fontSize: 14 }}>{survey?.user_id}</Avatar>
                     <Typography variant='subtitle1' sx={{ fontSize: 14, marginLeft: '5px', color: '#454545' }} >
