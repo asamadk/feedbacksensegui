@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { USER_LOCAL_KEY } from '../Utils/Constants';
 import CustomAlert from './CustomAlert';
 import { useNavigate } from 'react-router';
+import FSLoader from './FSLoader';
 
 
 const surveyPageMainContainer = {
@@ -61,6 +62,7 @@ function SurveyListPage() {
     const [openAlert, setOpenAlert] = React.useState(false);
     const [alertMessage, setAlertMessage] = React.useState('');
     const [alertType, setAlertType] = React.useState('');
+    const [ loading , setLoading] = React.useState(false);
 
     useEffect(() => {
         getFolders();
@@ -68,7 +70,9 @@ function SurveyListPage() {
     }, []);
 
     const getSubscriptionDetails = async () => {
+        setLoading(true);
         let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(FeedbackUtils.getUserId()));
+        setLoading(false);
         const isValidated = FeedbackUtils.validateAPIResponse(data);
         if (isValidated === false) {
             return;
@@ -76,7 +80,6 @@ function SurveyListPage() {
         
         let resData: any[] = data.data;
         if (resData != null) {
-            // console.log("🚀 ~ file: SurveyListPage.tsx:76 ~ getSubscriptionDetails ~ resData:", resData)
             setSubscriptionDetail(resData);
         }
     }
@@ -89,7 +92,9 @@ function SurveyListPage() {
             setAlertMessage('Something went wrong, please contact the admin');
         }
 
+        setLoading(true);
         let folderRes = await axios.get(Endpoints.getFolders(orgId));
+        setLoading(false);
         const isValidated = FeedbackUtils.validateAPIResponse(folderRes);
         if (isValidated === false) {
             //something went wrong
@@ -253,6 +258,7 @@ function SurveyListPage() {
                 <InviteMemberModal open={openInviteModal} close={handleCloseInviteModal} />
                 <CreateFolder open={openCreateFolderModal} close={handleCloseCreateFolderModal} />
             </div>
+            <FSLoader show={loading} />
         </>
     )
 }

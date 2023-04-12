@@ -2,49 +2,71 @@ import { Box, Button, Typography } from '@mui/material'
 import axios from 'axios';
 import React, { useEffect, useRef } from 'react'
 import * as Endpoints from '../Utils/Endpoints';
+import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import { getColorSchemes } from '../Utils/Constants';
-import { getSurveyFromLocalStorage, getSurveyIdFromLocalStorage, validateAPIResponse } from '../Utils/FeedbackUtils';
+import { validateAPIResponse } from '../Utils/FeedbackUtils';
 import Notification from '../Utils/Notification';
+import FSLoader from './FSLoader';
+import PoweredBy from './PoweredBy';
 
 
-function SurveyThemeSelector() {
+function SurveyThemeSelector(props : any) {
 
   const snackbarRef :any = useRef(null);
+  const [ loading , setLoading] = React.useState(false);
 
   useEffect(() => {
-    populateSurveyDesign();
+    getSingleSurvey();
   },[]);
 
-  const [selectedTheme, setSelectedTheme] = React.useState<any>();
+  const [selectedTheme, setSelectedTheme] = React.useState<any>(getColorSchemes()[0]);
 
-  const populateSurveyDesign = () => {
-    const tempSurvey = getSurveyFromLocalStorage();
+  const getSingleSurvey = async () => {
+    setLoading(true);
+    let { data } = await axios.get(Endpoints.getSurveyDetails(props.surveyId));
+    setLoading(false);
+    const isValidated = FeedbackUtils.validateAPIResponse(data);
+    if (isValidated === false) {
+      return;
+    }
+    if (data != null) {
+      const tempSurvey = data.data;
+      populateSurveyDesign(tempSurvey);
+      
+    }
+  }
+
+  const populateSurveyDesign = (tempSurvey : any) => {
     if(tempSurvey != null){
       const surveyDesign = tempSurvey.survey_design_json;
       if(surveyDesign == null){
         return;
       }
       const design = JSON.parse(surveyDesign);
+      props.updateTheme(design.theme);
       setSelectedTheme(design.theme);
     }
   }
 
   const handleThemeClick = (colorScheme : any) => {    
     setSelectedTheme(colorScheme);
+    props.updateTheme(colorScheme);
+    snackbarRef?.current?.show(`${colorScheme.header} selected`,'success');
   }
 
   const handleSaveClick = async () => {
     const saveObj = {
       theme : selectedTheme
     }
-    const { data } = await axios.post(Endpoints.saveSurveyDesgin(getSurveyIdFromLocalStorage()),saveObj);
+    setLoading(true);
+    const { data } = await axios.post(Endpoints.saveSurveyDesgin(props.surveyId),saveObj);
+    setLoading(false);
+    
     const isValidated = validateAPIResponse(data);
     if(isValidated === false){
       return;
     }
-
-    console.log('save design :: data',data);
 
     if(data.statusCode !== 200){
       snackbarRef?.current?.show(data.message,'error');
@@ -56,7 +78,7 @@ function SurveyThemeSelector() {
   }
 
   return (
-    <Box sx={{ padding: '20px', overflowY: 'scroll', height: '100%' }}>
+    <Box sx={{ padding: '20px', overflowY: 'scroll', height: 'calc(100vh - 200px)' }}>
       <Box sx={{ textAlign: 'start', marginBottom: '40px' }} >
         <Box display={'flex'} justifyContent={'space-between'}>
           <Typography sx={{ color: '#f1f1f1', fontSize: '20px', marginBottom: '10px' }} >Selected theme</Typography>
@@ -77,7 +99,7 @@ function SurveyThemeSelector() {
               textSecond={selectedTheme?.text}
             />
       </Box>
-      <Box sx={{ textAlign: 'start', overflowY: 'scroll', height: '100%' }}  >
+      <Box sx={{ textAlign: 'start' }}  >
         <Typography sx={{ color: '#f1f1f1', fontSize: '20px', marginBottom: '10px' }} >All themes</Typography>
         {getColorSchemes().map(colorScheme => {
           return (
@@ -93,6 +115,7 @@ function SurveyThemeSelector() {
         })}
       </Box>
       <Notification ref={snackbarRef}/>
+      <FSLoader show={loading} />
     </Box>
   )
 }

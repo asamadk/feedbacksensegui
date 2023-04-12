@@ -76,6 +76,23 @@ export const getAllPlanList = () => {
     return BASE_URL + `/plan/list/all`;
 }
 
+export const createOrgForuser = (orgName : string) => {
+    return BASE_URL + `/org/create/${orgName}`;
+}
+
+export const getOrgList = () => {
+    return BASE_URL + `/org/list`;
+}
+
+export const pointOrgToUser = () => {
+    return BASE_URL + `/org/point`;
+}
+
+export const updateSurveyName = (surveyId : string) => {
+    return BASE_URL + `/survey/update/name/${surveyId}`;
+
+}
+
 // ********
 
 export const getSubscriptionDetail = (): string => {

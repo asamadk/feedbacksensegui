@@ -3,7 +3,6 @@ import { Typography } from '@mui/material'
 import { useLocation, useNavigate } from 'react-router';
 import MainHeaderIcons from '../HeaderComponents/MainHeaderIcons';
 import SurveyDetailHeader from '../HeaderComponents/SurveyDetailHeader';
-import { SURVEY_LOCAL_KEY } from '../Utils/Constants';
 
 const bodyStyle: {} = {
     backgroundColor: '#1E1E1E',
@@ -17,22 +16,30 @@ function Header(props : any) {
     let location = useLocation();
 
     const [showSurveyDetailHeader, setShowSurveyDetailHeader] = React.useState<Boolean>(false);
+    const [inOrgSelectionMode, setInOrgSelectionMode] = React.useState<Boolean>(false);
 
 
     React.useEffect(() => {
         let currentPath: string = location.pathname;
-        if (currentPath.includes('/survey/detail/')) {
-            setShowSurveyDetailHeader(true);
-        } else {
-            setShowSurveyDetailHeader(false);
+        if(currentPath.includes('/user/create/organization')){
+            setInOrgSelectionMode(true);
+        }else{
+            setInOrgSelectionMode(false);
+            if (currentPath.includes('/survey/detail/')) {
+                setShowSurveyDetailHeader(true);
+            } else {
+                setShowSurveyDetailHeader(false);
+            }
         }
     }, [location.pathname]);
 
 
 
     const handleRouteToHome = () => {
-        localStorage.removeItem(SURVEY_LOCAL_KEY);
-        navigate('/');
+        // localStorage.removeItem(SURVEY_LOCAL_KEY);
+        if(inOrgSelectionMode === false){
+            navigate('/');
+        }
     }
 
     return (
@@ -44,8 +51,8 @@ function Header(props : any) {
                     <Typography style={{ color: '#FFA500', fontSize: '30px' }} variant='h4'>Sense</Typography>
                 </div>
 
-                {props.loggedIn && showSurveyDetailHeader === false && <div><MainHeaderIcons /></div>}
-                {props.loggedIn && showSurveyDetailHeader === true && <div><SurveyDetailHeader tabset={0} /></div>}
+                {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === false && <div><MainHeaderIcons /></div>}
+                {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === true && <div><SurveyDetailHeader surveyId={props.surveyId} tabset={0} /></div>}
 
             </div>
 

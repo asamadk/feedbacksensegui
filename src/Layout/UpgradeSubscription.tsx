@@ -6,11 +6,13 @@ import axios from 'axios';
 import { getAllPlanList } from '../Utils/Endpoints';
 import { validateAPIResponse } from '../Utils/FeedbackUtils';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import FSLoader from '../Components/FSLoader';
 
 function UpgradeSubscription() {
 
     const [selectedPlanCycle, setSelectedPlanCycle] = useState('Yearly');
     const [surveyPlans , setSurveyPlans] = useState<any>();
+    const [ loading , setLoading] = React.useState(false);
 
     useEffect(() => {
         populatePlanCycle();
@@ -19,14 +21,16 @@ function UpgradeSubscription() {
 
     const getSurveyPlans = async() => {
 
+        setLoading(true);
         const { data } = await axios.get(getAllPlanList());
+        setLoading(false);
+        
         const isvalidated = validateAPIResponse(data);
         if(isvalidated === false){
             //TODO show error
         }
 
         if(data != null){
-            console.log("🚀 ~ file: UpgradeSubscription.tsx:28 ~ getSurveyPlans ~ data:", data.data)
             setSurveyPlans(data.data);
         }
     }
@@ -81,6 +85,7 @@ function UpgradeSubscription() {
             <Box display={'flex'} justifyContent={'space-between'} marginTop={5} >
                 {surveyPlans?.map((plan : any) => {return(<SurveyPlan key={plan.id} plan={plan} />);})}
             </Box>
+            <FSLoader show={loading} />
         </Box>
     )
 }

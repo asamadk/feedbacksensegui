@@ -9,6 +9,7 @@ import { Button, IconButton, MenuItem, Modal, Select, Typography } from '@mui/ma
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Box } from '@mui/system'
 import axios from 'axios';
+import FSLoader from '../Components/FSLoader';
 
 const typeContainer = {
     border: '1px #454545 solid',
@@ -22,6 +23,7 @@ function CreateSurveyModal(props: any) {
 
     const [surveyTypes, setSurveyTypes] = useState<any[]>([]);
     const [selectedSurveyType, setSelectedSurveyType] = useState('');
+    const [ loading , setLoading] = React.useState(false);
 
     useEffect(() => {
         init();
@@ -33,7 +35,9 @@ function CreateSurveyModal(props: any) {
     }
 
     const getSurveyType = async () => {
+        setLoading(true);
         let { data } = await axios.get(Endpoints.getSurveyTypes());
+        setLoading(false);
         const isValidated = FeedbackUtils.validateAPIResponse(data);
         if (isValidated === false) {
             return;
@@ -57,7 +61,9 @@ function CreateSurveyModal(props: any) {
     }
 
     const handleCreateSurvey = async () => {
+        setLoading(true);
         let { data } = await axios.post(Endpoints.createSurvey(selectedSurveyType));
+        setLoading(false);
         let isValidated = FeedbackUtils.validateAPIResponse(data);
 
         if(isValidated === false){
@@ -115,6 +121,7 @@ function CreateSurveyModal(props: any) {
                     </Box>
                 </Box>
             </Modal>
+            <FSLoader show={loading} />   
         </>
     )
 }

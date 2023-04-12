@@ -8,6 +8,8 @@ import { settingLayoutStyle, globalSettingSubContainers } from '../Styles/Layout
 import { getSurveyConfigData, saveSurveyConfig } from '../Utils/Endpoints';
 import { getSurveyIdFromLocalStorage } from '../Utils/FeedbackUtils';
 import Notification from '../Utils/Notification';
+import { useParams } from 'react-router';
+import FSLoader from '../Components/FSLoader';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -32,6 +34,8 @@ const CssTextField = styled(TextField)({
 
 function ConfigureSurvey() {
 
+  const { surveyId } : any = useParams();
+
   const snackbarRef :any = useRef(null);
 
   useEffect(() => {
@@ -42,10 +46,12 @@ function ConfigureSurvey() {
   const [showStopSurveyDate, setShowStopSurveyDate] = React.useState(false);
   const [showStopSurveyDateData, setShowStopSurveyDateData] = React.useState<string>();
   const [showStopSurveyNumberData, setShowStopSurveyNumberData] = React.useState<string>();
+  const [ loading , setLoading] = React.useState(false);
 
   const getSurveyConfig = async() => {
-    let surveyId = getSurveyIdFromLocalStorage();
+    setLoading(true);
     const { data } = await axios.get(getSurveyConfigData(surveyId));
+    setLoading(false);
     const isValidated = FeedbackUtils.validateAPIResponse(data);
     if (isValidated === false) {
         return;
@@ -53,6 +59,7 @@ function ConfigureSurvey() {
 
     if(data.data != null){
       let tempData = data.data;
+      console.log("🚀 ~ file: ConfigureSurvey.tsx:56 ~ getSurveyConfig ~ tempData:", tempData)
       if(tempData?.response_limit != null && tempData?.response_limit != '0'){
         setShowStopSurveyNumber(true);
         setShowStopSurveyNumberData(tempData?.response_limit?.toString());
@@ -68,6 +75,10 @@ function ConfigureSurvey() {
 
   const handleSaveClick = async() => {
     let saveObj : any = {};
+    const toContinue : boolean = validateSave();
+    if(toContinue === false){
+      return;
+    }
     if(showStopSurveyNumber === true){
       saveObj.stopCount = showStopSurveyNumberData;
     }
@@ -76,17 +87,32 @@ function ConfigureSurvey() {
       saveObj.stopTime = showStopSurveyDateData;
     }
 
+    setLoading(true);
     const { data } = await axios.post(
       saveSurveyConfig(getSurveyIdFromLocalStorage()),
       saveObj
     );
-
+    setLoading(false);
+    
     const isValidated = FeedbackUtils.validateAPIResponse(data);
     if (isValidated === false) {
         return;
     }
 
     snackbarRef?.current?.show('Configuration saved.','success');
+  }
+
+  const validateSave = () : boolean => {
+    if(showStopSurveyNumber === true && (showStopSurveyNumberData === '0' || showStopSurveyNumberData == null || showStopSurveyNumberData == '')){
+      snackbarRef?.current?.show('Please fill all the details before saving.','warning');
+      return false;
+    }
+
+    if(showStopSurveyDate === true &&  (showStopSurveyDateData == null || showStopSurveyNumberData == '')){
+      snackbarRef?.current?.show('Please fill all the details before saving.','warning');
+      return false;
+    }
+    return true;
   }
 
   return (
@@ -149,6 +175,7 @@ function ConfigureSurvey() {
         <Button onClick={handleSaveClick} sx={containedButton} style={{width : 'fit-content'}} >Save</Button>
       </Box>
       <Notification ref={snackbarRef}/>
+      <FSLoader show={loading} />
     </Box>
   )
 }

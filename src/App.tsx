@@ -1,9 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import './App.css';
 import Header from './Components/Header';
-import SurveyThemeSelector from './Components/SurveyThemeSelector';
 import AnalyzeSurvey from './Layout/AnalyzeSurvey';
 import ConfigureSurvey from './Layout/ConfigureSurvey';
 import CreateSurvey from './Layout/CreateSurvey';
@@ -14,8 +13,9 @@ import MainBody from './Layout/MainBody';
 import OrgSettings from './Layout/OrgSettings';
 import ShareSurvey from './Layout/ShareSurvey';
 import SurveySettings from './Layout/SurveySettings';
-import { SURVEY_LOCAL_KEY, USER_LOCAL_KEY } from './Utils/Constants';
 import UpgradeSubscription from './Layout/UpgradeSubscription';
+import LoginSuccess from './Layout/LoginSuccess';
+import { USER_LOCAL_KEY } from './Utils/Constants';
 
 const globalBodyStyle = {
   backgroundColor: '#1E1E1E',
@@ -23,7 +23,10 @@ const globalBodyStyle = {
 
 function App() {
 
+  let navigate = useNavigate();
+
   const [user, setUser] = useState(null);
+  const [currentSurveyId, setCurrentSurveyId] = useState('');
   const dataFetchedRef = useRef(false);
 
   const getUser = async () => {
@@ -33,12 +36,18 @@ function App() {
       if(data.data != null){
         localStorage.setItem(USER_LOCAL_KEY, JSON.stringify(data.data));
       }
-      localStorage.removeItem(SURVEY_LOCAL_KEY);
-      setUser(data.data);
+
+      const currentUser = data.data;
+      if(currentUser.organization_id == null || currentUser.organization_id === ''){
+        setUser(currentUser);
+        navigate('/user/create/organization');
+        return;
+      }
+      setUser(currentUser);
+      navigate('/');
     } catch (err) {
       console.log('Error in auth',err);
       localStorage.setItem(USER_LOCAL_KEY,'{}');
-      localStorage.removeItem(SURVEY_LOCAL_KEY);
     }
   };
 
@@ -48,9 +57,13 @@ function App() {
     dataFetchedRef.current = true;
 	}, []);
 
+  const handleUpdateSurveyId = (surveyId : string) => {
+    setCurrentSurveyId(surveyId);
+  }
+
   return (
     <div style={globalBodyStyle} className="App">
-      <Header loggedIn={user != null} />
+      <Header surveyId={currentSurveyId} loggedIn={user != null} />
       <Routes>
         <Route path='/' element={user ?  <MainBody /> : <Navigate to={'/login'} /> } />
         <Route path='/login' element={ user ?  <MainBody /> : <Login />} />
@@ -59,12 +72,13 @@ function App() {
         <Route path='/org/subscription' element={ user ? <OrgSettings tabset={2} /> : <Navigate to={'/login'}/>} />
         <Route path='/survey/global/settings/general' element={user ?  <SurveySettings tabset={0} /> : <Navigate to={'/login'}/> } />
         <Route path='/survey/global/settings/web' element={ user ? <SurveySettings tabset={1} /> : <Navigate to={'/login'}/> } />
-        <Route path='/survey/detail/create/:surveyId' element={ user ? <CreateSurvey /> : <Navigate to={'/login'}/> } />
+        <Route path='/survey/detail/create/:surveyId' element={ user ? <CreateSurvey updateSurveyId={handleUpdateSurveyId} /> : <Navigate to={'/login'}/> } />
         <Route path='/survey/detail/design/:surveyId' element={user ? <DesignPreview /> : <Navigate to={'/login'}/> } />
         <Route path='/survey/detail/share/:surveyId' element={user ? <ShareSurvey />  : <Navigate to={'/login'}/>  } />
         <Route path='/survey/detail/analyze/:surveyId' element={ user ? <AnalyzeSurvey /> : <Navigate to={'/login'}/>   } />
         <Route path='/survey/detail/configure/:surveyId' element={ user ? <ConfigureSurvey /> : <Navigate to={'/login'}/>    } />
         <Route path='/upgrade/plan' element={ user ? <UpgradeSubscription /> : <Navigate to={'/login'}/>    } />
+        <Route path='/user/create/organization' element={ <LoginSuccess />} />
       </Routes>
     </div>
   );

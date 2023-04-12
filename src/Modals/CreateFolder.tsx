@@ -7,6 +7,7 @@ import { USER_LOCAL_KEY } from '../Utils/Constants';
 import { authUser } from '../Utils/types';
 import { createFolder } from '../Utils/Endpoints';
 import axios from 'axios';
+import FSLoader from '../Components/FSLoader';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -36,6 +37,7 @@ const textFieldStyle = {
 function CreateFolder(props: any) {
 
     const [folderName , setFolderName] = useState<string>('');
+    const [ loading , setLoading] = React.useState(false);
 
     const handleCreateButtonClick = async () => {
         const currentUser : string | null = localStorage.getItem(USER_LOCAL_KEY);
@@ -45,7 +47,10 @@ function CreateFolder(props: any) {
         }
         const authenticatedUser : authUser = JSON.parse(currentUser);
         // console.log('Current user',authenticatedUser);
+        setLoading(true);
         const { data } = await axios.post(createFolder(authenticatedUser.organization_id,folderName), { withCredentials: true });
+        setLoading(false);
+        
         if(data.statusCode === 200){
             props.close('save');
         }else{
@@ -89,6 +94,7 @@ function CreateFolder(props: any) {
                     </Box>
                 </Box>
             </Modal>
+            <FSLoader show={loading} />
         </>
     )
 }

@@ -13,6 +13,7 @@ import CustomChip from './CustomChip';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { deleteSurvey } from '../Utils/Endpoints';
+import FSLoader from './FSLoader';
 
 const surveyBlockMainContainer = {
     border: '1px #454545 solid',
@@ -34,6 +35,7 @@ function SurveyBlock(props : any) {
     const [showChangeFolderModal , setShowChangeFolderModal] = React.useState(false);
     const [changeFolderSurveyId, setChangeFolderSurveyId] = React.useState('')
     const [deleteSurveyId , setDeleteSurveyId] = React.useState('');
+    const [ loading , setLoading] = React.useState(false);
 
     const handleTextHighlight = (e: any) => {
         e.target.style.color = '#FFA500';
@@ -90,7 +92,9 @@ function SurveyBlock(props : any) {
     }
 
     const handleDeleteSurvey = async () => {
+        setLoading(true);
         let { data } = await axios.post(deleteSurvey(deleteSurveyId));
+        setLoading(false);
         if(data.statusCode !== 200){
             //TODO show error
             console.log('Something went wrong');
@@ -160,6 +164,8 @@ function SurveyBlock(props : any) {
                 callback={handleSuccessButtonClick}
             />
             <ChangeFolderModal callback={handleSuccessChangeFolder} surveyId={changeFolderSurveyId} close={() => setShowChangeFolderModal(false)}  open={showChangeFolderModal} />
+            <FSLoader show={loading} />
+
         </Box>
     )
 }

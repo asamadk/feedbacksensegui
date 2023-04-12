@@ -11,6 +11,7 @@ import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import SurveyBlock from './SurveyBlock';
 import axios from 'axios';
 import CreateSurveyModal from '../Modals/CreateSurveyModal';
+import FSLoader from './FSLoader';
 
 const buttonContainerStyles = {
     marginTop: '10px',
@@ -48,6 +49,7 @@ function SurveysPanel(props: any) {
     const [selectedSurveyType, setSelectedSurveyType] = useState<string>('0');
     const [surveyTypes, setSurveyTypes] = useState<any[]>([]);
     const [openCreateSurvey, setOpenCreateSurvey] = useState(false);
+    const [ loading , setLoading] = React.useState(false);
 
     useEffect(() => {
         getSurveys();
@@ -69,7 +71,9 @@ function SurveysPanel(props: any) {
     }
 
     const getSurveyTypes = async (): Promise<void> => {
+        setLoading(true);
         let { data } = await axios.get(Endpoints.getSurveyTypes());
+        setLoading(false);
         const isValidated = FeedbackUtils.validateAPIResponse(data);
         if (isValidated === false) {
             return;
@@ -86,7 +90,9 @@ function SurveysPanel(props: any) {
 
     const getUserList = async (): Promise<void> => {
         try {
+            setLoading(true);
             let { data } = await axios.get(Endpoints.getUserList(FeedbackUtils.getOrgId()));
+            setLoading(false);
             const isValidated = FeedbackUtils.validateAPIResponse(data);
             if (isValidated === false) {
                 return;
@@ -108,8 +114,9 @@ function SurveysPanel(props: any) {
         if (orgId === '') {
             //TODO : show error;
         }
-
+        setLoading(true);
         let { data } = await axios.get(Endpoints.getSurveyList(orgId));
+        setLoading(false);
         const isValidated = FeedbackUtils.validateAPIResponse(data);
         if (isValidated === false) {
             return;
@@ -241,6 +248,7 @@ function SurveysPanel(props: any) {
                 ))}
             </Grid>
             <CreateSurveyModal surveys={surveys}  open={openCreateSurvey} close={handleCloseCreateNewSurvey} />
+            <FSLoader show={loading} />
         </Box>
     )
 }

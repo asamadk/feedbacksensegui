@@ -9,11 +9,13 @@ import { getOrgId } from '../Utils/FeedbackUtils';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import * as Endpoints from '../Utils/Endpoints';
 import axios from 'axios';
+import FSLoader from '../Components/FSLoader';
 
 function ChangeFolderModal(props: any) {
 
     const [folderList, setFolderList] = React.useState<any[]>([]);
     const [selectedFolder, setSelectedFolder] = React.useState<string>('0');
+    const [ loading , setLoading] = React.useState(false);
 
 
     useEffect(() => {
@@ -26,7 +28,10 @@ function ChangeFolderModal(props: any) {
             //TODO show error
         }
 
+        setLoading(true);
         let folderRes = await axios.get(Endpoints.getFolders(orgId));
+        setLoading(false);
+
         const isValidated = FeedbackUtils.validateAPIResponse(folderRes);
         if (isValidated === false) {
             //something went wrong
@@ -52,10 +57,10 @@ function ChangeFolderModal(props: any) {
             return;
         }
         let surveyId = props.surveyId;
-        console.log('Survey id ', surveyId);
-        console.log('Folder id ', selectedFolder);
 
+        setLoading(true);
         let { data } = await axios.post(Endpoints.moveSurveyFolder(surveyId,selectedFolder));
+        setLoading(false);
 
         if(FeedbackUtils.validateAPIResponse(data) === false){
             //TODO show error
@@ -112,6 +117,7 @@ function ChangeFolderModal(props: any) {
                     </Box>
                 </Box>
             </Modal>
+            <FSLoader show={loading} />
         </>
     )
 }

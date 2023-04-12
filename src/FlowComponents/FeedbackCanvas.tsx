@@ -98,6 +98,7 @@ function FeedbackCanvas(props: any) {
     const deleteNode = (id: string) => {
         if (id != null) {
             setNodes(nds => nds.filter(node => node.id !== id));
+            setEdges(edgs => edgs.filter(edgs => (edgs.source !== id &&  edgs.target !== id) ))
         }
     }
 

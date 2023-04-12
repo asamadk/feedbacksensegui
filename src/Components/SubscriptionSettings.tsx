@@ -7,6 +7,7 @@ import CustomChip from './CustomChip'
 import * as LayoutStyles from '../Styles/LayoutStyles'
 import axios from 'axios'
 import { useNavigate } from 'react-router';
+import FSLoader from './FSLoader';
 
 
 const subscriptionSubContainer = {
@@ -31,6 +32,7 @@ function SubscriptionSettings() {
 
     let navigate = useNavigate();
 
+    const [ loading , setLoading] = React.useState(false);
     const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
 
     useEffect(() => {
@@ -38,7 +40,9 @@ function SubscriptionSettings() {
     },[]);
 
     const getSubscriptionDetails = async () => {
+        setLoading(true);
         let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(FeedbackUtils.getUserId()));
+        setLoading(false);
         const isValidated = FeedbackUtils.validateAPIResponse(data);
         if (isValidated === false) {
             return;
@@ -104,6 +108,7 @@ function SubscriptionSettings() {
                     <Typography color={'#454545'} >{subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}</Typography>
                 </Box>
             </Box>
+            <FSLoader show={loading} />
         </Box>
     )
 }

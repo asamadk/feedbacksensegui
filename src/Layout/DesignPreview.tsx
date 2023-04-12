@@ -1,4 +1,4 @@
-import { Box, Button, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
+import { Box, Button, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
 import React, { useRef } from 'react'
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import LaptopIcon from '@mui/icons-material/Laptop';
@@ -6,7 +6,8 @@ import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import CustomTabSet from '../Components/CustomTabSet';
 import SurveyThemeSelector from '../Components/SurveyThemeSelector';
 import EmailSurveyTemplate from '../Components/EmailSurveyTemplate';
-import Notification from '../Utils/Notification';
+import { useParams } from 'react-router';
+import PoweredBy from '../Components/PoweredBy';
 
 const tabsetList = [
     { id: 1, name: 'THEMES' },
@@ -21,7 +22,9 @@ const localNavbar = {
 }
 
 function DesignPreview() {
+    const { surveyId } = useParams();
 
+  const [selectedTheme, setSelectedTheme] = React.useState<any>();
     const [tabset, setTabset] = React.useState(0);
     const [devices, setDevices] = React.useState('phone');
 
@@ -38,6 +41,10 @@ function DesignPreview() {
         setTabset(value);
     }
 
+    const rerenderSelectedTheme = (themeData : any) => {
+        setSelectedTheme(themeData);
+        console.log("🚀 ~ file: DesignPreview.tsx:46 ~ rerenderSelectedTheme ~ themeData:", themeData)
+    }
 
     return (
         <Box sx={{ backgroundColor: '#1E1E1E', height: 'calc(100vh - 69px)',overflowY : 'hidden' }} >
@@ -64,12 +71,12 @@ function DesignPreview() {
             </Box>
             <Box sx={{display : 'flex',justifyContent : 'center'}} >
                 <Box width={'35%'} >
-                    {tabset === 0 &&  <SurveyThemeSelector/>}
+                    {tabset === 0 &&  <SurveyThemeSelector updateTheme={rerenderSelectedTheme} surveyId={surveyId} />}
                     {tabset === 1 &&  <EmailSurveyTemplate/>}
                 </Box>
-                <Box width={'65%'} height={'calc(100vh - 134px)'} sx={{backgroundColor : '#F1F1F1'}} >
-                    <HelpCenterIcon sx={{color : '#FFA500',marginTop : '30%'}} />
-                    <Typography fontSize={28} >Nothing to see here yet. Add your first question first!</Typography>
+                <Box width={'65%'} height={'calc(100vh - 134px)'} sx={{backgroundColor : selectedTheme?.color[0]}} >
+                    <SelectedThemeTest selectedTheme={selectedTheme} />
+                    <PoweredBy/>
                 </Box>
             </Box>
         </Box>
@@ -77,3 +84,27 @@ function DesignPreview() {
 }
 
 export default DesignPreview;
+
+function SelectedThemeTest( {selectedTheme} : any){
+    return(
+        <Box sx={{position: 'relative',top: '50%',left: '50%',transform: 'translate(-50%, -50%)',width : '70%'}} >
+            <Box margin={'20px'} >
+                <TextField 
+                    value={selectedTheme?.header} 
+                    size='small' 
+                    sx={{width : '60%', color : selectedTheme?.textColor}} >    
+                </TextField>
+            </Box>
+            <Box>
+            <Button 
+                style={{
+                    width : 'fit-content', 
+                    marginRight : '15px', 
+                    backgroundColor:selectedTheme?.color[1],
+                    color : selectedTheme?.textColor
+                }} 
+                variant="outlined">Cancel</Button>
+            </Box>
+        </Box>
+    )
+}

@@ -4,6 +4,7 @@ import React, { useRef } from 'react'
 import { disableSurvey, enableSurvey, shareSurvey } from '../Utils/Endpoints'
 import Notification from '../Utils/Notification'
 import CustomAlert from './CustomAlert'
+import FSLoader from './FSLoader'
 
 const surveyActionContainer = {
     position: 'absolute',
@@ -17,6 +18,8 @@ const surveyActionContainer = {
 }
 
 function SingleSurveyAction(props: any) {
+
+  const [ loading , setLoading] = React.useState(false);
 
     const snackbarRef: any = useRef(null);
 
@@ -38,7 +41,9 @@ function SingleSurveyAction(props: any) {
 
         if (props?.survey?.is_published === 1) {
             try {
+                setLoading(true);
                 let { data } = await axios.post(disableSurvey(props?.survey?.id));
+                setLoading(false);
                 if (data.statusCode !== 200) {                
                     snackbarRef?.current?.show(data.message, 'error');
                     return;
@@ -46,11 +51,14 @@ function SingleSurveyAction(props: any) {
                 snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
                 surveyData.is_published = 0;
             } catch (error) {
+                setLoading(false);
                 snackbarRef?.current?.show('Something went wrong', 'error');
             }
         } else {
             try {
+                setLoading(true);
                 let { data } = await axios.post(enableSurvey(props?.survey?.id));
+                setLoading(false);
                 if (data.statusCode !== 200) {
                     snackbarRef?.current?.show(data.message, 'error');
                     return;
@@ -60,6 +68,7 @@ function SingleSurveyAction(props: any) {
                     surveyData.is_published = 1;
                 }
             } catch (error) {
+                setLoading(false);
                 snackbarRef?.current?.show('Something went wrong', 'error');
             }
         }
@@ -118,6 +127,8 @@ function SingleSurveyAction(props: any) {
                 </Box>
             }
           <Notification ref={snackbarRef} />
+          <FSLoader show={loading} />
+
         </>
     )
 }

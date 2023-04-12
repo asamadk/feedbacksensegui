@@ -15,6 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import { SURVEY_LOCAL_KEY } from '../Utils/Constants';
 import Notification from '../Utils/Notification';
+import FSLoader from '../Components/FSLoader';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -37,7 +38,7 @@ const CssTextField = styled(TextField)({
   color: 'white'
 });
 
-function CreateSurvey() {
+function CreateSurvey(props : any) {
 
   const snackbarRef: any = useRef(null);
   const { surveyId } = useParams();
@@ -49,13 +50,16 @@ function CreateSurvey() {
   const [componentConfig, setComponentConfig] = React.useState<Map<string, object>>(new Map());
   const [surveyDetail, setSurveyDetail] = React.useState<any>();
   const [showSurveyName, setShowSurveyName] = React.useState(true);
+  const [ loading , setLoading] = React.useState(false);
 
   useEffect(() => {
     getSingleSurvey();
   }, [])
 
   const getSingleSurvey = async () => {
+    setLoading(true);
     let { data } = await axios.get(Endpoints.getSurveyDetails(surveyId));
+    setLoading(false);
     const isValidated = FeedbackUtils.validateAPIResponse(data);
     if (isValidated === false) {
       return;
@@ -65,7 +69,7 @@ function CreateSurvey() {
       if (data?.data?.workflows != null && data?.data.workflows.length > 0) {
         setSurveyFlow(data?.data?.workflows[0]);
       }
-      localStorage.setItem(SURVEY_LOCAL_KEY, JSON.stringify(data.data));
+      props.updateSurveyId(data.data.id)
     }
   }
 
@@ -117,7 +121,9 @@ function CreateSurvey() {
   }
 
   const saveFlow = async (flow: any) => {
+    setLoading(true);
     const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyDetail.id), flow);
+    setLoading(false);
     const isValidated = FeedbackUtils.validateAPIResponse(data);
     if (isValidated === false) {
       return;
@@ -138,13 +144,25 @@ function CreateSurvey() {
     setShowSurveyName(true);
   }
 
-  const handleSaveNameClick = () => {
+  const handleSaveNameClick = async () => {
     snackbarRef?.current?.show('Survey name updated.', 'success');
+    const payload = {
+      surveyName: surveyDetail.name
+    }
+    setLoading(true);
+    const { data } = await axios.post(Endpoints.updateSurveyName(surveyDetail.id), payload)
+    setLoading(false);
+    const isValidated = FeedbackUtils.validateAPIResponse(data);
+    if (isValidated === false) {
+      snackbarRef?.current?.show('Something went wrong.', 'error');
+      return;
+    }
+
     handleCloseEditName();
   }
 
-  const handleFlowNameChange = (e : any) => {
-    let tempSurveyDetail = surveyDetail;
+  const handleFlowNameChange = (e: any) => {
+    let tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
     tempSurveyDetail.name = e.target.value;
     setSurveyDetail(tempSurveyDetail);
   }
@@ -155,7 +173,7 @@ function CreateSurvey() {
         <Box display={'flex'} >
           {showSurveyName &&
             <Typography
-              style={{ position: 'relative', top: '15px', paddingLeft: '10px', cursor: 'pointer', fontSize: '17px' }}
+              style={{ position: 'relative', top: '15px', paddingLeft: '20px', cursor: 'pointer', fontSize: '17px' }}
               color={'#f1f1f1'} >
               {surveyDetail?.name}
             </Typography>
@@ -172,7 +190,7 @@ function CreateSurvey() {
               variant="outlined"
               size='small'
               onChange={(e) => handleFlowNameChange(e)}
-              style={{ width: '300px', paddingTop : '10px', paddingLeft : '10px' }}
+              style={{ width: '300px', paddingTop: '5px', paddingLeft: '10px' }}
             />
           }
           {
@@ -214,6 +232,7 @@ function CreateSurvey() {
       />
 
       <Notification ref={snackbarRef} />
+      <FSLoader show={loading} />
     </Box>
   )
 }

@@ -29,7 +29,7 @@ function SurveyDetailHeader(props :any) {
     let navigate = useNavigate();
 
     const handleRouteToHome = () => {
-        localStorage.removeItem(SURVEY_LOCAL_KEY);
+        // localStorage.removeItem(SURVEY_LOCAL_KEY);
         navigate('/');
     }
 
@@ -37,22 +37,16 @@ function SurveyDetailHeader(props :any) {
 
     const changetabset = (value: number) => {
         setTabset(value);
-        let surveyData = localStorage.getItem(SURVEY_LOCAL_KEY);
-        if(surveyData == null){
-            navigate('/');
-            return;
-        }
-        const surveyDataObj = JSON.parse(surveyData);
         if(value === 0){
-            navigate('/survey/detail/create/'+surveyDataObj.id);
+            navigate('/survey/detail/create/'+props.surveyId);
         }else if(value === 1){
-            navigate('/survey/detail/design/'+surveyDataObj.id);
+            navigate('/survey/detail/design/'+props.surveyId);
         }else if(value === 2){
-            navigate('/survey/detail/configure/'+surveyDataObj.id);
+            navigate('/survey/detail/configure/'+props.surveyId);
         }else if(value === 3){
-            navigate('/survey/detail/share/'+surveyDataObj.id);
+            navigate('/survey/detail/share/'+props.surveyId);
         }else if(value === 4){
-            navigate('/survey/detail/analyze/'+surveyDataObj.id);
+            navigate('/survey/detail/analyze/'+props.surveyId);
         }
     }
 
