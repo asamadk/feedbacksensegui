@@ -1,53 +1,57 @@
-import { Box, Button, ButtonGroup, IconButton, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+import { Box, Button, ButtonGroup, Divider, IconButton, Typography } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import * as LayoutStyles from '../Styles/LayoutStyles';
 import axios from 'axios';
 import { getAllPlanList } from '../Utils/Endpoints';
-import { validateAPIResponse } from '../Utils/FeedbackUtils';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FSLoader from '../Components/FSLoader';
+import Notification from '../Utils/Notification';
 
 function UpgradeSubscription() {
 
+    const snackbarRef: any = useRef(null);
+
     const [selectedPlanCycle, setSelectedPlanCycle] = useState('Yearly');
-    const [surveyPlans , setSurveyPlans] = useState<any>();
-    const [ loading , setLoading] = React.useState(false);
+    const [surveyPlans, setSurveyPlans] = useState<any>();
+    const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
         populatePlanCycle();
         getSurveyPlans();
-    },[]);
+    }, []);
 
-    const getSurveyPlans = async() => {
-
-        setLoading(true);
-        const { data } = await axios.get(getAllPlanList());
-        setLoading(false);
-        
-        const isvalidated = validateAPIResponse(data);
-        if(isvalidated === false){
-            //TODO show error
-        }
-
-        if(data != null){
-            setSurveyPlans(data.data);
+    const getSurveyPlans = async () => {
+        try {
+            setLoading(true);
+            const { data } = await axios.get(getAllPlanList());
+            setLoading(false);
+    
+            if (data.statusCode !== 200) {                
+                snackbarRef?.current?.show(data?.message, 'error');
+                return;
+            }
+    
+            if (data != null) {
+                setSurveyPlans(data.data);
+            }
+        } catch (error : any ) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
         }
     }
 
     const populatePlanCycle = () => {
         document.querySelectorAll<HTMLElement>('.cycle').forEach(element => {
-            if(element.id === selectedPlanCycle){
+            if (element.id === selectedPlanCycle) {
                 element.style.backgroundColor = '#1976D2'
                 element.style.color = '#f1f1f1';
-            }else{
+            } else {
                 element.style.background = '#1E1E1E';
                 element.style.color = '#1976d2';
             }
         });
     }
 
-    const handleButtonClick = (e : any) => {
+    const handleButtonClick = (e: any) => {
         const key = e?.target.id;
         setSelectedPlanCycle(key);
         document.querySelectorAll<HTMLElement>('.cycle').forEach(element => {
@@ -70,7 +74,7 @@ function UpgradeSubscription() {
     ];
 
     return (
-        <Box sx={LayoutStyles.settingLayoutStyle}  overflow={'scroll'}>
+        <Box sx={LayoutStyles.settingLayoutStyle} overflow={'scroll'}>
             <Box textAlign={'start'} display={'flex'} justifyContent={'space-between'} >
                 <IconButton color='warning' onClick={handleBackButtonClick} >
                     <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
@@ -83,24 +87,52 @@ function UpgradeSubscription() {
             <Box>
             </Box>
             <Box display={'flex'} justifyContent={'space-between'} marginTop={5} >
-                {surveyPlans?.map((plan : any) => {return(<SurveyPlan key={plan.id} plan={plan} />);})}
+                {surveyPlans?.map((plan: any) => { return (<SurveyPlan duration={selectedPlanCycle} key={plan.id} plan={plan} />); })}
             </Box>
             <FSLoader show={loading} />
+            <Notification ref={snackbarRef} />
         </Box>
     )
 }
 
 export default UpgradeSubscription
 
-function SurveyPlan({ plan } : any ){
-    return(
-        <Box padding={'10px'} width={'30%'} border={'1px #454545 solid'} borderRadius={'5px'}>
+function SurveyPlan({ plan,duration }: any) {
+
+    const [planDesc, setPlanDesc] = useState<any>();
+
+    useEffect(() => {
+        populateDescription();
+    }, []);
+
+    const populateDescription = () => {
+        const planDescStr: string = plan.description;
+        setPlanDesc(JSON.parse(planDescStr))
+    }
+
+    return (
+        <Box padding={'10px'} marginRight={'10px'} width={'33%'} border={'1px #454545 solid'} borderRadius={'5px'}>
             <Typography color={'#f1f1f1'} fontSize={'24px'} marginBottom={'30px'} >{plan.name}</Typography>
-            <Typography color={'#454545'} marginBottom={'20px'} >{'Basic description it will change later'}</Typography>
-            <Box display={'flex'} color={'#f1f1f1'} textAlign={'start'} >
-                <AttachMoneyIcon sx={{ width : '34px', padding : 0}} />
-                <Typography sx={{ fontSize : '34px'}} >{plan.price_cents}</Typography>
+            <Box height={'100px'} >
+                <Typography color={'#808080'} marginBottom={'20px'} >{planDesc?.description}</Typography>
             </Box>
+            <Box display={'flex'} justifyContent={'center'} color={'#f1f1f1'} >
+                <Typography sx={{ fontSize: '34px' }} >{'$'}</Typography>
+                <Typography sx={{ fontSize: '34px' }} >{plan.price_cents}</Typography>
+                <Box sx={{marginTop : '15px', marginLeft : '10px'}} >
+                    <Typography sx={{ fontSize: '13px',color : '#808080' }} >{`Billed : ${duration}`}</Typography>
+                </Box>
+            </Box>
+            <Button style={{ marginBottom: '30px',width : '100%', marginTop : '20px' }} color='primary'  variant="contained">Upgrade</Button>
+            <Divider sx={{background : '#808080',marginBottom: '30px'}} />
+            {planDesc?.features?.map((feat: string, index : number) => {
+                return (
+                    <Box >
+                        <Typography color={'#808080'} fontSize={'14px'} marginBottom={'15px'} textAlign={'start'} >{feat}</Typography>
+                        {index === 3 && <Divider sx={{background : '#808080',marginBottom : '15px'}} />}
+                    </Box>
+                )
+            })}
         </Box>
     )
 }

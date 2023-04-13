@@ -5,7 +5,6 @@ import * as Endpoints from '../Utils/Endpoints';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import { getColorSchemes } from '../Utils/Constants';
-import { validateAPIResponse } from '../Utils/FeedbackUtils';
 import Notification from '../Utils/Notification';
 import FSLoader from './FSLoader';
 import PoweredBy from './PoweredBy';
@@ -23,17 +22,22 @@ function SurveyThemeSelector(props : any) {
   const [selectedTheme, setSelectedTheme] = React.useState<any>(getColorSchemes()[0]);
 
   const getSingleSurvey = async () => {
-    setLoading(true);
-    let { data } = await axios.get(Endpoints.getSurveyDetails(props.surveyId));
-    setLoading(false);
-    const isValidated = FeedbackUtils.validateAPIResponse(data);
-    if (isValidated === false) {
-      return;
-    }
-    if (data != null) {
-      const tempSurvey = data.data;
-      populateSurveyDesign(tempSurvey);
+    try {
+      setLoading(true);
+      let { data } = await axios.get(Endpoints.getSurveyDetails(props.surveyId));
+      setLoading(false);
       
+      if(data?.statusCode !== 200){
+        snackbarRef?.current?.show(data?.message, 'error');
+      }
+
+      if (data != null) {
+        const tempSurvey = data.data;
+        populateSurveyDesign(tempSurvey);
+        
+      }
+    } catch (error : any ) {
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
     }
   }
 
@@ -56,24 +60,21 @@ function SurveyThemeSelector(props : any) {
   }
 
   const handleSaveClick = async () => {
-    const saveObj = {
-      theme : selectedTheme
+    try {
+      const saveObj = {
+        theme : selectedTheme
+      }
+      setLoading(true);
+      const { data } = await axios.post(Endpoints.saveSurveyDesgin(props.surveyId),saveObj);
+      setLoading(false);
+      if(data.statusCode !== 200){
+        snackbarRef?.current?.show(data.message,'error');
+        return;
+      }
+      snackbarRef?.current?.show('Design saved.','success'); 
+    } catch (error : any ) {
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
     }
-    setLoading(true);
-    const { data } = await axios.post(Endpoints.saveSurveyDesgin(props.surveyId),saveObj);
-    setLoading(false);
-    
-    const isValidated = validateAPIResponse(data);
-    if(isValidated === false){
-      return;
-    }
-
-    if(data.statusCode !== 200){
-      snackbarRef?.current?.show(data.message,'error');
-      return;
-    }
-
-    snackbarRef?.current?.show('Design saved.','success');
 
   }
 

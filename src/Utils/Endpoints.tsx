@@ -90,7 +90,10 @@ export const pointOrgToUser = () => {
 
 export const updateSurveyName = (surveyId : string) => {
     return BASE_URL + `/survey/update/name/${surveyId}`;
+}
 
+export const deleteFolder = (folderId : string) => {
+    return BASE_URL + `/folder/delete/${folderId}`;
 }
 
 // ********

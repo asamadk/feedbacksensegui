@@ -23,7 +23,6 @@ function SingleSurveyAction(props: any) {
 
     const snackbarRef: any = useRef(null);
 
-
     const highlightTextBackGround = (e: any) => {
         e.target.style.borderRadius = '5px'
         e.target.style.backgroundColor = '#454545';
@@ -45,14 +44,14 @@ function SingleSurveyAction(props: any) {
                 let { data } = await axios.post(disableSurvey(props?.survey?.id));
                 setLoading(false);
                 if (data.statusCode !== 200) {                
-                    snackbarRef?.current?.show(data.message, 'error');
+                    snackbarRef?.current?.show(data?.message, 'error');
                     return;
                 }
                 snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
                 surveyData.is_published = 0;
-            } catch (error) {
+            } catch (error : any ) {
                 setLoading(false);
-                snackbarRef?.current?.show('Something went wrong', 'error');
+                snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             }
         } else {
             try {
@@ -67,9 +66,9 @@ function SingleSurveyAction(props: any) {
                 if(data.success === true){
                     surveyData.is_published = 1;
                 }
-            } catch (error) {
+            } catch (error : any) {
                 setLoading(false);
-                snackbarRef?.current?.show('Something went wrong', 'error');
+                snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             }
         }
         props.close();

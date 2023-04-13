@@ -4,7 +4,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import * as Types from '../Utils/types' 
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Popover from './Popover';
 import SingleSurveyAction from './SingleSurveyAction';
 import GenericModal from '../Modals/GenericModal';
@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { deleteSurvey } from '../Utils/Endpoints';
 import FSLoader from './FSLoader';
+import Notification from '../Utils/Notification';
 
 const surveyBlockMainContainer = {
     border: '1px #454545 solid',
@@ -25,6 +26,7 @@ const surveyBlockMainContainer = {
 function SurveyBlock(props : any) {
 
     let navigation = useNavigate();
+    const snackbarRef: any = useRef(null);
 
     const [survey , setSurvey] = React.useState<any>(props.survey);
     const [genericModalObj, setGenericModalObj] = React.useState<Types.genericModalData>();
@@ -96,9 +98,10 @@ function SurveyBlock(props : any) {
         let { data } = await axios.post(deleteSurvey(deleteSurveyId));
         setLoading(false);
         if(data.statusCode !== 200){
-            //TODO show error
-            console.log('Something went wrong');
+            snackbarRef?.current?.show(data?.message, 'error');
+            return;
         }
+        
         props.delete(deleteSurveyId);
         props.update();
     }
@@ -165,7 +168,7 @@ function SurveyBlock(props : any) {
             />
             <ChangeFolderModal callback={handleSuccessChangeFolder} surveyId={changeFolderSurveyId} close={() => setShowChangeFolderModal(false)}  open={showChangeFolderModal} />
             <FSLoader show={loading} />
-
+            <Notification ref={snackbarRef} />
         </Box>
     )
 }

@@ -49,57 +49,61 @@ function ConfigureSurvey() {
   const [ loading , setLoading] = React.useState(false);
 
   const getSurveyConfig = async() => {
-    setLoading(true);
-    const { data } = await axios.get(getSurveyConfigData(surveyId));
-    setLoading(false);
-    const isValidated = FeedbackUtils.validateAPIResponse(data);
-    if (isValidated === false) {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(getSurveyConfigData(surveyId));
+      setLoading(false);
+      if(data.statusCode !== 200){
+        snackbarRef?.current?.show(data?.message, 'error');
         return;
-    }
-
-    if(data.data != null){
-      let tempData = data.data;
-      console.log("🚀 ~ file: ConfigureSurvey.tsx:56 ~ getSurveyConfig ~ tempData:", tempData)
-      if(tempData?.response_limit != null && tempData?.response_limit != '0'){
-        setShowStopSurveyNumber(true);
-        setShowStopSurveyNumberData(tempData?.response_limit?.toString());
       }
 
-      if(tempData?.time_limit != null){
-        setShowStopSurveyDate(true)
-        setShowStopSurveyDateData(tempData?.time_limit);
+      if(data.data != null){
+        let tempData = data.data;
+        if(tempData?.response_limit != null && tempData?.response_limit != '0'){
+          setShowStopSurveyNumber(true);
+          setShowStopSurveyNumberData(tempData?.response_limit?.toString());
+        }
+  
+        if(tempData?.time_limit != null){
+          setShowStopSurveyDate(true)
+          setShowStopSurveyDateData(tempData?.time_limit);
+        }
       }
+    } catch (error : any ) {
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
     }
 
   }
 
   const handleSaveClick = async() => {
-    let saveObj : any = {};
-    const toContinue : boolean = validateSave();
-    if(toContinue === false){
-      return;
-    }
-    if(showStopSurveyNumber === true){
-      saveObj.stopCount = showStopSurveyNumberData;
-    }
 
-    if(showStopSurveyDate === true){
-      saveObj.stopTime = showStopSurveyDateData;
-    }
-
-    setLoading(true);
-    const { data } = await axios.post(
-      saveSurveyConfig(getSurveyIdFromLocalStorage()),
-      saveObj
-    );
-    setLoading(false);
-    
-    const isValidated = FeedbackUtils.validateAPIResponse(data);
-    if (isValidated === false) {
+    try {
+      let saveObj : any = {};
+      const toContinue : boolean = validateSave();
+      if(toContinue === false){
         return;
+      }
+      if(showStopSurveyNumber === true){
+        saveObj.stopCount = showStopSurveyNumberData;
+      }
+      if(showStopSurveyDate === true){
+        saveObj.stopTime = showStopSurveyDateData;
+      }
+      setLoading(true);
+      const { data } = await axios.post(
+        saveSurveyConfig(getSurveyIdFromLocalStorage()),
+        saveObj
+      );
+      setLoading(false);
+      if(data.statusCode !== 200){
+        snackbarRef?.current?.show(data?.message, 'error');
+        return;
+      }
+      snackbarRef?.current?.show('Configuration saved.','success');
+    } catch (error : any ) {
+      snackbarRef?.current?.show(error?.response?.data?.statusCode,'error');
     }
-
-    snackbarRef?.current?.show('Configuration saved.','success');
   }
 
   const validateSave = () : boolean => {

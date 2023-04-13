@@ -1,5 +1,5 @@
 import { Button, IconButton, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import InviteMemberModal from '../Modals/InviteMemberModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 import * as ButtonStyles from '../Styles/ButtonStyle'
@@ -9,10 +9,10 @@ import * as Endpoints from '../Utils/Endpoints';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { USER_LOCAL_KEY } from '../Utils/Constants';
 import CustomAlert from './CustomAlert';
 import { useNavigate } from 'react-router';
 import FSLoader from './FSLoader';
+import Notification from '../Utils/Notification';
 
 
 const surveyPageMainContainer = {
@@ -52,6 +52,7 @@ const folderText = {
 function SurveyListPage() {
 
     let navigate = useNavigate();
+    const snackbarRef: any = useRef(null);
 
     const [folderList, setFolderList] = React.useState<any[]>([]);
     const [openInviteModal, setOpeninviteModal] = React.useState(false);
@@ -59,9 +60,6 @@ function SurveyListPage() {
     const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
     const [selectedFolder, setSelectedFolder] = React.useState<string>('All Surveys');
     const [selectedFolderId, setSelectedFolderId] = React.useState<string>('0');
-    const [openAlert, setOpenAlert] = React.useState(false);
-    const [alertMessage, setAlertMessage] = React.useState('');
-    const [alertType, setAlertType] = React.useState('');
     const [ loading , setLoading] = React.useState(false);
 
     useEffect(() => {
@@ -73,8 +71,8 @@ function SurveyListPage() {
         setLoading(true);
         let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(FeedbackUtils.getUserId()));
         setLoading(false);
-        const isValidated = FeedbackUtils.validateAPIResponse(data);
-        if (isValidated === false) {
+        if(data.statusCode !== 200){
+            snackbarRef?.current?.show(data?.message, 'error');
             return;
         }
         
@@ -87,17 +85,14 @@ function SurveyListPage() {
     const getFolders = async () => {
         let orgId = FeedbackUtils.getOrgId();
         if (orgId == null) {
-            setOpenAlert(true);
-            setAlertType('error');
-            setAlertMessage('Something went wrong, please contact the admin');
+            snackbarRef?.current?.show('Something went wrong, please contact the admin', 'error');
         }
 
         setLoading(true);
         let folderRes = await axios.get(Endpoints.getFolders(orgId));
         setLoading(false);
-        const isValidated = FeedbackUtils.validateAPIResponse(folderRes);
-        if (isValidated === false) {
-            //something went wrong
+        if(folderRes?.data?.statusCode !== 200){
+            snackbarRef?.current?.show(folderRes?.data?.message, 'error');
             return;
         }
 
@@ -105,12 +100,6 @@ function SurveyListPage() {
         if (resData == null) {
             return;
         }
-
-        if (resData.statusCode !== 200) {
-            //TODO show error
-            return;
-        }
-
         setFolderList(resData.data);
     }
 
@@ -176,8 +165,18 @@ function SurveyListPage() {
         e.target.style.color = '#323533';
     }
 
-    const handleDeleteFolderClick = (folderId: string) => {
-        console.log('handleDeleteFolderClick', folderId);
+    const handleDeleteFolderClick = async (folderId: string) => {
+        setLoading(true);
+        const { data } = await axios.delete(Endpoints.deleteFolder(folderId));
+        setLoading(false);
+        if(data.statusCode !== 200){
+            snackbarRef?.current?.show(data?.message, 'error');
+            return;
+        }
+        snackbarRef?.current?.show(data?.message, 'success');
+        setFolderList(fld => fld.filter(folder => folder.id !== folderId));
+        setSelectedFolder('All Surveys');
+        setSelectedFolderId('0');
     }
 
     const handleUpdateComponent = () => {
@@ -191,7 +190,6 @@ function SurveyListPage() {
     return (
         <>
             <div style={surveyPageMainContainer} >
-                <CustomAlert open={openAlert} message={alertMessage} type={alertType} />
                 <div style={{ display: 'flex', width: '15%', flexDirection: 'column', borderRight: '1px #454545 solid', justifyContent: 'space-between', padding: '10px 30px' }} >
                     <div style={{ width: '100%', overflowY: 'scroll' }} >
                         <div style={allSurveyFolder} className="all-folders-data" onClick={handleAllFolderClick} >
@@ -245,7 +243,6 @@ function SurveyListPage() {
                         <div style={{ marginTop: '40px' }} ></div>
                         <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade plan</Button>
                         <Button sx={ButtonStyles.outlinedButton} onClick={handleOpenInviteModal} variant="outlined">Invite teammates</Button>
-
                     </div>
                 </div>
                 <div style={{ width: '85%' }} >
@@ -259,6 +256,7 @@ function SurveyListPage() {
                 <CreateFolder open={openCreateFolderModal} close={handleCloseCreateFolderModal} />
             </div>
             <FSLoader show={loading} />
+            <Notification ref={snackbarRef} />
         </>
     )
 }

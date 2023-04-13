@@ -1,8 +1,24 @@
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, Typography } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { containedButton } from '../Styles/ButtonStyle';
+import { getColorsFromTheme } from '../Utils/FeedbackUtils';
 
 function SingleAnswerSelectionDisplay(props: any) {
+
+    const [colors, setColors] = useState<any>();
+    const [textColor, setTextColor] = useState('');
+
+    useEffect(() => {
+        if (props.theme != null) {
+            processThemeData();
+        }
+    }, [props]);
+
+    const processThemeData = () => {
+        const currentTheme = props.theme;
+        setColors(getColorsFromTheme(currentTheme));
+        setTextColor(currentTheme.textColor);
+    }
 
     return (
         <Box textAlign={'center'} margin={'15px'} padding={'15px'} marginTop={'10%'} marginBottom={'10%'}>
@@ -34,7 +50,12 @@ function SingleAnswerSelectionDisplay(props: any) {
                                 }
                             </FormGroup>
                     }
-                    <Button style={{ width: 'fit-content' }} sx={containedButton} variant="contained" >Submit</Button>
+                    <Button style={{
+                        width: 'fit-content',
+                        marginRight: '15px',
+                        backgroundColor: colors?.secondaryColor,
+                        color: textColor
+                    }} sx={containedButton} variant="contained" >Submit</Button>
                 </Box>
             </Box>
         </Box>

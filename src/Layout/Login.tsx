@@ -7,6 +7,13 @@ import { useState } from 'react';
 
 function Login() {
 
+    const googleAuth = () => {
+        window.open(
+            Endpoint.getRedirectGoogleAuth(),
+            "_target"
+        );
+    }
+
     return (
         <Box sx={{backgroundColor: '#1E1E1E',height : 'calc(100vh - 58px)', display : 'flex'}} >
             <Box sx={{width : '50%', marginTop : '15%'}} >
@@ -14,7 +21,8 @@ function Login() {
                     Welcome to Feedback<span style={{color : '#FFA500'}} >Sense</span>
                 </Typography>
                 <Box sx={{width : 'fit-content',margin : 'auto', paddingTop : '20px'}} >
-                    <GoogleLoginButton />
+                    {/* <GoogleLoginButton /> */}
+                    <GoogleButton onClick={googleAuth} type='light' style={{borderRadius : '6px'}}  />
                 </Box>
             </Box>
             <Box sx={{width : '50%', borderLeft : '1px #454545 solid'}} >
@@ -35,7 +43,7 @@ function GoogleLoginButton(){
         boxShadow: '0 0 2px rgba(23,29,26,.15)',
         cursor : 'pointer', 
         display : 'flex',
-        width : '200px'
+        width : '200px',
     }
 
     const googleAuth = () => {

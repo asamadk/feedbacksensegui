@@ -1,10 +1,4 @@
-import { AxiosResponse } from "axios";
 import { SURVEY_LOCAL_KEY, USER_LOCAL_KEY } from "./Constants";
-
-export const validateAPIResponse = (res: AxiosResponse<any, any>): Boolean => {
-    //TODO : work here
-    return true;
-}
 
 export const getUserId = () : string=> {
     let userStr = localStorage.getItem(USER_LOCAL_KEY);
@@ -65,34 +59,22 @@ export const getCompConfig = (props: any): any => {
     return result;
 }
 
-export const getCurrentSurveyDesign = () : any => {
-    const currentSurveyStr = localStorage.getItem(SURVEY_LOCAL_KEY);
-    if (currentSurveyStr == null) {
-        return null;
-    }
-
-    const currentSurveyObj = JSON.parse(currentSurveyStr);
-    const surveyDesignJSON = currentSurveyObj.survey_design_json;
-    if(surveyDesignJSON == null || surveyDesignJSON === ''){
-        return null;
-    }
-
-    const surveyDesignObj = JSON.parse(surveyDesignJSON);
-    const colorString = surveyDesignObj?.theme?.color;
-
-    return {
-        primaryColor : colorString[0],
-        secondaryColor : colorString[1]
-    }
-
-}
-
 export const validateFlowComponent = (data: any, componentId: string | undefined): string | null => {
     if (componentId == '1') {
         if (data.welcomeText == null || data.welcomeText == '' || data.buttonText == null || data.buttonText === '') {
             return 'Please fill in all required fields before saving.';
         }
     }
-
     return null;
+}
+
+export const getColorsFromTheme = (theme : any ) => {
+    if(theme == null){
+        return null;
+    }
+    const colors : any[] = theme.color;
+    return {
+        primaryColor : colors[0],
+        secondaryColor : colors[1],
+    }
 }

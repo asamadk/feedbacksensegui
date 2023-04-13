@@ -1,13 +1,13 @@
 import { Autocomplete, Box, Button, Checkbox, FormControlLabel, InputLabel, TextField, Typography } from '@mui/material'
 import * as LayoutStyles from '../Styles/LayoutStyles';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { styled } from '@mui/system';
 import { containedButton } from '../Styles/ButtonStyle';
 import axios from 'axios';
 import { createOrgForuser, getOrgList, pointOrgToUser } from '../Utils/Endpoints';
-import { validateAPIResponse } from '../Utils/FeedbackUtils';
 import { useNavigate } from 'react-router';
 import FSLoader from '../Components/FSLoader';
+import Notification from '../Utils/Notification';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -67,6 +67,7 @@ const subContainerCss = {
 function LoginSuccess() {
 
   let navigate = useNavigate();
+  const snackbarRef :any = useRef(null);
 
   const [orgList, setOrgList] = useState<any[]>([]);
   const [otherComany, setOtherComany] = useState<boolean>(true);
@@ -99,15 +100,16 @@ function LoginSuccess() {
       setLoading(true);
       const { data } = await axios.get(getOrgList(), { withCredentials: true });
       setLoading(false);
-      const isValidated = validateAPIResponse(data);
-      if (isValidated === false) {
-        //TODO show error
+      if(data.statusCode !== 200){
+        snackbarRef?.current?.show(data?.message, 'error');
+        return;
       }
       if (data != null) {
         let temoOrgList: any[] = data.data;
         convertListToOptionList(temoOrgList);
       }
-    } catch (error) {
+    } catch (error : any ) {
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       console.log('Exception :: fetchAllOrgList ::  ', error);
     }
   }
@@ -129,15 +131,17 @@ function LoginSuccess() {
       setLoading(true);
       const { data } = await axios.post(pointOrgToUser(),selectedOrg, { withCredentials: true });
       setLoading(false);
-      const isValidated = validateAPIResponse(data);
-      if (isValidated === false) {
-        //TODO show error
+      if(data.statusCode !== 200){
+        snackbarRef?.current?.show(data?.message, 'error');
+        return;
       }
 
       if (data.statusCode === 200) {
+        snackbarRef?.current?.show(data?.message, 'success');
         navigate('/');
       }
-    } catch (error) {
+    } catch (error :any ) {
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       console.log('Exception :: pointExistingOrgToCurrentUser ::  ', error);
     }
   }
@@ -147,16 +151,16 @@ function LoginSuccess() {
       setLoading(true);
       const { data } = await axios.get(createOrgForuser(newOrgName), { withCredentials: true });
       setLoading(false);
-      const isValidated = validateAPIResponse(data);
-      if (isValidated === false) {
-        //TODO show error
+      if(data.statusCode !== 200){
+        snackbarRef?.current?.show(data?.message, 'error');
+        return;
       }
 
       if (data.statusCode === 200) {
         navigate('/');
       }
-    } catch (error) {
-
+    } catch (error : any ) {
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
     }
   }
 
@@ -214,6 +218,7 @@ function LoginSuccess() {
         <Button sx={containedButton} onClick={handleContinueButtonClick} >Continue</Button>
       </Box>
       <FSLoader show={loading} />
+      <Notification ref={snackbarRef}/>
     </Box>
   )
 }

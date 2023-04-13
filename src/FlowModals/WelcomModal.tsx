@@ -4,7 +4,7 @@ import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/system';
-import { getCompConfig } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfig } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 const CssTextField = styled(TextField)({
@@ -34,6 +34,7 @@ function WelcomModal(props: any) {
         populateCompConfig();
     }, []);
 
+    const [colors , setColors] = useState<any>();
     const [welcomeText, setWelcomeText] = React.useState('');
     const [buttonText, setButtonText] = React.useState('');
 
@@ -41,6 +42,11 @@ function WelcomModal(props: any) {
         const compConfig = getCompConfig(props);
         setWelcomeText(compConfig?.welcomeText);
         setButtonText(compConfig?.buttonText);
+        
+        if(props.theme != null){
+            const currentTheme = JSON.parse(props.theme);
+            setColors(getColorsFromTheme(currentTheme.theme));
+        }
     }
 
     const handleSave = () => {
@@ -100,10 +106,11 @@ function WelcomModal(props: any) {
                             </Box>
                         </Box>
                     </Box>
-                    <Box sx={{ backgroundColor: '#f1f1f1', width: '55%' }} >
+                    <Box sx={{ backgroundColor: colors?.primaryColor, width: '55%' }} >
                         <DynamicComponentDisplay
                             data={{welcomeText: welcomeText,buttonText: buttonText}}
                             compId={props.compId}
+                            theme={props.theme}
                         />
                     </Box>
                 </Box>

@@ -1,5 +1,5 @@
 import { Box, Button, IconButton, InputLabel, Modal, styled, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import CloseIcon from '@mui/icons-material/Close';
@@ -8,6 +8,7 @@ import { authUser } from '../Utils/types';
 import { createFolder } from '../Utils/Endpoints';
 import axios from 'axios';
 import FSLoader from '../Components/FSLoader';
+import Notification from '../Utils/Notification';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -36,24 +37,27 @@ const textFieldStyle = {
 
 function CreateFolder(props: any) {
 
+    const snackbarRef: any = useRef(null);
+
     const [folderName , setFolderName] = useState<string>('');
     const [ loading , setLoading] = React.useState(false);
 
     const handleCreateButtonClick = async () => {
         const currentUser : string | null = localStorage.getItem(USER_LOCAL_KEY);
         if(currentUser == null){
-            //TODO show unauth error
+            snackbarRef?.current?.show('Unauthorized', 'error');
             return;
         }
         const authenticatedUser : authUser = JSON.parse(currentUser);
-        // console.log('Current user',authenticatedUser);
         setLoading(true);
         const { data } = await axios.post(createFolder(authenticatedUser.organization_id,folderName), { withCredentials: true });
         setLoading(false);
         
         if(data.statusCode === 200){
+            snackbarRef?.current?.show(data?.message, 'success');
             props.close('save');
         }else{
+            snackbarRef?.current?.show(data?.message, 'error');
             console.warn(data.message)
         }
     }
@@ -94,6 +98,7 @@ function CreateFolder(props: any) {
                     </Box>
                 </Box>
             </Modal>
+            <Notification ref={snackbarRef} />
             <FSLoader show={loading} />
         </>
     )

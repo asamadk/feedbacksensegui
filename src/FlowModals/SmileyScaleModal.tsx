@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, styled, TextField, Typography } from '@mui/material';
-import { getCompConfig } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfig } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 const CssTextField = styled(TextField)({
@@ -33,6 +33,7 @@ function SmileyScaleModal(props : any) {
         populateCompConfig();
     },[]);
 
+    const [colors , setColors] = useState<any>();
     const [question , setQuestion] = useState('');
     const [leftText , setLeftText] = useState('');
     const [rightText , setRightText] = useState('');
@@ -42,6 +43,10 @@ function SmileyScaleModal(props : any) {
         setQuestion(compConfig?.question);
         setLeftText(compConfig?.leftText);
         setRightText(compConfig?.rightText);
+        if(props.theme != null){
+            const currentTheme = JSON.parse(props.theme);
+            setColors(getColorsFromTheme(currentTheme.theme));
+        }
     }
 
     const handleSave = () => {
@@ -120,13 +125,14 @@ function SmileyScaleModal(props : any) {
                             <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
                         </Box>
                     </Box>
-                    <Box sx={{ backgroundColor: '#f1f1f1', width: '55%' }} >
+                    <Box sx={{ backgroundColor: colors?.primaryColor, width: '55%' }} >
                         <DynamicComponentDisplay
                             data={{
                                 question : question,
                                 leftText : leftText,
                                 rightText : rightText
                             }}
+                            theme={props.theme}
                             compId={props.compId}
                         />
                     </Box>

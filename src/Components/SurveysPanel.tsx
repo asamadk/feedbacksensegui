@@ -3,7 +3,7 @@ import { Box, styled } from '@mui/system'
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import * as ButtonStyles from '../Styles/ButtonStyle'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as Constants from '../Utils/Constants';
 import * as InputStyles from '../Styles/InputStyles';
 import * as Endpoints from '../Utils/Endpoints';
@@ -12,6 +12,7 @@ import SurveyBlock from './SurveyBlock';
 import axios from 'axios';
 import CreateSurveyModal from '../Modals/CreateSurveyModal';
 import FSLoader from './FSLoader';
+import Notification from '../Utils/Notification';
 
 const buttonContainerStyles = {
     marginTop: '10px',
@@ -40,6 +41,8 @@ const CssTextField = styled(TextField)({
 });
 
 function SurveysPanel(props: any) {
+    
+    const snackbarRef: any = useRef(null);
 
     const [surveys, setSurveys] = useState<any[]>([]);
     const [unfilteredSurveys, setUnfilteredSureveys] = useState<any[]>([]);
@@ -71,20 +74,25 @@ function SurveysPanel(props: any) {
     }
 
     const getSurveyTypes = async (): Promise<void> => {
-        setLoading(true);
-        let { data } = await axios.get(Endpoints.getSurveyTypes());
-        setLoading(false);
-        const isValidated = FeedbackUtils.validateAPIResponse(data);
-        if (isValidated === false) {
-            return;
-        }
-
-        if (data.data != null) {
-            data.data.unshift({
-                id: '0',
-                label: 'All survey type'
-            });
-            setSurveyTypes(data.data);
+        try {
+            setLoading(true);
+            let { data } = await axios.get(Endpoints.getSurveyTypes());
+            setLoading(false);
+            if(data.statusCode !== 200){
+                snackbarRef?.current?.show(data?.message, 'error');
+                return;
+            }
+    
+            if (data.data != null) {
+                data.data.unshift({
+                    id: '0',
+                    label: 'All survey type'
+                });
+                setSurveyTypes(data.data);
+            }
+        } catch (error : any ) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            console.log('Exception :: getUserList :: ', error);
         }
     }
 
@@ -93,10 +101,11 @@ function SurveysPanel(props: any) {
             setLoading(true);
             let { data } = await axios.get(Endpoints.getUserList(FeedbackUtils.getOrgId()));
             setLoading(false);
-            const isValidated = FeedbackUtils.validateAPIResponse(data);
-            if (isValidated === false) {
+            if(data?.statusCode !== 200){
+                snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
+
             if (data.data != null) {
                 data.data.unshift({
                     id: '0',
@@ -104,29 +113,34 @@ function SurveysPanel(props: any) {
                 })
                 setUserList(data.data);
             }
-        } catch (error) {
+        } catch (error : any ) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             console.log('Exception :: getUserList :: ', error);
         }
     }
 
     const getSurveys = async (): Promise<void> => {
-        let orgId = FeedbackUtils.getOrgId();
-        if (orgId === '') {
-            //TODO : show error;
-        }
-        setLoading(true);
-        let { data } = await axios.get(Endpoints.getSurveyList(orgId));
-        setLoading(false);
-        const isValidated = FeedbackUtils.validateAPIResponse(data);
-        if (isValidated === false) {
-            return;
-        }
-
-        let resData: any = data.data;
-        if (resData != null) {
-            console.log('ResData = ', resData);
-            setSurveys(resData);
-            setUnfilteredSureveys(resData);
+        try {
+            let orgId = FeedbackUtils.getOrgId();
+            if (orgId === '') {
+                snackbarRef?.current?.show('Something went wrong, Please contact FeedbackSense help', 'error');
+            }
+            setLoading(true);
+            let { data } = await axios.get(Endpoints.getSurveyList(orgId));
+            setLoading(false);
+            if(data?.statusCode !== 200){
+                snackbarRef?.current?.show(data?.message, 'error');
+                return;
+            }
+    
+            let resData: any = data.data;
+            if (resData != null) {
+                setSurveys(resData);
+                setUnfilteredSureveys(resData);
+            }
+        } catch (error : any ) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            
         }
     }
 
@@ -174,6 +188,7 @@ function SurveysPanel(props: any) {
         });
 
         setSurveys(tempSurveys);
+        snackbarRef?.current?.show('Survey deleted', 'success');
     }
 
     const rerenderAfterFolderChange = () => {
@@ -249,6 +264,7 @@ function SurveysPanel(props: any) {
             </Grid>
             <CreateSurveyModal surveys={surveys}  open={openCreateSurvey} close={handleCloseCreateNewSurvey} />
             <FSLoader show={loading} />
+            <Notification ref={snackbarRef} />
         </Box>
     )
 }

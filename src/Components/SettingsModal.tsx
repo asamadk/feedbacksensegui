@@ -5,7 +5,6 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import { useNavigate } from "react-router";
 import * as Endpoint from '../Utils/Endpoints'
-import axios from "axios";
 
 
 const settingsMainStyle = {

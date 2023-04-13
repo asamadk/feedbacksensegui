@@ -4,14 +4,17 @@ import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import * as InputStyles from '../Styles/InputStyles';
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { getOrgId } from '../Utils/FeedbackUtils';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import * as Endpoints from '../Utils/Endpoints';
 import axios from 'axios';
 import FSLoader from '../Components/FSLoader';
+import Notification from '../Utils/Notification';
 
 function ChangeFolderModal(props: any) {
+
+    const snackbarRef: any = useRef(null);
 
     const [folderList, setFolderList] = React.useState<any[]>([]);
     const [selectedFolder, setSelectedFolder] = React.useState<string>('0');
@@ -23,54 +26,49 @@ function ChangeFolderModal(props: any) {
     },[]);
 
     const getFolders = async () => {
-        let orgId = getOrgId();
-        if (orgId == null) {
-            //TODO show error
+        try {
+            let orgId = getOrgId();
+            if (orgId == null) {
+                snackbarRef?.current?.show('Something went wrong , please contact FeedbackSense help', 'error');
+                return;
+            }
+            setLoading(true);
+            let folderRes = await axios.get(Endpoints.getFolders(orgId));
+            setLoading(false);
+            if (folderRes?.data.statusCode !== 200) {                
+                snackbarRef?.current?.show(folderRes?.data?.message, 'error');
+                return;
+            }
+            let resData: any = folderRes.data;
+            if (resData == null) {
+                return;
+            }
+            setFolderList(resData.data);
+        } catch (error : any ) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
         }
-
-        setLoading(true);
-        let folderRes = await axios.get(Endpoints.getFolders(orgId));
-        setLoading(false);
-
-        const isValidated = FeedbackUtils.validateAPIResponse(folderRes);
-        if (isValidated === false) {
-            //something went wrong
-            return;
-        }
-
-        let resData: any = folderRes.data;
-        if (resData == null) {
-            return;
-        }
-
-        if(resData.statusCode !== 200){
-            //TODO show error
-            return;
-        }
-
-        setFolderList(resData.data);
     }
 
     const handleFolderChange = async () => {
-        if(selectedFolder === '0'){
-            //TODO show error
-            return;
+        try {
+            if(selectedFolder === '0'){
+                snackbarRef?.current?.show('Please select a valid folder', 'error');
+                return;
+            }
+            let surveyId = props.surveyId;
+            setLoading(true);
+            let { data } = await axios.post(Endpoints.moveSurveyFolder(surveyId,selectedFolder));
+            setLoading(false);
+            if (data.statusCode !== 200) {                
+                snackbarRef?.current?.show(data?.message, 'error');
+                return;
+            }
+            let surveyData = data.data;
+            props.callback(surveyData);
+            props.close();
+        } catch (error : any ) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
         }
-        let surveyId = props.surveyId;
-
-        setLoading(true);
-        let { data } = await axios.post(Endpoints.moveSurveyFolder(surveyId,selectedFolder));
-        setLoading(false);
-
-        if(FeedbackUtils.validateAPIResponse(data) === false){
-            //TODO show error
-            return;
-        }
-
-        let surveyData = data.data;
-        console.log('Survey data',surveyData);
-        props.callback(surveyData);
-        props.close();
     }
 
     const handleDropdownChange = (event : any) => {
@@ -118,6 +116,7 @@ function ChangeFolderModal(props: any) {
                 </Box>
             </Modal>
             <FSLoader show={loading} />
+            <Notification ref={snackbarRef} />
         </>
     )
 }

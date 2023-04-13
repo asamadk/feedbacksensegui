@@ -19,6 +19,7 @@ function DynamicComponentModal(props: any) {
         save={props.save}
         open={props.open}
         close={props.close}
+        theme={props.theme}
       />}
 
       {props.compId === 3 && <SingleAnswerSelectionModal
@@ -30,6 +31,7 @@ function DynamicComponentModal(props: any) {
         save={props.save}
         open={props.open}
         close={props.close}
+        theme={props.theme}
       />}
 
       {props.compId === 4 && <SingleAnswerSelectionModal 
@@ -41,6 +43,7 @@ function DynamicComponentModal(props: any) {
         save={props.save} 
         open={props.open} 
         close={props.close} 
+        theme={props.theme}
       />}
 
       {props.compId === 5 && <TextAnswerModal 
@@ -51,10 +54,10 @@ function DynamicComponentModal(props: any) {
         save={props.save} 
         open={props.open} 
         close={props.close} 
+        theme={props.theme}
       />}
 
-      {props.compId === 6 && 
-        <SmileyScaleModal 
+      {props.compId === 6 && <SmileyScaleModal 
           compId={props.compId} 
           flow={props.flow} 
           uiId={props.uiId} 
@@ -62,6 +65,7 @@ function DynamicComponentModal(props: any) {
           save={props.save} 
           open={props.open} 
           close={props.close} 
+          theme={props.theme}
       />}
 
       {props.compId === 7 && <RatingScaleModal 
@@ -72,6 +76,7 @@ function DynamicComponentModal(props: any) {
         save={props.save} 
         open={props.open} 
         close={props.close} 
+        theme={props.theme}
       />}
 
       {props.compId === 8 && <NPSModal 
@@ -82,6 +87,7 @@ function DynamicComponentModal(props: any) {
         save={props.save} 
         open={props.open} 
         close={props.close} 
+        theme={props.theme}
       />}
 
       {props.compId === 11 && <ContactFormModal 
@@ -92,6 +98,7 @@ function DynamicComponentModal(props: any) {
         save={props.save} 
         open={props.open} 
         close={props.close} 
+        theme={props.theme}
       />}
 
       {props.compId === 13 && <DateSelectorModal 
@@ -102,6 +109,7 @@ function DynamicComponentModal(props: any) {
         save={props.save} 
         open={props.open} 
         close={props.close} 
+        theme={props.theme}
       />}
     </>
   )

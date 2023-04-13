@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, Select, Slider, styled, TextField, Typography } from '@mui/material';
-import { getCompConfig } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfig } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 const CssTextField = styled(TextField)({
@@ -37,6 +37,7 @@ function RatingScale(props: any) {
   const [range, setRange] = useState(1);
   const [leftText, setLeftText] = useState('');
   const [rightText, setRightText] = useState('');
+  const [colors , setColors] = useState<any>();
 
   const populateCompConfig = () => {
     const compConfig = getCompConfig(props);
@@ -44,7 +45,10 @@ function RatingScale(props: any) {
     setLeftText(compConfig?.leftText);
     setRightText(compConfig?.rightText);
     setRange(compConfig?.range);
-    console.log("🚀 ~ file: RatingScaleModal.tsx:47 ~ populateCompConfig ~ compConfig?.range:", compConfig?.range)
+    if(props.theme != null){
+      const currentTheme = JSON.parse(props.theme);
+      setColors(getColorsFromTheme(currentTheme.theme));
+  }
   }
 
   const handleSave = () => {
@@ -135,7 +139,7 @@ function RatingScale(props: any) {
               <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
             </Box>
           </Box>
-          <Box sx={{ backgroundColor: '#f1f1f1', width: '55%' }} >
+          <Box sx={{ backgroundColor: colors?.primaryColor, width: '55%' }} >
             <DynamicComponentDisplay
               data={{
                 question: question,
@@ -143,6 +147,7 @@ function RatingScale(props: any) {
                 rightText: rightText,
                 range: range
               }}
+              theme={props.theme}
               compId={props.compId}
             />
           </Box>

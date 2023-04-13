@@ -2,12 +2,13 @@ import { Box, Button, Chip, Typography } from '@mui/material'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as Endpoints from '../Utils/Endpoints';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import CustomChip from './CustomChip'
 import * as LayoutStyles from '../Styles/LayoutStyles'
 import axios from 'axios'
 import { useNavigate } from 'react-router';
 import FSLoader from './FSLoader';
+import Notification from '../Utils/Notification';
 
 
 const subscriptionSubContainer = {
@@ -31,6 +32,7 @@ const subscriptionDetailList = {
 function SubscriptionSettings() {
 
     let navigate = useNavigate();
+    const snackbarRef: any = useRef(null);
 
     const [ loading , setLoading] = React.useState(false);
     const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
@@ -43,14 +45,13 @@ function SubscriptionSettings() {
         setLoading(true);
         let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(FeedbackUtils.getUserId()));
         setLoading(false);
-        const isValidated = FeedbackUtils.validateAPIResponse(data);
-        if (isValidated === false) {
+        if (data.statusCode !== 200) {
+            snackbarRef?.current?.show(data?.message, 'error');
             return;
         }
 
         let resData: any[] = data.data;
         if (resData != null) {
-            console.log("🚀 ~ file: SurveyListPage.tsx:76 ~ getSubscriptionDetails ~ resData:", resData)
             setSubscriptionDetail(resData);
         }
     }
@@ -108,6 +109,7 @@ function SubscriptionSettings() {
                     <Typography color={'#454545'} >{subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}</Typography>
                 </Box>
             </Box>
+            <Notification ref={snackbarRef} />
             <FSLoader show={loading} />
         </Box>
     )

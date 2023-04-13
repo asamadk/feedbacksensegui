@@ -55,7 +55,7 @@ export const getColorSchemes = () : any[] => {
             header : 'Relaxed red & off-white',
             text : 'classic',
             color : ['#D2686E','#FCF6F5FF'],
-            textColor : '#808080'
+            textColor : '#000000'
         },
         {
             id : count++,

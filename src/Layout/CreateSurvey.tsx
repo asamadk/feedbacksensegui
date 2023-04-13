@@ -13,7 +13,6 @@ import { useParams } from 'react-router';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
-import { SURVEY_LOCAL_KEY } from '../Utils/Constants';
 import Notification from '../Utils/Notification';
 import FSLoader from '../Components/FSLoader';
 
@@ -57,19 +56,23 @@ function CreateSurvey(props : any) {
   }, [])
 
   const getSingleSurvey = async () => {
-    setLoading(true);
-    let { data } = await axios.get(Endpoints.getSurveyDetails(surveyId));
-    setLoading(false);
-    const isValidated = FeedbackUtils.validateAPIResponse(data);
-    if (isValidated === false) {
-      return;
-    }
-    if (data != null) {
-      setSurveyDetail(data.data);
-      if (data?.data?.workflows != null && data?.data.workflows.length > 0) {
-        setSurveyFlow(data?.data?.workflows[0]);
+    try {
+      setLoading(true);
+      let { data } = await axios.get(Endpoints.getSurveyDetails(surveyId));
+      setLoading(false);
+      if(data.statusCode !== 200){
+        snackbarRef?.current?.show(data?.message, 'error');
+        return;
       }
-      props.updateSurveyId(data.data.id)
+      if (data != null) {
+        setSurveyDetail(data.data);
+        if (data?.data?.workflows != null && data?.data.workflows.length > 0) {
+          setSurveyFlow(data?.data?.workflows[0]);
+        }
+        props.updateSurveyId(data.data.id)
+      }
+    } catch (error : any ) {
+      snackbarRef?.current?.show(error?.response?.data?.statusCode,'error');
     }
   }
 
@@ -121,19 +124,18 @@ function CreateSurvey(props : any) {
   }
 
   const saveFlow = async (flow: any) => {
-    setLoading(true);
-    const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyDetail.id), flow);
-    setLoading(false);
-    const isValidated = FeedbackUtils.validateAPIResponse(data);
-    if (isValidated === false) {
-      return;
+    try {
+      setLoading(true);
+      const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyDetail.id), flow);
+      setLoading(false);
+      if(data.statusCode !== 200){
+        snackbarRef?.current?.show(data?.message, 'error');
+        return;
+      }
+      snackbarRef?.current?.show(data?.message, 'success');
+    } catch (error : any ) {
+      snackbarRef?.current?.show(error?.response?.data?.statusCode,'error');
     }
-
-    if (data.statusCode === 200) {
-      snackbarRef?.current?.show('Configuration saved.', 'success');
-    }
-
-    //TODO show saved alerts
   }
 
   const handleEditNameClick = () => {
@@ -145,20 +147,22 @@ function CreateSurvey(props : any) {
   }
 
   const handleSaveNameClick = async () => {
-    snackbarRef?.current?.show('Survey name updated.', 'success');
-    const payload = {
-      surveyName: surveyDetail.name
+    try {
+      const payload = {
+        surveyName: surveyDetail.name
+      }
+      setLoading(true);
+      const { data } = await axios.post(Endpoints.updateSurveyName(surveyDetail.id), payload)
+      setLoading(false);
+      if(data.statusCode !== 200){
+        snackbarRef?.current?.show(data?.message, 'error');
+        return;
+      }
+      snackbarRef?.current?.show(data?.message, 'success');
+      handleCloseEditName();
+    } catch (error : any ) {
+      snackbarRef?.current?.show(error?.response?.data?.statusCode,'error');
     }
-    setLoading(true);
-    const { data } = await axios.post(Endpoints.updateSurveyName(surveyDetail.id), payload)
-    setLoading(false);
-    const isValidated = FeedbackUtils.validateAPIResponse(data);
-    if (isValidated === false) {
-      snackbarRef?.current?.show('Something went wrong.', 'error');
-      return;
-    }
-
-    handleCloseEditName();
   }
 
   const handleFlowNameChange = (e: any) => {
@@ -229,6 +233,7 @@ function CreateSurvey(props : any) {
         compId={componentId}
         save={handleSavecomponentConfig}
         flow={surveyFlow}
+        theme={surveyDetail?.survey_design_json}
       />
 
       <Notification ref={snackbarRef} />

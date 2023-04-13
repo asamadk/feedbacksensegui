@@ -43,7 +43,6 @@ function DesignPreview() {
 
     const rerenderSelectedTheme = (themeData : any) => {
         setSelectedTheme(themeData);
-        console.log("🚀 ~ file: DesignPreview.tsx:46 ~ rerenderSelectedTheme ~ themeData:", themeData)
     }
 
     return (

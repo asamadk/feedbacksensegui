@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import * as ModalStyles from '../Styles/ModalStyle'
 import * as ButtonStyles from '../Styles/ButtonStyle'
@@ -10,6 +10,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Box } from '@mui/system'
 import axios from 'axios';
 import FSLoader from '../Components/FSLoader';
+import Notification from '../Utils/Notification';
 
 const typeContainer = {
     border: '1px #454545 solid',
@@ -20,6 +21,8 @@ const typeContainer = {
 }
 
 function CreateSurveyModal(props: any) {
+
+    const snackbarRef: any = useRef(null);
 
     const [surveyTypes, setSurveyTypes] = useState<any[]>([]);
     const [selectedSurveyType, setSelectedSurveyType] = useState('');
@@ -35,16 +38,20 @@ function CreateSurveyModal(props: any) {
     }
 
     const getSurveyType = async () => {
-        setLoading(true);
-        let { data } = await axios.get(Endpoints.getSurveyTypes());
-        setLoading(false);
-        const isValidated = FeedbackUtils.validateAPIResponse(data);
-        if (isValidated === false) {
-            return;
-        }
-
-        if (data.data != null) {
-            setSurveyTypes(data.data);
+        try {
+            setLoading(true);
+            let { data } = await axios.get(Endpoints.getSurveyTypes());
+            setLoading(false);
+            if (data.statusCode !== 200) {
+                snackbarRef?.current?.show(data.message, 'error');
+                return;
+            }
+    
+            if (data.data != null) {
+                setSurveyTypes(data.data);
+            }    
+        } catch (error : any ) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
         }
     }
 
@@ -61,17 +68,20 @@ function CreateSurveyModal(props: any) {
     }
 
     const handleCreateSurvey = async () => {
-        setLoading(true);
-        let { data } = await axios.post(Endpoints.createSurvey(selectedSurveyType));
-        setLoading(false);
-        let isValidated = FeedbackUtils.validateAPIResponse(data);
-
-        if(isValidated === false){
-            return;
+        try {
+            setLoading(true);
+            let { data } = await axios.post(Endpoints.createSurvey(selectedSurveyType));
+            setLoading(false);
+            if (data.statusCode !== 200) {
+                snackbarRef?.current?.show(data.message, 'error');
+                return;
+            }
+            snackbarRef?.current?.show(data.message, 'success');
+            props.surveys.push(data.data);
+            props.close();
+        } catch (error : any ) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
         }
-
-        props.surveys.push(data.data);
-        props.close();
     }
 
     return (
@@ -122,6 +132,7 @@ function CreateSurveyModal(props: any) {
                 </Box>
             </Modal>
             <FSLoader show={loading} />   
+            <Notification ref={snackbarRef} />
         </>
     )
 }
