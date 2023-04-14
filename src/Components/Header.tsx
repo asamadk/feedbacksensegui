@@ -36,7 +36,6 @@ function Header(props : any) {
 
 
     const handleRouteToHome = () => {
-        // localStorage.removeItem(SURVEY_LOCAL_KEY);
         if(inOrgSelectionMode === false){
             navigate('/');
         }

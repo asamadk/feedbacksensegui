@@ -16,6 +16,7 @@ import SurveySettings from './Layout/SurveySettings';
 import UpgradeSubscription from './Layout/UpgradeSubscription';
 import LoginSuccess from './Layout/LoginSuccess';
 import { USER_LOCAL_KEY } from './Utils/Constants';
+import SurveyDisplays from './SurveyEngine/Core/SurveyDisplays';
 
 const globalBodyStyle = {
   backgroundColor: '#1E1E1E',
@@ -28,9 +29,15 @@ function App() {
   const [user, setUser] = useState(null);
   const [currentSurveyId, setCurrentSurveyId] = useState('');
   const dataFetchedRef = useRef(false);
+  const [liveSurvey, setLiveSurvey] = useState(false);
 
   const getUser = async () => {
     try {
+      let currentPath: string = window.location.pathname;
+      if(currentPath.includes('/share/survey/') === true){
+        setLiveSurvey(true);
+        return;
+      }
       const url = Endpoint.checkLoginStatus();
       const { data } = await axios.get(url, { withCredentials: true });
       if(data.data != null){
@@ -62,25 +69,32 @@ function App() {
   }
 
   return (
-    <div style={globalBodyStyle} className="App">
-      <Header surveyId={currentSurveyId} loggedIn={user != null} />
-      <Routes>
-        <Route path='/' element={user ?  <MainBody /> : <Navigate to={'/login'} /> } />
-        <Route path='/login' element={ user ?  <MainBody /> : <Login />} />
-        <Route path='/org/general' element={user ? <OrgSettings tabset={0} /> : <Navigate to={'/login'}/> } />
-        <Route path='/org/teammates' element={user ? <OrgSettings tabset={1} /> : <Navigate to={'/login'}/> } />
-        <Route path='/org/subscription' element={ user ? <OrgSettings tabset={2} /> : <Navigate to={'/login'}/>} />
-        <Route path='/survey/global/settings/general' element={user ?  <SurveySettings tabset={0} /> : <Navigate to={'/login'}/> } />
-        <Route path='/survey/global/settings/web' element={ user ? <SurveySettings tabset={1} /> : <Navigate to={'/login'}/> } />
-        <Route path='/survey/detail/create/:surveyId' element={ user ? <CreateSurvey updateSurveyId={handleUpdateSurveyId} /> : <Navigate to={'/login'}/> } />
-        <Route path='/survey/detail/design/:surveyId' element={user ? <DesignPreview /> : <Navigate to={'/login'}/> } />
-        <Route path='/survey/detail/share/:surveyId' element={user ? <ShareSurvey />  : <Navigate to={'/login'}/>  } />
-        <Route path='/survey/detail/analyze/:surveyId' element={ user ? <AnalyzeSurvey /> : <Navigate to={'/login'}/>   } />
-        <Route path='/survey/detail/configure/:surveyId' element={ user ? <ConfigureSurvey /> : <Navigate to={'/login'}/>    } />
-        <Route path='/upgrade/plan' element={ user ? <UpgradeSubscription /> : <Navigate to={'/login'}/>    } />
-        <Route path='/user/create/organization' element={ <LoginSuccess />} />
-      </Routes>
-    </div>
+    <>
+      {liveSurvey === false && <div style={globalBodyStyle} className="App">
+        <Header surveyId={currentSurveyId} loggedIn={user != null} />
+        <Routes>
+          <Route path='/' element={user ?  <MainBody /> : <Navigate to={'/login'} /> } />
+          <Route path='/login' element={ user ?  <MainBody /> : <Login />} />
+          <Route path='/org/general' element={user ? <OrgSettings tabset={0} /> : <Navigate to={'/login'}/> } />
+          <Route path='/org/teammates' element={user ? <OrgSettings tabset={1} /> : <Navigate to={'/login'}/> } />
+          <Route path='/org/subscription' element={ user ? <OrgSettings tabset={2} /> : <Navigate to={'/login'}/>} />
+          <Route path='/survey/global/settings/general' element={user ?  <SurveySettings tabset={0} /> : <Navigate to={'/login'}/> } />
+          <Route path='/survey/global/settings/web' element={ user ? <SurveySettings tabset={1} /> : <Navigate to={'/login'}/> } />
+          <Route path='/survey/detail/create/:surveyId' element={ user ? <CreateSurvey updateSurveyId={handleUpdateSurveyId} /> : <Navigate to={'/login'}/> } />
+          <Route path='/survey/detail/design/:surveyId' element={user ? <DesignPreview /> : <Navigate to={'/login'}/> } />
+          <Route path='/survey/detail/share/:surveyId' element={user ? <ShareSurvey />  : <Navigate to={'/login'}/>  } />
+          <Route path='/survey/detail/analyze/:surveyId' element={ user ? <AnalyzeSurvey /> : <Navigate to={'/login'}/>   } />
+          <Route path='/survey/detail/configure/:surveyId' element={ user ? <ConfigureSurvey /> : <Navigate to={'/login'}/>    } />
+          <Route path='/upgrade/plan' element={ user ? <UpgradeSubscription /> : <Navigate to={'/login'}/>    } />
+          <Route path='/user/create/organization' element={ <LoginSuccess />} />
+        </Routes>
+      </div>}
+      {liveSurvey === true && <div>
+          <Routes>
+            <Route path='/share/survey/:surveyId' element={ <SurveyDisplays />} />
+          </Routes>
+      </div>}
+    </>
   );
 }
 

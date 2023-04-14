@@ -21,7 +21,7 @@ function WelcomeDisplay(props: any) {
   }
 
   return (
-    <Box textAlign={'center'} margin={'15px'} padding={'15px'} marginTop={'40%'}>
+    <Box textAlign={'center'} margin={'15px'} marginTop={0} padding={'15px'}>
       <Typography fontSize={'26px'} color={'#29292a'} fontWeight={300} >{props?.data?.welcomeText}</Typography>
       <Box marginTop={'20px'} >
         <Button 

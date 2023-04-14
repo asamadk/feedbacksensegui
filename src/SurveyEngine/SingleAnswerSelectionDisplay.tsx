@@ -21,7 +21,7 @@ function SingleAnswerSelectionDisplay(props: any) {
     }
 
     return (
-        <Box textAlign={'center'} margin={'15px'} padding={'15px'} marginTop={'10%'} marginBottom={'10%'}>
+        <Box textAlign={'center'} margin={'15px'} padding={'15px'} marginTop={0} marginBottom={'10%'}>
             <Box height={'90vh'} overflow={'scroll'} >
                 <Typography fontSize={'26px'} color={'#29292a'} fontWeight={300} >{props?.data?.question}</Typography>
                 <Box marginTop={'10px'} >

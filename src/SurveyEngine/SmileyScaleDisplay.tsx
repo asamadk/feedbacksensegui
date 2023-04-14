@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material'
 
 function SmileyScaleDisplay(props: any) {
     return (
-        <Box textAlign={'center'} margin={'15px'} padding={'15px'} marginTop={'20%'} >
+        <Box textAlign={'center'} padding={'15px'} >
             <Typography fontSize={'28px'} color={'#29292a'} fontWeight={200} >{props?.data?.question}</Typography>
             <SmileyDisplay />
             <Box display={'flex'} justifyContent={'space-around'} >

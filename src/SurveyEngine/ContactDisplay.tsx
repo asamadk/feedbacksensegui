@@ -21,7 +21,7 @@ function ContactDisplay(props: any) {
     }
 
     return (
-        <Box textAlign={'center'} margin={'15px'} padding={'15px'} marginTop={'2%'} marginBottom={'10%'} overflow={'scroll'} >
+        <Box textAlign={'center'} margin={'15px'} padding={'15px'} marginTop={0} overflow={'scroll'} >
             <Box height={'90vh'} overflow={'scroll'} >
                 <Typography fontSize={'26px'} color={'#29292a'} fontWeight={300} >{props?.data?.question}</Typography>
                 <Box marginTop={'10px'} >

@@ -3,7 +3,7 @@ import React from 'react'
 
 function NPSDisplay(props : any) {
   return (
-    <Box textAlign={'center'} margin={'15px'} padding={'15px'} marginTop={'20%'} >
+    <Box textAlign={'center'} margin={'15px'} padding={'15px'} marginTop={0}>
         <Typography fontSize={'28px'} color={'#29292a'} fontWeight={200} >{props?.data?.question}</Typography>
         <NpsCount/>
         <Box display={'flex'} justifyContent={'space-around'} >

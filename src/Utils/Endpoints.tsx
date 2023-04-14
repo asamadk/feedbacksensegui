@@ -96,6 +96,10 @@ export const deleteFolder = (folderId : string) => {
     return BASE_URL + `/folder/delete/${folderId}`;
 }
 
+export const getLiveSurveyData = (surveyId : string | undefined ) => {
+    return BASE_URL + `/live/survey/${surveyId}`;
+}
+
 // ********
 
 export const getSubscriptionDetail = (): string => {

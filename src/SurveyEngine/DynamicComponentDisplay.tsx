@@ -10,12 +10,12 @@ import TextAnswerDisplay from './TextAnswerDisplay'
 import WelcomeDisplay from './WelcomeDisplay'
 
 function DynamicComponentDisplay(props: any) {
-
+    //props.surveyId if null that mean we are in edit mode else we are live
     const [surveyColors , setSurveyColors] = useState<any>();
 
     useEffect(() => {
         populateTheme();
-    },[]);
+    },[props]);
 
     const populateTheme = () :void => {
         if(props.theme == null || props.theme?.length < 1){
@@ -27,9 +27,11 @@ function DynamicComponentDisplay(props: any) {
                 textColor : '#808089'
             };
             setSurveyColors(theme);
-        }else{
+        }else if(typeof props.theme === 'string') {
             const customeTheme = JSON.parse(props.theme);
             setSurveyColors(customeTheme?.theme);
+        }else{
+            setSurveyColors(props.theme);
         }
     }
 
