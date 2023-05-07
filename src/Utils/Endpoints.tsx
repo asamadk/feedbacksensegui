@@ -100,12 +100,6 @@ export const getLiveSurveyData = (surveyId : string | undefined ) => {
     return BASE_URL + `/live/survey/${surveyId}`;
 }
 
-// ********
-
-export const getSubscriptionDetail = (): string => {
-    return BASE_URL + '/api/v1/subscription/detail';
-}
-
 export const getRedirectGoogleAuth = () => {
     return BASE_URL + '/auth/oauth2/redirect';
 }
@@ -116,4 +110,29 @@ export const checkLoginStatus = () => {
 
 export const logout = () => {
     return BASE_URL + '/auth/logout';
+}
+
+export const saveSurveyResponseDb = (surveyId : string) => {
+    return BASE_URL + `/live/survey/response/${surveyId}`;
+}
+
+export const getSurveyResponseList = (surveyId : string) => {
+    return `${BASE_URL}/analysis/response/list/${surveyId}`
+}
+
+export const deleteSurveyResponse = (surveyResponseId : string) => {
+    return `${BASE_URL}/analysis/response/${surveyResponseId}`
+} 
+
+
+export const getOverallResponse = (surveyId : string) => {
+    return `${BASE_URL}/analysis/response/overall/${surveyId}`
+}
+
+export const getOverallMetricsResponse = (surveyId : string) => {
+    return `${BASE_URL}/analysis/response/sub-data/${surveyId}`
+}
+
+export const getOverAllComponentsData = (surveyId : string) => {
+    return `${BASE_URL}/analysis/response/components/${surveyId}`
 }

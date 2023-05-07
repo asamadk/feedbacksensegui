@@ -24,7 +24,7 @@ function SurveyThemeSelector(props : any) {
   const getSingleSurvey = async () => {
     try {
       setLoading(true);
-      let { data } = await axios.get(Endpoints.getSurveyDetails(props.surveyId));
+      let { data } = await axios.get(Endpoints.getSurveyDetails(props.surveyId),{ withCredentials : true });
       setLoading(false);
       
       if(data?.statusCode !== 200){
@@ -65,7 +65,7 @@ function SurveyThemeSelector(props : any) {
         theme : selectedTheme
       }
       setLoading(true);
-      const { data } = await axios.post(Endpoints.saveSurveyDesgin(props.surveyId),saveObj);
+      const { data } = await axios.post(Endpoints.saveSurveyDesgin(props.surveyId),saveObj,{ withCredentials : true });
       setLoading(false);
       if(data.statusCode !== 200){
         snackbarRef?.current?.show(data.message,'error');

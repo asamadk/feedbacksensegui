@@ -1,6 +1,7 @@
-import { Box, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import React from 'react'
 import { useNavigate } from 'react-router';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CustomTabSet from '../Components/CustomTabSet';
 import SurveyGeneralSettings from '../Components/SurveyGeneralSettings';
 import SurveySettingsWeb from '../Components/SurveySettingsWeb';
@@ -26,11 +27,24 @@ function SurveySettings(props: any) {
         }
     }
 
+    const handleBackButtonClick = () => {
+        navigation('/');
+    }
+
     return (
         <Box sx={LayoutStyles.settingLayoutStyle} >
             
-            <Box sx={{ textAlign: 'start' }} >
-                <Typography variant='h4' sx={LayoutStyles.settingsHeaderTextStyle} >Survey Settings</Typography>
+            <Box display={'flex'} sx={{ textAlign: 'start' }} >
+                <IconButton color='warning' onClick={handleBackButtonClick} >
+                    <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
+                </IconButton>
+                <Typography 
+                    style={{paddingTop : '5px'}}
+                    variant='h4' 
+                    sx={LayoutStyles.settingsHeaderTextStyle} 
+                >
+                    Survey Settings
+                </Typography>
             </Box>
 
             <Box sx={{ marginTop: '20px' }} >

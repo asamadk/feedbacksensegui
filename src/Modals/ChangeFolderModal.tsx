@@ -33,7 +33,7 @@ function ChangeFolderModal(props: any) {
                 return;
             }
             setLoading(true);
-            let folderRes = await axios.get(Endpoints.getFolders(orgId));
+            let folderRes = await axios.get(Endpoints.getFolders(orgId),{ withCredentials : true });
             setLoading(false);
             if (folderRes?.data.statusCode !== 200) {                
                 snackbarRef?.current?.show(folderRes?.data?.message, 'error');
@@ -57,7 +57,7 @@ function ChangeFolderModal(props: any) {
             }
             let surveyId = props.surveyId;
             setLoading(true);
-            let { data } = await axios.post(Endpoints.moveSurveyFolder(surveyId,selectedFolder));
+            let { data } = await axios.post(Endpoints.moveSurveyFolder(surveyId,selectedFolder),{ withCredentials : true });
             setLoading(false);
             if (data.statusCode !== 200) {                
                 snackbarRef?.current?.show(data?.message, 'error');

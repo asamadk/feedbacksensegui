@@ -26,7 +26,7 @@ function CreateSurveyModal(props: any) {
 
     const [surveyTypes, setSurveyTypes] = useState<any[]>([]);
     const [selectedSurveyType, setSelectedSurveyType] = useState('');
-    const [ loading , setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
         init();
@@ -40,17 +40,17 @@ function CreateSurveyModal(props: any) {
     const getSurveyType = async () => {
         try {
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getSurveyTypes());
+            let { data } = await axios.get(Endpoints.getSurveyTypes(), { withCredentials: true });
             setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data.message, 'error');
                 return;
             }
-    
+
             if (data.data != null) {
                 setSurveyTypes(data.data);
-            }    
-        } catch (error : any ) {
+            }
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
         }
     }
@@ -63,14 +63,18 @@ function CreateSurveyModal(props: any) {
         e.target.style.color = '#f1f1f1';
     }
 
-    const handleSurveyTypeClick = (surveyTypeId : string) => {
+    const handleSurveyTypeClick = (surveyTypeId: string) => {
         setSelectedSurveyType(surveyTypeId);
     }
 
     const handleCreateSurvey = async () => {
         try {
+            if(selectedSurveyType == null || selectedSurveyType === ''){
+                snackbarRef?.current?.show('Please select a survey type to create survey.', 'error');
+                return;
+            }
             setLoading(true);
-            let { data } = await axios.post(Endpoints.createSurvey(selectedSurveyType));
+            let { data } = await axios.post(Endpoints.createSurvey(selectedSurveyType), { withCredentials: true });
             setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data.message, 'error');
@@ -78,17 +82,23 @@ function CreateSurveyModal(props: any) {
             }
             snackbarRef?.current?.show(data.message, 'success');
             props.surveys.push(data.data);
-            props.close();
-        } catch (error : any ) {
+            setSelectedSurveyType('');
+            props.update();
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
         }
+    }
+
+    const handleClose = () => {
+        setSelectedSurveyType('');
+        props.close();
     }
 
     return (
         <>
             <Modal
                 open={props.open}
-                onClose={props.close}
+                onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -98,7 +108,7 @@ function CreateSurveyModal(props: any) {
                             Create a new survey
                         </Typography>
                         <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
-                            <CloseIcon onClick={props.close} />
+                            <CloseIcon onClick={handleClose} />
                         </IconButton>
                     </Box>
 
@@ -106,19 +116,19 @@ function CreateSurveyModal(props: any) {
                         {
                             surveyTypes.map(surveyType => {
                                 return (
-                                    <Box  
+                                    <Box
                                         onClick={() => handleSurveyTypeClick(surveyType.id)}
                                         onMouseEnter={highlightTextBackGround}
                                         onMouseLeave={unhighlightTextBackGround}
-                                        sx={typeContainer} 
-                                        key={surveyType.id} 
+                                        sx={typeContainer}
+                                        key={surveyType.id}
                                     >
                                         <Box display={'flex'} >
                                             <PollIcon />
                                             <Typography sx={{ paddingLeft: '5px' }} >{surveyType.label}</Typography>
                                         </Box>
                                         <Typography sx={{ fontSize: '14px' }} color={'#454545'} >Run targeted surveys on websites or inside products</Typography>
-                                        {selectedSurveyType === surveyType.id && <Box><CheckCircleIcon sx={{color : '#FFA500', position : 'absolute', right : '20px'}} /></Box>}
+                                        {selectedSurveyType === surveyType.id && <Box><CheckCircleIcon sx={{ color: '#FFA500', position: 'absolute', right: '20px' }} /></Box>}
                                     </Box>
                                 )
                             })
@@ -126,12 +136,12 @@ function CreateSurveyModal(props: any) {
                     </Box>
 
                     <Box sx={ModalStyles.modalButtonContainerStyle} >
-                        <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
+                        <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={handleClose} variant="contained">Cancel</Button>
                         <Button style={{ width: 'fit-content' }} onClick={handleCreateSurvey} sx={ButtonStyles.containedButton} variant="contained">Create</Button>
                     </Box>
                 </Box>
             </Modal>
-            <FSLoader show={loading} />   
+            <FSLoader show={loading} />
             <Notification ref={snackbarRef} />
         </>
     )

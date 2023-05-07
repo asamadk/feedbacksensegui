@@ -7,6 +7,10 @@ export type genericModalData = {
     type : string
 }
 
+export type surveyIdProp = {
+    surveyId: string
+}
+
 export type orgSettingUrlParam = {
     tabset : number
 }

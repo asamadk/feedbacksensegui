@@ -26,7 +26,7 @@ function DesignPreview() {
 
   const [selectedTheme, setSelectedTheme] = React.useState<any>();
     const [tabset, setTabset] = React.useState(0);
-    const [devices, setDevices] = React.useState('phone');
+    const [devices, setDevices] = React.useState('laptop');
 
     const handleDevices = (
         event: React.MouseEvent<HTMLElement>,
@@ -73,9 +73,15 @@ function DesignPreview() {
                     {tabset === 0 &&  <SurveyThemeSelector updateTheme={rerenderSelectedTheme} surveyId={surveyId} />}
                     {tabset === 1 &&  <EmailSurveyTemplate/>}
                 </Box>
-                <Box width={'65%'} height={'calc(100vh - 134px)'} sx={{backgroundColor : selectedTheme?.color[0]}} >
-                    <SelectedThemeTest selectedTheme={selectedTheme} />
-                    <PoweredBy/>
+                <Box width={'65%'} >
+                    <Box 
+                        width={devices === 'phone' ? '40%' : '100%'} 
+                        sx={{backgroundColor : selectedTheme?.color[0]}} 
+                        height={'calc(100vh - 134px)'}
+                    >
+                        <SelectedThemeTest selectedTheme={selectedTheme} />
+                        <PoweredBy/>
+                    </Box>
                 </Box>
             </Box>
         </Box>

@@ -1,9 +1,9 @@
-import { Avatar, Chip, IconButton, Typography } from '@mui/material'
+import { Avatar, Button, Chip, IconButton, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import EditIcon from '@mui/icons-material/Edit';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
-import * as Types from '../Utils/types' 
+import * as Types from '../Utils/types'
 import React, { useRef, useState } from 'react'
 import Popover from './Popover';
 import SingleSurveyAction from './SingleSurveyAction';
@@ -23,21 +23,25 @@ const surveyBlockMainContainer = {
     cursor: 'pointer'
 }
 
-function SurveyBlock(props : any) {
+function SurveyBlock(props: any) {
 
     let navigation = useNavigate();
     const snackbarRef: any = useRef(null);
 
-    const [survey , setSurvey] = React.useState<any>(props.survey);
+    const [survey, setSurvey] = React.useState<any>(props.survey);
     const [genericModalObj, setGenericModalObj] = React.useState<Types.genericModalData>();
-    const [showTitle, setShowTitile] = React.useState(false);
     const [showEditTitle, setShowEditTitle] = React.useState(false);
-    const [showSurveyAction, setShowSurveyAction] = React.useState(false);
-    const [showGenericModal , setShowGenericModal] = React.useState(false);
-    const [showChangeFolderModal , setShowChangeFolderModal] = React.useState(false);
+    const [showGenericModal, setShowGenericModal] = React.useState(false);
+    const [showChangeFolderModal, setShowChangeFolderModal] = React.useState(false);
     const [changeFolderSurveyId, setChangeFolderSurveyId] = React.useState('')
-    const [deleteSurveyId , setDeleteSurveyId] = React.useState('');
-    const [ loading , setLoading] = React.useState(false);
+    const [deleteSurveyId, setDeleteSurveyId] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
 
     const handleTextHighlight = (e: any) => {
         e.target.style.color = '#FFA500';
@@ -47,35 +51,32 @@ function SurveyBlock(props : any) {
         e.target.style.color = '#454545';
     }
 
-    const handleShowTitle = () => setShowTitile(true);
-    const handleHideTitle = () => setShowTitile(false);
-
     const handleShowEditTitle = () => setShowEditTitle(true);
     const handleHideEditTitle = () => setShowEditTitle(false);
 
     const handleMoreOptionsClick = () => {
         handleHideEditTitle();
-        handleHideTitle();
-        setShowSurveyAction(!showSurveyAction);
     }
 
-    const handleDeleteOptionClick = (surveyId : string) => {
+    const handleDeleteOptionClick = (surveyId: string) => {
         handleMoreOptionsClick();
+        setAnchorEl(null);
         setShowGenericModal(true);
         setDeleteSurveyId(surveyId);
-        let genDeleteObj : Types.genericModalData = {
-            header : 'Do you really want to delete this survey?',
-            warning : 'Warning: There\'s no turning back! I acknowledge that',
-            successButtonText : 'Delete',
-            cancelButtonText : 'Cancel',
-            description : 'The entire survey will be removed. | All the responses collected so far will be deleted.',
-            type : 'delete'
+        let genDeleteObj: Types.genericModalData = {
+            header: 'Do you really want to delete this survey?',
+            warning: 'Warning: There\'s no turning back! I acknowledge that',
+            successButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+            description: 'The entire survey will be removed. | All the responses collected so far will be deleted.',
+            type: 'delete'
         }
 
         setGenericModalObj(genDeleteObj);
     }
 
     const handleChangeFolderClick = () => {
+        setAnchorEl(null);
         handleMoreOptionsClick();
         setShowChangeFolderModal(true);
         setChangeFolderSurveyId(survey.id);
@@ -83,36 +84,41 @@ function SurveyBlock(props : any) {
 
     const handleOpenSurvey = () => {
         let surveyId = survey.id;
-        navigation('/survey/detail/create/'+surveyId);
+        navigation('/survey/detail/create/' + surveyId);
     }
 
     const handleSuccessButtonClick = () => {
         setShowGenericModal(false);
-        if(genericModalObj?.type === 'delete'){
+        if (genericModalObj?.type === 'delete') {
             handleDeleteSurvey();
         }
     }
 
     const handleDeleteSurvey = async () => {
-        setLoading(true);
-        let { data } = await axios.post(deleteSurvey(deleteSurveyId));
-        setLoading(false);
-        if(data.statusCode !== 200){
-            snackbarRef?.current?.show(data?.message, 'error');
-            return;
+        try {
+            setLoading(true);
+            let { data } = await axios.post(deleteSurvey(deleteSurveyId), { withCredentials: true });
+            setLoading(false);
+            if (data.statusCode !== 200) {
+                snackbarRef?.current?.show(data?.message, 'error');
+                return;
+            }
+            props.delete(deleteSurveyId);
+            props.update();
+        } catch (error: any) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            setLoading(false);
+            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
         }
-        
-        props.delete(deleteSurveyId);
-        props.update();
     }
 
-    const handleSuccessChangeFolder = (newSurveyData : any) => {
+    const handleSuccessChangeFolder = (newSurveyData: any) => {
         props.survey.folder_id = newSurveyData.folder_id;
         props.rerender();
     }
 
     const handleCloseSingleSurveyAction = () => {
-        setShowSurveyAction(false);
+        setAnchorEl(null);
         props.update();
     }
 
@@ -124,24 +130,27 @@ function SurveyBlock(props : any) {
                     <IconButton onClick={handleOpenSurvey} onMouseEnter={handleShowEditTitle} onMouseLeave={handleHideEditTitle} color='warning' sx={{ color: '#f1f1f1' }} >
                         <EditIcon />
                     </IconButton>
-                    <Popover open={showEditTitle} text={'Edit survey'}/>
-
-                    <IconButton onClick={handleMoreOptionsClick} onMouseEnter={handleShowTitle} onMouseLeave={handleHideTitle} color='warning' sx={{ color: '#f1f1f1' }} >
+                    <Popover open={showEditTitle} text={'Edit survey'} />
+                    <IconButton id="basic-button"
+                        onClick={handleClick}
+                        color='warning'
+                        sx={{ color: '#f1f1f1' }}
+                    >
                         <MoreHorizIcon />
                     </IconButton>
-                    <SingleSurveyAction 
-                        changeFolder={handleChangeFolderClick} 
-                        delete={handleDeleteOptionClick} 
-                        open={showSurveyAction}
+                    <SingleSurveyAction
+                        anchor={anchorEl}
+                        changeFolder={handleChangeFolderClick}
+                        delete={handleDeleteOptionClick}
+                        open={open}
                         survey={survey}
                         close={handleCloseSingleSurveyAction}
                     />
-                    <Popover open={showTitle} text={'Disable,delete and more..'}/>
                 </Box>
             </Box>
             <Box onClick={handleOpenSurvey} sx={{ padding: '15px', paddingBottom: '10px' }} >
                 <Box sx={{ display: 'flex' }} >
-                    <Avatar sx={{ bgcolor: '#D81159', width: 24, height: 24, fontSize: 14 }}>{survey?.user_id}</Avatar>
+                    <Avatar sx={{ bgcolor: '#D81159', width: 24, height: 24, fontSize: 14 }}>{survey?.user_id[0]}</Avatar>
                     <Typography variant='subtitle1' sx={{ fontSize: 14, marginLeft: '5px', color: '#454545' }} >
                         {new Date(survey?.created_at).toDateString()}
                     </Typography>
@@ -160,13 +169,13 @@ function SurveyBlock(props : any) {
                     </Box>
                 </Box>
             </Box>
-            <GenericModal 
-                payload={genericModalObj} 
-                close={() => setShowGenericModal(false)} 
-                open={showGenericModal} 
+            <GenericModal
+                payload={genericModalObj}
+                close={() => setShowGenericModal(false)}
+                open={showGenericModal}
                 callback={handleSuccessButtonClick}
             />
-            <ChangeFolderModal callback={handleSuccessChangeFolder} surveyId={changeFolderSurveyId} close={() => setShowChangeFolderModal(false)}  open={showChangeFolderModal} />
+            <ChangeFolderModal callback={handleSuccessChangeFolder} surveyId={changeFolderSurveyId} close={() => setShowChangeFolderModal(false)} open={showChangeFolderModal} />
             <FSLoader show={loading} />
             <Notification ref={snackbarRef} />
         </Box>

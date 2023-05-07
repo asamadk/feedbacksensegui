@@ -22,6 +22,18 @@ export const outlinedButton = {
     textTransform : 'none'
 }
 
+export const simpleOutlinedButton = {
+    "&.MuiButtonBase-root:hover": {
+        bgcolor: "#121212",
+        border : '1px #D81159 solid',
+    },
+    backgroundColor: '#1E1E1E',
+    color : '#D81159',
+    border : '1px #D81159 solid',
+    textTransform : 'none',
+    width : '100%'
+}
+
 export const outlinedBlackButton = {
     "&.MuiButtonBase-root:hover": {
         bgcolor: "#121212",

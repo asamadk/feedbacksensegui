@@ -68,39 +68,51 @@ function SurveyListPage() {
     }, []);
 
     const getSubscriptionDetails = async () => {
-        setLoading(true);
-        let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(FeedbackUtils.getUserId()));
-        setLoading(false);
-        if(data.statusCode !== 200){
-            snackbarRef?.current?.show(data?.message, 'error');
-            return;
-        }
-        
-        let resData: any[] = data.data;
-        if (resData != null) {
-            setSubscriptionDetail(resData);
+        try {
+            setLoading(true);
+            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(FeedbackUtils.getUserId()),{ withCredentials : true });
+            setLoading(false);
+            if(data.statusCode !== 200){
+                snackbarRef?.current?.show(data?.message, 'error');
+                return;
+            }
+            
+            let resData: any[] = data.data;
+            if (resData != null) {
+                setSubscriptionDetail(resData);
+            }            
+        } catch (error : any) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            setLoading(false);
+            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
         }
     }
 
     const getFolders = async () => {
-        let orgId = FeedbackUtils.getOrgId();
-        if (orgId == null) {
-            snackbarRef?.current?.show('Something went wrong, please contact the admin', 'error');
+        try {
+            let orgId = FeedbackUtils.getOrgId();
+            if (orgId == null) {
+                snackbarRef?.current?.show('Something went wrong, please contact the admin', 'error');
+            }
+    
+            setLoading(true);
+            let folderRes = await axios.get(Endpoints.getFolders(orgId),{ withCredentials : true });
+            setLoading(false);
+            if(folderRes?.data?.statusCode !== 200){
+                snackbarRef?.current?.show(folderRes?.data?.message, 'error');
+                return;
+            }
+    
+            let resData: any = folderRes.data;
+            if (resData == null) {
+                return;
+            }
+            setFolderList(resData.data);
+        } catch (error : any) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            setLoading(false);
+            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
         }
-
-        setLoading(true);
-        let folderRes = await axios.get(Endpoints.getFolders(orgId));
-        setLoading(false);
-        if(folderRes?.data?.statusCode !== 200){
-            snackbarRef?.current?.show(folderRes?.data?.message, 'error');
-            return;
-        }
-
-        let resData: any = folderRes.data;
-        if (resData == null) {
-            return;
-        }
-        setFolderList(resData.data);
     }
 
     const handleAllFolderClick = (e: any) => {
@@ -166,17 +178,23 @@ function SurveyListPage() {
     }
 
     const handleDeleteFolderClick = async (folderId: string) => {
-        setLoading(true);
-        const { data } = await axios.delete(Endpoints.deleteFolder(folderId));
-        setLoading(false);
-        if(data.statusCode !== 200){
-            snackbarRef?.current?.show(data?.message, 'error');
-            return;
+        try {
+            setLoading(true);
+            const { data } = await axios.delete(Endpoints.deleteFolder(folderId),{ withCredentials : true });
+            setLoading(false);
+            if(data.statusCode !== 200){
+                snackbarRef?.current?.show(data?.message, 'error');
+                return;
+            }
+            snackbarRef?.current?.show(data?.message, 'success');
+            setFolderList(fld => fld.filter(folder => folder.id !== folderId));
+            setSelectedFolder('All Surveys');
+            setSelectedFolderId('0');
+        } catch (error : any) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            setLoading(false);
+            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
         }
-        snackbarRef?.current?.show(data?.message, 'success');
-        setFolderList(fld => fld.filter(folder => folder.id !== folderId));
-        setSelectedFolder('All Surveys');
-        setSelectedFolderId('0');
     }
 
     const handleUpdateComponent = () => {
@@ -225,12 +243,12 @@ function SurveyListPage() {
 
                     </div>
                     <div style={{ borderTop: '1px #454545 solid' }} >
-                        <div style={{ color: '#323533', paddingTop: '10px' }}>
+                        <div style={{ color: '#808080', paddingTop: '10px' }}>
                             <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Subscription</Typography>
                         </div>
                         <Typography style={{ textAlign: 'start' }} variant='subtitle2' >{subscriptionDetails?.name}</Typography>
 
-                        <div style={{ color: '#323533', paddingTop: '10px' }}>
+                        <div style={{ color: '#808080', paddingTop: '10px' }}>
                             <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Billing cycle</Typography>
                         </div>
                         <Typography style={{ textAlign: 'start', paddingBottom: '30px' }} variant='subtitle2' >{subscriptionDetails?.billingCycle}</Typography>

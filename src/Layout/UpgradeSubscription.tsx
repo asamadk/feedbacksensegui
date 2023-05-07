@@ -6,6 +6,7 @@ import axios from 'axios';
 import { getAllPlanList } from '../Utils/Endpoints';
 import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
+import { containedButton } from '../Styles/ButtonStyle';
 
 function UpgradeSubscription() {
 
@@ -23,7 +24,7 @@ function UpgradeSubscription() {
     const getSurveyPlans = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(getAllPlanList());
+            const { data } = await axios.get(getAllPlanList(),{ withCredentials : true });
             setLoading(false);
     
             if (data.statusCode !== 200) {                
@@ -123,7 +124,8 @@ function SurveyPlan({ plan,duration }: any) {
                     <Typography sx={{ fontSize: '13px',color : '#808080' }} >{`Billed : ${duration}`}</Typography>
                 </Box>
             </Box>
-            <Button style={{ marginBottom: '30px',width : '100%', marginTop : '20px' }} color='primary'  variant="contained">Upgrade</Button>
+            {/* <Button sx={containedButton}   variant="contained">Upgrade</Button> */}
+            <Button sx={containedButton}   variant="contained">Coming soon</Button>
             <Divider sx={{background : '#808080',marginBottom: '30px'}} />
             {planDesc?.features?.map((feat: string, index : number) => {
                 return (

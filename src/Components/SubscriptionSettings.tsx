@@ -42,17 +42,23 @@ function SubscriptionSettings() {
     },[]);
 
     const getSubscriptionDetails = async () => {
-        setLoading(true);
-        let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(FeedbackUtils.getUserId()));
-        setLoading(false);
-        if (data.statusCode !== 200) {
-            snackbarRef?.current?.show(data?.message, 'error');
-            return;
-        }
-
-        let resData: any[] = data.data;
-        if (resData != null) {
-            setSubscriptionDetail(resData);
+        try {
+            setLoading(true);
+            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(FeedbackUtils.getUserId()),{ withCredentials : true });
+            setLoading(false);
+            if (data.statusCode !== 200) {
+                snackbarRef?.current?.show(data?.message, 'error');
+                return;
+            }
+    
+            let resData: any[] = data.data;
+            if (resData != null) {
+                setSubscriptionDetail(resData);
+            }
+        } catch (error : any) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            setLoading(false);
+            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
         }
     }
 

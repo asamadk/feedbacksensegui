@@ -70,7 +70,7 @@ function ShareSurvey() {
 
   return (
     <Box sx={{ height: 'calc(100vh - 70px)', overflowY: 'hidden', padding: '50px 30px' }} >
-      <Box sx={{ border: '1px #454545 solid', borderRadius: '5px' }} >
+      <Box sx={{ border: '1px #454545 solid', borderRadius: '5px',backgroundColor: '#1A1A1A' }} >
         <Box sx={{ textAlign: 'start', padding: '15px', borderBottom: '1px #454545 solid' }} >
           <Typography sx={{ color: '#f1f1f1', fontSize: '20px' }} >{headerText}</Typography>
         </Box>

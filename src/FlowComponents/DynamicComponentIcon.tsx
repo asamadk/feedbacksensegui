@@ -12,23 +12,24 @@ import AppsIcon from '@mui/icons-material/Apps';
 import CallIcon from '@mui/icons-material/Call';
 import StarsIcon from '@mui/icons-material/Stars';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { getIconColorById } from '../Utils/FeedbackUtils';
 
 function DynamicComponentIcon(props : any) {
   return (
     <>
-        {props.id === 1 && <PlayCircleFilledIcon sx={{ color: props.bgColor }} />}
-        {props.id === 2 && <ThumbUpIcon sx={{ color: props.bgColor }} />}
-        {props.id === 3 && <SquareIcon sx={{ color: props.bgColor }} />}
-        {props.id === 4 && <GridViewIcon sx={{ color: props.bgColor }} />}
-        {props.id === 5 && <CreateIcon sx={{ color: props.bgColor }} />}
-        {props.id === 6 && <InsertEmoticonIcon sx={{ color: props.bgColor }} />}
-        {props.id === 7 && <SubjectIcon sx={{ color: props.bgColor }} />}
-        {props.id === 8 && <AvTimerIcon sx={{ color: props.bgColor }} />}
-        {props.id === 9 && <ArrowDropDownCircleIcon sx={{ color: props.bgColor }} />}
-        {props.id === 10 && <AppsIcon sx={{ color: props.bgColor }} />}
-        {props.id === 11 && <CallIcon sx={{ color: props.bgColor }} />}
-        {props.id === 12 && <StarsIcon sx={{ color: props.bgColor }} />}
-        {props.id === 13 && <CalendarMonthIcon sx={{ color: props.bgColor }} />}
+        {props.id === 1 && <PlayCircleFilledIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 2 && <ThumbUpIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 3 && <SquareIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 4 && <GridViewIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 5 && <CreateIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 6 && <InsertEmoticonIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 7 && <SubjectIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 8 && <AvTimerIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 9 && <ArrowDropDownCircleIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 10 && <AppsIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 11 && <CallIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 12 && <StarsIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 13 && <CalendarMonthIcon sx={{ color: getIconColorById(props?.id) }} />}
     </>
   );
 }

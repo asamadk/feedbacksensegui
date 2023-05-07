@@ -43,30 +43,42 @@ function CreateFolder(props: any) {
     const [ loading , setLoading] = React.useState(false);
 
     const handleCreateButtonClick = async () => {
-        const currentUser : string | null = localStorage.getItem(USER_LOCAL_KEY);
-        if(currentUser == null){
-            snackbarRef?.current?.show('Unauthorized', 'error');
-            return;
+        try {
+            const currentUser : string | null = localStorage.getItem(USER_LOCAL_KEY);
+            if(currentUser == null){
+                snackbarRef?.current?.show('Unauthorized', 'error');
+                return;
+            }
+            const authenticatedUser : authUser = JSON.parse(currentUser);
+            setLoading(true);
+            const { data } = await axios.post(createFolder(authenticatedUser.organization_id,folderName), { withCredentials: true });
+            setLoading(false);
+            
+            if(data.statusCode === 200){
+                snackbarRef?.current?.show(data?.message, 'success');
+                setFolderName('');
+                props.close('save');
+            }else{
+                snackbarRef?.current?.show(data?.message, 'error');
+                console.warn(data.message)
+            }
+        } catch (error : any) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            setLoading(false);
+            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
         }
-        const authenticatedUser : authUser = JSON.parse(currentUser);
-        setLoading(true);
-        const { data } = await axios.post(createFolder(authenticatedUser.organization_id,folderName), { withCredentials: true });
-        setLoading(false);
-        
-        if(data.statusCode === 200){
-            snackbarRef?.current?.show(data?.message, 'success');
-            props.close('save');
-        }else{
-            snackbarRef?.current?.show(data?.message, 'error');
-            console.warn(data.message)
-        }
+    }
+
+    const handleClose = () => {
+        setFolderName('');
+        props.close();
     }
 
     return (
         <>
             <Modal
                 open={props.open}
-                onClose={props.close}
+                onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -76,7 +88,7 @@ function CreateFolder(props: any) {
                             Create folder
                         </Typography>
                         <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
-                            <CloseIcon onClick={props.close} />
+                            <CloseIcon onClick={handleClose} />
                         </IconButton>
                     </Box>
                     <Box sx={textFieldStyle} >
@@ -93,7 +105,7 @@ function CreateFolder(props: any) {
                         />
                     </Box>
                     <Box sx={ModalStyles.modalButtonContainerStyle} >
-                        <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
+                        <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={handleClose} variant="contained">Cancel</Button>
                         <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleCreateButtonClick} >Create</Button>
                     </Box>
                 </Box>

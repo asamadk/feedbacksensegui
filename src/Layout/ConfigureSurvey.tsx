@@ -3,10 +3,8 @@ import { styled } from '@mui/system';
 import axios from 'axios';
 import React, { useEffect, useRef } from 'react'
 import { containedButton } from '../Styles/ButtonStyle';
-import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import { settingLayoutStyle, globalSettingSubContainers } from '../Styles/LayoutStyles';
 import { getSurveyConfigData, saveSurveyConfig } from '../Utils/Endpoints';
-import { getSurveyIdFromLocalStorage } from '../Utils/FeedbackUtils';
 import Notification from '../Utils/Notification';
 import { useParams } from 'react-router';
 import FSLoader from '../Components/FSLoader';
@@ -51,7 +49,7 @@ function ConfigureSurvey() {
   const getSurveyConfig = async() => {
     try {
       setLoading(true);
-      const { data } = await axios.get(getSurveyConfigData(surveyId));
+      const { data } = await axios.get(getSurveyConfigData(surveyId),{ withCredentials : true });
       setLoading(false);
       if(data.statusCode !== 200){
         snackbarRef?.current?.show(data?.message, 'error');
@@ -60,7 +58,7 @@ function ConfigureSurvey() {
 
       if(data.data != null){
         let tempData = data.data;
-        if(tempData?.response_limit != null && tempData?.response_limit != '0'){
+        if(tempData?.response_limit != null && tempData?.response_limit !== '0'){
           setShowStopSurveyNumber(true);
           setShowStopSurveyNumberData(tempData?.response_limit?.toString());
         }
@@ -71,7 +69,9 @@ function ConfigureSurvey() {
         }
       }
     } catch (error : any ) {
-      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      console.warn("🚀 ~ file: ConfigureSurvey.tsx:72 ~ getSurveyConfig ~ error:", error)
+      setLoading(false);
+      // snackbarRef?.current?.show(error?.response?.data?.message, 'error');
     }
 
   }
@@ -92,8 +92,9 @@ function ConfigureSurvey() {
       }
       setLoading(true);
       const { data } = await axios.post(
-        saveSurveyConfig(getSurveyIdFromLocalStorage()),
-        saveObj
+        saveSurveyConfig(surveyId),
+        saveObj,
+        { withCredentials : true }
       );
       setLoading(false);
       if(data.statusCode !== 200){

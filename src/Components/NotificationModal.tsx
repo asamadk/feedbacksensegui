@@ -3,38 +3,24 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
 
 const notificationMainStyle = {
     width: "100%",
     maxWidth: 360,
     bgcolor: "background.paper",
     position: "absolute",
-    border: "1px #FFA500 solid",
     right: "10px",
     borderRadius: "5px",
     transition: "all .2s",
-    zIndex : 10
+    zIndex: 10,
+    color : '#f1f1f1'
 };
 
 const notificationData = [
     {
-        header: 'Brunch this weekend?',
-        secondaryText: 'Ali Connors',
-        mainText: ` — I'll be in your neighborhood doing errands this…`
+        header: 'Welcome to your personal notification center!',
+        mainText: `  Here, you'll find all the important updates and information you need`
     },
-    {
-        header: 'Oui Oui',
-        secondaryText: 'Ali Connors',
-        mainText: ` — I'll be in your neighborhood doing errands this…`
-    },
-    {
-        header: 'Summer BBQ',
-        secondaryText: 'Ali Connors',
-        mainText: ` — I'll be in your neighborhood doing errands this…`
-    }
 ]
 
 export default function NotificationModal() {
@@ -53,14 +39,6 @@ export default function NotificationModal() {
                                     primary={notify.header}
                                     secondary={
                                         <React.Fragment>
-                                            <Typography
-                                                sx={{ display: "inline" }}
-                                                component="span"
-                                                variant="body2"
-                                                color="text.primary"
-                                            >
-                                                {notify.secondaryText}
-                                            </Typography>
                                             {notify.mainText}
                                         </React.Fragment>
                                     }

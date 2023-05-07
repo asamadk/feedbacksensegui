@@ -41,7 +41,7 @@ const CssTextField = styled(TextField)({
 });
 
 function SurveysPanel(props: any) {
-    
+
     const snackbarRef: any = useRef(null);
 
     const [surveys, setSurveys] = useState<any[]>([]);
@@ -52,13 +52,15 @@ function SurveysPanel(props: any) {
     const [selectedSurveyType, setSelectedSurveyType] = useState<string>('0');
     const [surveyTypes, setSurveyTypes] = useState<any[]>([]);
     const [openCreateSurvey, setOpenCreateSurvey] = useState(false);
-    const [ loading , setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const [isEmpty, setIsEmpty] = React.useState<Boolean>(false);
+    const [forceRerender, setForceRerender] = React.useState(false);
 
     useEffect(() => {
         getSurveys();
         getUserList();
         getSurveyTypes();
-    }, []);
+    }, [forceRerender]);
 
     useEffect(() => {
         filterSurveysByFolderId(props.folderId);
@@ -76,13 +78,13 @@ function SurveysPanel(props: any) {
     const getSurveyTypes = async (): Promise<void> => {
         try {
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getSurveyTypes());
+            let { data } = await axios.get(Endpoints.getSurveyTypes(), { withCredentials: true });
             setLoading(false);
-            if(data.statusCode !== 200){
+            if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
-    
+
             if (data.data != null) {
                 data.data.unshift({
                     id: '0',
@@ -90,7 +92,7 @@ function SurveysPanel(props: any) {
                 });
                 setSurveyTypes(data.data);
             }
-        } catch (error : any ) {
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             console.log('Exception :: getUserList :: ', error);
         }
@@ -99,9 +101,9 @@ function SurveysPanel(props: any) {
     const getUserList = async (): Promise<void> => {
         try {
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getUserList(FeedbackUtils.getOrgId()));
+            let { data } = await axios.get(Endpoints.getUserList(FeedbackUtils.getOrgId()), { withCredentials: true });
             setLoading(false);
-            if(data?.statusCode !== 200){
+            if (data?.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
@@ -113,7 +115,7 @@ function SurveysPanel(props: any) {
                 })
                 setUserList(data.data);
             }
-        } catch (error : any ) {
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             console.log('Exception :: getUserList :: ', error);
         }
@@ -126,21 +128,28 @@ function SurveysPanel(props: any) {
                 snackbarRef?.current?.show('Something went wrong, Please contact FeedbackSense help', 'error');
             }
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getSurveyList(orgId));
+            let { data } = await axios.get(Endpoints.getSurveyList(orgId), { withCredentials: true });
             setLoading(false);
-            if(data?.statusCode !== 200){
+            if (data?.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
-    
+
             let resData: any = data.data;
             if (resData != null) {
                 setSurveys(resData);
                 setUnfilteredSureveys(resData);
+                if (resData?.length < 1) {
+                    setIsEmpty(true);
+                } else {
+                    setIsEmpty(false);
+                }
+            } else {
+                setIsEmpty(true);
             }
-        } catch (error : any ) {
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            
+
         }
     }
 
@@ -186,9 +195,13 @@ function SurveysPanel(props: any) {
                 tempSurveys.push(survey);
             }
         });
-
         setSurveys(tempSurveys);
         snackbarRef?.current?.show('Survey deleted', 'success');
+        if(tempSurveys.length < 1){
+            console.log('Force rerender');
+            setForceRerender(!forceRerender);
+        }
+
     }
 
     const rerenderAfterFolderChange = () => {
@@ -205,68 +218,98 @@ function SurveysPanel(props: any) {
         setOpenCreateSurvey(false);
     }
 
-    return (
-        <Box sx={{ padding: '15px 20px' }} >
-            <Typography sx={{ textAlign: 'start' }} variant='h5'>{props.folder}</Typography>
-            <Box sx={buttonContainerStyles} >
-                <Box>
-                    <Button
-                        sx={ButtonStyles.containedButton}
-                        style={{ width: 'fit-content', marginBottom: '15px', marginRight: '30px', textTransform: 'none' }}
-                        startIcon={<AddIcon />}
-                        variant='contained' 
-                        onClick={handleCreateNewSurvey}
-                        >
-                        Create new survey
-                    </Button>
-                    <Select onChange={handleUserChange} sx={InputStyles.muiSelectStyle} value={selectedUser} size='small' >
-                        {userList.map(user => {
-                            return (
-                                <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>
-                            );
-                        })}
-                    </Select>
-                    <Select onChange={handleSurveyTypeChange} value={selectedSurveyType} style={{ marginLeft: '10px' }} sx={InputStyles.muiSelectStyle} size='small' >
-                        {surveyTypes.map(type => {
-                            return (
-                                <MenuItem key={type.id} value={type.id}>{type.label}</MenuItem>
-                            )
-                        })}
-                    </Select>
-                </Box>
-                <Box>
-                    <CssTextField
-                        onChange={handleSearch}
-                        value={searchText}
-                        size='small'
-                        sx={{ input: { color: 'white' } }}
-                        placeholder='Search surveys and folders..'
-                        style={{ width: '250px' }}
-                        InputProps={{
-                            endAdornment: <SearchIcon sx={{ color: '#f1f1f1', paddingLeft: '5px' }} />
-                        }}
-                    />
-                </Box>
-            </Box>
-            <div style={{ border: '0.5px #454545 solid', marginTop: '10px' }} />
+    const runOnCreate = () => {
+        setOpenCreateSurvey(false);
+        setForceRerender(!forceRerender);
+    }
 
-            <Grid style={{ marginTop: '20px', overflowY : 'scroll', height : 'calc(100vh - 210px)' }} container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                {surveys.map((survey) => (
-                    <Grid item xs={2} sm={4} md={4} key={survey.id}>
-                        <SurveyBlock
-                            survey={survey}
-                            delete={deleteSurvey}
-                            rerender={rerenderAfterFolderChange}
-                            update={props.update}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
-            <CreateSurveyModal surveys={surveys}  open={openCreateSurvey} close={handleCloseCreateNewSurvey} />
+    return (
+        <>
+            {
+                isEmpty === true ?
+                    <div style={{
+                        position: "relative",
+                        top: "25%",
+                        width: 'fit-content',
+                        margin: 'auto'
+                    }} >
+                        <img style={{ maxWidth: 230 }} alt='Create your first survey to get started!' src='/completed-task.png'></img>
+                        <Typography style={{ color: '#f1f1f1' }} variant='h6'>Create your first survey to get started!</Typography>
+                        <Typography style={{ color: '#FFA500' }} variant='subtitle2'>Click the button below to add your first survey.</Typography>
+                        <Button sx={containedButtonStyle} onClick={handleCreateNewSurvey} variant="contained">Get Started</Button>
+                    </div>
+                    :
+                    <Box sx={{ padding: '15px 20px' }} >
+                        <Typography sx={{ textAlign: 'start' }} variant='h5'>{props.folder}</Typography>
+                        <Box sx={buttonContainerStyles} >
+                            <Box>
+                                <Button
+                                    sx={ButtonStyles.containedButton}
+                                    style={{ width: 'fit-content', marginBottom: '15px', marginRight: '30px', textTransform: 'none' }}
+                                    startIcon={<AddIcon />}
+                                    variant='contained'
+                                    onClick={handleCreateNewSurvey}
+                                >
+                                    Create new survey
+                                </Button>
+                                <Select onChange={handleUserChange} sx={InputStyles.muiSelectStyle} value={selectedUser} size='small' >
+                                    {userList.map(user => {
+                                        return (
+                                            <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>
+                                        );
+                                    })}
+                                </Select>
+                                <Select onChange={handleSurveyTypeChange} value={selectedSurveyType} style={{ marginLeft: '10px' }} sx={InputStyles.muiSelectStyle} size='small' >
+                                    {surveyTypes.map(type => {
+                                        return (
+                                            <MenuItem key={type.id} value={type.id}>{type.label}</MenuItem>
+                                        )
+                                    })}
+                                </Select>
+                            </Box>
+                            <Box>
+                                <CssTextField
+                                    onChange={handleSearch}
+                                    value={searchText}
+                                    size='small'
+                                    sx={{ input: { color: 'white' } }}
+                                    placeholder='Search surveys and folders..'
+                                    style={{ width: '250px' }}
+                                    InputProps={{
+                                        endAdornment: <SearchIcon sx={{ color: '#f1f1f1', paddingLeft: '5px' }} />
+                                    }}
+                                />
+                            </Box>
+                        </Box>
+                        <div style={{ border: '0.5px #454545 solid', marginTop: '10px' }} />
+
+                        <Grid style={{ marginTop: '20px', overflowY: 'scroll', height: 'calc(100vh - 210px)' }} container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                            {surveys.map((survey) => (
+                                <Grid item xs={2} sm={4} md={4} key={survey.id}>
+                                    <SurveyBlock
+                                        survey={survey}
+                                        delete={deleteSurvey}
+                                        rerender={rerenderAfterFolderChange}
+                                        update={props.update}
+                                    />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Box>
+            }
+            <CreateSurveyModal update={runOnCreate} surveys={surveys} open={openCreateSurvey} close={handleCloseCreateNewSurvey} />
             <FSLoader show={loading} />
             <Notification ref={snackbarRef} />
-        </Box>
+        </>
     )
 }
 
 export default SurveysPanel
+
+const containedButtonStyle = {
+    marginTop: '10px',
+    backgroundColor: '#D81159',
+    "&.MuiButtonBase-root:hover": {
+        bgcolor: "#FF367F"
+    }
+}

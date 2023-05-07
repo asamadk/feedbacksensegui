@@ -1,5 +1,5 @@
 import { Alert, Box, Button, IconButton, Snackbar, styled, TextField, Typography } from '@mui/material'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import FeedbackCanvas from '../FlowComponents/FeedbackCanvas'
 import 'reactflow/dist/style.css';
 import FeedbackComponentList from '../FlowComponents/FeedbackComponentList'
@@ -15,6 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import Notification from '../Utils/Notification';
 import FSLoader from '../Components/FSLoader';
+import { enableSurvey } from '../Utils/Endpoints';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -37,11 +38,10 @@ const CssTextField = styled(TextField)({
   color: 'white'
 });
 
-function CreateSurvey(props : any) {
+function CreateSurvey(props: any) {
 
   const snackbarRef: any = useRef(null);
   const { surveyId } = useParams();
-
   const [openEditModal, setOpenEditModal] = React.useState(false);
   const [componentId, setComponentId] = React.useState<string>();
   const [comUiId, setCompUiId] = React.useState<string>('');
@@ -49,7 +49,7 @@ function CreateSurvey(props : any) {
   const [componentConfig, setComponentConfig] = React.useState<Map<string, object>>(new Map());
   const [surveyDetail, setSurveyDetail] = React.useState<any>();
   const [showSurveyName, setShowSurveyName] = React.useState(true);
-  const [ loading , setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
     getSingleSurvey();
@@ -58,9 +58,9 @@ function CreateSurvey(props : any) {
   const getSingleSurvey = async () => {
     try {
       setLoading(true);
-      let { data } = await axios.get(Endpoints.getSurveyDetails(surveyId));
+      let { data } = await axios.get(Endpoints.getSurveyDetails(surveyId), { withCredentials: true });
       setLoading(false);
-      if(data.statusCode !== 200){
+      if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
         return;
       }
@@ -71,8 +71,8 @@ function CreateSurvey(props : any) {
         }
         props.updateSurveyId(data.data.id)
       }
-    } catch (error : any ) {
-      snackbarRef?.current?.show(error?.response?.data?.statusCode,'error');
+    } catch (error: any) {
+      snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
     }
   }
 
@@ -82,9 +82,13 @@ function CreateSurvey(props : any) {
     setOpenEditModal(true);
   }
 
-  const handleSavecomponentConfig = (data: any) => {
+  const handleSaveComponentConfig = (data: any) => {
     let tempMap = componentConfig;
-    const validatedComp = FeedbackUtils.validateFlowComponent(JSON.parse(data), componentId);
+    if (componentId == null) {
+      snackbarRef?.current?.show('A component error has been occurred.', 'error');
+      return;
+    }
+    const validatedComp = FeedbackUtils.validateFlowComponent(JSON.parse(data), parseInt(componentId));
     if (validatedComp !== null) {
       snackbarRef?.current?.show(validatedComp, 'error');
       return;
@@ -123,18 +127,53 @@ function CreateSurvey(props : any) {
 
   }
 
+  const validateSurveyFlowOnSave = (flow: any): boolean => {
+    try {
+      const nodes: any[] = flow?.nodes;
+      for (const node of nodes) {
+        if (node == null || node.data == null) {
+          continue;
+        }
+        if (node?.data?.compConfig == null) {
+          snackbarRef?.current?.show('One or more components are have missing information.', 'error');
+          return false;
+        }
+        const validatedComp = FeedbackUtils.validateFlowComponent(JSON.parse(node?.data?.compConfig), node.data.compId);
+        if (validatedComp != null) {
+          snackbarRef?.current?.show(validatedComp, 'error');
+          return false;
+        }
+      }
+      return true;
+    } catch (error) {
+      console.log("🚀 ~ file: CreateSurvey.tsx:146 ~ validateSurveyFlowOnSave ~ error:", error)
+      return false;
+    }
+  }
+
   const saveFlow = async (flow: any) => {
     try {
       setLoading(true);
-      const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyDetail.id), flow);
+      const isSurveyFlowValid = validateSurveyFlowOnSave(flow);
+      const isNodeDisconnected = FeedbackUtils.validateIsNodeDisconnected(flow);
+      if (isNodeDisconnected === true) {
+        setLoading(false);
+        snackbarRef?.current?.show('Please make sure all components are connected.', 'error');
+        return;
+      }
+      if (isSurveyFlowValid === false) {
+        setLoading(false);
+        return;
+      }
+      const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyDetail.id), flow, { withCredentials: true });
       setLoading(false);
-      if(data.statusCode !== 200){
+      if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
         return;
       }
       snackbarRef?.current?.show(data?.message, 'success');
-    } catch (error : any ) {
-      snackbarRef?.current?.show(error?.response?.data?.statusCode,'error');
+    } catch (error: any) {
+      snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
     }
   }
 
@@ -152,16 +191,16 @@ function CreateSurvey(props : any) {
         surveyName: surveyDetail.name
       }
       setLoading(true);
-      const { data } = await axios.post(Endpoints.updateSurveyName(surveyDetail.id), payload)
+      const { data } = await axios.post(Endpoints.updateSurveyName(surveyDetail.id), payload, { withCredentials: true })
       setLoading(false);
-      if(data.statusCode !== 200){
+      if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
         return;
       }
       snackbarRef?.current?.show(data?.message, 'success');
       handleCloseEditName();
-    } catch (error : any ) {
-      snackbarRef?.current?.show(error?.response?.data?.statusCode,'error');
+    } catch (error: any) {
+      snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
     }
   }
 
@@ -169,6 +208,47 @@ function CreateSurvey(props : any) {
     let tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
     tempSurveyDetail.name = e.target.value;
     setSurveyDetail(tempSurveyDetail);
+  }
+
+  const handleDisableEnableSurvey = async (e: any) => {
+    if (surveyDetail?.is_published === true) {
+      try {
+        setLoading(true);
+        let { data } = await axios.post(Endpoints.disableSurvey(surveyDetail?.id), { withCredentials: true });
+        setLoading(false);
+        if (data.statusCode !== 200) {
+          snackbarRef?.current?.show(data?.message, 'error');
+          return;
+        }
+        snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
+        const tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
+        tempSurveyDetail.is_published = false;
+        setSurveyDetail(tempSurveyDetail);
+      } catch (error: any) {
+        setLoading(false);
+        snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      }
+    } else {
+      try {
+        setLoading(true);
+        let { data } = await axios.post(enableSurvey(surveyDetail?.id), { withCredentials: true });
+        setLoading(false);
+        if (data.statusCode !== 200) {
+          snackbarRef?.current?.show(data.message, 'error');
+          return;
+        }
+        snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
+        if (data.success === true) {
+          const tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
+          tempSurveyDetail.is_published = true;
+          setSurveyDetail(tempSurveyDetail);
+        }
+      } catch (error: any) {
+        setLoading(false);
+        snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      }
+    }
+    props.close();
   }
 
   return (
@@ -183,7 +263,7 @@ function CreateSurvey(props : any) {
             </Typography>
           }
           {showSurveyName &&
-            <IconButton onClick={handleEditNameClick} size='small' style={{ padding: '0px', paddingTop: '10px', paddingLeft: '10px' }} >
+            <IconButton onClick={handleEditNameClick} size='small' sx={iconStyle} >
               <ModeEditOutlineOutlinedIcon sx={{ color: '#f1f1f1' }} />
             </IconButton>}
           {showSurveyName === false &&
@@ -199,18 +279,20 @@ function CreateSurvey(props : any) {
           }
           {
             showSurveyName === false &&
-            <IconButton onClick={handleSaveNameClick} size='small' style={{ padding: '0px', paddingTop: '10px', paddingLeft: '10px' }} >
+            <IconButton onClick={handleSaveNameClick} size='small' sx={iconStyle} >
               <SaveAltIcon sx={{ color: '#f1f1f1' }} />
             </IconButton>
           }
           {
             showSurveyName === false &&
-            <IconButton onClick={handleCloseEditName} size='small' style={{ padding: '0px', paddingTop: '10px', paddingLeft: '10px' }} >
+            <IconButton onClick={handleCloseEditName} size='small' sx={iconStyle} >
               <CloseIcon sx={{ color: '#f1f1f1' }} />
             </IconButton>
           }
         </Box>
-        <Button style={{ width: '110px' }} sx={ButtonStyles.containedButton} variant="contained">Preview</Button>
+        <Button onClick={handleDisableEnableSurvey} style={{ width: '110px' }} sx={ButtonStyles.containedButton} variant="contained">
+          {surveyDetail?.is_published === true ? 'Disable' : 'Enable'}
+        </Button>
       </Box>
       <Box display={'flex'} >
         <Box width={'77%'} >
@@ -221,7 +303,7 @@ function CreateSurvey(props : any) {
             performSave={handleSaveFlow}
           />
         </Box>
-        <Box sx={{ borderLeft: '1px #454545 solid', overflowY: 'scroll' }} width={'23%'} >
+        <Box sx={{ borderLeft: '1px #454545 solid', overflowY: 'scroll', height: 'calc(100vh - 130px)' }} width={'23%'} >
           <FeedbackComponentList />
         </Box>
       </Box>
@@ -231,7 +313,7 @@ function CreateSurvey(props : any) {
         open={openEditModal}
         uiId={comUiId}
         compId={componentId}
-        save={handleSavecomponentConfig}
+        save={handleSaveComponentConfig}
         flow={surveyFlow}
         theme={surveyDetail?.survey_design_json}
       />
@@ -243,3 +325,10 @@ function CreateSurvey(props : any) {
 }
 
 export default CreateSurvey
+
+const iconStyle = {
+  marginTop: '5px',
+  padding: '10px',
+  paddingTop: '10px',
+  paddingLeft: '10px'
+}

@@ -3,6 +3,7 @@ export const APP_WEB_SURVEY_TYPE = 'app/web';
 
 export const USER_LOCAL_KEY = 'user';
 export const SURVEY_LOCAL_KEY = 'currentSurvey';
+export const LIVE_SURVEY_USER_ID = 'survey-user';
 
 export const getColorSchemes = () : any[] => {
     let count = 0;
