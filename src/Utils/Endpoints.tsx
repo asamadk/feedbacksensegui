@@ -1,16 +1,16 @@
 // export const BASE_URL = 'http://api.feedbacksense.tech';
 export const BASE_URL = 'http://localhost:3001';
 
-export const createFolder = (orgId : string, folderName : string) : string => {
-    return BASE_URL + `/folder/create/${orgId}/${folderName}`
+export const createFolder = (folderName : string) : string => {
+    return BASE_URL + `/folder/create/${folderName}`
 }
 
-export const getFolders = (orgId : string) :string => {
-    return BASE_URL + `/folder/list/${orgId}`;
+export const getFolders = () :string => {
+    return BASE_URL + `/folder/list`;
 }
 
-export const getSurveyList = (orgId : string ) :string => {
-    return BASE_URL + `/survey/list/${orgId}`;
+export const getSurveyList = () :string => {
+    return BASE_URL + `/survey/list`;
 }
 
 export const enableSurvey = (surveyId : string) : string => {
@@ -37,8 +37,8 @@ export const getSurveyDetails = (surveyId : string | undefined) : string => {
     return BASE_URL + `/survey/details/${surveyId}`
 }
 
-export const getUserList = (orgId : string) : string => {
-    return BASE_URL + `/user/list/org/${orgId}`
+export const getUserList = () : string => {
+    return BASE_URL + `/user/list/org`
 }
 
 export const getSurveyTypes = () :string => {
@@ -69,8 +69,8 @@ export const getSurveyConfigData = (surveyId : string) => {
     return BASE_URL + `/survey/config/detail/${surveyId}`;
 }
 
-export const getSubscriptionDetailHome = (userId : string) => {
-    return BASE_URL + `/subscription/sub/details/${userId}`;
+export const getSubscriptionDetailHome = () => {
+    return BASE_URL + `/subscription/sub/details`;
 }
 
 export const getAllPlanList = () => {

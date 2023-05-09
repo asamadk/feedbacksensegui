@@ -70,7 +70,7 @@ function SurveyListPage() {
     const getSubscriptionDetails = async () => {
         try {
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(FeedbackUtils.getUserId()),{ withCredentials : true });
+            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(),{ withCredentials : true });
             setLoading(false);
             if(data.statusCode !== 200){
                 snackbarRef?.current?.show(data?.message, 'error');
@@ -96,7 +96,7 @@ function SurveyListPage() {
             }
     
             setLoading(true);
-            let folderRes = await axios.get(Endpoints.getFolders(orgId),{ withCredentials : true });
+            let folderRes = await axios.get(Endpoints.getFolders(),{ withCredentials : true });
             setLoading(false);
             if(folderRes?.data?.statusCode !== 200){
                 snackbarRef?.current?.show(folderRes?.data?.message, 'error');

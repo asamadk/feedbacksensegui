@@ -101,7 +101,7 @@ function SurveysPanel(props: any) {
     const getUserList = async (): Promise<void> => {
         try {
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getUserList(FeedbackUtils.getOrgId()), { withCredentials: true });
+            let { data } = await axios.get(Endpoints.getUserList(), { withCredentials: true });
             setLoading(false);
             if (data?.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
@@ -123,12 +123,8 @@ function SurveysPanel(props: any) {
 
     const getSurveys = async (): Promise<void> => {
         try {
-            let orgId = FeedbackUtils.getOrgId();
-            if (orgId === '') {
-                snackbarRef?.current?.show('Something went wrong, Please contact FeedbackSense help', 'error');
-            }
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getSurveyList(orgId), { withCredentials: true });
+            let { data } = await axios.get(Endpoints.getSurveyList(), { withCredentials: true });
             setLoading(false);
             if (data?.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');

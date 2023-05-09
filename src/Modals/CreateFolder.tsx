@@ -51,7 +51,7 @@ function CreateFolder(props: any) {
             }
             const authenticatedUser : authUser = JSON.parse(currentUser);
             setLoading(true);
-            const { data } = await axios.post(createFolder(authenticatedUser.organization_id,folderName), {},{ withCredentials: true });
+            const { data } = await axios.post(createFolder(folderName), {},{ withCredentials: true });
             setLoading(false);
             
             if(data.statusCode === 200){

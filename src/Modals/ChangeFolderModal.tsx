@@ -33,7 +33,7 @@ function ChangeFolderModal(props: any) {
                 return;
             }
             setLoading(true);
-            let folderRes = await axios.get(Endpoints.getFolders(orgId),{ withCredentials : true });
+            let folderRes = await axios.get(Endpoints.getFolders(),{ withCredentials : true });
             setLoading(false);
             if (folderRes?.data.statusCode !== 200) {                
                 snackbarRef?.current?.show(folderRes?.data?.message, 'error');

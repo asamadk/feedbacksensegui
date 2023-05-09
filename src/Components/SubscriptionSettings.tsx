@@ -44,7 +44,7 @@ function SubscriptionSettings() {
     const getSubscriptionDetails = async () => {
         try {
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(FeedbackUtils.getUserId()),{ withCredentials : true });
+            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(),{ withCredentials : true });
             setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
