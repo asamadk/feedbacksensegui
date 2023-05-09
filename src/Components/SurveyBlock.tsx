@@ -97,7 +97,7 @@ function SurveyBlock(props: any) {
     const handleDeleteSurvey = async () => {
         try {
             setLoading(true);
-            let { data } = await axios.post(deleteSurvey(deleteSurveyId), { withCredentials: true });
+            let { data } = await axios.post(deleteSurvey(deleteSurveyId),{},{ withCredentials: true });
             setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');

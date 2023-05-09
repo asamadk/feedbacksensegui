@@ -20,7 +20,7 @@ function SingleSurveyAction(props: any) {
         if (props?.survey?.is_published === 1) {
             try {
                 setLoading(true);
-                let { data } = await axios.post(disableSurvey(props?.survey?.id), { withCredentials: true });
+                let { data } = await axios.post(disableSurvey(props?.survey?.id),{}, { withCredentials: true });
                 setLoading(false);
                 if (data.statusCode !== 200) {
                     snackbarRef?.current?.show(data?.message, 'error');
@@ -35,7 +35,7 @@ function SingleSurveyAction(props: any) {
         } else {
             try {
                 setLoading(true);
-                let { data } = await axios.post(enableSurvey(props?.survey?.id), { withCredentials: true });
+                let { data } = await axios.post(enableSurvey(props?.survey?.id),{}, { withCredentials: true });
                 setLoading(false);
                 if (data.statusCode !== 200) {
                     snackbarRef?.current?.show(data.message, 'error');

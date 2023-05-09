@@ -165,7 +165,10 @@ function CreateSurvey(props: any) {
         setLoading(false);
         return;
       }
-      const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyDetail.id), flow, { withCredentials: true });
+      if(surveyId == null){
+        return;
+      }
+      const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyId), flow, { withCredentials: true });
       setLoading(false);
       if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
@@ -188,10 +191,10 @@ function CreateSurvey(props: any) {
   const handleSaveNameClick = async () => {
     try {
       const payload = {
-        surveyName: surveyDetail.name
+        surveyName: surveyDetail?.name
       }
       setLoading(true);
-      const { data } = await axios.post(Endpoints.updateSurveyName(surveyDetail.id), payload, { withCredentials: true })
+      const { data } = await axios.post(Endpoints.updateSurveyName(surveyDetail?.id), payload, { withCredentials: true })
       setLoading(false);
       if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
@@ -214,7 +217,7 @@ function CreateSurvey(props: any) {
     if (surveyDetail?.is_published === true) {
       try {
         setLoading(true);
-        let { data } = await axios.post(Endpoints.disableSurvey(surveyDetail?.id), { withCredentials: true });
+        let { data } = await axios.post(Endpoints.disableSurvey(surveyDetail?.id),{}, { withCredentials: true });
         setLoading(false);
         if (data.statusCode !== 200) {
           snackbarRef?.current?.show(data?.message, 'error');
@@ -231,7 +234,7 @@ function CreateSurvey(props: any) {
     } else {
       try {
         setLoading(true);
-        let { data } = await axios.post(enableSurvey(surveyDetail?.id), { withCredentials: true });
+        let { data } = await axios.post(enableSurvey(surveyDetail?.id), {},{ withCredentials: true });
         setLoading(false);
         if (data.statusCode !== 200) {
           snackbarRef?.current?.show(data.message, 'error');

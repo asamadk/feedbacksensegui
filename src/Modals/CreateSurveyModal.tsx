@@ -74,7 +74,7 @@ function CreateSurveyModal(props: any) {
                 return;
             }
             setLoading(true);
-            let { data } = await axios.post(Endpoints.createSurvey(selectedSurveyType), { withCredentials: true });
+            let { data } = await axios.post(Endpoints.createSurvey(selectedSurveyType),{}, { withCredentials: true });
             setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data.message, 'error');
