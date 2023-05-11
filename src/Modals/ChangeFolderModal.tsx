@@ -11,6 +11,7 @@ import * as Endpoints from '../Utils/Endpoints';
 import axios from 'axios';
 import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
+import { LoadingButton } from '@mui/lab';
 
 function ChangeFolderModal(props: any) {
 
@@ -18,12 +19,12 @@ function ChangeFolderModal(props: any) {
 
     const [folderList, setFolderList] = React.useState<any[]>([]);
     const [selectedFolder, setSelectedFolder] = React.useState<string>('0');
-    const [ loading , setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
 
     useEffect(() => {
         getFolders();
-    },[]);
+    }, []);
 
     const getFolders = async () => {
         try {
@@ -33,9 +34,9 @@ function ChangeFolderModal(props: any) {
                 return;
             }
             setLoading(true);
-            let folderRes = await axios.get(Endpoints.getFolders(),{ withCredentials : true });
+            let folderRes = await axios.get(Endpoints.getFolders(), { withCredentials: true });
             setLoading(false);
-            if (folderRes?.data.statusCode !== 200) {                
+            if (folderRes?.data.statusCode !== 200) {
                 snackbarRef?.current?.show(folderRes?.data?.message, 'error');
                 return;
             }
@@ -44,34 +45,34 @@ function ChangeFolderModal(props: any) {
                 return;
             }
             setFolderList(resData.data);
-        } catch (error : any ) {
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
         }
     }
 
     const handleFolderChange = async () => {
         try {
-            if(selectedFolder === '0'){
+            if (selectedFolder === '0') {
                 snackbarRef?.current?.show('Please select a valid folder', 'error');
                 return;
             }
             let surveyId = props.surveyId;
             setLoading(true);
-            let { data } = await axios.post(Endpoints.moveSurveyFolder(surveyId,selectedFolder),{},{ withCredentials : true });
+            let { data } = await axios.post(Endpoints.moveSurveyFolder(surveyId, selectedFolder), {}, { withCredentials: true });
             setLoading(false);
-            if (data.statusCode !== 200) {                
+            if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
             let surveyData = data.data;
             props.callback(surveyData);
             props.close();
-        } catch (error : any ) {
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
         }
     }
 
-    const handleDropdownChange = (event : any) => {
+    const handleDropdownChange = (event: any) => {
         let tempSearchText: string = event.target.value;
         setSelectedFolder(tempSearchText);
     }
@@ -95,27 +96,38 @@ function ChangeFolderModal(props: any) {
                     </Box>
 
                     <Box sx={{ marginTop: '20px', marginBottom: '20px' }}>
-                    <Select 
-                        onChange={handleDropdownChange} 
-                        sx={InputStyles.muiSelectStyle} 
-                        style={{width : '100%'}} 
-                        value={selectedFolder} 
-                        size='small'
-                    >
-                        <MenuItem value={'0'}>Select a folder</MenuItem>
-                        {folderList.map(folder => {
-                            return(<MenuItem key={folder.id} value={folder.id}>{folder.name}</MenuItem>)
-                        })}
-                    </Select>
+                        <Select
+                            onChange={handleDropdownChange}
+                            sx={InputStyles.muiSelectStyle}
+                            style={{ width: '100%' }}
+                            value={selectedFolder}
+                            size='small'
+                        >
+                            <MenuItem value={'0'}>Select a folder</MenuItem>
+                            {folderList.map(folder => {
+                                return (<MenuItem key={folder.id} value={folder.id}>{folder.name}</MenuItem>)
+                            })}
+                        </Select>
                     </Box>
 
                     <Box sx={ModalStyles.modalButtonContainerStyle} >
-                        <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
-                        <Button style={{ width: 'fit-content' }} onClick={handleFolderChange} sx={ButtonStyles.containedButton} variant="contained">Move to folder</Button>
+                        <Button
+                            style={{ width: 'fit-content', marginRight: '15px' }}
+                            sx={ButtonStyles.outlinedButton}
+                            onClick={props.close}
+                            variant="contained"
+                        >Cancel</Button>
+                        <LoadingButton
+                            style={{ width: 'fit-content' }}
+                            onClick={handleFolderChange}
+                            loading={loading}
+                            sx={ButtonStyles.containedButton}
+                            variant="contained">
+                            Move to folder
+                        </LoadingButton>
                     </Box>
                 </Box>
             </Modal>
-            <FSLoader show={loading} />
             <Notification ref={snackbarRef} />
         </>
     )

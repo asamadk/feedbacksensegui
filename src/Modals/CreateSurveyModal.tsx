@@ -3,6 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import * as ModalStyles from '../Styles/ModalStyle'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
+import LoadingButton from '@mui/lab/LoadingButton';
 import PollIcon from '@mui/icons-material/Poll';
 import * as Endpoints from '../Utils/Endpoints';
 import { Button, IconButton, MenuItem, Modal, Select, Typography } from '@mui/material'
@@ -136,12 +137,27 @@ function CreateSurveyModal(props: any) {
                     </Box>
 
                     <Box sx={ModalStyles.modalButtonContainerStyle} >
-                        <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={handleClose} variant="contained">Cancel</Button>
-                        <Button style={{ width: 'fit-content' }} onClick={handleCreateSurvey} sx={ButtonStyles.containedButton} variant="contained">Create</Button>
+                        <Button 
+                            style={{ width: 'fit-content', marginRight: '15px' }} 
+                            sx={ButtonStyles.outlinedButton} 
+                            onClick={handleClose} 
+                            variant="contained">
+                                Cancel
+                            </Button>
+                        <LoadingButton 
+                            style={{ width: 'fit-content' }} 
+                            onClick={handleCreateSurvey} 
+                            loading={loading}
+                            sx={ButtonStyles.containedButton} 
+                            variant="contained">
+                                <span>
+                                    Create
+                                </span>
+                        </LoadingButton>
                     </Box>
                 </Box>
             </Modal>
-            <FSLoader show={loading} />
+            {/* <FSLoader show={loading} /> */}
             <Notification ref={snackbarRef} />
         </>
     )
