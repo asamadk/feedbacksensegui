@@ -13,6 +13,7 @@ import CustomAlert from './CustomAlert';
 import { useNavigate } from 'react-router';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 
 
 const surveyPageMainContainer = {
@@ -60,7 +61,7 @@ function SurveyListPage() {
     const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
     const [selectedFolder, setSelectedFolder] = React.useState<string>('All Surveys');
     const [selectedFolderId, setSelectedFolderId] = React.useState<string>('0');
-    const [ loading , setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
         getFolders();
@@ -70,48 +71,47 @@ function SurveyListPage() {
     const getSubscriptionDetails = async () => {
         try {
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(),{ withCredentials : true });
+            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(), { withCredentials: true });
             setLoading(false);
-            if(data.statusCode !== 200){
+            if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
-            
+
             let resData: any[] = data.data;
             if (resData != null) {
                 setSubscriptionDetail(resData);
-            }            
-        } catch (error : any) {
+            }
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
+            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 
     const getFolders = async () => {
         try {
-            let orgId = FeedbackUtils.getOrgId();
-            if (orgId == null) {
-                snackbarRef?.current?.show('Something went wrong, please contact the admin', 'error');
-            }
-    
             setLoading(true);
-            let folderRes = await axios.get(Endpoints.getFolders(),{ withCredentials : true });
+            let folderRes = await axios.get(Endpoints.getFolders(), { withCredentials: true });
             setLoading(false);
-            if(folderRes?.data?.statusCode !== 200){
+            if (folderRes?.data?.statusCode !== 200) {
                 snackbarRef?.current?.show(folderRes?.data?.message, 'error');
                 return;
             }
-    
+
             let resData: any = folderRes.data;
             if (resData == null) {
                 return;
             }
             setFolderList(resData.data);
-        } catch (error : any) {
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
+            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 
@@ -180,9 +180,9 @@ function SurveyListPage() {
     const handleDeleteFolderClick = async (folderId: string) => {
         try {
             setLoading(true);
-            const { data } = await axios.delete(Endpoints.deleteFolder(folderId),{ withCredentials : true });
+            const { data } = await axios.delete(Endpoints.deleteFolder(folderId), { withCredentials: true });
             setLoading(false);
-            if(data.statusCode !== 200){
+            if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
@@ -190,10 +190,15 @@ function SurveyListPage() {
             setFolderList(fld => fld.filter(folder => folder.id !== folderId));
             setSelectedFolder('All Surveys');
             setSelectedFolderId('0');
-        } catch (error : any) {
+            document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
+                element.style.background = '#323533';
+            });
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
+            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 
@@ -234,7 +239,7 @@ function SurveyListPage() {
                                             onClick={() => handleDeleteFolderClick(folder.id)}
                                             style={{ padding: '0px' }}
                                             size='small' >
-                                            <DeleteIcon sx={{color : '#f1f1f1', fontSize : '15px'}} />
+                                            <DeleteIcon sx={{ color: '#f1f1f1', fontSize: '15px' }} />
                                         </IconButton>
                                     </div>
                                 )

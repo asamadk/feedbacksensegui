@@ -9,13 +9,14 @@ import * as Endpoints from '../Utils/Endpoints';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import DynamicComponentModal from '../FlowComponents/DynamicComponentModal';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import Notification from '../Utils/Notification';
 import FSLoader from '../Components/FSLoader';
 import { enableSurvey } from '../Utils/Endpoints';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -41,6 +42,7 @@ const CssTextField = styled(TextField)({
 function CreateSurvey(props: any) {
 
   const snackbarRef: any = useRef(null);
+  const navigate = useNavigate();
   const { surveyId } = useParams();
   const [openEditModal, setOpenEditModal] = React.useState(false);
   const [componentId, setComponentId] = React.useState<string>();
@@ -73,6 +75,9 @@ function CreateSurvey(props: any) {
       }
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        navigate('/login');
+      }
     }
   }
 
@@ -165,7 +170,7 @@ function CreateSurvey(props: any) {
         setLoading(false);
         return;
       }
-      if(surveyId == null){
+      if (surveyId == null) {
         return;
       }
       const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyId), flow, { withCredentials: true });
@@ -176,7 +181,11 @@ function CreateSurvey(props: any) {
       }
       snackbarRef?.current?.show(data?.message, 'success');
     } catch (error: any) {
+      setLoading(false)
       snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        navigate('/login');
+      }
     }
   }
 
@@ -203,7 +212,11 @@ function CreateSurvey(props: any) {
       snackbarRef?.current?.show(data?.message, 'success');
       handleCloseEditName();
     } catch (error: any) {
+      setLoading(false);
       snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        navigate('/login');
+      }
     }
   }
 
@@ -217,7 +230,7 @@ function CreateSurvey(props: any) {
     if (surveyDetail?.is_published === true) {
       try {
         setLoading(true);
-        let { data } = await axios.post(Endpoints.disableSurvey(surveyDetail?.id),{}, { withCredentials: true });
+        let { data } = await axios.post(Endpoints.disableSurvey(surveyDetail?.id), {}, { withCredentials: true });
         setLoading(false);
         if (data.statusCode !== 200) {
           snackbarRef?.current?.show(data?.message, 'error');
@@ -230,11 +243,14 @@ function CreateSurvey(props: any) {
       } catch (error: any) {
         setLoading(false);
         snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+        if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+          navigate('/login');
+        }
       }
     } else {
       try {
         setLoading(true);
-        let { data } = await axios.post(enableSurvey(surveyDetail?.id), {},{ withCredentials: true });
+        let { data } = await axios.post(enableSurvey(surveyDetail?.id), {}, { withCredentials: true });
         setLoading(false);
         if (data.statusCode !== 200) {
           snackbarRef?.current?.show(data.message, 'error');
@@ -249,6 +265,9 @@ function CreateSurvey(props: any) {
       } catch (error: any) {
         setLoading(false);
         snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+        if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+          navigate('/login');
+        }
       }
     }
     props.close();

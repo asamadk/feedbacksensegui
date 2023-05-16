@@ -15,6 +15,7 @@ import axios from 'axios';
 import { deleteSurvey } from '../Utils/Endpoints';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 
 const surveyBlockMainContainer = {
     border: '1px #454545 solid',
@@ -108,7 +109,9 @@ function SurveyBlock(props: any) {
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
+            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                navigation('/login');
+            }
         }
     }
 
@@ -118,6 +121,10 @@ function SurveyBlock(props: any) {
     }
 
     const handleCloseSingleSurveyAction = () => {
+        setAnchorEl(null);
+    }
+
+    const handleCloseAndUpdate = () => {
         setAnchorEl(null);
         props.update();
     }
@@ -144,6 +151,7 @@ function SurveyBlock(props: any) {
                         delete={handleDeleteOptionClick}
                         open={open}
                         survey={survey}
+                        closeAndUpdate={handleCloseAndUpdate}
                         close={handleCloseSingleSurveyAction}
                     />
                 </Box>
@@ -175,7 +183,10 @@ function SurveyBlock(props: any) {
                 open={showGenericModal}
                 callback={handleSuccessButtonClick}
             />
-            <ChangeFolderModal callback={handleSuccessChangeFolder} surveyId={changeFolderSurveyId} close={() => setShowChangeFolderModal(false)} open={showChangeFolderModal} />
+            {
+                showChangeFolderModal &&
+                <ChangeFolderModal callback={handleSuccessChangeFolder} surveyId={changeFolderSurveyId} close={() => setShowChangeFolderModal(false)} open={showChangeFolderModal} />
+            }
             <FSLoader show={loading} />
             <Notification ref={snackbarRef} />
         </Box>

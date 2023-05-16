@@ -10,6 +10,8 @@ import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import GenericModal from '../Modals/GenericModal';
 import EmptyAnalysis from './OverAllResults/EmptyAnalysis';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { useNavigate } from 'react-router';
 
 const responseStyle = {
     padding: '10px',
@@ -38,6 +40,7 @@ type IndividualResponseProps = {
 
 function IndividualResponse(props: IndividualResponseProps) {
     const snackbarRef: any = useRef(null);
+    const navigate = useNavigate();
 
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<Types.genericModalData>();
@@ -79,7 +82,9 @@ function IndividualResponse(props: IndividualResponseProps) {
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
+            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 
@@ -145,7 +150,9 @@ function IndividualResponse(props: IndividualResponseProps) {
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
+            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 

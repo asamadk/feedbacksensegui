@@ -5,11 +5,14 @@ import { disableSurvey, enableSurvey, getShareSurveyLink, shareSurvey } from '..
 import Notification from '../Utils/Notification'
 import CustomAlert from './CustomAlert'
 import FSLoader from './FSLoader'
+import { USER_UNAUTH_TEXT } from '../Utils/Constants'
+import { useNavigate } from 'react-router'
 
 function SingleSurveyAction(props: any) {
 
     const [loading, setLoading] = React.useState(false);
     const snackbarRef: any = useRef(null);
+    const navigate = useNavigate();
 
     const handleDisableEnableSurvey = async (e: any) => {
         let surveyData = props?.survey;
@@ -20,7 +23,7 @@ function SingleSurveyAction(props: any) {
         if (props?.survey?.is_published === 1) {
             try {
                 setLoading(true);
-                let { data } = await axios.post(disableSurvey(props?.survey?.id),{}, { withCredentials: true });
+                let { data } = await axios.post(disableSurvey(props?.survey?.id), {}, { withCredentials: true });
                 setLoading(false);
                 if (data.statusCode !== 200) {
                     snackbarRef?.current?.show(data?.message, 'error');
@@ -31,11 +34,14 @@ function SingleSurveyAction(props: any) {
             } catch (error: any) {
                 setLoading(false);
                 snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+                if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                    navigate('/login');
+                }
             }
         } else {
             try {
                 setLoading(true);
-                let { data } = await axios.post(enableSurvey(props?.survey?.id),{}, { withCredentials: true });
+                let { data } = await axios.post(enableSurvey(props?.survey?.id), {}, { withCredentials: true });
                 setLoading(false);
                 if (data.statusCode !== 200) {
                     snackbarRef?.current?.show(data.message, 'error');
@@ -48,9 +54,12 @@ function SingleSurveyAction(props: any) {
             } catch (error: any) {
                 setLoading(false);
                 snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+                if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                    navigate('/login');
+                }
             }
         }
-        props.close();
+        props.closeAndUpdate();
     }
 
     const handleShareSurvey = () => {
@@ -59,6 +68,7 @@ function SingleSurveyAction(props: any) {
         snackbarRef?.current?.show('Survey link copied.', 'success');
         props.close();
     }
+
 
     return (
         <>
@@ -83,7 +93,7 @@ function SingleSurveyAction(props: any) {
                 <MenuItem onClick={props.changeFolder}>
                     Move to folder
                 </MenuItem>
-                <MenuItem onClick={() => props.delete(props?.survey?.id)}>
+                <MenuItem sx={{color : 'red'}} onClick={() => props.delete(props?.survey?.id)}>
                     Delete
                 </MenuItem>
             </Menu>

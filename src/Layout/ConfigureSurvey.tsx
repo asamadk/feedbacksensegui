@@ -6,8 +6,12 @@ import { containedButton } from '../Styles/ButtonStyle';
 import { settingLayoutStyle, globalSettingSubContainers } from '../Styles/LayoutStyles';
 import { getSurveyConfigData, saveSurveyConfig } from '../Utils/Endpoints';
 import Notification from '../Utils/Notification';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import FSLoader from '../Components/FSLoader';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -32,91 +36,103 @@ const CssTextField = styled(TextField)({
 
 function ConfigureSurvey() {
 
-  const { surveyId } : any = useParams();
+  const { surveyId }: any = useParams();
 
-  const snackbarRef :any = useRef(null);
+  const snackbarRef: any = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getSurveyConfig();
-  },[]);
+  }, []);
 
   const [showStopSurveyNumber, setShowStopSurveyNumber] = React.useState(false);
   const [showStopSurveyDate, setShowStopSurveyDate] = React.useState(false);
-  const [showStopSurveyDateData, setShowStopSurveyDateData] = React.useState<string>();
-  const [showStopSurveyNumberData, setShowStopSurveyNumberData] = React.useState<string>();
-  const [ loading , setLoading] = React.useState(false);
+  const [showStopSurveyDateData, setShowStopSurveyDateData] = React.useState<string | null>();
+  const [showStopSurveyNumberData, setShowStopSurveyNumberData] = React.useState<string>('');
+  const [loading, setLoading] = React.useState(false);
 
-  const getSurveyConfig = async() => {
+  const getSurveyConfig = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(getSurveyConfigData(surveyId),{ withCredentials : true });
+      const { data } = await axios.get(getSurveyConfigData(surveyId), { withCredentials: true });
       setLoading(false);
-      if(data.statusCode !== 200){
+      if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
         return;
       }
 
-      if(data.data != null){
+      if (data.data != null) {
         let tempData = data.data;
-        if(tempData?.response_limit != null && tempData?.response_limit !== '0'){
+        if (tempData?.response_limit != null && tempData?.response_limit !== '0') {
           setShowStopSurveyNumber(true);
           setShowStopSurveyNumberData(tempData?.response_limit?.toString());
         }
-  
-        if(tempData?.time_limit != null){
+
+        if (tempData?.time_limit != null) {
           setShowStopSurveyDate(true)
-          setShowStopSurveyDateData(tempData?.time_limit);
+          const tempTimeLimit = dayjs(tempData?.time_limit).format('MM/DD/YYYY');
+          setShowStopSurveyDateData(tempTimeLimit);
         }
       }
-    } catch (error : any ) {
-      console.warn("🚀 ~ file: ConfigureSurvey.tsx:72 ~ getSurveyConfig ~ error:", error)
+    } catch (error: any) {
       setLoading(false);
-      // snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        navigate('/login');
+      }
     }
 
   }
 
-  const handleSaveClick = async() => {
-
+  const handleSaveClick = async () => {
     try {
-      let saveObj : any = {};
-      const toContinue : boolean = validateSave();
-      if(toContinue === false){
+      let saveObj: any = {};
+      const toContinue: boolean = validateSave();
+      if (toContinue === false) {
         return;
       }
-      if(showStopSurveyNumber === true){
+      if (showStopSurveyNumber === true) {
         saveObj.stopCount = showStopSurveyNumberData;
       }
-      if(showStopSurveyDate === true){
+      if (showStopSurveyDate === true) {
         saveObj.stopTime = showStopSurveyDateData;
       }
       setLoading(true);
       const { data } = await axios.post(
         saveSurveyConfig(surveyId),
         saveObj,
-        { withCredentials : true }
+        { withCredentials: true }
       );
       setLoading(false);
-      if(data.statusCode !== 200){
+      if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
         return;
       }
-      snackbarRef?.current?.show('Configuration saved.','success');
-    } catch (error : any ) {
-      snackbarRef?.current?.show(error?.response?.data?.statusCode,'error');
+      snackbarRef?.current?.show('Configuration saved.', 'success');
+    } catch (error: any) {
+      setLoading(false);
+      snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        navigate('/login');
+      }
     }
   }
 
-  const validateSave = () : boolean => {
-    if(showStopSurveyNumber === true && (showStopSurveyNumberData === '0' || showStopSurveyNumberData == null || showStopSurveyNumberData == '')){
-      snackbarRef?.current?.show('Please fill all the details before saving.','warning');
+  const validateSave = (): boolean => {
+    if (showStopSurveyNumber === true && (showStopSurveyNumberData === '0' || showStopSurveyNumberData == null || showStopSurveyNumberData == '')) {
+      snackbarRef?.current?.show('Please fill all the details before saving.', 'warning');
       return false;
     }
 
-    if(showStopSurveyDate === true &&  (showStopSurveyDateData == null || showStopSurveyNumberData == '')){
-      snackbarRef?.current?.show('Please fill all the details before saving.','warning');
+    if (showStopSurveyDate === true && (showStopSurveyDateData == null || showStopSurveyNumberData == '')) {
+      snackbarRef?.current?.show('Please fill all the details before saving.', 'warning');
       return false;
     }
+
+    if (parseInt(showStopSurveyNumberData) > 1000000) {
+      snackbarRef?.current?.show('The value entered exceeds the maximum allowed limit. Please enter a valid value.', 'warning');
+      return false;
+    }
+
     return true;
   }
 
@@ -163,23 +179,19 @@ function ConfigureSurvey() {
           />
         </Box>
         {showStopSurveyDate === true &&
-          <CssTextField
-            size='small'
-            type={'date'}
-            sx={{ input: { color: 'white' } }}
-            id="outlined-basic"
-            placeholder='Enter a number'
-            variant="outlined"
-            style={{ width: '100%', }}
-            value={showStopSurveyDateData}
-            onChange={(e) => setShowStopSurveyDateData(e.target.value)}
-          />
+          <LocalizationProvider size={'small'} dateAdapter={AdapterDayjs}>
+            <DatePicker
+              sx={{ width: '100%' }}
+              value={dayjs(showStopSurveyDateData)}
+              onChange={(newVal: any) => setShowStopSurveyDateData(newVal)}
+            />
+          </LocalizationProvider>
         }
       </Box>
       <Box textAlign={'end'} >
-        <Button onClick={handleSaveClick} sx={containedButton} style={{width : 'fit-content'}} >Save</Button>
+        <Button onClick={handleSaveClick} sx={containedButton} style={{ width: 'fit-content' }} >Save</Button>
       </Box>
-      <Notification ref={snackbarRef}/>
+      <Notification ref={snackbarRef} />
       <FSLoader show={loading} />
     </Box>
   )

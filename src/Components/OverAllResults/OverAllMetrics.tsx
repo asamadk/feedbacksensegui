@@ -8,6 +8,8 @@ import Notification from '../../Utils/Notification';
 import axios from 'axios';
 import { surveyIdProp } from '../../Utils/types';
 import { getOverallMetricsResponse } from '../../Utils/Endpoints';
+import { USER_UNAUTH_TEXT } from '../../Utils/Constants';
+import { useNavigate } from 'react-router';
 
 const subContainerStyle = {
     border: '1px #454545 solid',
@@ -27,6 +29,7 @@ const mainContainer = {
 
 function OverAllMetrics(props : surveyIdProp) {
 
+    const navigate = useNavigate();
     const snackbarRef: any = useRef(null);
     const [loading , setLoading] = React.useState(false);
     const [overAllMetrics, setOverAllMetrics] = React.useState<any>();
@@ -48,7 +51,9 @@ function OverAllMetrics(props : surveyIdProp) {
         } catch (error : any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            console.warn("🚀 ~ file: OverAllResultChart.tsx:29 ~ getOverAllResponseForChart ~ error:", error)   
+            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 

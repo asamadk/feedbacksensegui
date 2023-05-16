@@ -1,4 +1,4 @@
-import { Box, Button, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
+import { Box, Button, TextField, ThemeProvider, ToggleButton, ToggleButtonGroup, Typography, createTheme } from '@mui/material'
 import React, { useRef } from 'react'
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import LaptopIcon from '@mui/icons-material/Laptop';
@@ -11,7 +11,7 @@ import PoweredBy from '../Components/PoweredBy';
 
 const tabsetList = [
     { id: 1, name: 'THEMES' },
-    { id: 2, name: 'EMAIL TEMPLATES' }
+    // { id: 2, name: 'EMAIL TEMPLATES' }
 ]
 
 const localNavbar = {
@@ -91,25 +91,34 @@ function DesignPreview() {
 export default DesignPreview;
 
 function SelectedThemeTest( {selectedTheme} : any){
+
+    const lightTheme = createTheme({
+        palette: {
+          mode: 'light',
+        },
+      });
+
     return(
-        <Box sx={{position: 'relative',top: '50%',left: '50%',transform: 'translate(-50%, -50%)',width : '70%'}} >
-            <Box margin={'20px'} >
-                <TextField 
-                    value={selectedTheme?.header} 
-                    size='small' 
-                    sx={{width : '60%', color : selectedTheme?.textColor}} >    
-                </TextField>
+        <ThemeProvider theme={lightTheme} >
+            <Box sx={{position: 'relative',top: '50%',left: '50%',transform: 'translate(-50%, -50%)',width : '70%'}} >
+                <Box margin={'20px'} >
+                    <TextField 
+                        value={selectedTheme?.header} 
+                        size='small' 
+                        sx={{width : '60%', color : selectedTheme?.textColor}} >    
+                    </TextField>
+                </Box>
+                <Box>
+                <Button 
+                    style={{
+                        width : 'fit-content', 
+                        marginRight : '15px', 
+                        backgroundColor:selectedTheme?.color[1],
+                        color : selectedTheme?.textColor
+                    }} 
+                    variant="outlined">Cancel</Button>
+                </Box>
             </Box>
-            <Box>
-            <Button 
-                style={{
-                    width : 'fit-content', 
-                    marginRight : '15px', 
-                    backgroundColor:selectedTheme?.color[1],
-                    color : selectedTheme?.textColor
-                }} 
-                variant="outlined">Cancel</Button>
-            </Box>
-        </Box>
+        </ThemeProvider>
     )
 }

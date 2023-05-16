@@ -12,11 +12,13 @@ import axios from 'axios';
 import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { useNavigate } from 'react-router';
 
 function ChangeFolderModal(props: any) {
 
     const snackbarRef: any = useRef(null);
-
+    const navigate = useNavigate();
     const [folderList, setFolderList] = React.useState<any[]>([]);
     const [selectedFolder, setSelectedFolder] = React.useState<string>('0');
     const [loading, setLoading] = React.useState(false);
@@ -46,7 +48,11 @@ function ChangeFolderModal(props: any) {
             }
             setFolderList(resData.data);
         } catch (error: any) {
+            setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+                navigate('/login');
+            }
         }
     }
 
@@ -68,7 +74,11 @@ function ChangeFolderModal(props: any) {
             props.callback(surveyData);
             props.close();
         } catch (error: any) {
+            setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 

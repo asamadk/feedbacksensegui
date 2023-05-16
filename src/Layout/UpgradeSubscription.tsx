@@ -7,10 +7,13 @@ import { getAllPlanList } from '../Utils/Endpoints';
 import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
 import { containedButton } from '../Styles/ButtonStyle';
+import { useNavigate } from 'react-router';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 
 function UpgradeSubscription() {
 
     const snackbarRef: any = useRef(null);
+    const navigate = useNavigate();
 
     const [selectedPlanCycle, setSelectedPlanCycle] = useState('Yearly');
     const [surveyPlans, setSurveyPlans] = useState<any>();
@@ -24,19 +27,22 @@ function UpgradeSubscription() {
     const getSurveyPlans = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(getAllPlanList(),{ withCredentials : true });
+            const { data } = await axios.get(getAllPlanList(), { withCredentials: true });
             setLoading(false);
-    
-            if (data.statusCode !== 200) {                
+
+            if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
-    
+
             if (data != null) {
                 setSurveyPlans(data.data);
             }
-        } catch (error : any ) {
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+                navigate('/login');
+            }
         }
     }
 
@@ -98,7 +104,7 @@ function UpgradeSubscription() {
 
 export default UpgradeSubscription
 
-function SurveyPlan({ plan,duration }: any) {
+function SurveyPlan({ plan, duration }: any) {
 
     const [planDesc, setPlanDesc] = useState<any>();
 
@@ -120,18 +126,18 @@ function SurveyPlan({ plan,duration }: any) {
             <Box display={'flex'} justifyContent={'center'} color={'#f1f1f1'} >
                 <Typography sx={{ fontSize: '34px' }} >{'$'}</Typography>
                 <Typography sx={{ fontSize: '34px' }} >{plan.price_cents}</Typography>
-                <Box sx={{marginTop : '15px', marginLeft : '10px'}} >
-                    <Typography sx={{ fontSize: '13px',color : '#808080' }} >{`Billed : ${duration}`}</Typography>
+                <Box sx={{ marginTop: '15px', marginLeft: '10px' }} >
+                    <Typography sx={{ fontSize: '13px', color: '#808080' }} >{`Billed : ${duration}`}</Typography>
                 </Box>
             </Box>
             {/* <Button sx={containedButton}   variant="contained">Upgrade</Button> */}
-            <Button sx={containedButton}   variant="contained">Coming soon</Button>
-            <Divider sx={{background : '#808080',marginBottom: '30px'}} />
-            {planDesc?.features?.map((feat: string, index : number) => {
+            <Button sx={containedButton} variant="contained">Coming soon</Button>
+            <Divider sx={{ background: '#808080', marginBottom: '30px' }} />
+            {planDesc?.features?.map((feat: string, index: number) => {
                 return (
                     <Box >
                         <Typography color={'#808080'} fontSize={'14px'} marginBottom={'15px'} textAlign={'start'} >{feat}</Typography>
-                        {index === 3 && <Divider sx={{background : '#808080',marginBottom : '15px'}} />}
+                        {index === 3 && <Divider sx={{ background: '#808080', marginBottom: '15px' }} />}
                     </Box>
                 )
             })}

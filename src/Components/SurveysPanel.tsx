@@ -1,4 +1,4 @@
-import { Button, Divider, FilledInput, Grid, IconButton, InputLabel, makeStyles, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material'
+import { Button, Grid, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { Box, styled } from '@mui/system'
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
@@ -13,6 +13,7 @@ import axios from 'axios';
 import CreateSurveyModal from '../Modals/CreateSurveyModal';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
+import { useNavigate } from 'react-router';
 
 const buttonContainerStyles = {
     marginTop: '10px',
@@ -43,6 +44,7 @@ const CssTextField = styled(TextField)({
 function SurveysPanel(props: any) {
 
     const snackbarRef: any = useRef(null);
+    const navigate = useNavigate();
 
     const [surveys, setSurveys] = useState<any[]>([]);
     const [unfilteredSurveys, setUnfilteredSureveys] = useState<any[]>([]);
@@ -93,8 +95,11 @@ function SurveysPanel(props: any) {
                 setSurveyTypes(data.data);
             }
         } catch (error: any) {
+            setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            console.log('Exception :: getUserList :: ', error);
+            if(error?.response?.data?.message === Constants.USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 
@@ -116,8 +121,11 @@ function SurveysPanel(props: any) {
                 setUserList(data.data);
             }
         } catch (error: any) {
+            setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            console.log('Exception :: getUserList :: ', error);
+            if(error?.response?.data?.message === Constants.USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 
@@ -144,8 +152,11 @@ function SurveysPanel(props: any) {
                 setIsEmpty(true);
             }
         } catch (error: any) {
+            setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-
+            if(error?.response?.data?.message === Constants.USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 
@@ -186,15 +197,22 @@ function SurveysPanel(props: any) {
 
     const deleteSurvey = (surveyId: string) => {
         let tempSurveys: any[] = [];
-        surveys.forEach(survey => {
+        unfilteredSurveys.forEach(survey => {
             if (survey.id !== surveyId) {
                 tempSurveys.push(survey);
             }
         });
-        setSurveys(tempSurveys);
+        setUnfilteredSureveys(tempSurveys);
+
+        let filteredTempSurveys : any[] = [];
+        surveys.forEach(survey => {
+            if (survey.id !== surveyId) {
+                filteredTempSurveys.push(survey);
+            }
+        });
+        setSurveys(filteredTempSurveys);
         snackbarRef?.current?.show('Survey deleted', 'success');
         if(tempSurveys.length < 1){
-            console.log('Force rerender');
             setForceRerender(!forceRerender);
         }
 
@@ -279,7 +297,7 @@ function SurveysPanel(props: any) {
                         </Box>
                         <div style={{ border: '0.5px #454545 solid', marginTop: '10px' }} />
 
-                        <Grid style={{ marginTop: '20px', overflowY: 'scroll', height: 'calc(100vh - 210px)' }} container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                        <Grid style={{ marginTop: '20px', overflowY: 'scroll', height: 'calc(100vh - 230px)' }} container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                             {surveys.map((survey) => (
                                 <Grid item xs={2} sm={4} md={4} key={survey.id}>
                                     <SurveyBlock
@@ -304,6 +322,7 @@ export default SurveysPanel
 
 const containedButtonStyle = {
     marginTop: '10px',
+    color : '#f1f1f1',
     backgroundColor: '#D81159',
     "&.MuiButtonBase-root:hover": {
         bgcolor: "#FF367F"

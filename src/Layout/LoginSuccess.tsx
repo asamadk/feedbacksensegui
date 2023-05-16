@@ -8,6 +8,7 @@ import { createOrgForuser, getOrgList, pointOrgToUser } from '../Utils/Endpoints
 import { useNavigate } from 'react-router';
 import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -67,14 +68,14 @@ const subContainerCss = {
 function LoginSuccess() {
 
   let navigate = useNavigate();
-  const snackbarRef :any = useRef(null);
+  const snackbarRef: any = useRef(null);
 
   const [orgList, setOrgList] = useState<any[]>([]);
   const [otherComany, setOtherComany] = useState<boolean>(true);
   const [newOrgName, setNewOrgName] = useState<string>('');
-  const [selectedOrg, setSelectedOrg] = useState<string | null >(orgList[0]);
+  const [selectedOrg, setSelectedOrg] = useState<string | null>(orgList[0]);
   const [selectedOrgValue, setSelectedOrgValue] = useState<any>('');
-  const [ loading , setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
     fetchAllOrgList();
@@ -100,7 +101,7 @@ function LoginSuccess() {
       setLoading(true);
       const { data } = await axios.get(getOrgList(), { withCredentials: true });
       setLoading(false);
-      if(data.statusCode !== 200){
+      if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
         return;
       }
@@ -108,16 +109,18 @@ function LoginSuccess() {
         let temoOrgList: any[] = data.data;
         convertListToOptionList(temoOrgList);
       }
-    } catch (error : any ) {
+    } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-      console.log('Exception :: fetchAllOrgList ::  ', error);
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        navigate('/login');
+      }
     }
   }
 
   const handleContinueButtonClick = () => {
     if (otherComany === true) {
       createOrgForUser();
-    }else{
+    } else {
       pointExistingOrgToCurrentUser();
     }
   }
@@ -129,9 +132,9 @@ function LoginSuccess() {
   const pointExistingOrgToCurrentUser = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.post(pointOrgToUser(),selectedOrg, { withCredentials: true });
+      const { data } = await axios.post(pointOrgToUser(), selectedOrg, { withCredentials: true });
       setLoading(false);
-      if(data.statusCode !== 200){
+      if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
         return;
       }
@@ -140,9 +143,11 @@ function LoginSuccess() {
         snackbarRef?.current?.show(data?.message, 'success');
         navigate('/');
       }
-    } catch (error :any ) {
+    } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-      console.log('Exception :: pointExistingOrgToCurrentUser ::  ', error);
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        navigate('/login');
+      }
     }
   }
 
@@ -151,7 +156,7 @@ function LoginSuccess() {
       setLoading(true);
       const { data } = await axios.get(createOrgForuser(newOrgName), { withCredentials: true });
       setLoading(false);
-      if(data.statusCode !== 200){
+      if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
         return;
       }
@@ -159,8 +164,11 @@ function LoginSuccess() {
       if (data.statusCode === 200) {
         navigate('/');
       }
-    } catch (error : any ) {
+    } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        navigate('/login');
+      }
     }
   }
 
@@ -182,7 +190,7 @@ function LoginSuccess() {
               id="combo-box-demo"
               options={orgList}
               value={selectedOrg}
-              onChange={(event: any, newValue : any) => handleSelectValue(newValue)}
+              onChange={(event: any, newValue: any) => handleSelectValue(newValue)}
               inputValue={selectedOrgValue}
               onInputChange={(event, newInputValue) => {
                 setSelectedOrgValue(newInputValue);
@@ -218,7 +226,7 @@ function LoginSuccess() {
         <Button sx={containedButton} onClick={handleContinueButtonClick} >Continue</Button>
       </Box>
       <FSLoader show={loading} />
-      <Notification ref={snackbarRef}/>
+      <Notification ref={snackbarRef} />
     </Box>
   )
 }

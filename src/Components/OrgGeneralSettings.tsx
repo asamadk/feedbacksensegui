@@ -1,22 +1,41 @@
 import { Box, Typography } from '@mui/material'
 import * as LayoutStyles from '../Styles/LayoutStyles'
-import React, { useEffect, useState } from 'react'
-import { USER_LOCAL_KEY } from '../Utils/Constants';
+import React, { useEffect, useRef, useState } from 'react'
+import { USER_LOCAL_KEY, USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { checkLoginStatus } from '../Utils/Endpoints';
+import axios from 'axios';
+import FSLoader from './FSLoader';
+import Notification from '../Utils/Notification';
+import { useNavigate } from 'react-router';
 
 
 function OrgGeneralSettings() {
 
+  const snackbarRef: any = useRef(null);
+  const navigate = useNavigate();
+  const [loading, setLoading] = React.useState(false);
   const [userDetail, setUserDetail] = useState<any>();
 
   useEffect(() => {
     getUserDetails();
-  },[]);
+  }, []);
 
-  const getUserDetails =() => {
-    const userData = localStorage.getItem(USER_LOCAL_KEY);
-    if(userData != null){
-      setUserDetail(JSON.parse(userData));
-      console.log("🚀 ~ file: OrgGeneralSettings.tsx:19 ~ getUserDetails ~ JSON.parse(userData):", JSON.parse(userData))
+  const getUserDetails = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(checkLoginStatus(), { withCredentials: true });
+      setLoading(false);
+      if (data.statusCode === 200) {
+        setUserDetail(data.data);
+      } else {
+        snackbarRef?.current?.show(data?.message, 'error');
+      }
+    } catch (error: any) {
+      setLoading(false);
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+        navigate('/login');
+      }
     }
   }
 
@@ -46,12 +65,14 @@ function OrgGeneralSettings() {
       </Box>
       <Box display={'flex'} marginBottom={2}>
         <Typography width={200} textAlign={'start'} color={'#f1f1f1'} >Joined on </Typography>
-        <Typography color={'#454545'} >{new Date(userDetail?.created_at)?.toLocaleDateString()}</Typography>
+        <Typography color={'#454545'} >{new Date(userDetail?.created_at)?.toDateString()}</Typography>
       </Box>
       <Box display={'flex'} marginBottom={2}>
         <Typography width={200} textAlign={'start'} color={'#f1f1f1'} >Authorized by </Typography>
         <Typography color={'#454545'} >{userDetail?.oauth_provider.toUpperCase()}</Typography>
       </Box>
+      <FSLoader show={loading} />
+      <Notification ref={snackbarRef} />
     </Box>
   )
 }

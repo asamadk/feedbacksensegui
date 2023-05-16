@@ -15,14 +15,42 @@ const nodeTypes = {
 
 function FeedbackCanvas(props: any) {
 
-    const [surveyFlow , setSurveyFlow] = React.useState<any>(props.flow);
+    const [surveyFlow, setSurveyFlow] = React.useState<any>(props.flow);
+
+    // useEffect(() => {
+    //     if(props?.surveyDetail?.workflows != null && props?.surveyDetail?.workflows.length > 0){
+    //         setSurveyFlow(props?.surveyDetail?.workflows[0]);
+    //         onRestore();
+    //     }
+    // }, [props.surveyDetail]);
 
     useEffect(() => {
-        onRestore();
-        if(props?.surveyDetail?.workflows != null && props?.surveyDetail?.workflows.length > 0){
+        if (props?.surveyDetail?.workflows != null && props?.surveyDetail?.workflows.length > 0) {
             setSurveyFlow(props?.surveyDetail?.workflows[0]);
         }
     }, [props.surveyDetail]);
+
+    useEffect(() => {
+        restoreFlow();
+    }, [surveyFlow]);
+
+
+    const restoreFlow = async () => {
+        if (props.surveyDetail == null || surveyFlow == null) {
+            return;
+        }
+        const tempSurFlow = JSON.parse(surveyFlow?.json);
+        const flow: any = tempSurFlow;
+        if (flow) {
+            let nodeList: any[] = flow.nodes;
+            for (let i = 0; i < nodeList.length; i++) {
+                nodeList[i].data.onDelete = deleteNode;
+                nodeList[i].data.onEdit = props.onEdit;
+            }
+            setNodes(flow.nodes || []);
+            setEdges(flow.edges || []);
+        }
+    };
 
     const reactFlowWrapper: any = useRef(null);
     const [nodes, setNodes] = useState<any[]>([]);
@@ -73,32 +101,32 @@ function FeedbackCanvas(props: any) {
     }, [reactFlowInstance]);
 
 
-    const onRestore = useCallback(() => {
-        const restoreFlow = async () => {
-            if(props.surveyDetail == null || surveyFlow == null){
-                return;
-            }
-            const tempSurFlow = JSON.parse(surveyFlow?.json);
-            const flow: any = tempSurFlow;
-            if (flow) {
-                let nodeList : any[] = flow.nodes;
-                for(let i =0;i<nodeList.length;i++){
-                    nodeList[i].data.onDelete = deleteNode;
-                    nodeList[i].data.onEdit = props.onEdit;
+    // const onRestore = useCallback(() => {
+    //     const restoreFlow = async () => {
+    //         if (props.surveyDetail == null || surveyFlow == null) {
+    //             return;
+    //         }
+    //         const tempSurFlow = JSON.parse(surveyFlow?.json);
+    //         const flow: any = tempSurFlow;
+    //         if (flow) {
+    //             let nodeList: any[] = flow.nodes;
+    //             for (let i = 0; i < nodeList.length; i++) {
+    //                 nodeList[i].data.onDelete = deleteNode;
+    //                 nodeList[i].data.onEdit = props.onEdit;
 
-                }
-                setNodes(flow.nodes || []);
-                setEdges(flow.edges || []);
-            }
-        };
+    //             }
+    //             setNodes(flow.nodes || []);
+    //             setEdges(flow.edges || []);
+    //         }
+    //     };
 
-        restoreFlow();
-    }, [setNodes,props.surveyDetail]);
+    //     restoreFlow();
+    // }, [setNodes, props.surveyDetail]);
 
     const deleteNode = (id: string) => {
         if (id != null) {
             setNodes(nds => nds.filter(node => node.id !== id));
-            setEdges(edgs => edgs.filter(edgs => (edgs.source !== id &&  edgs.target !== id) ))
+            setEdges(edgs => edgs.filter(edgs => (edgs.source !== id && edgs.target !== id)))
         }
     }
 
@@ -160,8 +188,8 @@ function FeedbackCanvas(props: any) {
                 {/* <MiniMap nodeColor={'#454545'} color={'#1E1E1E'} /> */}
                 <Background />
                 <Controls />
-                <Box sx={{position: 'absolute',top: '10px',left: '-5px'}} >
-                    <Button style={{position: 'relative', zIndex: '100',color : '#f1f1f1'}} sx={ButtonStyle.containedButton} onClick={handleSaveWorkflow} >Save</Button>
+                <Box sx={{ position: 'absolute', top: '10px', left: '-5px' }} >
+                    <Button style={{ position: 'relative', zIndex: '100', color: '#f1f1f1' }} sx={ButtonStyle.containedButton} onClick={handleSaveWorkflow} >Save</Button>
                 </Box>
             </ReactFlow>
         </Box>

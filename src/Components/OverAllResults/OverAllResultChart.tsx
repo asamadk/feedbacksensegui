@@ -6,6 +6,8 @@ import axios from 'axios';
 import FSLoader from '../FSLoader';
 import Notification from '../../Utils/Notification';
 import { surveyIdProp } from '../../Utils/types';
+import { USER_UNAUTH_TEXT } from '../../Utils/Constants';
+import { useNavigate } from 'react-router';
 
 const mainContainer = {
     margin: '20px',
@@ -34,6 +36,7 @@ type propsType = {
 function OverAllResultChart(props: propsType) {
 
     const snackbarRef: any = useRef(null);
+    const navigate = useNavigate();
     const [loading , setLoading] = React.useState(false);
     const [overAllResultGraph, setOverAllResultGraph] = useState<any[]>([]);
 
@@ -62,7 +65,9 @@ function OverAllResultChart(props: propsType) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             props.empty();
             setLoading(false);
-            console.warn("🚀 ~ file: OverAllResultChart.tsx:29 ~ getOverAllResponseForChart ~ error:", error)   
+            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 

@@ -2,16 +2,16 @@ import React, { useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import * as ModalStyles from '../Styles/ModalStyle'
 import * as ButtonStyles from '../Styles/ButtonStyle'
-import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import LoadingButton from '@mui/lab/LoadingButton';
 import PollIcon from '@mui/icons-material/Poll';
 import * as Endpoints from '../Utils/Endpoints';
-import { Button, IconButton, MenuItem, Modal, Select, Typography } from '@mui/material'
+import { Button, IconButton, Modal, Typography } from '@mui/material'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Box } from '@mui/system'
 import axios from 'axios';
-import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
+import { useNavigate } from 'react-router';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 
 const typeContainer = {
     border: '1px #454545 solid',
@@ -24,19 +24,14 @@ const typeContainer = {
 function CreateSurveyModal(props: any) {
 
     const snackbarRef: any = useRef(null);
-
+    const navigate = useNavigate();
     const [surveyTypes, setSurveyTypes] = useState<any[]>([]);
     const [selectedSurveyType, setSelectedSurveyType] = useState('');
     const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
-        init();
         getSurveyType();
     }, []);
-
-    const init = () => {
-        setSelectedSurveyType('');
-    }
 
     const getSurveyType = async () => {
         try {
@@ -47,12 +42,15 @@ function CreateSurveyModal(props: any) {
                 snackbarRef?.current?.show(data.message, 'error');
                 return;
             }
-
             if (data.data != null) {
                 setSurveyTypes(data.data);
             }
         } catch (error: any) {
+            setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+                navigate('/login');
+            }
         }
     }
 
@@ -70,12 +68,12 @@ function CreateSurveyModal(props: any) {
 
     const handleCreateSurvey = async () => {
         try {
-            if(selectedSurveyType == null || selectedSurveyType === ''){
+            if (selectedSurveyType == null || selectedSurveyType === '') {
                 snackbarRef?.current?.show('Please select a survey type to create survey.', 'error');
                 return;
             }
             setLoading(true);
-            let { data } = await axios.post(Endpoints.createSurvey(selectedSurveyType),{}, { withCredentials: true });
+            let { data } = await axios.post(Endpoints.createSurvey(selectedSurveyType), {}, { withCredentials: true });
             setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data.message, 'error');
@@ -87,11 +85,15 @@ function CreateSurveyModal(props: any) {
             props.update();
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+                navigate('/login');
+            }
         }
     }
 
     const handleClose = () => {
         setSelectedSurveyType('');
+        setLoading(false);
         props.close();
     }
 
@@ -137,27 +139,26 @@ function CreateSurveyModal(props: any) {
                     </Box>
 
                     <Box sx={ModalStyles.modalButtonContainerStyle} >
-                        <Button 
-                            style={{ width: 'fit-content', marginRight: '15px' }} 
-                            sx={ButtonStyles.outlinedButton} 
-                            onClick={handleClose} 
+                        <Button
+                            style={{ width: 'fit-content', marginRight: '15px' }}
+                            sx={ButtonStyles.outlinedButton}
+                            onClick={handleClose}
                             variant="contained">
-                                Cancel
-                            </Button>
-                        <LoadingButton 
-                            style={{ width: 'fit-content' }} 
-                            onClick={handleCreateSurvey} 
+                            Cancel
+                        </Button>
+                        <LoadingButton
+                            style={{ width: 'fit-content' }}
+                            onClick={handleCreateSurvey}
                             loading={loading}
-                            sx={ButtonStyles.containedButton} 
+                            sx={ButtonStyles.containedButton}
                             variant="contained">
-                                <span>
-                                    Create
-                                </span>
+                            <span>
+                                Create
+                            </span>
                         </LoadingButton>
                     </Box>
                 </Box>
             </Modal>
-            {/* <FSLoader show={loading} /> */}
             <Notification ref={snackbarRef} />
         </>
     )

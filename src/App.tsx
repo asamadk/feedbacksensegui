@@ -140,13 +140,13 @@ function App() {
           </Routes>
         </div>}
 
-        {liveSurvey === true &&
-          <div>
-            <Routes>
-              <Route path='/share/survey/:surveyId' element={<SurveyDisplays />} />
-            </Routes>
-          </div>}
       </ThemeProvider>
+      {liveSurvey === true &&
+        <div>
+          <Routes>
+            <Route path='/share/survey/:surveyId' element={<SurveyDisplays />} />
+          </Routes>
+        </div>}
     </>
   );
 }

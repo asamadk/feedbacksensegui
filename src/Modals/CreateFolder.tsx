@@ -3,13 +3,14 @@ import React, { useRef, useState } from 'react'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import CloseIcon from '@mui/icons-material/Close';
-import { USER_LOCAL_KEY } from '../Utils/Constants';
+import { USER_LOCAL_KEY, USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { authUser } from '../Utils/types';
 import { createFolder } from '../Utils/Endpoints';
 import axios from 'axios';
 import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
+import { useNavigate } from 'react-router';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -39,7 +40,7 @@ const textFieldStyle = {
 function CreateFolder(props: any) {
 
     const snackbarRef: any = useRef(null);
-
+    const navigate = useNavigate();
     const [folderName, setFolderName] = useState<string>('');
     const [loading, setLoading] = React.useState(false);
 
@@ -66,7 +67,9 @@ function CreateFolder(props: any) {
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
+            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 

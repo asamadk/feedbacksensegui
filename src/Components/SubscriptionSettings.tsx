@@ -9,6 +9,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 
 
 const subscriptionSubContainer = {
@@ -58,7 +59,9 @@ function SubscriptionSettings() {
         } catch (error : any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
+            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                navigate('/login');
+            }
         }
     }
 

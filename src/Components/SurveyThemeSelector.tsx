@@ -2,49 +2,53 @@ import { Box, Button, Typography } from '@mui/material'
 import axios from 'axios';
 import React, { useEffect, useRef } from 'react'
 import * as Endpoints from '../Utils/Endpoints';
-import * as FeedbackUtils from '../Utils/FeedbackUtils'
-import * as ButtonStyles from '../Styles/ButtonStyle'
-import { getColorSchemes } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, getColorSchemes } from '../Utils/Constants';
 import Notification from '../Utils/Notification';
 import FSLoader from './FSLoader';
-import PoweredBy from './PoweredBy';
+import { ColorScheme } from '../Types/GenericTypes';
+import { useNavigate } from 'react-router';
 
 
-function SurveyThemeSelector(props : any) {
+function SurveyThemeSelector(props: any) {
 
-  const snackbarRef :any = useRef(null);
-  const [ loading , setLoading] = React.useState(false);
+  let navigate = useNavigate();
+  const snackbarRef: any = useRef(null);
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
     getSingleSurvey();
-  },[]);
+  }, []);
 
-  const [selectedTheme, setSelectedTheme] = React.useState<any>(getColorSchemes()[0]);
+  const [selectedTheme, setSelectedTheme] = React.useState<ColorScheme>(getColorSchemes()[0]);
 
   const getSingleSurvey = async () => {
     try {
       setLoading(true);
-      let { data } = await axios.get(Endpoints.getSurveyDetails(props.surveyId),{ withCredentials : true });
+      let { data } = await axios.get(Endpoints.getSurveyDetails(props.surveyId), { withCredentials: true });
       setLoading(false);
-      
-      if(data?.statusCode !== 200){
+
+      if (data?.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
       }
 
       if (data != null) {
         const tempSurvey = data.data;
         populateSurveyDesign(tempSurvey);
-        
+
       }
-    } catch (error : any ) {
+    } catch (error: any) {
+      setLoading(false);
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        navigate('/login');
+      }
     }
   }
 
-  const populateSurveyDesign = (tempSurvey : any) => {
-    if(tempSurvey != null){
+  const populateSurveyDesign = (tempSurvey: any) => {
+    if (tempSurvey != null) {
       const surveyDesign = tempSurvey.survey_design_json;
-      if(surveyDesign == null){
+      if (surveyDesign == null) {
         return;
       }
       const design = JSON.parse(surveyDesign);
@@ -53,27 +57,34 @@ function SurveyThemeSelector(props : any) {
     }
   }
 
-  const handleThemeClick = (colorScheme : any) => {    
+  const handleThemeClick = (colorScheme: ColorScheme) => {
+    if (colorScheme.id === selectedTheme.id) {
+      return;
+    }
     setSelectedTheme(colorScheme);
     props.updateTheme(colorScheme);
-    snackbarRef?.current?.show(`${colorScheme.header} selected`,'success');
+    snackbarRef?.current?.show(`${colorScheme.header} selected`, 'success');
+    handleSaveClick();
   }
 
   const handleSaveClick = async () => {
     try {
       const saveObj = {
-        theme : selectedTheme
+        theme: selectedTheme
       }
       setLoading(true);
-      const { data } = await axios.post(Endpoints.saveSurveyDesgin(props.surveyId),saveObj,{ withCredentials : true });
+      const { data } = await axios.post(Endpoints.saveSurveyDesgin(props.surveyId), saveObj, { withCredentials: true });
       setLoading(false);
-      if(data.statusCode !== 200){
-        snackbarRef?.current?.show(data.message,'error');
+      if (data.statusCode !== 200) {
+        snackbarRef?.current?.show(data.message, 'error');
         return;
       }
-      snackbarRef?.current?.show('Design saved.','success'); 
-    } catch (error : any ) {
+      snackbarRef?.current?.show('Design saved.', 'success');
+    } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        navigate('/login');
+      }
     }
 
   }
@@ -83,7 +94,7 @@ function SurveyThemeSelector(props : any) {
       <Box sx={{ textAlign: 'start', marginBottom: '40px' }} >
         <Box display={'flex'} justifyContent={'space-between'}>
           <Typography sx={{ color: '#f1f1f1', fontSize: '20px', marginBottom: '10px' }} >Selected theme</Typography>
-          {
+          {/* {
             selectedTheme != null &&
             <Button 
               sx={ButtonStyles.containedButton} style={{width : 'fit-content', color : '#f1f1f1', margin : 0, marginBottom : '15px'}} 
@@ -91,20 +102,20 @@ function SurveyThemeSelector(props : any) {
             >
               Save
             </Button> 
-          }
+          } */}
         </Box>
         <ThemeComponent
-              color1={selectedTheme?.color[0]}
-              color2={selectedTheme?.color[1]}
-              textHeading={selectedTheme?.header}
-              textSecond={selectedTheme?.text}
-            />
+          color1={selectedTheme?.color[0]}
+          color2={selectedTheme?.color[1]}
+          textHeading={selectedTheme?.header}
+          textSecond={selectedTheme?.text}
+        />
       </Box>
       <Box sx={{ textAlign: 'start' }}  >
         <Typography sx={{ color: '#f1f1f1', fontSize: '20px', marginBottom: '10px' }} >All themes</Typography>
-        {getColorSchemes().map(colorScheme => {
+        {getColorSchemes().map((colorScheme: ColorScheme) => {
           return (
-            <Box key={colorScheme.id}  onClick={() => handleThemeClick(colorScheme)} >
+            <Box key={colorScheme.id} onClick={() => handleThemeClick(colorScheme)} >
               <ThemeComponent
                 color1={colorScheme.color[0]}
                 color2={colorScheme.color[1]}
@@ -115,7 +126,7 @@ function SurveyThemeSelector(props : any) {
           )
         })}
       </Box>
-      <Notification ref={snackbarRef}/>
+      <Notification ref={snackbarRef} />
       <FSLoader show={loading} />
     </Box>
   )

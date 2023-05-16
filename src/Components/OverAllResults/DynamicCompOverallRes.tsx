@@ -7,6 +7,8 @@ import { getOverAllComponentsData } from '../../Utils/Endpoints'
 import FSLoader from '../FSLoader'
 import Notification from '../../Utils/Notification'
 import axios from 'axios'
+import { USER_UNAUTH_TEXT } from '../../Utils/Constants'
+import { useNavigate } from 'react-router'
 
 const mainContainer = {
   margin: '20px',
@@ -29,6 +31,7 @@ const mainTextStyle = {
 function DynamicCompOverallRes(props: any) {
 
   const snackbarRef: any = useRef(null);
+  const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
   const [overAllComponentData, setOverAllComponentData] = useState<any>({});
 
@@ -46,10 +49,12 @@ function DynamicCompOverallRes(props: any) {
         return;
       }
       setOverAllComponentData(data?.data);
-      // console.log("🚀 ~ file: DynamicCompOverallRes.tsx:53 ~ fetchOverAllComponentData ~ data?.data:", data?.data)
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       setLoading(false);
+      if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+        navigate('/login');
+      }
     }
   }
 

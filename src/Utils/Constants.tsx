@@ -5,6 +5,8 @@ export const USER_LOCAL_KEY = 'user';
 export const SURVEY_LOCAL_KEY = 'currentSurvey';
 export const LIVE_SURVEY_USER_ID = 'survey-user';
 
+export const USER_UNAUTH_TEXT = 'User is not authorized';
+
 export const getColorSchemes = () : any[] => {
     let count = 0;
 
