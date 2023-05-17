@@ -4,7 +4,6 @@ export const modalStyle = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '50%',
-    // height : '100%',
     bgcolor: '#181818',
     border: '2px solid #454545',
     boxShadow: 24,

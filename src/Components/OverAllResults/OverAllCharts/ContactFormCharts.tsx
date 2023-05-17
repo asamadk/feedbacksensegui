@@ -1,64 +1,95 @@
-import { Box, ThemeProvider, Typography, createTheme } from '@mui/material'
-import React from 'react'
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
+import React, { useState } from 'react';
 
 const mainContainer = {
   marginTop: '20px',
   color: '#f1f1f1',
   textAlign: 'start',
   padding: '20px'
-}
+};
 
-type propsType = {
-  id: number,
-  data: any
-}
+type PropsType = {
+  id: number;
+  data: any;
+};
 
-function ContactFormCharts(props: propsType) {
+function ContactFormCharts(props: PropsType) {
   return (
-    <Box sx={mainContainer} >
+    <Box sx={mainContainer}>
       <ContactResultTable data={props.data} />
       <Box marginTop={'20px'}>
-        <Typography color={'#808080'} >
-          Total : <span style={{ color: '#f1f1f1' }}>{props?.data?.contactInfoRow?.length} response</span>
+        <Typography color={'#808080'}>
+          Total: <span style={{ color: '#f1f1f1' }}>{props?.data?.contactInfoRow?.length} response</span>
         </Typography>
       </Box>
     </Box>
-  )
+  );
 }
 
-export default ContactFormCharts
+export default ContactFormCharts;
+
 
 function ContactResultTable({ data }: any) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState( data?.contactInfoRow?.length > 5 ? 5 : data?.contactInfoRow?.length);
 
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if(rows?.length < parseInt(event.target.value)){
+      return;
+    }
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const rows = data?.contactInfoRow || [];
+
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-      <TableContainer component={Paper} >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              {data?.contactColumn?.map((column: string) => { return (<TableCell>{column}</TableCell>) })}
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            {data?.contactColumn?.map((column: string) => (
+              <TableCell key={column}>{column}</TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {(rowsPerPage > 0
+            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : rows
+          ).map((contactRow: any[], index: number) => (
+            <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              {contactRow.map((row: string, cellIndex: number) => (
+                <TableCell key={cellIndex} component="th" scope="row">
+                  {row}
+                </TableCell>
+              ))}
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {data?.contactInfoRow?.map((contactRow: any[], index: number) => {
-              return (
-                <TableRow
-                  key={index}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >{contactRow.map(row => {return (<TableCell component="th" scope="row">{row}</TableCell>)})}
-                </TableRow>
-              )}
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-  )
+          ))}
+
+          {emptyRows > 0 && page === Math.ceil(rows.length / rowsPerPage) - 1 && (
+            <TableRow style={{ height: 53 * emptyRows }}>
+              <TableCell colSpan={data?.contactColumn?.length} />
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </TableContainer>
+  );
 }

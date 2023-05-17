@@ -7,7 +7,6 @@ import { getLiveSurveyData } from '../../Utils/Endpoints';
 import DynamicComponentDisplay from '../DynamicComponentDisplay';
 import { v4 as uuidv4, v4 } from "uuid";
 
-import { getSurveyDisplayContainerStyle } from '../../Styles/SurveyDisplay';
 import { LIVE_SURVEY_USER_ID } from '../../Utils/Constants';
 import SurveyEndPage from './SurveyEndPage';
 
@@ -57,8 +56,8 @@ function SurveyDisplays() {
             populateComponentData(resData.nodes[0]);
             localStorage.setItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`, v4());
         } catch (error: any) {
+            console.log("🚀 ~ file: SurveyDisplays.tsx:62 ~ fetchLiveSurveyNodes ~ error:", error)
             setLoading(false);
-            console.log('Error message = ', error?.response?.data?.message)
             setDisplayMssg({
                 message: error?.response?.data?.message,
                 type: error?.response?.data?.success === true ? 'success' : 'error'
@@ -86,8 +85,6 @@ function SurveyDisplays() {
     }
 
     const next = () => {
-        console.log("🚀 ~ file: SurveyDisplays.tsx:88 ~ next ~ currentPage:", currentPage)
-        console.log("🚀 ~ file: SurveyDisplays.tsx:89 ~ next ~ surveyDiplays?.length:", surveyDiplays?.length)
         if (currentPage < surveyDiplays?.length - 1) {
             const nextPage = surveyDiplays[currentPage + 1];
             if (nextPage != null) {
@@ -98,7 +95,6 @@ function SurveyDisplays() {
             }
         }else{
             setShowEnd(true);
-            console.log('On last page')
         }
     }
 

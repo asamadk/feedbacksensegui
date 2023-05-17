@@ -14,6 +14,7 @@ const subContainerStyle = {
 }
 
 function SurveyEndPage() {
+
     return (
         <Box sx={bodyStyle} >
             <Box sx={subContainerStyle} >
@@ -35,11 +36,18 @@ function SurveyEndPage() {
 export default SurveyEndPage
 
 function CreateOwnSurvey(){
+
+    const handleCreateSurvey = () => {
+        const url = `https://${window.location.host}/login`
+        console.log('URL',url)
+        window.open(url,'__target');
+    }
+
     return(
         <Box marginTop={'20px'} color={'#f1f1f1'} >
             <Typography fontSize={20} >Want to create your own surveys?</Typography>
             <Typography color={'#808080'} fontSize={14} >See how easy it is to get feedback using FeedbackSense</Typography>
-            <Button sx={ButtonStyles.containedButton} style={{width : 'fit-content'}} >
+            <Button onClick={handleCreateSurvey} sx={ButtonStyles.containedButton} style={{width : 'fit-content'}} >
                 {'Create your own survey'}
             </Button>
         </Box>

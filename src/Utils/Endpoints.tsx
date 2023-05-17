@@ -1,4 +1,4 @@
-// export const BASE_URL = 'http://api.feedbacksense.tech';
+// export const BASE_URL = 'https://api.feedbacksense.tech';
 export const BASE_URL = 'http://localhost:3001';
 
 export const createFolder = (folderName : string) : string => {

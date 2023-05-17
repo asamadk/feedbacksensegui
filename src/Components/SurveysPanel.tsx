@@ -235,6 +235,7 @@ function SurveysPanel(props: any) {
     const runOnCreate = () => {
         setOpenCreateSurvey(false);
         setForceRerender(!forceRerender);
+        props.runOnSurveyCreate();
     }
 
     return (

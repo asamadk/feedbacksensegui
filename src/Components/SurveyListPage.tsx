@@ -210,6 +210,19 @@ function SurveyListPage() {
         navigate('/upgrade/plan');
     }
 
+    const handleRerenderSurveyCreate = () => {
+        setSelectedFolder('All Surveys');
+        setSelectedFolderId('0');
+
+        document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
+            element.style.background = '#1E1E1E';
+        });
+
+        document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
+            element.style.background = '#323533';
+        })
+    }
+
     return (
         <>
             <div style={surveyPageMainContainer} >
@@ -273,6 +286,7 @@ function SurveyListPage() {
                         folder={selectedFolder}
                         folderId={selectedFolderId}
                         update={handleUpdateComponent}
+                        runOnSurveyCreate={handleRerenderSurveyCreate}
                     />
                 </div>
                 <InviteMemberModal open={openInviteModal} close={handleCloseInviteModal} />

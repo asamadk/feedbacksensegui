@@ -40,7 +40,6 @@ const CssTextField = styled(TextField)({
 });
 
 function CreateSurvey(props: any) {
-
   const snackbarRef: any = useRef(null);
   const navigate = useNavigate();
   const { surveyId } = useParams();

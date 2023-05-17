@@ -8,7 +8,7 @@ function EmptyAnalysis() {
                 <img 
                   style={{width : '250px',margin : 'auto'}} 
                   alt='There are no results'
-                  src='/emptyAnalysis.png'
+                  src='/EmptyAnalysis.png'
                 ></img>
             </Box>
             <Typography variant='h6'>There are no results</Typography>
