@@ -75,7 +75,7 @@ function CreateSurvey(props: any) {
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        navigate('/login');
+        FeedbackUtils.handleLogout();
       }
     }
   }
@@ -183,7 +183,7 @@ function CreateSurvey(props: any) {
       setLoading(false)
       snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        navigate('/login');
+        FeedbackUtils.handleLogout();
       }
     }
   }
@@ -214,7 +214,7 @@ function CreateSurvey(props: any) {
       setLoading(false);
       snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        navigate('/login');
+        FeedbackUtils.handleLogout();
       }
     }
   }
@@ -243,7 +243,7 @@ function CreateSurvey(props: any) {
         setLoading(false);
         snackbarRef?.current?.show(error?.response?.data?.message, 'error');
         if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-          navigate('/login');
+          FeedbackUtils.handleLogout();
         }
       }
     } else {
@@ -265,7 +265,7 @@ function CreateSurvey(props: any) {
         setLoading(false);
         snackbarRef?.current?.show(error?.response?.data?.message, 'error');
         if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-          navigate('/login');
+          FeedbackUtils.handleLogout();
         }
       }
     }

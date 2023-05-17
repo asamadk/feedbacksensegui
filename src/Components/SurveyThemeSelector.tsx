@@ -7,6 +7,7 @@ import Notification from '../Utils/Notification';
 import FSLoader from './FSLoader';
 import { ColorScheme } from '../Types/GenericTypes';
 import { useNavigate } from 'react-router';
+import { handleLogout } from '../Utils/FeedbackUtils';
 
 
 function SurveyThemeSelector(props: any) {
@@ -40,7 +41,7 @@ function SurveyThemeSelector(props: any) {
       setLoading(false);
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        navigate('/login');
+        handleLogout();
       }
     }
   }
@@ -83,7 +84,7 @@ function SurveyThemeSelector(props: any) {
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        navigate('/login');
+        handleLogout();
       }
     }
 

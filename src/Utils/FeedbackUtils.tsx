@@ -1,5 +1,6 @@
 import { Dayjs } from "dayjs";
 import { SURVEY_LOCAL_KEY, USER_LOCAL_KEY } from "./Constants";
+import { logout } from "./Endpoints";
 
 export const getUserId = (): string => {
     let userStr = localStorage.getItem(USER_LOCAL_KEY);
@@ -247,3 +248,10 @@ export const getComponentNameById = (id : number) : string => {
     }
     return '';
 }
+
+export const handleLogout = () => {
+    window.open(
+      logout(),
+      "_self"
+    );
+  }

@@ -60,7 +60,7 @@ function SubscriptionSettings() {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
             if(error?.response?.data?.message === USER_UNAUTH_TEXT){
-                navigate('/login');
+                FeedbackUtils.handleLogout();
             }
         }
     }

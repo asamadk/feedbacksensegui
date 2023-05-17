@@ -16,6 +16,7 @@ import { deleteSurvey } from '../Utils/Endpoints';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { handleLogout } from '../Utils/FeedbackUtils';
 
 const surveyBlockMainContainer = {
     border: '1px #454545 solid',
@@ -110,7 +111,7 @@ function SurveyBlock(props: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
             if(error?.response?.data?.message === USER_UNAUTH_TEXT){
-                navigation('/login');
+                handleLogout();
             }
         }
     }

@@ -7,6 +7,7 @@ import axios from 'axios';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import { useNavigate } from 'react-router';
+import { handleLogout } from '../Utils/FeedbackUtils';
 
 
 function OrgGeneralSettings() {
@@ -34,7 +35,7 @@ function OrgGeneralSettings() {
       setLoading(false);
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       if(error?.response?.data?.message === USER_UNAUTH_TEXT){
-        navigate('/login');
+        handleLogout();
       }
     }
   }

@@ -4,7 +4,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import { useNavigate } from "react-router";
-import * as Endpoint from '../Utils/Endpoints'
+import { handleLogout } from "../Utils/FeedbackUtils";
 
 
 const settingsMainStyle = {
@@ -16,14 +16,14 @@ const settingsMainStyle = {
   border: "1px #454545 solid",
   right: "10px",
   borderRadius: "5px",
-  zIndex : 10
+  zIndex: 10
 };
 
 const singleElementStyle = {
   cursor: "pointer",
 };
 
-export default function SettingsModal(props : any) {
+export default function SettingsModal(props: any) {
 
   const navigation = useNavigate();
 
@@ -36,16 +36,9 @@ export default function SettingsModal(props : any) {
     e.target.style.color = '#f1f1f1';
   };
 
-  const handleSettingsRouting = (path : string) => {
+  const handleSettingsRouting = (path: string) => {
     props.close();
     navigation(path);
-  }
-
-  const handleLogout = async () => {
-    window.open(
-      Endpoint.logout(),
-      "_self"
-  );
   }
 
   return (

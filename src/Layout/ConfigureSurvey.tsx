@@ -12,6 +12,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { handleLogout } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -77,7 +78,7 @@ function ConfigureSurvey() {
     } catch (error: any) {
       setLoading(false);
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        navigate('/login');
+        handleLogout();
       }
     }
 
@@ -112,7 +113,7 @@ function ConfigureSurvey() {
       setLoading(false);
       snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        navigate('/login');
+        handleLogout();
       }
     }
   }
@@ -137,7 +138,7 @@ function ConfigureSurvey() {
   }
 
   return (
-    <Box sx={settingLayoutStyle} overflow={'scroll'} >
+    <Box sx={settingLayoutStyle} >
 
       <Box sx={globalSettingSubContainers} >
         <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Responses limit</Typography>

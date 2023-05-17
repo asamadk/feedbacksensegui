@@ -12,6 +12,7 @@ import GenericModal from '../Modals/GenericModal';
 import EmptyAnalysis from './OverAllResults/EmptyAnalysis';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { useNavigate } from 'react-router';
+import { handleLogout } from '../Utils/FeedbackUtils';
 
 const responseStyle = {
     padding: '10px',
@@ -83,7 +84,7 @@ function IndividualResponse(props: IndividualResponseProps) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
             if(error?.response?.data?.message === USER_UNAUTH_TEXT){
-                navigate('/login');
+                handleLogout();
             }
         }
     }
@@ -151,7 +152,7 @@ function IndividualResponse(props: IndividualResponseProps) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
             if(error?.response?.data?.message === USER_UNAUTH_TEXT){
-                navigate('/login');
+                handleLogout();
             }
         }
     }

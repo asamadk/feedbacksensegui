@@ -18,11 +18,11 @@ type propsType = {
 function SingleAnswerChart(props: propsType) {
     return (
         <Box sx={mainContainer} >
-            <Typography color={'#808080'} >The question that was asked ?</Typography>
+            <Typography fontSize={20} color={'#f1f1f1'} paddingBottom={'10px'} >Question : {props?.data?.question}</Typography>
             <SingleAnswerBarChart data={props.data} id={props.id} />
             <Typography fontWeight={600} >Answers</Typography>
             {
-                props?.data?.map((answers: any) => {
+                props?.data?.statsArr?.map((answers: any) => {
                     return (
                         <Box>
                             <Divider sx={{ borderTop: '1px #454545 solid', margin: '10px 0px' }} />
@@ -49,7 +49,7 @@ function SingleAnswerBarChart(props: any) {
                     layout="vertical"
                     width={1200}
                     height={400}
-                    data={props?.data}
+                    data={props?.data?.statsArr}
                     margin={{
                         top: 20,
                         right: 20,

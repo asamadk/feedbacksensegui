@@ -19,9 +19,13 @@ function TextAnswerChart(props: propsType) {
 
     return (
         <Box sx={mainContainer} >
+            <Box marginBottom={'20px'} >
+                <Typography fontSize={20} color={'#f1f1f1'} paddingBottom={'10px'} >Question : {props?.data?.question}</Typography>
+            </Box>
+
             <Typography fontWeight={600} >Answers</Typography>
             {
-                data?.map((answers: string) => {
+                data?.statsArr?.map((answers: string) => {
                     return (
                         <Box>
                             <Divider sx={{ borderTop: '1px #454545 solid', margin: '10px 0px' }} />
@@ -35,7 +39,7 @@ function TextAnswerChart(props: propsType) {
             <Divider sx={{ borderTop: '1px #454545 solid', margin: '10px 0px' }} />
             <Box>
                 <Typography color={'#808080'} >
-                    Total : <span style={{ color: '#f1f1f1' }}>{data?.length} response</span>
+                    Total : <span style={{ color: '#f1f1f1' }}>{data?.statsArr?.length} response</span>
                 </Typography>
             </Box>
         </Box>

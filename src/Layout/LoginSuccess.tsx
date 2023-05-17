@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router';
 import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { handleLogout } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -112,7 +113,7 @@ function LoginSuccess() {
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        navigate('/login');
+        handleLogout();
       }
     }
   }
@@ -146,7 +147,7 @@ function LoginSuccess() {
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        navigate('/login');
+        handleLogout();
       }
     }
   }
@@ -167,7 +168,7 @@ function LoginSuccess() {
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        navigate('/login');
+        handleLogout();
       }
     }
   }

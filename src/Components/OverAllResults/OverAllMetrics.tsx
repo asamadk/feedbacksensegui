@@ -10,6 +10,7 @@ import { surveyIdProp } from '../../Utils/types';
 import { getOverallMetricsResponse } from '../../Utils/Endpoints';
 import { USER_UNAUTH_TEXT } from '../../Utils/Constants';
 import { useNavigate } from 'react-router';
+import { handleLogout } from '../../Utils/FeedbackUtils';
 
 const subContainerStyle = {
     border: '1px #454545 solid',
@@ -52,7 +53,7 @@ function OverAllMetrics(props : surveyIdProp) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
             if(error?.response?.data?.message === USER_UNAUTH_TEXT){
-                navigate('/login');
+                handleLogout();
             }
         }
     }

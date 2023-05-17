@@ -11,6 +11,7 @@ import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router';
+import { handleLogout } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -68,7 +69,7 @@ function CreateFolder(props: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
             if(error?.response?.data?.message === USER_UNAUTH_TEXT){
-                navigate('/login');
+                handleLogout();
             }
         }
     }

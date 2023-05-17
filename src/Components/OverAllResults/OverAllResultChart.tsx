@@ -5,9 +5,9 @@ import { getOverallResponse } from '../../Utils/Endpoints';
 import axios from 'axios';
 import FSLoader from '../FSLoader';
 import Notification from '../../Utils/Notification';
-import { surveyIdProp } from '../../Utils/types';
 import { USER_UNAUTH_TEXT } from '../../Utils/Constants';
 import { useNavigate } from 'react-router';
+import { handleLogout } from '../../Utils/FeedbackUtils';
 
 const mainContainer = {
     margin: '20px',
@@ -66,7 +66,7 @@ function OverAllResultChart(props: propsType) {
             props.empty();
             setLoading(false);
             if(error?.response?.data?.message === USER_UNAUTH_TEXT){
-                navigate('/login');
+                handleLogout();
             }
         }
     }

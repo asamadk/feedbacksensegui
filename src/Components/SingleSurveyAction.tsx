@@ -7,6 +7,7 @@ import CustomAlert from './CustomAlert'
 import FSLoader from './FSLoader'
 import { USER_UNAUTH_TEXT } from '../Utils/Constants'
 import { useNavigate } from 'react-router'
+import { handleLogout } from '../Utils/FeedbackUtils'
 
 function SingleSurveyAction(props: any) {
 
@@ -35,7 +36,7 @@ function SingleSurveyAction(props: any) {
                 setLoading(false);
                 snackbarRef?.current?.show(error?.response?.data?.message, 'error');
                 if(error?.response?.data?.message === USER_UNAUTH_TEXT){
-                    navigate('/login');
+                    handleLogout();
                 }
             }
         } else {
@@ -55,7 +56,7 @@ function SingleSurveyAction(props: any) {
                 setLoading(false);
                 snackbarRef?.current?.show(error?.response?.data?.message, 'error');
                 if(error?.response?.data?.message === USER_UNAUTH_TEXT){
-                    navigate('/login');
+                    handleLogout();
                 }
             }
         }

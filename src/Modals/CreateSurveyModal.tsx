@@ -12,6 +12,7 @@ import axios from 'axios';
 import Notification from '../Utils/Notification';
 import { useNavigate } from 'react-router';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { handleLogout } from '../Utils/FeedbackUtils';
 
 const typeContainer = {
     border: '1px #454545 solid',
@@ -49,7 +50,7 @@ function CreateSurveyModal(props: any) {
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-                navigate('/login');
+                handleLogout();
             }
         }
     }
@@ -86,7 +87,7 @@ function CreateSurveyModal(props: any) {
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-                navigate('/login');
+                handleLogout();
             }
         }
     }

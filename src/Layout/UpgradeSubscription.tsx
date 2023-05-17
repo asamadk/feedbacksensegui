@@ -9,6 +9,7 @@ import Notification from '../Utils/Notification';
 import { containedButton } from '../Styles/ButtonStyle';
 import { useNavigate } from 'react-router';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { handleLogout } from '../Utils/FeedbackUtils';
 
 function UpgradeSubscription() {
 
@@ -41,7 +42,7 @@ function UpgradeSubscription() {
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-                navigate('/login');
+                handleLogout();
             }
         }
     }

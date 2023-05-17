@@ -51,7 +51,7 @@ function ChangeFolderModal(props: any) {
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-                navigate('/login');
+                FeedbackUtils.handleLogout();
             }
         }
     }
@@ -77,7 +77,7 @@ function ChangeFolderModal(props: any) {
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             if(error?.response?.data?.message === USER_UNAUTH_TEXT){
-                navigate('/login');
+                FeedbackUtils.handleLogout();
             }
         }
     }

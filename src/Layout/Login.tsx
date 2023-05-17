@@ -6,7 +6,8 @@ function Login() {
 
     const googleAuth = () => {
         window.open(
-            Endpoint.getRedirectGoogleAuth()
+            Endpoint.getRedirectGoogleAuth(),
+            '_self'
         );
     }
 
