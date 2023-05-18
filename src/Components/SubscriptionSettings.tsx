@@ -46,6 +46,7 @@ function SubscriptionSettings() {
         try {
             setLoading(true);
             let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(),{ withCredentials : true });
+            console.log("🚀 ~ file: SubscriptionSettings.tsx:49 ~ getSubscriptionDetails ~ data:", data)
             setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');

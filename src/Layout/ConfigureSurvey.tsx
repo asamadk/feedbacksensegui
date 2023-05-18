@@ -10,7 +10,7 @@ import { useNavigate, useParams } from 'react-router';
 import FSLoader from '../Components/FSLoader';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs, { Dayjs, isDayjs } from 'dayjs';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
 
@@ -48,7 +48,7 @@ function ConfigureSurvey() {
 
   const [showStopSurveyNumber, setShowStopSurveyNumber] = React.useState(false);
   const [showStopSurveyDate, setShowStopSurveyDate] = React.useState(false);
-  const [showStopSurveyDateData, setShowStopSurveyDateData] = React.useState<string | null>();
+  const [showStopSurveyDateData, setShowStopSurveyDateData] = React.useState<string | null>('');
   const [showStopSurveyNumberData, setShowStopSurveyNumberData] = React.useState<string>('');
   const [loading, setLoading] = React.useState(false);
 
@@ -64,7 +64,7 @@ function ConfigureSurvey() {
 
       if (data.data != null) {
         let tempData = data.data;
-        if (tempData?.response_limit != null && tempData?.response_limit !== '0') {
+        if (tempData?.response_limit != null && tempData?.response_limit !== 0) {
           setShowStopSurveyNumber(true);
           setShowStopSurveyNumberData(tempData?.response_limit?.toString());
         }
@@ -124,9 +124,24 @@ function ConfigureSurvey() {
       return false;
     }
 
-    if (showStopSurveyDate === true && (showStopSurveyDateData == null || showStopSurveyNumberData == '')) {
-      snackbarRef?.current?.show('Please fill all the details before saving.', 'warning');
-      return false;
+    const isDateValid = dayjs(showStopSurveyDateData).isValid();
+    if (showStopSurveyDate === true) {
+      if (isDateValid === false) {
+        snackbarRef?.current?.show('Selected date is not valid.', 'warning');
+        return false;
+      }
+      if (showStopSurveyDateData == null) {
+        snackbarRef?.current?.show('Please fill all the details before saving.', 'warning');
+        return false;
+      }
+      const currentDate = dayjs();
+      const selectedDate = dayjs(showStopSurveyDateData);
+      const isPast = selectedDate.isBefore(currentDate);
+
+      if(isPast === true){
+        snackbarRef?.current?.show('Selected date is in the past. Please choose a future date.', 'warning');
+        return false;
+      }
     }
 
     if (parseInt(showStopSurveyNumberData) > 1000000) {
