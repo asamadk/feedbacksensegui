@@ -9,7 +9,7 @@ import * as Endpoints from '../Utils/Endpoints';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import DynamicComponentModal from '../FlowComponents/DynamicComponentModal';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
@@ -17,6 +17,8 @@ import Notification from '../Utils/Notification';
 import FSLoader from '../Components/FSLoader';
 import { enableSurvey } from '../Utils/Endpoints';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { genericModalData } from '../Utils/types';
+import GenericModal from '../Modals/GenericModal';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -41,8 +43,10 @@ const CssTextField = styled(TextField)({
 
 function CreateSurvey(props: any) {
   const snackbarRef: any = useRef(null);
-  const navigate = useNavigate();
+
   const { surveyId } = useParams();
+  const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
+  const [showGenericModal, setShowGenericModal] = React.useState(false);
   const [openEditModal, setOpenEditModal] = React.useState(false);
   const [componentId, setComponentId] = React.useState<string>();
   const [comUiId, setCompUiId] = React.useState<string>('');
@@ -51,6 +55,8 @@ function CreateSurvey(props: any) {
   const [surveyDetail, setSurveyDetail] = React.useState<any>();
   const [showSurveyName, setShowSurveyName] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
+  const [saveFlowTemp, setSaveFlowTemp] = React.useState();
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     getSingleSurvey();
@@ -103,13 +109,52 @@ function CreateSurvey(props: any) {
     snackbarRef?.current?.show('Saved.', 'success');
   }
 
-  const handleSaveFlow = (flow: any) => {
+  const checkSurveyResponse = async (): Promise<boolean> => {
     try {
-      if (flow == null || flow.length < 1) {
+      setLoading(true);
+      if (surveyId == null) { return false; }
+      const { data } = await axios.get(Endpoints.checkBeforeSaveSurveyFlow(surveyId), { withCredentials: true });
+      setLoading(false);
+      return data?.data?.alreadyHasResponse;
+    } catch (error) {
+      setLoading(false);
+      return true;
+    }
+  }
+
+  const handleSurveyResetModal = () => {
+    setShowGenericModal(true);
+    let genDeleteObj: genericModalData = {
+      header: 'Do you really want to save this survey?',
+      warning: 'Warning: Changes will delete previous responses',
+      successButtonText: 'Save anyway',
+      cancelButtonText: 'Cancel',
+      description: 'Making changes to a survey that has already received responses will result in the deletion of all previous responses. Are you sure you want to proceed?',
+      type: 'save_survey'
+    }
+    setGenericModalObj(genDeleteObj);
+  }
+
+  const handleSuccessGenericButtonClick = () => {
+    setShowGenericModal(false);
+    if (genericModalObj?.type !== 'save_survey') {
+      return;
+    }
+    saveFlow(saveFlowTemp,true);
+  }
+
+  const handleSaveFlow = async (flow: any) => {
+    try {
+      const isSurveyAlreadyFilled = await checkSurveyResponse();
+      if (isSurveyAlreadyFilled === true) {
+        setSaveFlowTemp(flow);
+        handleSurveyResetModal();
         return;
       }
+
+      if (flow == null || flow.length < 1) { return; }
       if (componentConfig.size < 1) {
-        saveFlow(flow);
+        saveFlow(flow,false);
         return;
       }
       for (const key in flow) {
@@ -123,7 +168,7 @@ function CreateSurvey(props: any) {
           }
         });
       }
-      saveFlow(flow);
+      saveFlow(flow,false);
     } catch (error) {
       console.log('Exception :: handleSaveFlow :: ', error);
       snackbarRef?.current?.show('Something went wrong.', 'error');
@@ -155,7 +200,7 @@ function CreateSurvey(props: any) {
     }
   }
 
-  const saveFlow = async (flow: any) => {
+  const saveFlow = async (flow: any,deleteResponse : boolean) => {
     try {
       setLoading(true);
       const isSurveyFlowValid = validateSurveyFlowOnSave(flow);
@@ -172,7 +217,7 @@ function CreateSurvey(props: any) {
       if (surveyId == null) {
         return;
       }
-      const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyId), flow, { withCredentials: true });
+      const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyId,deleteResponse), flow, { withCredentials: true });
       setLoading(false);
       if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
@@ -272,6 +317,7 @@ function CreateSurvey(props: any) {
     props.close();
   }
 
+
   return (
     <Box sx={{ backgroundColor: '#1E1E1E', height: 'calc(100vh - 69px)' }} >
       <Box sx={LayoutStyles.localSurveyNavbar} >
@@ -341,6 +387,12 @@ function CreateSurvey(props: any) {
 
       <Notification ref={snackbarRef} />
       <FSLoader show={loading} />
+      <GenericModal
+        payload={genericModalObj}
+        close={() => setShowGenericModal(false)}
+        open={showGenericModal}
+        callback={handleSuccessGenericButtonClick}
+      />
     </Box>
   )
 }

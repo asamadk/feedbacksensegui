@@ -49,8 +49,12 @@ export const createSurvey = (surveyTypeId : string ) : string => {
     return BASE_URL + `/survey/create/${surveyTypeId}`;
 }
 
-export const saveSurveyFlow = (surveyId : string) : string => {
-    return BASE_URL + `/survey/save/flow/${surveyId}`;
+export const saveSurveyFlow = (surveyId : string,deleteResponse : boolean) : string => {
+    return BASE_URL + `/survey/save/flow/${surveyId}?delete=${deleteResponse+''}`;
+}
+
+export const checkBeforeSaveSurveyFlow = (surveyId : string) : string => {
+    return BASE_URL + `/survey/save/check/${surveyId}`;
 }
 
 export const getShareSurveyLink = (currentLocation : string,surveyId : any) : string => {

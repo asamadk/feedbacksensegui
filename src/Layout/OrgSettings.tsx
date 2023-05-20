@@ -17,13 +17,14 @@ const tabsetList = [
 
 function OrgSettings(props : any) {
 
+    const [tabset, setTabset] = React.useState(parseInt(props.tabset))
+
     useEffect(() => {
         console.log("🚀 ~ file: OrgSettings.tsx:23 ~ useEffect ~ props.tabset:", props.tabset)
         changeTabSet(props.tabset);
     },[props.tabset]);
 
     let navigation = useNavigate();
-    const [tabset, setTabset] = React.useState(parseInt(props.tabset))
 
     const changeTabSet = (value: number) => {
         setTabset(value);

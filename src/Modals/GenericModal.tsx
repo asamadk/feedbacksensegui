@@ -2,8 +2,6 @@ import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 import * as Types from '../Utils/types'
 import * as ButtonStyles from '../Styles/ButtonStyle'
-
-import React, { useEffect } from 'react'
 import * as ModalStyles from '../Styles/ModalStyle'
 
 function GenericModal(props: any) {
@@ -56,7 +54,7 @@ function GenericModal(props: any) {
                             sx={ButtonStyles.containedButton}
                             variant="contained"
                             onClick={handleSuccessButtonClick}
-                            >
+                        >
                             {payload?.successButtonText}
                         </Button>
                     </Box>

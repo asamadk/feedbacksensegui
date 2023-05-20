@@ -1,6 +1,6 @@
 import { Tab, Tabs } from '@mui/material';
 import { styled } from '@mui/system';
-import React from 'react'
+import React, { useEffect } from 'react'
 
 interface StyledTabProps {
     label: string;
