@@ -14,7 +14,7 @@ export const getSurveyList = () :string => {
 }
 
 export const enableSurvey = (surveyId : string) : string => {
-    return BASE_URL + `/survey/enable/${surveyId}`;
+    return BASE_URL + `/survey/enable/${surveyId}`; 
 }
 
 export const disableSurvey = (surveyId : string) : string => {

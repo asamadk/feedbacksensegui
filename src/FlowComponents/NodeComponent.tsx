@@ -1,9 +1,11 @@
-import { Box, Typography } from '@mui/material'
+import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React from 'react'
 import DynamicComponentIcon from './DynamicComponentIcon'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Popover from '../Components/Popover';
+import { getIconColorById } from '../Utils/FeedbackUtils';
 
 const commonLogoStyle = {
     marginTop: '20px',
@@ -11,51 +13,88 @@ const commonLogoStyle = {
 }
 
 const editButton = {
-    position: 'absolute',
-    top: '-30px',
-    right: '40px',
-    cursor : 'pointer'
+    // position: 'absolute',
+    // top: '-30px',
+    // right: '40px',
+    // cursor : 'pointer'
 }
 
 const deleteButton = {
-    position: 'absolute',
-    top: '-30px',
-    right: '10px',
-    cursor : 'pointer'
+    // position: 'absolute',
+    // top: '-30px',
+    // right: '10px',
+    // cursor : 'pointer'
 }
 
-function NodeComponent(props : any) {
+function NodeComponent(props: any) {
 
-    const [showDeleteText , setShowDeleteText] = React.useState(false);
-    const [showEditText , setShowEditText] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
 
-    const handleDeleteButtonClick = (e : any) => {
+    const handleDeleteButtonClick = (e: any) => {
+        handleCloseMore();
         props.delete(props.uniqueId);
     }
 
     const handleEditButtonClick = () => {
-        props.edit(props.uniqueId,props.compId);
+        handleCloseMore();
+        props.edit(props.uniqueId, props.compId);
     }
 
-  return (
-    <Box textAlign={'start'} display={'flex'} overflow={'hidden'} >
-        <Box onMouseEnter={() => setShowDeleteText(true)} onMouseLeave={() => setShowDeleteText(false)} onClick={handleDeleteButtonClick} sx={deleteButton} >
-            <DeleteRoundedIcon/>
-            <Popover open={showDeleteText} text={'Delete'}/>
+    const handleCloseMore = () => {
+        setAnchorEl(null);
+    }
+
+    const handleOpenMoreClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    return (
+        <Box textAlign={'start'} display={'flex'} overflow={'hidden'} >
+            <Box sx={commonLogoStyle} >
+                <DynamicComponentIcon id={props.compId} />
+            </Box>
+            <Box >
+                <Typography>{props.label}</Typography>
+                <Typography sx={{ color: '#454545', fontSize: '12px' }} >{props.description?.substring(0, 65) + '...'}</Typography>
+            </Box>
+            <Box>
+                <IconButton onClick={handleOpenMoreClick} sx={{ marginTop: '10px' }} >
+                    <MoreVertIcon sx={{color : getIconColorById(props.compId)}} />
+                </IconButton>
+            </Box>
+            <NodeComponentMore
+                anchor={anchorEl}
+                open={open}
+                close={handleCloseMore}
+                edit={handleEditButtonClick}
+                delete={handleDeleteButtonClick}
+            />
         </Box>
-        <Box onMouseEnter={() => setShowEditText(true)} onMouseLeave={() => setShowEditText(false)}  onClick={handleEditButtonClick} sx={editButton} >
-            <EditRoundedIcon/>
-            <Popover open={showEditText} text={'Edit'}/>
-        </Box>
-        <Box sx={commonLogoStyle} >
-            <DynamicComponentIcon id={props.compId} />
-        </Box>
-        <Box>
-            <Typography>{props.label}</Typography>
-            <Typography sx={{color : '#454545', fontSize : '12px'}} >{props.description?.substring(0,83)+'...'}</Typography>
-        </Box>
-    </Box>
-  )
+    )
 }
 
 export default NodeComponent
+
+function NodeComponentMore(props: any) {
+    return (
+        <Menu
+            id="basic-menu"
+            anchorEl={props.anchor}
+            open={props.open}
+            onClose={props.close}
+            MenuListProps={{
+                'aria-labelledby': 'basic-button',
+            }}
+        >
+            <MenuItem onClick={props.edit}>
+                <EditRoundedIcon />
+                Edit
+            </MenuItem>
+            <MenuItem onClick={props.delete} >
+                <DeleteRoundedIcon />
+                Delete
+            </MenuItem>
+        </Menu>
+    )
+}

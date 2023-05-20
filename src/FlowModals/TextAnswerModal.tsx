@@ -54,7 +54,7 @@ function TextAnswerModal(props: any) {
         if (verifyComponent() === false) {
             return;
         }
-
+        setQuestion('');
         props.save(JSON.stringify(obj));
     }
 
