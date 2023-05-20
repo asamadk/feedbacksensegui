@@ -7,9 +7,16 @@
   pointer-events: none;
 }
 
-/* body {
-  font-family: 'Cairo', sans-serif;
-}  */
+@font-face {
+  font-family: 'Apercu Pro';
+  src: url('Fonts/apercu_regular_pro.otf') format('truetype');
+  /* Add additional src declarations for different font weights or styles if needed */
+}
+
+body {
+  /* font-family: 'Cairo', sans-serif; */
+  font-family: 'Apercu Pro', sans-serif;
+} 
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

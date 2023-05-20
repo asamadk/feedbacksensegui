@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, ThemeProvider, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
@@ -25,10 +25,10 @@ function SurveyDisplays() {
         message: '',
         type: 'success'
     });
-    const [showEnd , setShowEnd] = useState(false);
+    const [showEnd, setShowEnd] = useState(false);
 
     useEffect(() => {
-        if(initialized === false){
+        if (initialized === false) {
             fetchLiveSurveyNodes();
         }
     }, []);
@@ -38,7 +38,7 @@ function SurveyDisplays() {
             initialized = true;
             setLoading(true);
             const url = getLiveSurveyData(surveyId);
-            const { data } = await axios.get(url,{ withCredentials : true });
+            const { data } = await axios.get(url, { withCredentials: true });
             setLoading(false);
             const isAlreadyTaken = checkIfSurveyAlreadytaken();
             if (isAlreadyTaken === true) {
@@ -93,7 +93,7 @@ function SurveyDisplays() {
                 setCurrentPage(currentPage + 1);
                 setShowEnd(false);
             }
-        }else{
+        } else {
             setShowEnd(true);
         }
     }
@@ -105,23 +105,23 @@ function SurveyDisplays() {
                     <DisplayError error={displayMssg.message} />
                 </Box>
             }
-                {displayMssg.type !== 'error' && showEnd === false &&
-                    <Box sx={{ height: '100vh', backgroundColor: surveyTheme?.color[0] }} >
-                        <FSLoader show={loading} />
-                        <Box>
-                            <DynamicComponentDisplay
-                                theme={surveyTheme}
-                                compId={currentSurvey?.data?.compId}
-                                data={currentPageData}
-                                next={next}
-                                surveyId={surveyId}
-                            />
-                        </Box>
+            {displayMssg.type !== 'error' && showEnd === false &&
+                <Box sx={{ height: '100vh', backgroundColor: surveyTheme?.color[0] }} >
+                    <FSLoader show={loading} />
+                    <Box>
+                        <DynamicComponentDisplay
+                            theme={surveyTheme}
+                            compId={currentSurvey?.data?.compId}
+                            data={currentPageData}
+                            next={next}
+                            surveyId={surveyId}
+                        />
                     </Box>
-                }
-                {displayMssg.type !== 'error' && showEnd === true &&
-                    <SurveyEndPage/>
-                }
+                </Box>
+            }
+            {displayMssg.type !== 'error' && showEnd === true &&
+                <SurveyEndPage />
+            }
         </>
     )
 }

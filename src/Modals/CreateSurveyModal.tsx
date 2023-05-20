@@ -108,7 +108,7 @@ function CreateSurveyModal(props: any) {
             >
                 <Box sx={ModalStyles.modalStyle}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
-                        <Typography id="modal-modal-title" variant="h5" component="h2">
+                        <Typography fontFamily={'Apercu Pro'}  id="modal-modal-title" variant="h5" component="h2">
                             Create a new survey
                         </Typography>
                         <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
@@ -129,9 +129,9 @@ function CreateSurveyModal(props: any) {
                                     >
                                         <Box display={'flex'} >
                                             <PollIcon />
-                                            <Typography sx={{ paddingLeft: '5px' }} >{surveyType.label}</Typography>
+                                            <Typography fontFamily={'Apercu Pro'} sx={{ paddingLeft: '5px' }} >{surveyType.label}</Typography>
                                         </Box>
-                                        <Typography sx={{ fontSize: '14px' }} color={'#454545'} >Run targeted surveys on websites or inside products</Typography>
+                                        <Typography fontFamily={'Apercu Pro'} sx={{ fontSize: '14px' }} color={'#454545'} >Run targeted surveys on websites or inside products</Typography>
                                         {selectedSurveyType === surveyType.id && <Box><CheckCircleIcon sx={{ color: '#FFA500', position: 'absolute', right: '20px' }} /></Box>}
                                     </Box>
                                 )

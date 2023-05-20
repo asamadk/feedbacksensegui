@@ -10,7 +10,7 @@ const bodyStyle: {} = {
     borderBottom: '1px #454545 solid'
 }
 
-function Header(props : any) {
+function Header(props: any) {
 
     let navigate = useNavigate();
     let location = useLocation();
@@ -21,9 +21,9 @@ function Header(props : any) {
 
     React.useEffect(() => {
         let currentPath: string = location.pathname;
-        if(currentPath.includes('/user/create/organization')){
+        if (currentPath.includes('/user/create/organization')) {
             setInOrgSelectionMode(true);
-        }else{
+        } else {
             setInOrgSelectionMode(false);
             if (currentPath.includes('/survey/detail/')) {
                 setShowSurveyDetailHeader(true);
@@ -36,7 +36,7 @@ function Header(props : any) {
 
 
     const handleRouteToHome = () => {
-        if(inOrgSelectionMode === false){
+        if (inOrgSelectionMode === false) {
             navigate('/');
         }
     }
@@ -44,13 +44,20 @@ function Header(props : any) {
     return (
         <div style={bodyStyle} >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-
-                <div onClick={handleRouteToHome} style={{ display: 'flex', cursor: 'pointer' }} >
-                    <Typography style={{ color: '#f1f1f1', fontSize: '30px' }} variant='h4'>Feedback</Typography>
-                    <Typography style={{ color: '#FFA500', fontSize: '30px' }} variant='h4'>Sense</Typography>
-                </div>
-
+                {inOrgSelectionMode === false && showSurveyDetailHeader === false &&
+                    <div onClick={handleRouteToHome} style={{ display: 'flex', cursor: 'pointer', marginTop: '5px', marginBottom: '5px' }} >
+                        <Typography style={{ color: '#f1f1f1', fontSize: '22px' }} variant='h4'>Feedback</Typography>
+                        <Typography style={{ color: '#FFA500', fontSize: '22px' }} variant='h4'>Sense</Typography>
+                    </div>
+                }
                 {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === false && <div><MainHeaderIcons /></div>}
+
+                {inOrgSelectionMode === false && showSurveyDetailHeader === true &&
+                    <div onClick={handleRouteToHome} style={{ display: 'flex', cursor: 'pointer', marginTop: '10px' }} >
+                        <Typography style={{ color: '#f1f1f1', fontSize: '22px' }} variant='h4'>Feedback</Typography>
+                        <Typography style={{ color: '#FFA500', fontSize: '22px' }} variant='h4'>Sense</Typography>
+                    </div>
+                }
                 {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === true && <div><SurveyDetailHeader surveyId={props.surveyId} tabset={0} /></div>}
 
             </div>

@@ -55,7 +55,7 @@ function CreateSurvey(props: any) {
   const [surveyDetail, setSurveyDetail] = React.useState<any>();
   const [showSurveyName, setShowSurveyName] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
-  const [saveFlowTemp, setSaveFlowTemp] = React.useState();
+  const [saveFlowTemp, setSaveFlowTemp] = React.useState<any>();
   const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
@@ -94,6 +94,7 @@ function CreateSurvey(props: any) {
 
   const handleSaveComponentConfig = (data: any) => {
     let tempMap = componentConfig;
+    console.log("🚀 ~ file: CreateSurvey.tsx:97 ~ handleSaveComponentConfig ~ tempMap:", tempMap)
     if (componentId == null) {
       snackbarRef?.current?.show('A component error has been occurred.', 'error');
       return;
@@ -140,7 +141,24 @@ function CreateSurvey(props: any) {
     if (genericModalObj?.type !== 'save_survey') {
       return;
     }
-    saveFlow(saveFlowTemp,true);
+
+    if (saveFlowTemp == null || saveFlowTemp?.length < 1) { return; }
+    if (componentConfig.size < 1) {
+      saveFlow(saveFlowTemp, true);
+      return;
+    }
+    for (const key in saveFlowTemp) {
+      if (key.toLowerCase() !== 'nodes') {
+        continue;
+      }
+      let nodeList: any[] = saveFlowTemp[key];
+      nodeList.forEach(n => {
+        if (componentConfig.has(n.id)) {
+          n.data.compConfig = componentConfig.get(n.id);
+        }
+      });
+    }
+    saveFlow(saveFlowTemp, true);
   }
 
   const handleSaveFlow = async (flow: any) => {
@@ -154,7 +172,7 @@ function CreateSurvey(props: any) {
 
       if (flow == null || flow.length < 1) { return; }
       if (componentConfig.size < 1) {
-        saveFlow(flow,false);
+        saveFlow(flow, false);
         return;
       }
       for (const key in flow) {
@@ -168,7 +186,7 @@ function CreateSurvey(props: any) {
           }
         });
       }
-      saveFlow(flow,false);
+      saveFlow(flow, false);
     } catch (error) {
       console.log('Exception :: handleSaveFlow :: ', error);
       snackbarRef?.current?.show('Something went wrong.', 'error');
@@ -180,6 +198,7 @@ function CreateSurvey(props: any) {
     try {
       const nodes: any[] = flow?.nodes;
       for (const node of nodes) {
+        console.log("🚀 ~ file: CreateSurvey.tsx:183 ~ validateSurveyFlowOnSave ~ node:", node)
         if (node == null || node.data == null) {
           continue;
         }
@@ -200,7 +219,7 @@ function CreateSurvey(props: any) {
     }
   }
 
-  const saveFlow = async (flow: any,deleteResponse : boolean) => {
+  const saveFlow = async (flow: any, deleteResponse: boolean) => {
     try {
       setLoading(true);
       const isSurveyFlowValid = validateSurveyFlowOnSave(flow);
@@ -217,7 +236,7 @@ function CreateSurvey(props: any) {
       if (surveyId == null) {
         return;
       }
-      const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyId,deleteResponse), flow, { withCredentials: true });
+      const { data } = await axios.post(Endpoints.saveSurveyFlow(surveyId, deleteResponse), flow, { withCredentials: true });
       setLoading(false);
       if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');

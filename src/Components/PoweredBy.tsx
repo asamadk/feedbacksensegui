@@ -17,6 +17,7 @@ const mainContainerCss = {
 function PoweredBy() {
   return (
     <Box sx={mainContainerCss} >
+        <img style={{width : '20px',height : '20px',marginRight : '5px'}} src='/link.png' ></img>
         <Typography marginTop={'3px'} fontSize={'12px'} color={'black'} marginRight={'5px'} >Powered by</Typography>
         <Typography fontWeight={900} fontSize={'16px'} color={'#29292a'} >FeedbackSense</Typography>
     </Box>

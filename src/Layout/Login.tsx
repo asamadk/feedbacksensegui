@@ -24,7 +24,7 @@ function Login() {
     return (
         <Box sx={{ backgroundColor: '#1E1E1E', height: 'calc(100vh - 58px)', display: 'flex' }} >
             <Box sx={subContainerStyle} >
-                <Typography sx={{ color: '#f1f1f1', fontSize: '34px' }} >
+                <Typography sx={{ color: '#f1f1f1', fontSize: '25px' }} >
                     Welcome to Feedback<span style={{ color: '#FFA500' }} >Sense</span>
                 </Typography>
                 <Box sx={{ width: 'fit-content', margin: 'auto', paddingTop: '20px' }} >

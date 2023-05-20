@@ -18,6 +18,7 @@ import LoginSuccess from './Layout/LoginSuccess';
 import { USER_LOCAL_KEY } from './Utils/Constants';
 import SurveyDisplays from './SurveyEngine/Core/SurveyDisplays';
 import { ThemeProvider, createTheme } from '@mui/material';
+import TypographyOverride from './Fonts/TypographyOverride';
 
 const globalBodyStyle = {
   backgroundColor: '#1E1E1E',
@@ -73,6 +74,18 @@ function App() {
     palette: {
       mode: 'dark',
     },
+    typography: {
+      fontFamily: 'Apercu Pro, sans-serif'
+    }
+  });
+
+  const lightTheme = createTheme({
+    palette: {
+      mode: 'light',
+    },
+    typography: {
+      fontFamily: 'Apercu Pro, sans-serif'
+    }
   });
 
   return (
@@ -142,11 +155,14 @@ function App() {
 
       </ThemeProvider>
       {liveSurvey === true &&
-        <div>
-          <Routes>
-            <Route path='/share/survey/:surveyId' element={<SurveyDisplays />} />
-          </Routes>
-        </div>}
+        <ThemeProvider theme={lightTheme} >
+          <div>
+            <Routes>
+              <Route path='/share/survey/:surveyId' element={<SurveyDisplays />} />
+            </Routes>
+          </div>
+        </ThemeProvider>
+      }
     </>
   );
 }
