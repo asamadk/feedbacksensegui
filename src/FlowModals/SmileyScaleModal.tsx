@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, styled, TextField, Typography } from '@mui/material';
-import { getColorsFromTheme, getCompConfig } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 const CssTextField = styled(TextField)({
@@ -31,7 +31,7 @@ function SmileyScaleModal(props : any) {
 
     useEffect(() => {
         populateCompConfig();
-    },[]);
+    },[props.uiId]);
 
     const [colors , setColors] = useState<any>();
     const [question , setQuestion] = useState('');
@@ -39,10 +39,10 @@ function SmileyScaleModal(props : any) {
     const [rightText , setRightText] = useState('');
 
     const populateCompConfig = () => {
-        const compConfig = getCompConfig(props);
-        setQuestion(compConfig?.question);
-        setLeftText(compConfig?.leftText);
-        setRightText(compConfig?.rightText);
+        const compConfig = getCompConfigFromUiId(props);
+        setQuestion(compConfig?.question || '');
+        setLeftText(compConfig?.leftText || '');
+        setRightText(compConfig?.rightText || '');
         if(props.theme != null){
             const currentTheme = JSON.parse(props.theme);
             setColors(getColorsFromTheme(currentTheme.theme));

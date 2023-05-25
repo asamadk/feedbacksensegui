@@ -17,7 +17,7 @@ import Notification from '../Utils/Notification';
 import FSLoader from '../Components/FSLoader';
 import { enableSurvey } from '../Utils/Endpoints';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
-import { genericModalData } from '../Utils/types';
+import { genericModalData, surveyFlowType } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
 
 const CssTextField = styled(TextField)({
@@ -75,6 +75,7 @@ function CreateSurvey(props: any) {
         setSurveyDetail(data.data);
         if (data?.data?.workflows != null && data?.data.workflows.length > 0) {
           setSurveyFlow(data?.data?.workflows[0]);
+          populateComponentConfig(data?.data?.workflows[0]);
         }
         props.updateSurveyId(data.data.id)
       }
@@ -86,6 +87,18 @@ function CreateSurvey(props: any) {
     }
   }
 
+  const populateComponentConfig = (flow: any) => {
+    if (flow == null || flow.json == null) { return; }
+    const flowMap: surveyFlowType = JSON.parse(flow.json);
+    const compConfMap = new Map<string, object>();
+    flowMap?.nodes?.forEach((node) => {
+      const compConfig = FeedbackUtils.getComponentConfigFromNode(node);
+      const compUiId = node?.id;
+      compConfMap.set(compUiId, compConfig);
+    });
+    setComponentConfig(compConfMap);
+  }
+
   const handleComponentEditClick = (uId: string, compId: string) => {
     setComponentId(compId);
     setCompUiId(uId);
@@ -94,7 +107,6 @@ function CreateSurvey(props: any) {
 
   const handleSaveComponentConfig = (data: any) => {
     let tempMap = componentConfig;
-    console.log("🚀 ~ file: CreateSurvey.tsx:97 ~ handleSaveComponentConfig ~ tempMap:", tempMap)
     if (componentId == null) {
       snackbarRef?.current?.show('A component error has been occurred.', 'error');
       return;
@@ -104,7 +116,8 @@ function CreateSurvey(props: any) {
       snackbarRef?.current?.show(validatedComp, 'error');
       return;
     }
-    tempMap?.set(comUiId, data);
+    
+    tempMap?.set(comUiId, JSON.parse(data));
     setComponentConfig(tempMap);
     setOpenEditModal(false);
     snackbarRef?.current?.show('Saved.', 'success');
@@ -154,7 +167,7 @@ function CreateSurvey(props: any) {
       let nodeList: any[] = saveFlowTemp[key];
       nodeList.forEach(n => {
         if (componentConfig.has(n.id)) {
-          n.data.compConfig = componentConfig.get(n.id);
+          n.data.compConfig = JSON.stringify(componentConfig.get(n.id));
         }
       });
     }
@@ -182,23 +195,23 @@ function CreateSurvey(props: any) {
         let nodeList: any[] = flow[key];
         nodeList.forEach(n => {
           if (componentConfig.has(n.id)) {
-            n.data.compConfig = componentConfig.get(n.id);
+            const compConfStr = componentConfig.get(n.id);
+            if (compConfStr != null) {
+              n.data.compConfig = JSON.stringify(compConfStr);
+            }
           }
         });
       }
       saveFlow(flow, false);
     } catch (error) {
-      console.log('Exception :: handleSaveFlow :: ', error);
       snackbarRef?.current?.show('Something went wrong.', 'error');
     }
-
   }
 
   const validateSurveyFlowOnSave = (flow: any): boolean => {
     try {
       const nodes: any[] = flow?.nodes;
       for (const node of nodes) {
-        console.log("🚀 ~ file: CreateSurvey.tsx:183 ~ validateSurveyFlowOnSave ~ node:", node)
         if (node == null || node.data == null) {
           continue;
         }
@@ -213,8 +226,8 @@ function CreateSurvey(props: any) {
         }
       }
       return true;
-    } catch (error) {
-      console.log("🚀 ~ file: CreateSurvey.tsx:146 ~ validateSurveyFlowOnSave ~ error:", error)
+    } catch (error: any) {
+      snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
       return false;
     }
   }
@@ -384,6 +397,7 @@ function CreateSurvey(props: any) {
         <Box width={'77%'} >
           <FeedbackCanvas
             flow={surveyFlow}
+            config={componentConfig}
             surveyDetail={surveyDetail}
             onEdit={handleComponentEditClick}
             performSave={handleSaveFlow}
@@ -400,7 +414,7 @@ function CreateSurvey(props: any) {
         uiId={comUiId}
         compId={componentId}
         save={handleSaveComponentConfig}
-        flow={surveyFlow}
+        data={componentConfig}
         theme={surveyDetail?.survey_design_json}
       />
 

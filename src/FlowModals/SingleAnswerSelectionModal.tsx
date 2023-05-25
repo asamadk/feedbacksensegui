@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import * as ModalStyles from '../Styles/ModalStyle'
 import React, { useEffect, useRef, useState } from 'react'
-import { getColorsFromTheme, getCompConfig } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import Notification from '../Utils/Notification';
 
@@ -35,15 +35,15 @@ function SingleAnswerSelectionModal(props: any) {
 
     useEffect(() => {
         populateCompConfig();
-    }, []);
+    }, [props.uiId]);
 
     const [colors , setColors] = useState<any>();
     const [answerChoiceList, setAnswerChoiceList] = useState<string[]>(['']);
     const [questionText, setQuestionText] = useState('');
 
     const populateCompConfig = () => {
-        const compConfig = getCompConfig(props);
-        setQuestionText(compConfig?.question);
+        const compConfig = getCompConfigFromUiId(props);
+        setQuestionText(compConfig?.question || '');
         if (compConfig?.answerList != null) {
             setAnswerChoiceList([...compConfig?.answerList]);
         }

@@ -4,7 +4,7 @@ import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/system';
-import { getColorsFromTheme, getCompConfig } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 const CssTextField = styled(TextField)({
@@ -32,16 +32,16 @@ function WelcomModal(props: any) {
 
     useEffect(() => {
         populateCompConfig();
-    }, []);
+    }, [props.uiId]);
 
     const [colors , setColors] = useState<any>();
     const [welcomeText, setWelcomeText] = React.useState('');
     const [buttonText, setButtonText] = React.useState('');
 
     const populateCompConfig = () => {
-        const compConfig = getCompConfig(props);
-        setWelcomeText(compConfig?.welcomeText);
-        setButtonText(compConfig?.buttonText);
+        const compConfig = getCompConfigFromUiId(props);
+        setWelcomeText(compConfig?.welcomeText || '');
+        setButtonText(compConfig?.buttonText || '');
         
         if(props.theme != null){
             const currentTheme = JSON.parse(props.theme);

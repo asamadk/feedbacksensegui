@@ -1,4 +1,4 @@
-import { Button, IconButton, Typography } from '@mui/material';
+import { Box, Button, IconButton, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import InviteMemberModal from '../Modals/InviteMemberModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
@@ -85,7 +85,7 @@ function SurveyListPage() {
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                 FeedbackUtils.handleLogout();
             }
         }
@@ -109,7 +109,7 @@ function SurveyListPage() {
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                 FeedbackUtils.handleLogout();
             }
         }
@@ -196,7 +196,7 @@ function SurveyListPage() {
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                 FeedbackUtils.handleLogout();
             }
         }
@@ -247,7 +247,9 @@ function SurveyListPage() {
                             folderList?.map(folder => {
                                 return (
                                     <div key={folder.id} className="folders-data" style={surveyFolderText} onClick={(e) => handleFolderClick(e, folder.name, folder.id)} >
-                                        <Typography variant='subtitle2' >{folder.name}</Typography>
+                                        <Box sx={{cursor : 'default'}} >
+                                            <Typography variant='subtitle2' >{folder.name}</Typography>
+                                        </Box>
                                         <IconButton
                                             onClick={() => handleDeleteFolderClick(folder.id)}
                                             style={{ padding: '0px' }}

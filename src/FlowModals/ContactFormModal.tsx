@@ -4,7 +4,7 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, Select, Slider, styled, TextField, Typography } from '@mui/material';
-import { getColorsFromTheme, getCompConfig } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 const CssTextField = styled(TextField)({
@@ -32,15 +32,15 @@ function ContactFormModal(props: any) {
 
     useEffect(() => {
         populateCompConfig();
-    }, []);
+    }, [props.uiId]);
 
     const [colors , setColors] = useState<any>();
     const [answerChoiceList, setAnswerChoiceList] = useState<string[]>(['']);
     const [questionText, setQuestionText] = useState('');
 
     const populateCompConfig = () => {
-        const compConfig = getCompConfig(props);
-        setQuestionText(compConfig?.question);
+        const compConfig = getCompConfigFromUiId(props);
+        setQuestionText(compConfig?.question || '');
         if (compConfig?.answerList != null) {
             setAnswerChoiceList([...compConfig?.answerList]);
         }

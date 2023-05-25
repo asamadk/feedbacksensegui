@@ -7,6 +7,12 @@ export type genericModalData = {
     type : string
 }
 
+export type surveyFlowType = {
+    nodes : any[],
+    edges : any[],
+    viewport : any
+}
+
 export type surveyIdProp = {
     surveyId: string
 }

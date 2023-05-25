@@ -5,7 +5,6 @@ import * as ButtonStyle from '../Styles/ButtonStyle'
 import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow, NodeToolbar, useReactFlow, MiniMap } from 'reactflow'
 import CustomNode from './CustomNode';
 
-
 let id = 0;
 const getId = () => `dndnode_${id++}${new Date().getMilliseconds()}`;
 
@@ -16,13 +15,6 @@ const nodeTypes = {
 function FeedbackCanvas(props: any) {
 
     const [surveyFlow, setSurveyFlow] = React.useState<any>(props.flow);
-
-    // useEffect(() => {
-    //     if(props?.surveyDetail?.workflows != null && props?.surveyDetail?.workflows.length > 0){
-    //         setSurveyFlow(props?.surveyDetail?.workflows[0]);
-    //         onRestore();
-    //     }
-    // }, [props.surveyDetail]);
 
     useEffect(() => {
         if (props?.surveyDetail?.workflows != null && props?.surveyDetail?.workflows.length > 0) {
@@ -73,7 +65,6 @@ function FeedbackCanvas(props: any) {
         if (componentData == null || componentData.id == null) {
             return;
         }
-
         let uniqueId = getId();
         let tempComp: Node = {
             id: uniqueId,
@@ -98,30 +89,7 @@ function FeedbackCanvas(props: any) {
             const flow = reactFlowInstance.toObject();
             props.performSave(flow);
         }
-    }, [reactFlowInstance]);
-
-
-    // const onRestore = useCallback(() => {
-    //     const restoreFlow = async () => {
-    //         if (props.surveyDetail == null || surveyFlow == null) {
-    //             return;
-    //         }
-    //         const tempSurFlow = JSON.parse(surveyFlow?.json);
-    //         const flow: any = tempSurFlow;
-    //         if (flow) {
-    //             let nodeList: any[] = flow.nodes;
-    //             for (let i = 0; i < nodeList.length; i++) {
-    //                 nodeList[i].data.onDelete = deleteNode;
-    //                 nodeList[i].data.onEdit = props.onEdit;
-
-    //             }
-    //             setNodes(flow.nodes || []);
-    //             setEdges(flow.edges || []);
-    //         }
-    //     };
-
-    //     restoreFlow();
-    // }, [setNodes, props.surveyDetail]);
+    }, [reactFlowInstance,props.config]);
 
     const deleteNode = (id: string) => {
         if (id != null) {

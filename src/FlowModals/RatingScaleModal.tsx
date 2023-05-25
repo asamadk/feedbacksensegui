@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, Select, Slider, styled, TextField, Typography } from '@mui/material';
-import { getColorsFromTheme, getCompConfig } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 const CssTextField = styled(TextField)({
@@ -31,7 +31,7 @@ function RatingScale(props: any) {
 
   useEffect(() => {
     populateCompConfig();
-  }, []);
+  }, [props.uiId]);
 
   const [question, setQuestion] = useState('');
   const [range, setRange] = useState(1);
@@ -40,11 +40,11 @@ function RatingScale(props: any) {
   const [colors , setColors] = useState<any>();
 
   const populateCompConfig = () => {
-    const compConfig = getCompConfig(props);
-    setQuestion(compConfig?.question);
-    setLeftText(compConfig?.leftText);
-    setRightText(compConfig?.rightText);
-    setRange(compConfig?.range);
+    const compConfig = getCompConfigFromUiId(props);
+    setQuestion(compConfig?.question || '');
+    setLeftText(compConfig?.leftText || '');
+    setRightText(compConfig?.rightText || '');
+    setRange(compConfig?.range || 1);
     if(props.theme != null){
       const currentTheme = JSON.parse(props.theme);
       setColors(getColorsFromTheme(currentTheme.theme));

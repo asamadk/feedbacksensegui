@@ -21,26 +21,18 @@ export const getOrgId = (): string => {
     return userData?.organization_id;
 }
 
-export const getCompConfig = (props: any): any => {
-    const flow = props.flow;
-    if (flow == null) { return {}; }
-    const surveyFlowJSON = flow.json;
-    if (surveyFlowJSON == null) { return {}; }
-    const flowObj = JSON.parse(surveyFlowJSON);
-
-    let result = {};
-    flowObj?.nodes?.forEach((node: any) => {
-        const compData = node.data;
-        if (node.id == props.uiId) {
-            result = compData?.compConfig;
-            return;
-        }
-    });
-
+export const getComponentConfigFromNode = (node : any) => {
+    const compData = node?.data;
+    const result = compData?.compConfig;
     if (result != null && typeof result === 'string') {
         return JSON.parse(result);
     }
-    return result;
+    return {};
+}
+
+export const getCompConfigFromUiId = (props : any) : any => {
+    const compConfMap : Map<string,object> = props.data;
+    return compConfMap.get(props.uiId);
 }
 
 export const validateIsNodeDisconnected = (flow: any): boolean => {

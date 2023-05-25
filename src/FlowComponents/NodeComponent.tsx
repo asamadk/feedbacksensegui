@@ -50,7 +50,7 @@ function NodeComponent(props: any) {
     };
 
     return (
-        <Box textAlign={'start'} display={'flex'} overflow={'hidden'} >
+        <Box textAlign={'start'} display={'flex'} overflow={'hidden'} onDoubleClick={handleEditButtonClick}>
             <Box sx={commonLogoStyle} >
                 <DynamicComponentIcon id={props.compId} />
             </Box>

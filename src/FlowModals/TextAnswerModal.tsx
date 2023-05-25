@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, styled, TextField, Typography } from '@mui/material';
-import { getColorsFromTheme, getCompConfig } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 
@@ -32,14 +32,14 @@ function TextAnswerModal(props: any) {
 
     useEffect(() => {
         populateCompConfig();
-    }, []);
+    }, [props.uiId]);
 
     const [question, setQuestion] = useState('');
     const [colors , setColors] = useState<any>();
 
     const populateCompConfig = () => {
-        const compConfig = getCompConfig(props);
-        setQuestion(compConfig?.question);
+        const compConfig = getCompConfigFromUiId(props);
+        setQuestion(compConfig?.question || '');
         if(props.theme != null){
             const currentTheme = JSON.parse(props.theme);
             setColors(getColorsFromTheme(currentTheme.theme));
@@ -50,11 +50,9 @@ function TextAnswerModal(props: any) {
         let obj = {
             question: question
         }
-
         if (verifyComponent() === false) {
             return;
         }
-        setQuestion('');
         props.save(JSON.stringify(obj));
     }
 
