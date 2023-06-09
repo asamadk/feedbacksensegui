@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { genericModalData } from '../Utils/types';
+import GenericModal from '../Modals/GenericModal';
 
 
 const subscriptionSubContainer = {
@@ -35,31 +37,34 @@ function SubscriptionSettings() {
     let navigate = useNavigate();
     const snackbarRef: any = useRef(null);
 
-    const [ loading , setLoading] = React.useState(false);
+    const [showGenericModal, setShowGenericModal] = React.useState(false);
+    const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
+    const [loading, setLoading] = React.useState(false);
     const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
 
     useEffect(() => {
         getSubscriptionDetails();
-    },[]);
+    }, []);
 
     const getSubscriptionDetails = async () => {
         try {
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(),{ withCredentials : true });
+            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(), { withCredentials: true });
             setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
-    
+
             let resData: any[] = data.data;
+            console.log("🚀 ~ file: SubscriptionSettings.tsx:60 ~ getSubscriptionDetails ~ resData:", resData)
             if (resData != null) {
                 setSubscriptionDetail(resData);
             }
-        } catch (error : any) {
+        } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                 FeedbackUtils.handleLogout();
             }
         }
@@ -67,6 +72,46 @@ function SubscriptionSettings() {
 
     const handleUpgradePlanClick = () => {
         navigate('/upgrade/plan');
+    }
+
+    const handleCancelSubscription = () => {
+        setShowGenericModal(true);
+        let genDeleteObj: genericModalData = {
+            header: 'Do you really want to cancel your subscription?',
+            warning: 'Warning: There\'s no turning back! I acknowledge that',
+            successButtonText: 'Proceed',
+            cancelButtonText: 'Close',
+            description: 'You will still have access to your subscription till end of the current billing period.',
+            type: 'cancel'
+        }
+        setGenericModalObj(genDeleteObj);
+    }
+
+    const handleSuccessButtonClick = () => {
+        setShowGenericModal(false);
+        if (genericModalObj?.type === 'cancel') {
+            cancelUserSubscription();
+        }
+    }
+
+    const cancelUserSubscription = async () => {
+        try {
+            setLoading(true)
+            let { data } = await axios.post(Endpoints.cancelSubScription(), {}, { withCredentials: true });
+            setLoading(false);
+            if (data.statusCode !== 200) {
+                snackbarRef?.current?.show(data?.message, 'error');
+                return;
+            }
+            snackbarRef?.current?.show(data?.message, 'success');
+            getSubscriptionDetails();
+        } catch (error: any) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            setLoading(false);
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+                FeedbackUtils.handleLogout();
+            }
+        }
     }
 
     return (
@@ -78,11 +123,14 @@ function SubscriptionSettings() {
                         <Typography fontSize={24} >{subscriptionDetails?.name}</Typography>
                     </Box>
                     <Box>
-                        <CustomChip status={'success'} />
+                        <Box sx={{ border: '1px #0eee85 solid', color: '#0eee85', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
+                            {subscriptionDetails?.status?.substring(0,21)}
+                        </Box>
                     </Box>
                 </Box>
                 <Box sx={{ marginLeft: '20px' }} >
                     <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade Subscription</Button>
+                    {/* <Button sx={ButtonStyles.outlinedButton} variant="outlined">Update billing info</Button> */}
                 </Box>
             </Box>
 
@@ -102,7 +150,7 @@ function SubscriptionSettings() {
                 <Box sx={subscriptionDetailList} >
                     <Typography color={'#454545'} >Next invoice date </Typography>
                     <Typography color={'#454545'} >
-                        {new Date(subscriptionDetails?.endDate).toDateString()}
+                        {subscriptionDetails?.endDate}
                     </Typography>
                 </Box>
                 {/* <Box sx={subscriptionDetailList} >
@@ -117,9 +165,29 @@ function SubscriptionSettings() {
                     <Typography color={'#454545'} >Survey active   </Typography>
                     <Typography color={'#454545'} >{subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}</Typography>
                 </Box>
+                <Box sx={subscriptionDetailList} >
+                    <Typography color={'#454545'} >Survey response capacity  </Typography>
+                    <Typography color={'#454545'} >{subscriptionDetails?.responseCapacity}</Typography>
+                </Box>
+                <Box sx={subscriptionDetailList} >
+                    <Typography color={'#454545'} >Survey response store limit  </Typography>
+                    <Typography color={'#454545'} >{subscriptionDetails?.responseStoreLimit}</Typography>
+                </Box>
+                {/* <Box width={'fit-content'} >
+                    <Typography
+                        sx={{ color: '#808080', fontSize: '13px', textDecoration: 'underline', cursor: 'pointer', marginTop: '20px' }}
+                        onClick={handleCancelSubscription}
+                    >Cancel Subscription</Typography>
+                </Box> */}
             </Box>
             <Notification ref={snackbarRef} />
             <FSLoader show={loading} />
+            <GenericModal
+                payload={genericModalObj}
+                close={() => setShowGenericModal(false)}
+                open={showGenericModal}
+                callback={handleSuccessButtonClick}
+            />
         </Box>
     )
 }

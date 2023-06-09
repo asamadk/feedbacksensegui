@@ -47,7 +47,7 @@ function Header(props: any) {
                 {inOrgSelectionMode === false && showSurveyDetailHeader === false &&
                     <div onClick={handleRouteToHome} style={{ display: 'flex', cursor: 'pointer', marginTop: '5px', marginBottom: '5px' }} >
                         <Typography style={{ color: '#f1f1f1', fontSize: '22px' }} variant='h4'>Feedback</Typography>
-                        <Typography style={{ color: '#FFA500', fontSize: '22px' }} variant='h4'>Sense</Typography>
+                        <Typography style={{ color: '#f3d503', fontSize: '22px' }} variant='h4'>Sense</Typography>
                     </div>
                 }
                 {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === false && <div><MainHeaderIcons /></div>}
@@ -55,7 +55,7 @@ function Header(props: any) {
                 {inOrgSelectionMode === false && showSurveyDetailHeader === true &&
                     <div onClick={handleRouteToHome} style={{ display: 'flex', cursor: 'pointer', marginTop: '10px' }} >
                         <Typography style={{ color: '#f1f1f1', fontSize: '22px' }} variant='h4'>Feedback</Typography>
-                        <Typography style={{ color: '#FFA500', fontSize: '22px' }} variant='h4'>Sense</Typography>
+                        <Typography style={{ color: '#f3d503', fontSize: '22px' }} variant='h4'>Sense</Typography>
                     </div>
                 }
                 {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === true && <div><SurveyDetailHeader surveyId={props.surveyId} tabset={0} /></div>}

@@ -13,20 +13,20 @@ import { handleLogout } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
-    color: '#FFA500',
+    color: '#f3d503',
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#FFA500',
+    borderBottomColor: '#f3d503',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderColor: '#454545',
     },
     '&:hover fieldset': {
-      borderColor: '#FFA500',
+      borderColor: '#f3d503',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#FFA500',
+      borderColor: '#f3d503',
     },
   },
   color: 'white'
@@ -34,20 +34,20 @@ const CssTextField = styled(TextField)({
 
 const StyledDropdown = styled(Autocomplete)({
   '& label.Mui-focused': {
-    color: '#FFA500',
+    color: '#f3d503',
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#FFA500',
+    borderBottomColor: '#f3d503',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderColor: '#454545',
     },
     '&:hover fieldset': {
-      borderColor: '#FFA500',
+      borderColor: '#f3d503',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#FFA500',
+      borderColor: '#f3d503',
     },
   },
   color: 'white'
@@ -174,7 +174,7 @@ function LoginSuccess() {
   }
 
   return (
-    <Box sx={LayoutStyles.settingLayoutStyle} >
+    <Box sx={LayoutStyles.settingLayoutStyle} style={{height: 'calc(100vh - 120px)'}} >
       <Box sx={subContainerCss} >
         <Box marginBottom={'10px'} >
           <Typography color='#f1f1f1' fontSize={'22px'} >Share a few details about you</Typography>

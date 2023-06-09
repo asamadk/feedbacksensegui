@@ -7,20 +7,20 @@ import React from 'react'
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
-        color: '#FFA500',
+        color: '#f3d503',
     },
     '& .MuiInput-underline:after': {
-        borderBottomColor: '#FFA500',
+        borderBottomColor: '#f3d503',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
             borderColor: '#454545',
         },
         '&:hover fieldset': {
-            borderColor: '#FFA500',
+            borderColor: '#f3d503',
         },
         '&.Mui-focused fieldset': {
-            borderColor: '#FFA500',
+            borderColor: '#f3d503',
         },
     },
     color: 'white'
@@ -85,13 +85,13 @@ function InviteCommingSoon(){
     return(
         <Box height={150} >
             <Typography fontSize={30} paddingTop={'20px'} >
-                Comming <span style={{color : '#FFA500'}} >soon</span>
+                Comming <span style={{color : '#f3d503'}} >soon</span>
             </Typography>
             <Typography color={'#454545'} paddingBottom={'20px'} >
                 Exciting News! Team Feature Coming Soon! Stay tuned for the new team feature that 
                 will enhance collaboration and streamline your workflow. Get ready to level up your teamwork!
             </Typography>
-            <Typography style={{color : '#FFA500'}} >
+            <Typography style={{color : '#f3d503'}} >
                 #TeamworkMakesTheDreamWork
             </Typography>
         </Box>

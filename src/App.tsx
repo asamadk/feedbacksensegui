@@ -18,7 +18,7 @@ import LoginSuccess from './Layout/LoginSuccess';
 import { USER_LOCAL_KEY } from './Utils/Constants';
 import SurveyDisplays from './SurveyEngine/Core/SurveyDisplays';
 import { ThemeProvider, createTheme } from '@mui/material';
-import TypographyOverride from './Fonts/TypographyOverride';
+import PaymentSuccess from './Components/Stripe/PaymentSuccess';
 
 const globalBodyStyle = {
   backgroundColor: '#1E1E1E',
@@ -145,6 +145,10 @@ function App() {
             <Route
               path='/upgrade/plan'
               element={user ? <UpgradeSubscription /> : <Navigate to={'/login'} />}
+            />
+            <Route
+              path='/payment/success'
+              element={user ? <PaymentSuccess /> : <Navigate to={'/login'} />}
             />
             <Route
               path='/user/create/organization'

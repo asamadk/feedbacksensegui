@@ -141,3 +141,15 @@ export const getOverallMetricsResponse = (surveyId : string) => {
 export const getOverAllComponentsData = (surveyId : string) => {
     return `${BASE_URL}/analysis/response/components/${surveyId}`
 }
+
+export const getStripePaymentIntent = () => {
+    return `${BASE_URL}/stripe/create-payment-intent`
+}
+
+export const startSubScription = () => {
+    return `${BASE_URL}/stripe/api/subscribe`
+}
+
+export const cancelSubScription = () => {
+    return `${BASE_URL}/stripe/api/cancel`
+}

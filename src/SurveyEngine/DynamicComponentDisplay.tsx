@@ -31,7 +31,7 @@ function DynamicComponentDisplay(props: any) {
                 id: 1,
                 header: 'Default',
                 text: 'Default',
-                color: ['#f1f1f1', '#D81159'],
+                color: ['#f1f1f1', '#f3d503'],
                 textColor: '#808089'
             };
             setSurveyColors(theme);

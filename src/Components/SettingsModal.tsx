@@ -28,7 +28,7 @@ export default function SettingsModal(props: any) {
   const navigation = useNavigate();
 
   const changeBackground = (e: any) => {
-    e.target.style.color = '#FFA500';
+    e.target.style.color = '#f3d503';
     e.target.style.borderRadius = '5px'
   };
 

@@ -65,13 +65,13 @@ function SurveyThemeSelector(props: any) {
     setSelectedTheme(colorScheme);
     props.updateTheme(colorScheme);
     snackbarRef?.current?.show(`${colorScheme.header} selected`, 'success');
-    handleSaveClick();
+    handleSaveClick(colorScheme);
   }
 
-  const handleSaveClick = async () => {
+  const handleSaveClick = async (selectedColorTheme : ColorScheme) => {
     try {
       const saveObj = {
-        theme: selectedTheme
+        theme: selectedColorTheme
       }
       setLoading(true);
       const { data } = await axios.post(Endpoints.saveSurveyDesgin(props.surveyId), saveObj, { withCredentials: true });

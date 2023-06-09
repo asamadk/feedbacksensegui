@@ -16,20 +16,20 @@ import { handleLogout } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
-    color: '#FFA500',
+    color: '#f3d503',
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#FFA500',
+    borderBottomColor: '#f3d503',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderColor: '#454545',
     },
     '&:hover fieldset': {
-      borderColor: '#FFA500',
+      borderColor: '#f3d503',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#FFA500',
+      borderColor: '#f3d503',
     },
   },
   color: 'white'
@@ -46,6 +46,8 @@ function ConfigureSurvey() {
     getSurveyConfig();
   }, []);
 
+  const [notifyUser, setNotifyUser] = React.useState(false);
+  const [emailList, setEmailList] = React.useState('');
   const [showStopSurveyNumber, setShowStopSurveyNumber] = React.useState(false);
   const [showStopSurveyDate, setShowStopSurveyDate] = React.useState(false);
   const [showStopSurveyDateData, setShowStopSurveyDateData] = React.useState<string | null>('');
@@ -97,6 +99,9 @@ function ConfigureSurvey() {
       if (showStopSurveyDate === true) {
         saveObj.stopTime = showStopSurveyDateData;
       }
+      if (notifyUser === true) {
+        saveObj.emails = emailList;
+      }
       setLoading(true);
       const { data } = await axios.post(
         saveSurveyConfig(surveyId),
@@ -111,7 +116,7 @@ function ConfigureSurvey() {
       snackbarRef?.current?.show('Configuration saved.', 'success');
     } catch (error: any) {
       setLoading(false);
-      snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
         handleLogout();
       }
@@ -138,7 +143,7 @@ function ConfigureSurvey() {
       const selectedDate = dayjs(showStopSurveyDateData);
       const isPast = selectedDate.isBefore(currentDate);
 
-      if(isPast === true){
+      if (isPast === true) {
         snackbarRef?.current?.show('Selected date is in the past. Please choose a future date.', 'warning');
         return false;
       }
@@ -149,11 +154,43 @@ function ConfigureSurvey() {
       return false;
     }
 
+    if (notifyUser === true && (emailList == null || emailList.length < 1)) {
+      snackbarRef?.current?.show('Please fill all the details before saving.', 'warning');
+      return false;
+    }
+
     return true;
   }
 
   return (
     <Box sx={settingLayoutStyle} >
+
+      <Box sx={globalSettingSubContainers} >
+        <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Response notification</Typography>
+        <Typography marginTop={'20px'} textAlign={'start'} color={'#454545'} >
+          Would you like to receive notifications when someone fills out the survey?
+        </Typography>
+        <Box textAlign={'start'} >
+          <FormControlLabel
+            sx={{ color: 'whitesmoke' }}
+            control={<Switch onChange={(e) => setNotifyUser(e.target.checked)} checked={notifyUser} value={notifyUser} color="warning" />}
+            label="Notify me."
+          />
+        </Box>
+        {
+          notifyUser &&
+          <CssTextField
+            size='small'
+            sx={{ input: { color: 'white' } }}
+            id="outlined-basic"
+            placeholder='Please enter the emails separated by commas.'
+            variant="outlined"
+            style={{ width: '100%', }}
+            value={emailList}
+            onChange={(e) => setEmailList(e.target.value)}
+          />
+        }
+      </Box>
 
       <Box sx={globalSettingSubContainers} >
         <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Responses limit</Typography>

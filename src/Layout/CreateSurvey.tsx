@@ -22,20 +22,20 @@ import GenericModal from '../Modals/GenericModal';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
-    color: '#FFA500',
+    color: '#f3d503',
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#FFA500',
+    borderBottomColor: '#f3d503',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderColor: '#454545',
     },
     '&:hover fieldset': {
-      borderColor: '#FFA500',
+      borderColor: '#f3d503',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#FFA500',
+      borderColor: '#f3d503',
     },
   },
   color: 'white'
@@ -432,7 +432,7 @@ function CreateSurvey(props: any) {
 
 export default CreateSurvey
 
-const iconStyle = {
+export const iconStyle = {
   marginTop: '5px',
   padding: '10px',
   paddingTop: '10px',

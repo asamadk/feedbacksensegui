@@ -21,7 +21,7 @@ function EmailSurveyTemplate() {
 
         <Box sx={{display : 'flex', justifyContent : 'space-between', borderBottom : '1px #454545 solid',padding : '20px'}} >
             <Typography sx={{color : '#f1f1f1',position : 'relative', top : '5px'}} >Round buttons</Typography>
-            <Checkbox  sx={{color : '#FFA500'}} defaultChecked />
+            <Checkbox  sx={{color : '#f3d503'}} defaultChecked />
         </Box>
     </Box>
   )

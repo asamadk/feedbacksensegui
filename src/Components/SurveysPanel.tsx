@@ -23,20 +23,20 @@ const buttonContainerStyles = {
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
-        color: '#FFA500',
+        color: '#f3d503',
     },
     '& .MuiInput-underline:after': {
-        borderBottomColor: '#FFA500',
+        borderBottomColor: '#f3d503',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
             borderColor: '#454545',
         },
         '&:hover fieldset': {
-            borderColor: '#FFA500',
+            borderColor: '#f3d503',
         },
         '&.Mui-focused fieldset': {
-            borderColor: '#FFA500',
+            borderColor: '#f3d503',
         },
     },
 });
@@ -250,7 +250,7 @@ function SurveysPanel(props: any) {
                     }} >
                         <img style={{ maxWidth: 230 }} alt='Create your first survey to get started!' src='/completed-task.png'></img>
                         <Typography style={{ color: '#f1f1f1' }} variant='h6'>Create your first survey to get started!</Typography>
-                        <Typography style={{ color: '#FFA500' }} variant='subtitle2'>Click the button below to add your first survey.</Typography>
+                        <Typography style={{ color: '#f3d503' }} variant='subtitle2'>Click the button below to add your first survey.</Typography>
                         <Button sx={containedButtonStyle} onClick={handleCreateNewSurvey} variant="contained">Get Started</Button>
                     </div>
                     :
@@ -324,7 +324,7 @@ export default SurveysPanel
 const containedButtonStyle = {
     marginTop: '10px',
     color : '#f1f1f1',
-    backgroundColor: '#D81159',
+    backgroundColor: '#f3d503',
     "&.MuiButtonBase-root:hover": {
         bgcolor: "#FF367F"
     }

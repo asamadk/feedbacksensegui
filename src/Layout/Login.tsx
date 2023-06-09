@@ -12,25 +12,25 @@ function Login() {
     }
 
     const subContainerStyle = {
-        width: '35%',
+        width: '50%',
         margin: 'auto',
-        marginTop: '15%',
-        border: '1px #454545 solid',
-        borderRadius: '6px',
+        borderRight: '1px #454545 solid',
         padding: '50px 0px',
-        backgroundColor: '#1A1A1A'
+        backgroundColor: '#1A1A1A',
+        height: 'calc(100vh - 158px)'
     }
 
     return (
         <Box sx={{ backgroundColor: '#1E1E1E', height: 'calc(100vh - 58px)', display: 'flex' }} >
             <Box sx={subContainerStyle} >
-                <Typography sx={{ color: '#f1f1f1', fontSize: '25px' }} >
-                    Welcome to Feedback<span style={{ color: '#FFA500' }} >Sense</span>
+                <Typography sx={{ color: '#f1f1f1', fontSize: '25px',marginTop : '25%' }} >
+                    Welcome to Feedback<span style={{ color: '#f3d503' }} >Sense</span>
                 </Typography>
                 <Box sx={{ width: 'fit-content', margin: 'auto', paddingTop: '20px' }} >
-                    <GoogleButton onClick={googleAuth} type='light' style={{ borderRadius: '6px' }} />
+                    <GoogleButton type='light' onClick={googleAuth} style={{ borderRadius: '6px' }} />
                 </Box>
             </Box>
+            <Box width={'50%'} ></Box>
         </Box>
     )
 }

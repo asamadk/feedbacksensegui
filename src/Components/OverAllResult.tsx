@@ -21,7 +21,7 @@ function OverAllResult(props: IndividualResponseProps) {
                     paddingLeft={'10px'}
                     fontSize={'14px'}
                     fontWeight={'600'}
-                    color={'#FFA500'} >
+                    color={'#f3d503'} >
                     {'Overall Result'}
                 </Typography>
             </Box>

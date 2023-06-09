@@ -15,20 +15,20 @@ import { handleLogout } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
-        color: '#FFA500',
+        color: '#f3d503',
     },
     '& .MuiInput-underline:after': {
-        borderBottomColor: '#FFA500',
+        borderBottomColor: '#f3d503',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
             borderColor: '#454545',
         },
         '&:hover fieldset': {
-            borderColor: '#FFA500',
+            borderColor: '#f3d503',
         },
         '&.Mui-focused fieldset': {
-            borderColor: '#FFA500',
+            borderColor: '#f3d503',
         },
     },
     color: 'white'
@@ -54,7 +54,12 @@ function CreateFolder(props: any) {
             }
             const authenticatedUser: authUser = JSON.parse(currentUser);
             setLoading(true);
-            const { data } = await axios.post(createFolder(folderName), {}, { withCredentials: true });
+            const { data } =
+                await axios.post
+                    (createFolder(folderName),
+                        {},
+                        { withCredentials: true }
+                    );
             setLoading(false);
 
             if (data.statusCode === 200) {
@@ -68,7 +73,7 @@ function CreateFolder(props: any) {
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                 handleLogout();
             }
         }

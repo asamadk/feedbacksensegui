@@ -43,6 +43,7 @@ function DynamicCompOverallRes(props: any) {
     try {
       setLoading(true);
       const { data } = await axios.get(getOverAllComponentsData(props.surveyId), { withCredentials: true });
+      // console.log("🚀 ~ file: DynamicCompOverallRes.tsx:46 ~ fetchOverAllComponentData ~ data:", data)
       setLoading(false);
       if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
