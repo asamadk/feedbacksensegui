@@ -11,7 +11,6 @@ import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import DynamicComponentModal from '../FlowComponents/DynamicComponentModal';
 import { useParams } from 'react-router';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import Notification from '../Utils/Notification';
 import FSLoader from '../Components/FSLoader';
@@ -19,6 +18,8 @@ import { enableSurvey } from '../Utils/Endpoints';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { genericModalData, surveyFlowType } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -116,7 +117,7 @@ function CreateSurvey(props: any) {
       snackbarRef?.current?.show(validatedComp, 'error');
       return;
     }
-    
+
     tempMap?.set(comUiId, JSON.parse(data));
     setComponentConfig(tempMap);
     setOpenEditModal(false);
@@ -389,7 +390,13 @@ function CreateSurvey(props: any) {
             </IconButton>
           }
         </Box>
-        <Button onClick={handleDisableEnableSurvey} style={{ width: '110px' }} sx={ButtonStyles.containedButton} variant="contained">
+        <Button
+          endIcon={surveyDetail?.is_published === true ? <CloseIcon/> : <DoneIcon/>}
+          onClick={handleDisableEnableSurvey}
+          style={{ width: '110px' }}
+          sx={ButtonStyles.containedButton}
+          variant="contained"
+        >
           {surveyDetail?.is_published === true ? 'Disable' : 'Enable'}
         </Button>
       </Box>

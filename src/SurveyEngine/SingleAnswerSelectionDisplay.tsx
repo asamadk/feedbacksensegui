@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, Typography } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { containedButton } from '../Styles/ButtonStyle';
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
@@ -89,6 +89,17 @@ function SingleAnswerSelectionDisplay(props: any) {
                                                     label={answer}
                                                 />
                                             </Box>
+                                            // <ToggleButtonGroup
+                                            //     sx={{marginBottom :  '10px',textAlign : 'start'}}
+                                            //     orientation="vertical"
+                                            //     exclusive
+                                            //     value={answer}
+                                            //     onChange={handleRadioChange}
+                                            // >
+                                            //     <ToggleButton value="list" aria-label="list">
+                                            //         <Typography >{answer}</Typography>
+                                            //     </ToggleButton>
+                                            // </ToggleButtonGroup>
                                         )
                                     })
                                 }
@@ -107,6 +118,16 @@ function SingleAnswerSelectionDisplay(props: any) {
                                                     label={answer}
                                                 />
                                             </Box>
+                                            // <ToggleButtonGroup
+                                            //     orientation="vertical"
+                                            //     // value={view}
+                                            //     exclusive
+                                            // // onChange={handleChange}
+                                            // >
+                                            //     <ToggleButton value="list" aria-label="list">
+                                            //         <Typography>{answer}</Typography>
+                                            //     </ToggleButton>
+                                            // </ToggleButtonGroup>
                                         )
                                     })
                                 }
@@ -134,7 +155,7 @@ const FormControlStyle = {
     margin: '10px',
     borderRadius: '6px',
     width: '90%',
-    border : '1px #000000 solid',
+    border : '1px #454545 solid',
 }
 
 export default SingleAnswerSelectionDisplay

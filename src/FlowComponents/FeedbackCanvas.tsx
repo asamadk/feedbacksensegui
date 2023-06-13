@@ -4,6 +4,7 @@ import 'reactflow/dist/style.css';
 import * as ButtonStyle from '../Styles/ButtonStyle'
 import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow, NodeToolbar, useReactFlow, MiniMap } from 'reactflow'
 import CustomNode from './CustomNode';
+import SaveIcon from '@mui/icons-material/Save';
 
 let id = 0;
 const getId = () => `dndnode_${id++}${new Date().getMilliseconds()}`;
@@ -89,7 +90,7 @@ function FeedbackCanvas(props: any) {
             const flow = reactFlowInstance.toObject();
             props.performSave(flow);
         }
-    }, [reactFlowInstance,props.config]);
+    }, [reactFlowInstance, props.config]);
 
     const deleteNode = (id: string) => {
         if (id != null) {
@@ -153,11 +154,18 @@ function FeedbackCanvas(props: any) {
                 panOnScroll
                 selectionOnDrag
             >
-                <MiniMap nodeColor={'#454545'} color={'#1E1E1E'} />
+                {/* <MiniMap nodeColor={'#454545'} color={'#1E1E1E'} /> */}
                 <Background />
                 <Controls />
                 <Box sx={{ position: 'absolute', top: '10px', left: '-5px' }} >
-                    <Button style={{ position: 'relative', zIndex: '100', color: '#1E1E1E' }} sx={ButtonStyle.containedButton} onClick={handleSaveWorkflow} >Save</Button>
+                    <Button
+                        endIcon={<SaveIcon/>}
+                        style={{ position: 'relative', zIndex: '100', color: '#1E1E1E' }}
+                        sx={ButtonStyle.containedButton}
+                        onClick={handleSaveWorkflow}
+                    >
+                        Save
+                    </Button>
                 </Box>
             </ReactFlow>
         </Box>

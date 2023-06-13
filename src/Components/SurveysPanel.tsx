@@ -133,6 +133,7 @@ function SurveysPanel(props: any) {
         try {
             setLoading(true);
             let { data } = await axios.get(Endpoints.getSurveyList(), { withCredentials: true });
+            console.log("🚀 ~ file: SurveysPanel.tsx:136 ~ getSurveys ~ data:", data)
             setLoading(false);
             if (data?.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');

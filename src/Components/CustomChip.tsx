@@ -6,7 +6,7 @@ function CustomChip(props : any) {
         <>
         {
             props.status === 'success' ? 
-        <Box sx={{ border: '1px #0eee85 solid', color: '#0eee85', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
+        <Box sx={{ border: '1px #b8a727 solid', color: '#b8a727', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
             Enabled
         </Box> : <Box sx={{ border: '1px #454545 solid', color: '#454545', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
             Disabled

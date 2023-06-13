@@ -123,7 +123,7 @@ function SubscriptionSettings() {
                         <Typography fontSize={24} >{subscriptionDetails?.name}</Typography>
                     </Box>
                     <Box>
-                        <Box sx={{ border: '1px #0eee85 solid', color: '#0eee85', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
+                        <Box sx={{ border: '1px #f3d503 solid', color: '#f3d503', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
                             {subscriptionDetails?.status?.substring(0,21)}
                         </Box>
                     </Box>
