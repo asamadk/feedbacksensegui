@@ -160,7 +160,7 @@ function FeedbackCanvas(props: any) {
                 <Box sx={{ position: 'absolute', top: '10px', left: '-5px' }} >
                     <Button
                         endIcon={<SaveIcon/>}
-                        style={{ position: 'relative', zIndex: '100', color: '#1E1E1E' }}
+                        style={{ position: 'relative', zIndex: '100', }}
                         sx={ButtonStyle.containedButton}
                         onClick={handleSaveWorkflow}
                     >

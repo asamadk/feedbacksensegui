@@ -170,7 +170,7 @@ function SurveyListPage() {
     }
 
     const highlightCreateFolder = (e: any) => {
-        e.target.style.color = '#f3d503';
+        e.target.style.color = '#006DFF';
     }
 
     const unhighlightCreateFolder = (e: any) => {

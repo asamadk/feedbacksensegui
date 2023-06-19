@@ -20,7 +20,7 @@ function SurveyEndPage() {
             <Box sx={subContainerStyle} >
                 <Box display={'flex'} >
                     <Typography style={{ color: '#f1f1f1', fontSize: '30px' }} variant='h4' >Feedback</Typography>
-                    <Typography style={{ color: '#f3d503', fontSize: '30px' }} variant='h4' >Sense</Typography>
+                    <Typography style={{ color: '#006DFF', fontSize: '30px' }} variant='h4' >Sense</Typography>
                 </Box>
                 <Box marginTop={'10px'} >
                     <Typography style={{ color: '#f1f1f1', fontSize: '24px' }}>

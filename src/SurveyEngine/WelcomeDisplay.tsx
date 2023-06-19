@@ -1,6 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import { containedButton } from '../Styles/ButtonStyle';
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
 import { getColorsFromTheme } from '../Utils/FeedbackUtils';
 
@@ -33,22 +32,23 @@ function WelcomeDisplay(props: any) {
 
   const next = () => {
     props.next({
-      click : 'next'
+      click: 'next'
     });
   }
 
   return (
     <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} >
-      <Typography fontSize={'26px'} color={'#29292a'} fontWeight={300} >{props?.data?.welcomeText}</Typography>
+      <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={300} >{props?.data?.welcomeText}</Typography>
       <Box marginTop={'20px'} >
         <Button
           onClick={next}
-          style={{
-            width: 'fit-content',
-            backgroundColor: colors?.secondaryColor,
-            color: textColor
+          sx={{
+            "&.MuiButtonBase-root:hover": {
+              bgcolor: colors?.shade
+            },
+            backgroundColor: colors?.primaryColor,
+            color: textColor,
           }}
-          sx={containedButton}
           variant="contained" >
           {props?.data?.buttonText?.toUpperCase()}
         </Button>

@@ -31,7 +31,7 @@ function DynamicComponentDisplay(props: any) {
                 id: 1,
                 header: 'Default',
                 text: 'Default',
-                color: ['#f1f1f1', '#f3d503'],
+                color: ['#f1f1f1', '#006DFF'],
                 textColor: '#808089'
             };
             setSurveyColors(theme);
@@ -115,17 +115,20 @@ function DynamicComponentDisplay(props: any) {
                 {props.compId === 6 && <SmileyScaleDisplay
                     data={props.data}
                     surveyId={props.surveyId}
+                    theme={surveyColors}
                     next={next}
                 />}
                 {props.compId === 7 && <RatingScaleDisplay
                     data={props.data}
                     surveyId={props.surveyId}
                     next={next}
+                    theme={surveyColors}
                 />}
                 {props.compId === 8 && <NPSDisplay
                     data={props.data}
                     surveyId={props.surveyId}
                     next={next}
+                    theme={surveyColors}
                 />}
                 {props.compId === 11 && <ContactDisplay
                     data={props.data}

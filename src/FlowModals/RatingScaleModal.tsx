@@ -8,20 +8,20 @@ import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
-    color: '#f3d503',
+    color: '#006DFF',
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#f3d503',
+    borderBottomColor: '#006DFF',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderColor: '#454545',
     },
     '&:hover fieldset': {
-      borderColor: '#f3d503',
+      borderColor: '#006DFF',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#f3d503',
+      borderColor: '#006DFF',
     },
   },
   color: 'white'
@@ -37,7 +37,7 @@ function RatingScale(props: any) {
   const [range, setRange] = useState(1);
   const [leftText, setLeftText] = useState('');
   const [rightText, setRightText] = useState('');
-  const [colors , setColors] = useState<any>();
+  const [background, setBackground] = useState<any>();
 
   const populateCompConfig = () => {
     const compConfig = getCompConfigFromUiId(props);
@@ -47,7 +47,7 @@ function RatingScale(props: any) {
     setRange(compConfig?.range || 1);
     if(props.theme != null){
       const currentTheme = JSON.parse(props.theme);
-      setColors(getColorsFromTheme(currentTheme.theme));
+      setBackground(currentTheme.background);
   }
   }
 
@@ -108,7 +108,7 @@ function RatingScale(props: any) {
 
               <Box sx={{ marginTop: '10px' }} >
                 <Typography color={'#454545'} >Select range</Typography>
-                <Slider onChange={handleSilderChange} sx={{ width: '95%', marginLeft: '10px' }} value={range} valueLabelDisplay="auto" step={1} marks min={3} max={9} />
+                <Slider onChange={handleSilderChange} sx={{ width: '95%', marginLeft: '10px' }} value={range} valueLabelDisplay="auto" step={1} marks min={3} max={7} />
               </Box>
 
             </Box>
@@ -139,7 +139,7 @@ function RatingScale(props: any) {
               <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
             </Box>
           </Box>
-          <Box sx={{ backgroundColor: colors?.primaryColor, width: '55%' }} >
+          <Box className={background?.value} sx={{ backgroundColor: '#ffffff', width: '55%' }} >
             <DynamicComponentDisplay
               data={{
                 question: question,

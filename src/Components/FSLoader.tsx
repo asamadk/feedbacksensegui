@@ -12,7 +12,7 @@ function FSLoader(props: any) {
           <CircularProgress
             size={34}
             sx={{
-              color: 'rgb(255, 165, 0)',
+              color: '#006DFF',
               position: 'absolute',
               top: '50%',
               left: '50%',

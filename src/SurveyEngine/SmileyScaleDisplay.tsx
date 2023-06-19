@@ -1,18 +1,29 @@
 import { Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
+import { getColorsFromTheme } from '../Utils/FeedbackUtils';
 
 function SmileyScaleDisplay(props: any) {
 
     const [position , setPosition] = useState('absolute');
+    const [colors, setColors] = useState<any>();
 
     useEffect(() => {
+        if (props.theme != null) {
+            processThemeData();
+        }
         if(props.surveyId){
             setPosition('absolute');
         }else{
             setPosition('relative')
         }
-    },[]);
+    },[props]);
+
+    const processThemeData = () => {
+        const currentTheme = props.theme;
+        console.log("🚀 ~ file: SmileyScaleDisplay.tsx:24 ~ processThemeData ~ currentTheme:", currentTheme)
+        setColors(getColorsFromTheme(currentTheme));
+      }
 
     const next = (emojiId : string ) => {
         props.next({
@@ -22,17 +33,17 @@ function SmileyScaleDisplay(props: any) {
 
     return (
         <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} padding={'15px'} >
-            <Typography fontSize={'28px'} color={'#29292a'} fontWeight={200} >{props?.data?.question}</Typography>
+            <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
             <SmileyDisplay  
                 next={next}
             />
             <Box display={'flex'} justifyContent={'space-around'} >
-                <Typography fontSize={'12px'} color={'#29292a'} fontWeight={200} >{props?.data?.leftText}</Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'12px'} color={'#29292a'} fontWeight={200} >{props?.data?.rightText}</Typography>
+                <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.leftText}</Typography>
+                <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
+                <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
+                <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
+                <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
+                <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.rightText}</Typography>
             </Box>
         </Box>
     )

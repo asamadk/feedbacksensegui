@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { Navigate, Route, Router, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import './App.css';
 import Header from './Components/Header';
 import AnalyzeSurvey from './Layout/AnalyzeSurvey';

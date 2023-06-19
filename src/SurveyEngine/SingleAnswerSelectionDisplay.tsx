@@ -1,8 +1,7 @@
-import { Box, Button, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, Typography, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import { containedButton } from '../Styles/ButtonStyle';
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
-import { getColorsFromTheme } from '../Utils/FeedbackUtils';
+import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
 
 function SingleAnswerSelectionDisplay(props: any) {
 
@@ -11,6 +10,8 @@ function SingleAnswerSelectionDisplay(props: any) {
     const [position, setPosition] = useState('absolute');
     const [selectedRadio, setSelectedRadio] = useState('');
     const [selectedChecks, setSelectedChecks] = useState<Set<any>>(new Set<any>());
+
+    const isSmallScreen = useMediaQuery('(max-width: 600px)');
 
     useEffect(() => {
         if (props.theme != null) {
@@ -68,10 +69,29 @@ function SingleAnswerSelectionDisplay(props: any) {
         }
     }
 
+    const selectionBlock = {
+        padding: '10px',
+        backgroundColor: colors?.shade,
+        color: colors?.primaryColor,
+        borderRadius: '10px',
+        height: '30px',
+        textAlign: 'start',
+        width: isSmallScreen === true ? '80%' : '55%',
+        margin: "auto",
+        marginBottom: '10px',
+    }
+
+    const RadioButtonStyle = {
+        color: colors?.primaryColor,
+        '&.Mui-checked': {
+            color: colors?.primaryColor,
+        },
+    }
+
     return (
         <Box sx={getSurveyDisplayContainerStyle(position)} style={{ width: '95%' }} textAlign={'center'}>
-            <Box height={'90vh'} overflow={'scroll'} >
-                <Typography fontSize={'26px'} color={'#29292a'} fontWeight={300} >{props?.data?.question}</Typography>
+            <Box height={'90vh'} sx={getCenterAlignmentStyle()} overflow={'scroll'} >
+                <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={400} >{props?.data?.question}</Typography>
                 <Box marginTop={'10px'} >
                     {
                         props.type === 'single' ?
@@ -79,27 +99,15 @@ function SingleAnswerSelectionDisplay(props: any) {
                                 {
                                     props?.data?.answerList?.map((answer: string) => {
                                         return (
-                                            <Box key={answer}
-                                                sx={FormControlStyle}
-                                                textAlign={'start'} >
+                                            <Box sx={selectionBlock} >
                                                 <FormControlLabel
-                                                    onChange={handleRadioChange}
+                                                    sx={{ position: 'relative', top: '-5px' }}
                                                     value={answer}
-                                                    control={<Radio name='same' />}
+                                                    control={<Radio sx={RadioButtonStyle} />}
                                                     label={answer}
+                                                    onChange={handleRadioChange}
                                                 />
                                             </Box>
-                                            // <ToggleButtonGroup
-                                            //     sx={{marginBottom :  '10px',textAlign : 'start'}}
-                                            //     orientation="vertical"
-                                            //     exclusive
-                                            //     value={answer}
-                                            //     onChange={handleRadioChange}
-                                            // >
-                                            //     <ToggleButton value="list" aria-label="list">
-                                            //         <Typography >{answer}</Typography>
-                                            //     </ToggleButton>
-                                            // </ToggleButtonGroup>
                                         )
                                     })
                                 }
@@ -108,26 +116,15 @@ function SingleAnswerSelectionDisplay(props: any) {
                                 {
                                     props?.data?.answerList?.map((answer: string) => {
                                         return (
-                                            <Box key={answer}
-                                                sx={FormControlStyle}
-                                                textAlign={'start'} >
+                                            <Box sx={selectionBlock} >
                                                 <FormControlLabel
-                                                    onChange={handleCheckboxClicks}
+                                                    sx={{ position: 'relative', top: '-5px' }}
                                                     value={answer}
-                                                    control={<Checkbox />}
+                                                    control={<Checkbox sx={RadioButtonStyle} />}
                                                     label={answer}
+                                                    onChange={handleCheckboxClicks}
                                                 />
                                             </Box>
-                                            // <ToggleButtonGroup
-                                            //     orientation="vertical"
-                                            //     // value={view}
-                                            //     exclusive
-                                            // // onChange={handleChange}
-                                            // >
-                                            //     <ToggleButton value="list" aria-label="list">
-                                            //         <Typography>{answer}</Typography>
-                                            //     </ToggleButton>
-                                            // </ToggleButtonGroup>
                                         )
                                     })
                                 }
@@ -135,27 +132,21 @@ function SingleAnswerSelectionDisplay(props: any) {
                     }
                     <Button
                         onClick={next}
-                        style={{
-                            width: 'fit-content',
-                            marginRight: '15px',
-                            backgroundColor: colors?.secondaryColor,
-                            color: textColor
-                        }} sx={containedButton} variant="contained" >Submit</Button>
+                        sx={{
+                            "&.MuiButtonBase-root:hover": {
+                                bgcolor: colors?.shade
+                            },
+                            backgroundColor: colors?.primaryColor,
+                            color: textColor,
+                        }}
+                        variant="contained"
+                    >
+                        Submit
+                    </Button>
                 </Box>
             </Box>
         </Box>
     )
-}
-
-const FormControlStyle = {
-    fontWeight: '300',
-    color: '#29292a',
-    fontSize: '20px',
-    padding: '10px',
-    margin: '10px',
-    borderRadius: '6px',
-    width: '90%',
-    border : '1px #454545 solid',
 }
 
 export default SingleAnswerSelectionDisplay

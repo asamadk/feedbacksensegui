@@ -18,6 +18,7 @@ function SurveyDisplays() {
     const [loading, setLoading] = React.useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const [surveyTheme, setSurveyTheme] = useState<any>();
+    const [background, setBackground] = useState<any>();
     const [surveyDiplays, setSurveyDisplays] = useState<any[]>([]);
     const [currentSurvey, setCurrentSurvey] = useState<any>();
     const [currentPageData, setCurrentPagedata] = useState<any>();
@@ -52,6 +53,7 @@ function SurveyDisplays() {
             setCurrentPage(0);
             setSurveyDisplays(resData.nodes);
             setSurveyTheme(resData.theme);
+            setBackground(resData.background)
             setCurrentSurvey(resData.nodes[0]);
             populateComponentData(resData.nodes[0]);
             localStorage.setItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`, v4());
@@ -106,7 +108,7 @@ function SurveyDisplays() {
                 </Box>
             }
             {displayMssg.type !== 'error' && showEnd === false &&
-                <Box sx={{ height: '100vh', backgroundColor: surveyTheme?.color[0] }} >
+                <Box className={background?.value} sx={{ height: '100vh', backgroundColor: '#ffffff' }} >
                     <FSLoader show={loading} />
                     <Box>
                         <DynamicComponentDisplay

@@ -13,6 +13,7 @@ import Notification from '../Utils/Notification';
 import { loadStripe } from '@stripe/stripe-js';
 import { genericModalData } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
+import { containedButton } from '../Styles/ButtonStyle';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY as string);
 
@@ -238,7 +239,7 @@ function SinglePlan({ plan, checkout }: any) {
                     </Typography>
                     <Grid container spacing={1} alignItems="center" sx={{ mt: 5 }}>
                         <Grid item xs="auto">
-                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#f3d503', fontSize: 'sm' }}>
+                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#006DFF', fontSize: 'sm' }}>
                                 What's included
                             </Typography>
                         </Grid>
@@ -247,7 +248,7 @@ function SinglePlan({ plan, checkout }: any) {
                         <Grid item xs={12} sm={6}>
                             <Box display={'flex'} marginBottom={'20px'}>
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#f3d503' }} />
+                                    <CheckIcon sx={{ color: '#006DFF' }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[0]}
@@ -255,7 +256,7 @@ function SinglePlan({ plan, checkout }: any) {
                             </Box>
                             <Box display={'flex'} >
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#f3d503' }} />
+                                    <CheckIcon sx={{ color: '#006DFF' }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[1]}
@@ -265,7 +266,7 @@ function SinglePlan({ plan, checkout }: any) {
                         <Grid item xs={12} sm={6}>
                             <Box display={'flex'} marginBottom={'20px'}>
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#f3d503' }} />
+                                    <CheckIcon sx={{ color: '#006DFF' }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[2]}
@@ -273,7 +274,7 @@ function SinglePlan({ plan, checkout }: any) {
                             </Box>
                             <Box display={'flex'} >
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#f3d503' }} />
+                                    <CheckIcon sx={{ color: '#006DFF' }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[3]}
@@ -297,20 +298,8 @@ function SinglePlan({ plan, checkout }: any) {
                         </Box>
                         <Button
                             variant="contained"
-                            sx={{
-                                mt: 2,
-                                width: '50%',
-                                borderRadius: 'md',
-                                backgroundColor: '#f3d503',
-                                px: 2,
-                                py: 1,
-                                textTransform: 'none',
-                                fontWeight: 'bold',
-                                color: '#1E1E1E',
-                                boxShadow: 'sm',
-                                '&:hover': { backgroundColor: '#b8a727' },
-                                '&:focus': { outline: '2px solid', outlineColor: '#1E1E1E' },
-                            }}
+                            style={{width : '50%'}}
+                            sx={containedButton}
                             onClick={() => checkout(plan.id, plan.price_cents)}
                         >
                             Get access
@@ -361,12 +350,12 @@ function PlanDetailsTable() {
                     <TableRow>
                         <TableCell>Folders</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#f3d503' }} /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Personalized assistance</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#f3d503' }} /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Questions in survey</TableCell>
@@ -376,7 +365,7 @@ function PlanDetailsTable() {
                     <TableRow>
                         <TableCell>Detailed analysis</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#f3d503' }} /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Collection time / survey</TableCell>
@@ -386,17 +375,17 @@ function PlanDetailsTable() {
                     <TableRow>
                         <TableCell>Notifications</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#f3d503' }} /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Email support</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#f3d503' }} /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Exclusive Features</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#f3d503' }} /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Result export</TableCell>

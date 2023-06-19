@@ -23,20 +23,20 @@ const buttonContainerStyles = {
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
-        color: '#f3d503',
+        color: '#006DFF',
     },
     '& .MuiInput-underline:after': {
-        borderBottomColor: '#f3d503',
+        borderBottomColor: '#006DFF',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
             borderColor: '#454545',
         },
         '&:hover fieldset': {
-            borderColor: '#f3d503',
+            borderColor: '#006DFF',
         },
         '&.Mui-focused fieldset': {
-            borderColor: '#f3d503',
+            borderColor: '#006DFF',
         },
     },
 });
@@ -133,7 +133,7 @@ function SurveysPanel(props: any) {
         try {
             setLoading(true);
             let { data } = await axios.get(Endpoints.getSurveyList(), { withCredentials: true });
-            console.log("🚀 ~ file: SurveysPanel.tsx:136 ~ getSurveys ~ data:", data)
+            // console.log("🚀 ~ file: SurveysPanel.tsx:136 ~ getSurveys ~ data:", data)
             setLoading(false);
             if (data?.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
@@ -251,7 +251,7 @@ function SurveysPanel(props: any) {
                     }} >
                         <img style={{ maxWidth: 230 }} alt='Create your first survey to get started!' src='/completed-task.png'></img>
                         <Typography style={{ color: '#f1f1f1' }} variant='h6'>Create your first survey to get started!</Typography>
-                        <Typography style={{ color: '#f3d503' }} variant='subtitle2'>Click the button below to add your first survey.</Typography>
+                        <Typography style={{ color: '#006DFF' }} variant='subtitle2'>Click the button below to add your first survey.</Typography>
                         <Button sx={containedButtonStyle} onClick={handleCreateNewSurvey} variant="contained">Get Started</Button>
                     </div>
                     :
@@ -325,8 +325,8 @@ export default SurveysPanel
 const containedButtonStyle = {
     marginTop: '10px',
     color : '#f1f1f1',
-    backgroundColor: '#f3d503',
+    backgroundColor: '#006DFF',
     "&.MuiButtonBase-root:hover": {
-        bgcolor: "#FF367F"
+        bgcolor: "#004cb3"
     }
 }

@@ -21,7 +21,7 @@ export const getOrgId = (): string => {
     return userData?.organization_id;
 }
 
-export const getComponentConfigFromNode = (node : any) => {
+export const getComponentConfigFromNode = (node: any) => {
     const compData = node?.data;
     const result = compData?.compConfig;
     if (result != null && typeof result === 'string') {
@@ -30,8 +30,8 @@ export const getComponentConfigFromNode = (node : any) => {
     return {};
 }
 
-export const getCompConfigFromUiId = (props : any) : any => {
-    const compConfMap : Map<string,object> = props.data;
+export const getCompConfigFromUiId = (props: any): any => {
+    const compConfMap: Map<string, object> = props.data;
     return compConfMap.get(props.uiId);
 }
 
@@ -71,8 +71,9 @@ export const validateSurveyDisplay = (data: any, componentId: number | undefined
             }
             break;
         case 13:
-            const dateData: Dayjs | null = data;
-            if (data == null || dateData?.isValid() === false) {
+            // const dateData: Dayjs | null = data;
+            const dateData = data;
+            if (dateData == null) {
                 return 'Selected date is not valid';
             }
             break;
@@ -87,11 +88,11 @@ export const validateSurveyDisplay = (data: any, componentId: number | undefined
             }
             break;
         case 11:
-            if(data == null){
+            if (data == null) {
                 return 'Please fill all the values before moving forward'
             }
-            for(const d in data){
-                if(data[d] == null || data[d]?.length < 1){
+            for (const d in data) {
+                if (data[d] == null || data[d]?.length < 1) {
                     return 'Please fill all the values before moving forward'
                 }
             }
@@ -165,77 +166,86 @@ export const getColorsFromTheme = (theme: any) => {
     return {
         primaryColor: colors[0],
         secondaryColor: colors[1],
+        shade: theme?.shade
     }
 }
 
 export const getSurveyUserInformation = () => {
     const details = {
-        userAgent : window.navigator.userAgent,
-        languages : window.navigator.languages,
+        userAgent: window.navigator.userAgent,
+        languages: window.navigator.languages,
     }
     return details;
 }
 
-export const getEmojiFromId = (emojiId : string) => {
-    if(emojiId === '0'){
+export const getCenterAlignmentStyle = () => {
+    return {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center'
+    }
+}
+
+export const getEmojiFromId = (emojiId: string) => {
+    if (emojiId === '0') {
         return '😡';
-    }else if(emojiId === '1'){
+    } else if (emojiId === '1') {
         return '🙁';
-    }else if(emojiId === '2'){
+    } else if (emojiId === '2') {
         return '😐';
-    }else if(emojiId === '3'){
+    } else if (emojiId === '3') {
         return '🙂';
-    }else if(emojiId === '4'){
+    } else if (emojiId === '4') {
         return '😍';
     }
 }
 
-export const getIconColorById = (id : number) : string => {
-    if(id === 1){
+export const getIconColorById = (id: number): string => {
+    if (id === 1) {
         return '#00B3EC';
-    }else if(id === 2){
+    } else if (id === 2) {
         return '#F6AE2D';
-    }else if(id === 3){
+    } else if (id === 3) {
         return '#9E4784';
-    }else if(id === 4){
+    } else if (id === 4) {
         return '#F26419';
-    }else if(id === 5){
+    } else if (id === 5) {
         return '#539165';
-    }else if(id === 6){
+    } else if (id === 6) {
         return '#EA8FEA';
-    }else if(id === 7){
+    } else if (id === 7) {
         return '#E9967A';
-    }else if(id === 8){
+    } else if (id === 8) {
         return '#E4DCCF';
-    }else if(id === 11){
+    } else if (id === 11) {
         return '#0F6292';
-    }else if(id === 13){
+    } else if (id === 13) {
         return '#9E4784';
     }
     return '#f1f1f1';
 }
 
-export const getComponentNameById = (id : number) : string => {
-    if(id === 1){
+export const getComponentNameById = (id: number): string => {
+    if (id === 1) {
         return 'Welcome message';
-    }else if(id === 2){
+    } else if (id === 2) {
         return 'Thank you screen';
     }
-    else if(id === 3){
+    else if (id === 3) {
         return 'Single answer selection';
-    }else if(id === 4){
+    } else if (id === 4) {
         return 'Multiple answer selection';
-    }else if(id === 5){
+    } else if (id === 5) {
         return 'Text answer';
-    }else if(id === 6){
+    } else if (id === 6) {
         return 'Smiley scale';
-    }else if(id === 7){
+    } else if (id === 7) {
         return 'Rating scale';
-    }else if(id === 8){
+    } else if (id === 8) {
         return 'NPS';
-    }else if(id === 11){
+    } else if (id === 11) {
         return 'Contact form';
-    }else if(id === 13){
+    } else if (id === 13) {
         return 'Date';
     }
     return '';
@@ -243,7 +253,7 @@ export const getComponentNameById = (id : number) : string => {
 
 export const handleLogout = () => {
     window.open(
-      logout(),
-      "_self"
+        logout(),
+        "_self"
     );
-  }
+}

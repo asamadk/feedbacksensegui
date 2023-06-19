@@ -8,20 +8,20 @@ import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
-        color: '#f3d503',
+        color: '#006DFF',
     },
     '& .MuiInput-underline:after': {
-        borderBottomColor: '#f3d503',
+        borderBottomColor: '#006DFF',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
             borderColor: '#454545',
         },
         '&:hover fieldset': {
-            borderColor: '#f3d503',
+            borderColor: '#006DFF',
         },
         '&.Mui-focused fieldset': {
-            borderColor: '#f3d503',
+            borderColor: '#006DFF',
         },
     },
     color: 'white'
@@ -33,7 +33,7 @@ function SmileyScaleModal(props : any) {
         populateCompConfig();
     },[props.uiId]);
 
-    const [colors , setColors] = useState<any>();
+    const [background, setBackground] = useState<any>();
     const [question , setQuestion] = useState('');
     const [leftText , setLeftText] = useState('');
     const [rightText , setRightText] = useState('');
@@ -45,7 +45,7 @@ function SmileyScaleModal(props : any) {
         setRightText(compConfig?.rightText || '');
         if(props.theme != null){
             const currentTheme = JSON.parse(props.theme);
-            setColors(getColorsFromTheme(currentTheme.theme));
+            setBackground(currentTheme.background);
         }
     }
 
@@ -125,7 +125,7 @@ function SmileyScaleModal(props : any) {
                             <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
                         </Box>
                     </Box>
-                    <Box sx={{ backgroundColor: colors?.primaryColor, width: '55%' }} >
+                    <Box className={background?.value} sx={{ backgroundColor: '#ffffff', width: '55%' }} >
                         <DynamicComponentDisplay
                             data={{
                                 question : question,

@@ -1,8 +1,9 @@
 import React from 'react'
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { useLocation, useNavigate } from 'react-router';
 import MainHeaderIcons from '../HeaderComponents/MainHeaderIcons';
 import SurveyDetailHeader from '../HeaderComponents/SurveyDetailHeader';
+import Logo from './Logo';
 
 const bodyStyle: {} = {
     backgroundColor: '#1E1E1E',
@@ -45,18 +46,16 @@ function Header(props: any) {
         <div style={bodyStyle} >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 {inOrgSelectionMode === false && showSurveyDetailHeader === false &&
-                    <div onClick={handleRouteToHome} style={{ display: 'flex', cursor: 'pointer', marginTop: '5px', marginBottom: '5px' }} >
-                        <Typography style={{ color: '#f1f1f1', fontSize: '22px' }} variant='h4'>Feedback</Typography>
-                        <Typography style={{ color: '#f3d503', fontSize: '22px' }} variant='h4'>Sense</Typography>
-                    </div>
+                    <Box sx={{marginLeft : '10px'}} onClick={handleRouteToHome} >
+                        <Logo/>
+                    </Box>
                 }
                 {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === false && <div><MainHeaderIcons /></div>}
 
                 {inOrgSelectionMode === false && showSurveyDetailHeader === true &&
-                    <div onClick={handleRouteToHome} style={{ display: 'flex', cursor: 'pointer', marginTop: '10px' }} >
-                        <Typography style={{ color: '#f1f1f1', fontSize: '22px' }} variant='h4'>Feedback</Typography>
-                        <Typography style={{ color: '#f3d503', fontSize: '22px' }} variant='h4'>Sense</Typography>
-                    </div>
+                    <Box sx={{marginTop : '8px'}} onClick={handleRouteToHome} >
+                        <Logo/>
+                    </Box>
                 }
                 {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === true && <div><SurveyDetailHeader surveyId={props.surveyId} tabset={0} /></div>}
 
