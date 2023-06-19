@@ -81,8 +81,8 @@ export const getAllPlanList = () => {
     return BASE_URL + `/plan/list/all`;
 }
 
-export const createOrgForuser = (orgName : string) => {
-    return BASE_URL + `/org/create/${orgName}`;
+export const createOrgForuser = () => {
+    return BASE_URL + `/org/create`;
 }
 
 export const getOrgList = () => {

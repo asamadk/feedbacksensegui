@@ -16,20 +16,20 @@ import { handleLogout } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
-    color: '#f3d503',
+    color: '#006DFF',
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#f3d503',
+    borderBottomColor: '#006DFF',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderColor: '#454545',
     },
     '&:hover fieldset': {
-      borderColor: '#f3d503',
+      borderColor: '#006DFF',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#f3d503',
+      borderColor: '#006DFF',
     },
   },
   color: 'white'
@@ -75,6 +75,11 @@ function ConfigureSurvey() {
           setShowStopSurveyDate(true)
           const tempTimeLimit = dayjs(tempData?.time_limit).format('MM/DD/YYYY');
           setShowStopSurveyDateData(tempTimeLimit);
+        }
+
+        if(tempData?.emails != null){
+          setNotifyUser(true);
+          setEmailList(tempData?.emails);
         }
       }
     } catch (error: any) {
@@ -173,7 +178,7 @@ function ConfigureSurvey() {
         <Box textAlign={'start'} >
           <FormControlLabel
             sx={{ color: 'whitesmoke' }}
-            control={<Switch onChange={(e) => setNotifyUser(e.target.checked)} checked={notifyUser} value={notifyUser} color="warning" />}
+            control={<Switch onChange={(e) => setNotifyUser(e.target.checked)} checked={notifyUser} value={notifyUser} color="info" />}
             label="Notify me."
           />
         </Box>
@@ -200,7 +205,7 @@ function ConfigureSurvey() {
         <Box textAlign={'start'} >
           <FormControlLabel
             sx={{ color: 'whitesmoke' }}
-            control={<Switch onChange={(e) => setShowStopSurveyNumber(e.target.checked)} checked={showStopSurveyNumber} value={showStopSurveyNumber} color="warning" />}
+            control={<Switch onChange={(e) => setShowStopSurveyNumber(e.target.checked)} checked={showStopSurveyNumber} value={showStopSurveyNumber} color="info" />}
             label="Stop the survey after collecting a specific number of responses"
           />
         </Box>
@@ -227,7 +232,7 @@ function ConfigureSurvey() {
         <Box textAlign={'start'} >
           <FormControlLabel
             sx={{ color: 'whitesmoke' }}
-            control={<Switch onChange={(e) => setShowStopSurveyDate(e.target.checked)} checked={showStopSurveyDate} value={showStopSurveyDate} color="warning" />}
+            control={<Switch onChange={(e) => setShowStopSurveyDate(e.target.checked)} checked={showStopSurveyDate} value={showStopSurveyDate} color="info" />}
             label="Stop the survey on a specific date."
           />
         </Box>

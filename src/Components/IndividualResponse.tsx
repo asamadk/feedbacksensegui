@@ -169,7 +169,7 @@ function IndividualResponse(props: IndividualResponseProps) {
                             paddingLeft={'10px'}
                             fontSize={'14px'}
                             fontWeight={'600'}
-                            color={'#f3d503'} >
+                            color={'#006DFF'} >
                             {'Individual Responses'}
                         </Typography>
                     </Box>

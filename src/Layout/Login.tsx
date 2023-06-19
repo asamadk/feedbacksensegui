@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import GoogleButton from 'react-google-button';
 import * as Endpoint from '../Utils/Endpoints'
+import Logo from '../Components/Logo';
 
 function Login() {
 
@@ -23,14 +24,19 @@ function Login() {
     return (
         <Box sx={{ backgroundColor: '#1E1E1E', height: 'calc(100vh - 58px)', display: 'flex' }} >
             <Box sx={subContainerStyle} >
-                <Typography sx={{ color: '#f1f1f1', fontSize: '25px',marginTop : '25%' }} >
-                    Welcome to Feedback<span style={{ color: '#f3d503' }} >Sense</span>
-                </Typography>
+                    <Typography sx={{ color: '#f1f1f1', fontSize: '25px',marginTop : '25%' }} >
+                        Welcome to 
+                        <span style={{ color: '#006DFF',marginLeft : '5px' }} >Feedback</span>Sense
+                    </Typography>
                 <Box sx={{ width: 'fit-content', margin: 'auto', paddingTop: '20px' }} >
                     <GoogleButton type='light' onClick={googleAuth} style={{ borderRadius: '6px' }} />
                 </Box>
             </Box>
-            <Box width={'50%'} ></Box>
+            <Box width={'50%'} >
+                <Box overflow={'hidden'}  >
+                    <img style={{width : '800px'}} alt='Banner' src='/banner.png' ></img>
+                </Box>
+            </Box>
         </Box>
     )
 }

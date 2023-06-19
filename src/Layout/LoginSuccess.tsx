@@ -13,20 +13,20 @@ import { handleLogout } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
-    color: '#f3d503',
+    color: '#006DFF',
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#f3d503',
+    borderBottomColor: '#006DFF',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderColor: '#454545',
     },
     '&:hover fieldset': {
-      borderColor: '#f3d503',
+      borderColor: '#006DFF',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#f3d503',
+      borderColor: '#006DFF',
     },
   },
   color: 'white'
@@ -34,20 +34,20 @@ const CssTextField = styled(TextField)({
 
 const StyledDropdown = styled(Autocomplete)({
   '& label.Mui-focused': {
-    color: '#f3d503',
+    color: '#006DFF',
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#f3d503',
+    borderBottomColor: '#006DFF',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderColor: '#454545',
     },
     '&:hover fieldset': {
-      borderColor: '#f3d503',
+      borderColor: '#006DFF',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#f3d503',
+      borderColor: '#006DFF',
     },
   },
   color: 'white'
@@ -74,6 +74,9 @@ function LoginSuccess() {
   const [orgList, setOrgList] = useState<any[]>([]);
   const [otherComany, setOtherComany] = useState<boolean>(true);
   const [newOrgName, setNewOrgName] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
+  const [pin,setPin] = useState<string>('');
+  const [country, setCountry] = useState<string>('');
   const [selectedOrg, setSelectedOrg] = useState<string | null>(orgList[0]);
   const [selectedOrgValue, setSelectedOrgValue] = useState<any>('');
   const [loading, setLoading] = React.useState(false);
@@ -153,9 +156,19 @@ function LoginSuccess() {
   }
 
   const createOrgForUser = async () => {
+    if(newOrgName?.length < 1 || address?.length < 1 || country?.length < 1 || pin.length < 1){
+      snackbarRef?.current?.show('Please fill all the values.', 'error');
+      return;
+    }
     try {
       setLoading(true);
-      const { data } = await axios.get(createOrgForuser(newOrgName), { withCredentials: true });
+      const saveObj = {
+        orgName :newOrgName, 
+        address: address,
+        country: country,
+        pinCode: pin
+      };
+      const { data } = await axios.post(createOrgForuser(), saveObj, { withCredentials: true });
       setLoading(false);
       if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
@@ -174,7 +187,7 @@ function LoginSuccess() {
   }
 
   return (
-    <Box sx={LayoutStyles.settingLayoutStyle} style={{height: 'calc(100vh - 120px)'}} >
+    <Box sx={LayoutStyles.settingLayoutStyle} style={{ height: 'calc(100vh - 120px)' }} >
       <Box sx={subContainerCss} >
         <Box marginBottom={'10px'} >
           <Typography color='#f1f1f1' fontSize={'22px'} >Share a few details about you</Typography>
@@ -206,17 +219,56 @@ function LoginSuccess() {
 
         {
           otherComany === true &&
-          <Box marginTop={'20px'} >
-            <InputLabel sx={{ color: '#f1f1f1', marginBottom: '5px', marginTop: '10px' }} >Enter Company name</InputLabel>
-            <CssTextField
-              size='small'
-              sx={{ input: { color: 'white' } }}
-              id="outlined-basic"
-              placeholder='Enter company name'
-              variant="outlined"
-              style={{ width: '100%' }}
-              onChange={(e) => setNewOrgName(e.target.value)}
-            />
+          <Box>
+            <Box marginTop={'20px'} >
+              <InputLabel sx={{ color: '#f1f1f1', marginBottom: '5px', marginTop: '10px' }} >Enter Company name</InputLabel>
+              <CssTextField
+                size='small'
+                sx={{ input: { color: 'white' } }}
+                id="outlined-basic"
+                placeholder='Company'
+                variant="outlined"
+                style={{ width: '100%' }}
+                onChange={(e) => setNewOrgName(e.target.value)}
+              />
+            </Box>
+            <Box marginTop={'20px'} >
+              <InputLabel sx={{ color: '#f1f1f1', marginBottom: '5px', marginTop: '10px' }} >Enter you address</InputLabel>
+              <CssTextField
+                size='small'
+                sx={{ input: { color: 'white' } }}
+                id="outlined-basic"
+                placeholder='Address'
+                variant="outlined"
+                style={{ width: '100%' }}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+            </Box>
+            <Box marginTop={'20px'} >
+              <InputLabel sx={{ color: '#f1f1f1', marginBottom: '5px', marginTop: '10px' }} >Enter you country</InputLabel>
+              <CssTextField
+                size='small'
+                sx={{ input: { color: 'white' } }}
+                id="outlined-basic"
+                placeholder='Country'
+                variant="outlined"
+                style={{ width: '100%' }}
+                onChange={(e) => setCountry(e.target.value)}
+              />
+            </Box>
+            <Box marginTop={'20px'} >
+              <InputLabel sx={{ color: '#f1f1f1', marginBottom: '5px', marginTop: '10px' }} >Enter you country</InputLabel>
+              <CssTextField
+                size='small'
+                sx={{ input: { color: 'white' } }}
+                id="outlined-basic"
+                placeholder='Pin'
+                type='number'
+                variant="outlined"
+                style={{ width: '100%' }}
+                onChange={(e) => setPin(e.target.value)}
+              />
+            </Box>
           </Box>
         }
 
@@ -224,7 +276,7 @@ function LoginSuccess() {
           control={<Checkbox onChange={(e) => setOtherComany(e.target.checked)} value={otherComany} />} label="Company not found ?"
         /> */}
 
-        <Button sx={containedButton} onClick={handleContinueButtonClick} >Continue</Button>
+        <Button style={{ marginTop: '20px' }} sx={containedButton} onClick={handleContinueButtonClick} >Continue</Button>
       </Box>
       <FSLoader show={loading} />
       <Notification ref={snackbarRef} />

@@ -56,7 +56,7 @@ function CreateSurveyModal(props: any) {
     }
 
     const highlightTextBackGround = (e: any) => {
-        e.target.style.color = '#f3d503';
+        e.target.style.color = '#006DFF';
     }
 
     const unhighlightTextBackGround = (e: any) => {
@@ -132,7 +132,7 @@ function CreateSurveyModal(props: any) {
                                             <Typography fontFamily={'Apercu Pro'} sx={{ paddingLeft: '5px' }} >{surveyType.label}</Typography>
                                         </Box>
                                         <Typography fontFamily={'Apercu Pro'} sx={{ fontSize: '14px' }} color={'#454545'} >Run targeted surveys on websites or inside products</Typography>
-                                        {selectedSurveyType === surveyType.id && <Box><CheckCircleIcon sx={{ color: '#f3d503', position: 'absolute', right: '20px' }} /></Box>}
+                                        {selectedSurveyType === surveyType.id && <Box><CheckCircleIcon sx={{ color: '#006DFF', position: 'absolute', right: '20px' }} /></Box>}
                                     </Box>
                                 )
                             })

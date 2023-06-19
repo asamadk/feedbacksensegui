@@ -1,14 +1,20 @@
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
+import { getColorsFromTheme } from '../Utils/FeedbackUtils';
 
 function NPSDisplay(props: any) {
 
+    const [colors, setColors] = useState<any>();
+    const isSmallScreen = useMediaQuery('(max-width: 600px)');
     const [position, setPosition] = useState('absolute');
 
     useEffect(() => {
+        if (props.theme != null) {
+            processThemeData();
+        }
         verifyLiveSurvey();
-    }, []);
+    }, [props]);
 
     const verifyLiveSurvey = () => {
         if (props.surveyId) {
@@ -18,6 +24,11 @@ function NPSDisplay(props: any) {
         }
     }
 
+    const processThemeData = () => {
+        const currentTheme = props.theme;
+        setColors(getColorsFromTheme(currentTheme));
+    }
+
     const next = (index: any) => {
         props.next({
             value: index
@@ -25,23 +36,28 @@ function NPSDisplay(props: any) {
     }
 
     return (
-        <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} margin={'15px'} padding={'15px'} marginTop={0}>
-            <Typography fontSize={'28px'} color={'#29292a'} fontWeight={200} >{props?.data?.question}</Typography>
+        <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'}>
+            <Typography
+                fontSize={'28px'}
+                color={colors?.primaryColor}
+                fontWeight={200}
+                width={'fit-content'}
+                margin={'auto'}
+            >
+                {props?.data?.question}
+            </Typography>
             <NpsCount
                 next={next}
+                colors={colors}
             />
-            <Box display={'flex'} justifyContent={'space-around'} >
-                <Typography fontSize={'12px'} color={'#29292a'} fontWeight={200} >{props?.data?.leftText}</Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={'#29292a'} fontWeight={200} ></Typography>
-                <Typography fontSize={'12px'} color={'#29292a'} fontWeight={200} >{props?.data?.rightText}</Typography>
+            <Box
+                width={isSmallScreen ? '90%' : '80%'}
+                margin={'auto'}
+                display={'flex'}
+                justifyContent={'space-between'}
+            >
+                <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.leftText}</Typography>
+                <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.rightText}</Typography>
             </Box>
         </Box>
     )
@@ -51,48 +67,105 @@ export default NPSDisplay
 
 function NpsCount(props: any) {
 
-    const isSmallScreen = useMediaQuery('(max-width: 600px)');
-
-    const handleMouseEnter = (e: any) => {
-        e.target.style.padding = '30px'
-        e.target.style.transition = '0.3s'
-    }
-
-    const handleMouseLeave = (e: any) => {
-        e.target.style.padding = '15px'
-    }
-
     return (
-        <Box flexWrap={'wrap'} marginTop={'20px'} marginBottom={'20px'} display={'flex'} justifyContent={isSmallScreen ? 'start' : 'space-between'}>
-            <Box border={'1px #808080 solid'} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: 'pointer', marginRight: '7px',marginTop : '5px' }} onClick={() => props.next('1')} padding={'15px'} borderRadius={'5px'} bgcolor={'rgb(144 140 141 / 10%)'} >
-                <Typography color={'#454545'} >{'1'}</Typography>
+        <Box
+            width={'fit-content'}
+            margin={'auto'}
+            flexWrap={'wrap'}
+            marginTop={'20px'}
+            marginBottom={'20px'}
+            display={'flex'}
+            justifyContent={'start'}
+        >
+            <Box
+                sx={{ cursor: 'pointer', marginRight: '7px', marginTop: '5px', width: '15px' }}
+                onClick={() => props.next('1')}
+                padding={'15px'}
+                borderRadius={'5px'}
+                bgcolor={props?.colors?.shade}
+            >
+                <Typography color={props?.colors?.primaryColor} >{'1'}</Typography>
             </Box>
-            <Box border={'1px #808080 solid'} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: 'pointer', marginRight: '7px',marginTop : '5px' }} onClick={() => props.next('2')} padding={'15px'} borderRadius={'5px'} bgcolor={'rgb(144 140 141 / 10%)'} >
-                <Typography color={'#454545'} >{'2'}</Typography>
+            <Box
+                sx={{ cursor: 'pointer', marginRight: '7px', marginTop: '5px', width: '15px' }}
+                onClick={() => props.next('2')}
+                padding={'15px'}
+                borderRadius={'5px'}
+                bgcolor={props?.colors?.shade}
+            >
+                <Typography color={props?.colors?.primaryColor} >{'2'}</Typography>
             </Box>
-            <Box border={'1px #808080 solid'} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: 'pointer', marginRight: '7px',marginTop : '5px' }} onClick={() => props.next('3')} padding={'15px'} borderRadius={'5px'} bgcolor={'rgb(144 140 141 / 10%)'} >
-                <Typography color={'#454545'} >{'3'}</Typography>
+            <Box
+                sx={{ cursor: 'pointer', marginRight: '7px', marginTop: '5px', width: '15px' }}
+                onClick={() => props.next('3')}
+                padding={'15px'}
+                borderRadius={'5px'}
+                bgcolor={props?.colors?.shade}
+            >
+                <Typography color={props?.colors?.primaryColor} >{'3'}</Typography>
             </Box>
-            <Box border={'1px #808080 solid'} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: 'pointer', marginRight: '7px',marginTop : '5px' }} onClick={() => props.next('4')} padding={'15px'} borderRadius={'5px'} bgcolor={'rgb(144 140 141 / 10%)'} >
-                <Typography color={'#454545'} >{'4'}</Typography>
+            <Box
+                sx={{ cursor: 'pointer', marginRight: '7px', marginTop: '5px', width: '15px' }}
+                onClick={() => props.next('4')}
+                padding={'15px'}
+                borderRadius={'5px'}
+                bgcolor={props?.colors?.shade}
+            >
+                <Typography color={props?.colors?.primaryColor} >{'4'}</Typography>
             </Box>
-            <Box border={'1px #808080 solid'} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: 'pointer', marginRight: '7px',marginTop : '5px' }} onClick={() => props.next('5')} padding={'15px'} borderRadius={'5px'} bgcolor={'rgb(144 140 141 / 10%)'} >
-                <Typography color={'#454545'} >{'5'}</Typography>
+            <Box
+                sx={{ cursor: 'pointer', marginRight: '7px', marginTop: '5px', width: '15px' }}
+                onClick={() => props.next('5')}
+                padding={'15px'}
+                borderRadius={'5px'}
+                bgcolor={props?.colors?.shade}
+            >
+                <Typography color={props?.colors?.primaryColor} >{'5'}</Typography>
             </Box>
-            <Box border={'1px #808080 solid'} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: 'pointer', marginRight: '7px',marginTop : '5px' }} onClick={() => props.next('6')} padding={'15px'} borderRadius={'5px'} bgcolor={'rgb(144 140 141 / 10%)'} >
-                <Typography color={'#454545'} >{'6'}</Typography>
+            <Box
+                sx={{ cursor: 'pointer', marginRight: '7px', marginTop: '5px', width: '15px' }}
+                onClick={() => props.next('6')}
+                padding={'15px'}
+                borderRadius={'5px'}
+                bgcolor={props?.colors?.shade}
+            >
+                <Typography color={props?.colors?.primaryColor} >{'6'}</Typography>
             </Box>
-            <Box border={'1px #808080 solid'} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: 'pointer', marginRight: '7px',marginTop : '5px' }} onClick={() => props.next('7')} padding={'15px'} borderRadius={'5px'} bgcolor={'rgb(144 140 141 / 10%)'} >
-                <Typography color={'#454545'} >{'7'}</Typography>
+            <Box
+                sx={{ cursor: 'pointer', marginRight: '7px', marginTop: '5px', width: '15px' }}
+                onClick={() => props.next('7')}
+                padding={'15px'}
+                borderRadius={'5px'}
+                bgcolor={props?.colors?.shade}
+            >
+                <Typography color={props?.colors?.primaryColor} >{'7'}</Typography>
             </Box>
-            <Box border={'1px #808080 solid'} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: 'pointer', marginRight: '7px',marginTop : '5px' }} onClick={() => props.next('8')} padding={'15px'} borderRadius={'5px'} bgcolor={'rgb(144 140 141 / 10%)'} >
-                <Typography color={'#454545'} >{'8'}</Typography>
+            <Box
+                sx={{ cursor: 'pointer', marginRight: '7px', marginTop: '5px', width: '15px' }}
+                onClick={() => props.next('8')}
+                padding={'15px'}
+                borderRadius={'5px'}
+                bgcolor={props?.colors?.shade}
+            >
+                <Typography color={props?.colors?.primaryColor} >{'8'}</Typography>
             </Box>
-            <Box border={'1px #808080 solid'} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: 'pointer', marginRight: '7px',marginTop : '5px' }} onClick={() => props.next('9')} padding={'15px'} borderRadius={'5px'} bgcolor={'rgb(144 140 141 / 10%)'} >
-                <Typography color={'#454545'} >{'9'}</Typography>
+            <Box
+                sx={{ cursor: 'pointer', marginRight: '7px', marginTop: '5px', width: '15px' }}
+                onClick={() => props.next('9')}
+                padding={'15px'}
+                borderRadius={'5px'}
+                bgcolor={props?.colors?.shade}
+            >
+                <Typography color={props?.colors?.primaryColor} >{'9'}</Typography>
             </Box>
-            <Box border={'1px #808080 solid'} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: 'pointer', marginRight: '7px',marginTop : '5px' }} onClick={() => props.next('10')} padding={'15px'} borderRadius={'5px'} bgcolor={'rgb(144 140 141 / 10%)'} >
-                <Typography color={'#454545'} >{'10'}</Typography>
+            <Box
+                sx={{ cursor: 'pointer', marginRight: '7px', marginTop: '5px', width: '15px' }}
+                onClick={() => props.next('10')}
+                padding={'15px'}
+                borderRadius={'5px'}
+                bgcolor={props?.colors?.shade}
+            >
+                <Typography color={props?.colors?.primaryColor} >{'10'}</Typography>
             </Box>
         </Box>
     )

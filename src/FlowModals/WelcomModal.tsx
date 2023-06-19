@@ -9,20 +9,20 @@ import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
-        color: '#f3d503',
+        color: '#006DFF',
     },
     '& .MuiInput-underline:after': {
-        borderBottomColor: '#f3d503',
+        borderBottomColor: '#006DFF',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
             borderColor: '#454545',
         },
         '&:hover fieldset': {
-            borderColor: '#f3d503',
+            borderColor: '#006DFF',
         },
         '&.Mui-focused fieldset': {
-            borderColor: '#f3d503',
+            borderColor: '#006DFF',
         },
     },
     color: 'white'
@@ -34,7 +34,7 @@ function WelcomModal(props: any) {
         populateCompConfig();
     }, [props.uiId]);
 
-    const [colors , setColors] = useState<any>();
+    const [background, setBackground] = useState<any>();
     const [welcomeText, setWelcomeText] = React.useState('');
     const [buttonText, setButtonText] = React.useState('');
 
@@ -42,10 +42,10 @@ function WelcomModal(props: any) {
         const compConfig = getCompConfigFromUiId(props);
         setWelcomeText(compConfig?.welcomeText || '');
         setButtonText(compConfig?.buttonText || '');
-        
-        if(props.theme != null){
+
+        if (props.theme != null) {
             const currentTheme = JSON.parse(props.theme);
-            setColors(getColorsFromTheme(currentTheme.theme));
+            setBackground(currentTheme.background);
         }
     }
 
@@ -106,9 +106,9 @@ function WelcomModal(props: any) {
                             </Box>
                         </Box>
                     </Box>
-                    <Box sx={{ backgroundColor: colors?.primaryColor, width: '55%' }} >
+                    <Box className={background?.value} sx={{ backgroundColor: '#ffffff', width: '55%' }} >
                         <DynamicComponentDisplay
-                            data={{welcomeText: welcomeText,buttonText: buttonText}}
+                            data={{ welcomeText: welcomeText, buttonText: buttonText }}
                             compId={props.compId}
                             theme={props.theme}
                         />

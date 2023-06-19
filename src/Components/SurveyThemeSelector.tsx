@@ -54,6 +54,7 @@ function SurveyThemeSelector(props: any) {
       }
       const design = JSON.parse(surveyDesign);
       props.updateTheme(design.theme);
+      props.updateBackground(design?.background)
       setSelectedTheme(design.theme);
     }
   }
@@ -71,7 +72,8 @@ function SurveyThemeSelector(props: any) {
   const handleSaveClick = async (selectedColorTheme : ColorScheme) => {
     try {
       const saveObj = {
-        theme: selectedColorTheme
+        theme: selectedColorTheme,
+        background : props?.selectedBackground
       }
       setLoading(true);
       const { data } = await axios.post(Endpoints.saveSurveyDesgin(props.surveyId), saveObj, { withCredentials: true });
@@ -139,7 +141,7 @@ function ThemeComponent(props: any) {
   return (
     <Box sx={{ cursor: 'pointer', height: '90px', border: '1px #454545 solid', borderRadius: '5px', display: 'flex', marginBottom: '10px' }} >
       <Box sx={{ width: '25%', borderRight: '1px #454545 solid', backgroundColor: props.color1 }} ></Box>
-      <Box sx={{ width: '25%', borderRight: '1px #454545 solid', backgroundColor: props.color2 }} ></Box>
+      {/* <Box sx={{ width: '25%', borderRight: '1px #454545 solid', backgroundColor: props.color2 }} ></Box> */}
       <Box sx={{ width: '75%', margin: 'auto', paddingLeft: '20px' }} >
         <Typography sx={{ color: '#f1f1f1' }} >{props.textHeading}</Typography>
         <Typography sx={{ color: '#454545' }} >{props.textSecond}</Typography>

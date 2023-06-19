@@ -1,12 +1,12 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import { containedButton } from '../Styles/ButtonStyle';
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
 import { getColorsFromTheme } from '../Utils/FeedbackUtils';
 
 function TextAnswerDisplay(props: any) {
 
   const [colors, setColors] = useState<any>();
+  const isSmallScreen = useMediaQuery('(max-width: 600px)');
   const [textColor, setTextColor] = useState('');
   const [position, setPosition] = useState('absolute');
   const [textAnswerValue, setTextAnswerValue] = useState('');
@@ -34,33 +34,41 @@ function TextAnswerDisplay(props: any) {
 
   const next = () => {
     const res = {
-      answer : textAnswerValue
+      answer: textAnswerValue
     }
     props.next(res);
   }
 
+  const inputStyleCSS = {
+    borderRadius: '10px',
+    width: isSmallScreen === true ? '80%' : '65%',
+    border: 'none',
+    padding: '20px',
+    backgroundColor: colors?.shade,
+    color: colors?.primaryColor,
+    paddingBottom: '40px',
+    margin : 'auto'
+  }
+
   return (
-    <Box sx={getSurveyDisplayContainerStyle(position)}  textAlign={'center'} >
-      <Typography fontSize={'28px'} color={'#29292a'} fontWeight={200} >{props?.data?.question}</Typography>
+    <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} >
+      <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
       <Box marginTop={'20px'} >
-        <TextField 
-          value={textAnswerValue} 
-          sx={{ width: '100%' }} 
-          id="outlined-basic" 
-          label="Give your answer" 
-          size='small' 
-          variant="outlined"
+        <input
+          style={inputStyleCSS}
+          value={textAnswerValue}
+          placeholder='Type your answer here...'
           onChange={(e) => setTextAnswerValue(e.target.value)}
         />
       </Box>
       <Button
         onClick={next}
         style={{
-        width: 'fit-content',
-        marginRight: '15px',
-        backgroundColor: colors?.secondaryColor,
-        color: textColor
-      }} sx={containedButton} variant="contained" >{'NEXT'}</Button>
+          width: 'fit-content',
+          marginTop: '10px',
+          backgroundColor: colors?.primaryColor,
+          color: textColor
+        }} variant="contained" >{'NEXT'}</Button>
     </Box>
   )
 }

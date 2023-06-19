@@ -46,7 +46,7 @@ function SurveyBlock(props: any) {
     };
 
     const handleTextHighlight = (e: any) => {
-        e.target.style.color = '#f3d503';
+        e.target.style.color = '#006DFF';
     }
 
     const handleTextUnhighlight = (e: any) => {
@@ -159,7 +159,7 @@ function SurveyBlock(props: any) {
             </Box>
             <Box onClick={handleOpenSurvey} sx={{ padding: '15px', paddingBottom: '10px' }} >
                 <Box sx={{ display: 'flex' }} >
-                    <Avatar sx={{ bgcolor: '#f3d503', width: 24, height: 24, fontSize: 14 }}>{survey?.user_id[0]}</Avatar>
+                    <Avatar sx={{ bgcolor: '#006DFF', width: 24, height: 24, fontSize: 14 }} alt={survey?.username[0]} src={survey?.image} />
                     <Typography variant='subtitle1' sx={{ fontSize: 14, marginLeft: '5px', color: '#454545' }} >
                         {new Date(survey?.created_at).toDateString()}
                     </Typography>

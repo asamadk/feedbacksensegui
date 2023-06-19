@@ -1,11 +1,11 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
+import { Box, Button, TextField, Typography, useMediaQuery } from '@mui/material'
 import { useEffect, useRef, useState } from 'react';
-import { containedButton } from '../Styles/ButtonStyle'
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
-import { getColorsFromTheme } from '../Utils/FeedbackUtils';
+import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
 
 function ContactDisplay(props: any) {
 
+    const isSmallScreen = useMediaQuery('(max-width: 600px)');
     const [colors, setColors] = useState<any>();
     const [textColor, setTextColor] = useState('');
     const [position, setPosition] = useState('absolute');
@@ -28,12 +28,12 @@ function ContactDisplay(props: any) {
     }
 
     const populateAnswerResult = () => {
-        const answerList : any[]= props?.data?.answerList;
-        if(answerList == null || answerList?.length < 1){
+        const answerList: any[] = props?.data?.answerList;
+        if (answerList == null || answerList?.length < 1) {
             return;
         }
-        let obj : any= {};
-        answerList.forEach((answer : string) => {
+        let obj: any = {};
+        answerList.forEach((answer: string) => {
             obj[answer] = '';
         });
         setAnswerResult(obj);
@@ -47,52 +47,64 @@ function ContactDisplay(props: any) {
 
     const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, key: string) => {
         try {
-          const val = e.target.value;
-          const tempAnswerResult = JSON.parse(JSON.stringify(answerResult));
-          tempAnswerResult[key] = val;
-          setAnswerResult(tempAnswerResult);
+            const val = e.target.value;
+            const tempAnswerResult = JSON.parse(JSON.stringify(answerResult));
+            tempAnswerResult[key] = val;
+            setAnswerResult(tempAnswerResult);
         } catch (error) {
-          console.log("🚀 ~ handleTextChange ~ error:", error);
+            console.log("🚀 ~ handleTextChange ~ error:", error);
         }
-      }
+    }
 
     const next = () => {
         props.next(answerResult);
     }
 
+    const inputStyleCSS = {
+        borderRadius: '10px',
+        width: isSmallScreen === true ? '80%' : '55%',
+        border: 'none',
+        padding: '12px',
+        backgroundColor: colors?.shade,
+        color: colors?.primaryColor,
+        margin: 'auto'
+    }
+
     return (
-        <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} margin={'15px'} padding={'15px'} marginTop={0} overflow={'scroll'} >
-            <Box height={'90vh'} overflow={'scroll'} >
-                <Typography fontSize={'26px'} color={'#29292a'} fontWeight={300} >{props?.data?.question}</Typography>
+        <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} overflow={'scroll'} >
+            <Box overflow={'scroll'} sx={getCenterAlignmentStyle()} >
+                <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
                 <Box marginTop={'10px'} >
                     {
                         props?.data?.answerList?.map((answer: string) => {
                             return (
                                 <Box key={answer} >
-                                    <Box key={answer} sx={{ padding: '10px', margin: '10px' }}>
-                                        <TextField 
-                                            onChange={(e) => handleTextChange(e,answer)}
-                                            value={answerResult != null && answerResult[answer] != null ? answerResult[answer] : ''} 
-                                            variant='outlined' 
-                                            fullWidth
-                                            size='small' 
-                                            label={answer}>
-                                        </TextField>
+                                    <Box key={answer} sx={{ padding: '5px', marginTop: '5px' }}>
+                                        <input
+                                            style={inputStyleCSS}
+                                            value={answerResult != null && answerResult[answer] != null ? answerResult[answer] : ''}
+                                            placeholder={answer}
+                                            onChange={(e) => handleTextChange(e, answer)}
+                                        />
                                     </Box>
                                 </Box>
                             )
                         })
                     }
                 </Box>
-                <Button 
-                    onClick={next}
-                    style={{
-                    width: 'fit-content',
-                    marginRight: '15px',
-                    backgroundColor: colors?.secondaryColor,
-                    color: textColor
-                }} sx={containedButton} variant="contained" >Submit</Button>
             </Box>
+            <Button
+                onClick={next}
+                style={{
+                    width: 'fit-content',
+                    backgroundColor: colors?.primaryColor,
+                    color: textColor,
+                    marginTop: '10px'
+                }}
+                variant="contained"
+            >
+                Submit
+            </Button>
         </Box>
     )
 }
