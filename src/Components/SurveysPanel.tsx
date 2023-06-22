@@ -14,6 +14,7 @@ import CreateSurveyModal from '../Modals/CreateSurveyModal';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import { useNavigate } from 'react-router';
+import Logo from './Logo';
 
 const buttonContainerStyles = {
     marginTop: '10px',
@@ -97,7 +98,7 @@ function SurveysPanel(props: any) {
         } catch (error: any) {
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            if(error?.response?.data?.message === Constants.USER_UNAUTH_TEXT){
+            if (error?.response?.data?.message === Constants.USER_UNAUTH_TEXT) {
                 FeedbackUtils.handleLogout();
             }
         }
@@ -123,7 +124,7 @@ function SurveysPanel(props: any) {
         } catch (error: any) {
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            if(error?.response?.data?.message === Constants.USER_UNAUTH_TEXT){
+            if (error?.response?.data?.message === Constants.USER_UNAUTH_TEXT) {
                 FeedbackUtils.handleLogout();
             }
         }
@@ -133,7 +134,6 @@ function SurveysPanel(props: any) {
         try {
             setLoading(true);
             let { data } = await axios.get(Endpoints.getSurveyList(), { withCredentials: true });
-            // console.log("🚀 ~ file: SurveysPanel.tsx:136 ~ getSurveys ~ data:", data)
             setLoading(false);
             if (data?.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
@@ -155,7 +155,7 @@ function SurveysPanel(props: any) {
         } catch (error: any) {
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            if(error?.response?.data?.message === Constants.USER_UNAUTH_TEXT){
+            if (error?.response?.data?.message === Constants.USER_UNAUTH_TEXT) {
                 FeedbackUtils.handleLogout();
             }
         }
@@ -205,7 +205,7 @@ function SurveysPanel(props: any) {
         });
         setUnfilteredSureveys(tempSurveys);
 
-        let filteredTempSurveys : any[] = [];
+        let filteredTempSurveys: any[] = [];
         surveys.forEach(survey => {
             if (survey.id !== surveyId) {
                 filteredTempSurveys.push(survey);
@@ -213,7 +213,7 @@ function SurveysPanel(props: any) {
         });
         setSurveys(filteredTempSurveys);
         snackbarRef?.current?.show('Survey deleted', 'success');
-        if(tempSurveys.length < 1){
+        if (tempSurveys.length < 1) {
             setForceRerender(!forceRerender);
         }
 
@@ -249,9 +249,11 @@ function SurveysPanel(props: any) {
                         width: 'fit-content',
                         margin: 'auto'
                     }} >
-                        <img style={{ maxWidth: 230 }} alt='Create your first survey to get started!' src='/completed-task.png'></img>
-                        <Typography style={{ color: '#f1f1f1' }} variant='h6'>Create your first survey to get started!</Typography>
-                        <Typography style={{ color: '#006DFF' }} variant='subtitle2'>Click the button below to add your first survey.</Typography>
+                        <Box sx={{ width: 'fit-content', margin: 'auto' }} >
+                            <Logo />
+                        </Box>
+                        <Typography style={{ color: '#f1f1f1' }} variant='h3'>Create your first survey to get started!</Typography>
+                        <Typography style={{ color: '#808080' }} variant='subtitle2'>Click the button below to add your first survey.</Typography>
                         <Button sx={containedButtonStyle} onClick={handleCreateNewSurvey} variant="contained">Get Started</Button>
                     </div>
                     :
@@ -324,7 +326,7 @@ export default SurveysPanel
 
 const containedButtonStyle = {
     marginTop: '10px',
-    color : '#f1f1f1',
+    color: '#f1f1f1',
     backgroundColor: '#006DFF',
     "&.MuiButtonBase-root:hover": {
         bgcolor: "#004cb3"
