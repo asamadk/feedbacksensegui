@@ -100,7 +100,7 @@ function ChangeFolderModal(props: any) {
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Move to folder
                         </Typography>
-                        <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+                        <IconButton color='info' sx={{ color: '#f1f1f1' }} >
                             <CloseIcon onClick={props.close} />
                         </IconButton>
                     </Box>

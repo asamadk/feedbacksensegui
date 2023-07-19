@@ -66,7 +66,6 @@ function BackgroundTemplates(props: any) {
   const handleSaveClick = async (background : any) => {
     try {
       const selectedTheme = props.selectedTheme;
-      console.log("🚀 ~ file: BackgroundTemplates.tsx:26 ~ handleSaveClick ~ selectedTheme:", selectedTheme)
       const saveObj = {
         theme: selectedTheme,
         background : background

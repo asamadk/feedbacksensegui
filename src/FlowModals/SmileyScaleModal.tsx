@@ -76,24 +76,25 @@ function SmileyScaleModal(props : any) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={ModalStyles.modalStyleComponents}>
-                    <Box width={'40%'} marginRight={10} >
+                    <Box width={'40%'} marginRight={10} overflow={'scroll'}>
                         <Box sx={ModalStyles.modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">
                                 {props.header}
                             </Typography>
-                            <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+                            <IconButton color='info' sx={{ color: '#f1f1f1' }} >
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
 
-                        <Box sx={ModalStyles.modalBodyContainerStyle} >
+                        <Box sx={ModalStyles.modalBodyContainerStyle} maxHeight={'calc(100vh - 100px)'}>
                             <CssTextField
-                                sx={{ input: { color: 'white' } }}
+                                sx={{ input: { color: 'white' },maxHeight : 'calc(100vh - 250px)' }}
                                 id="outlined-basic"
                                 placeholder='Enter your question here'
                                 variant="outlined"
                                 size={'small'}
                                 value={question}
+                                multiline
                                 style={{ width: '100%' }}
                                 onChange={(e) => setQuestion(e.target.value)}
                             />

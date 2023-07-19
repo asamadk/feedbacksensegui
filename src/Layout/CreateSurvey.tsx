@@ -58,6 +58,7 @@ function CreateSurvey(props: any) {
   const [loading, setLoading] = React.useState(false);
   const [saveFlowTemp, setSaveFlowTemp] = React.useState<any>();
   const [isDirty, setIsDirty] = useState(false);
+  const [isWorkflowPublished, setIsWorkflowPublished] = useState(false);
 
   useEffect(() => {
     getSingleSurvey();
@@ -75,6 +76,8 @@ function CreateSurvey(props: any) {
       if (data != null) {
         setSurveyDetail(data.data);
         if (data?.data?.workflows != null && data?.data.workflows.length > 0) {
+          const tempSurveyFlow = data?.data;
+          setIsWorkflowPublished(tempSurveyFlow?.is_published);
           setSurveyFlow(data?.data?.workflows[0]);
           populateComponentConfig(data?.data?.workflows[0]);
         }
@@ -107,6 +110,10 @@ function CreateSurvey(props: any) {
   }
 
   const handleSaveComponentConfig = (data: any) => {
+    if (isWorkflowPublished === true) {
+      snackbarRef?.current?.show('Please disable workflow to edit.', 'error');
+      return;
+    }
     let tempMap = componentConfig;
     if (componentId == null) {
       snackbarRef?.current?.show('A component error has been occurred.', 'error');
@@ -209,44 +216,13 @@ function CreateSurvey(props: any) {
     }
   }
 
-  const validateSurveyFlowOnSave = (flow: any): boolean => {
-    try {
-      const nodes: any[] = flow?.nodes;
-      for (const node of nodes) {
-        if (node == null || node.data == null) {
-          continue;
-        }
-        if (node?.data?.compConfig == null) {
-          snackbarRef?.current?.show('One or more components are have missing information.', 'error');
-          return false;
-        }
-        const validatedComp = FeedbackUtils.validateFlowComponent(JSON.parse(node?.data?.compConfig), node.data.compId);
-        if (validatedComp != null) {
-          snackbarRef?.current?.show(validatedComp, 'error');
-          return false;
-        }
-      }
-      return true;
-    } catch (error: any) {
-      snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
-      return false;
-    }
-  }
-
   const saveFlow = async (flow: any, deleteResponse: boolean) => {
     try {
+      if (isWorkflowPublished === true) {
+        snackbarRef?.current?.show('Cannot save enabled surveys.', 'error');
+        return;
+      }
       setLoading(true);
-      const isSurveyFlowValid = validateSurveyFlowOnSave(flow);
-      const isNodeDisconnected = FeedbackUtils.validateIsNodeDisconnected(flow);
-      if (isNodeDisconnected === true) {
-        setLoading(false);
-        snackbarRef?.current?.show('Please make sure all components are connected.', 'error');
-        return;
-      }
-      if (isSurveyFlowValid === false) {
-        setLoading(false);
-        return;
-      }
       if (surveyId == null) {
         return;
       }
@@ -316,6 +292,7 @@ function CreateSurvey(props: any) {
         snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
         const tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
         tempSurveyDetail.is_published = false;
+        setIsWorkflowPublished(false);
         setSurveyDetail(tempSurveyDetail);
       } catch (error: any) {
         setLoading(false);
@@ -337,6 +314,7 @@ function CreateSurvey(props: any) {
         if (data.success === true) {
           const tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
           tempSurveyDetail.is_published = true;
+          setIsWorkflowPublished(true);
           setSurveyDetail(tempSurveyDetail);
         }
       } catch (error: any) {
@@ -347,7 +325,6 @@ function CreateSurvey(props: any) {
         }
       }
     }
-    props.close();
   }
 
 
@@ -391,7 +368,7 @@ function CreateSurvey(props: any) {
           }
         </Box>
         <Button
-          endIcon={surveyDetail?.is_published === true ? <CloseIcon/> : <DoneIcon/>}
+          endIcon={surveyDetail?.is_published === true ? <CloseIcon /> : <DoneIcon />}
           onClick={handleDisableEnableSurvey}
           style={{ width: '110px' }}
           sx={ButtonStyles.containedButton}
@@ -401,8 +378,9 @@ function CreateSurvey(props: any) {
         </Button>
       </Box>
       <Box display={'flex'} >
-        <Box width={'77%'} >
+        <Box width={isWorkflowPublished === true ? '100%' : '77%'} >
           <FeedbackCanvas
+            published={isWorkflowPublished}
             flow={surveyFlow}
             config={componentConfig}
             surveyDetail={surveyDetail}
@@ -410,9 +388,12 @@ function CreateSurvey(props: any) {
             performSave={handleSaveFlow}
           />
         </Box>
-        <Box sx={{ borderLeft: '1px #454545 solid', overflowY: 'scroll', height: 'calc(100vh - 130px)' }} width={'23%'} >
-          <FeedbackComponentList />
-        </Box>
+        {
+          isWorkflowPublished === false &&
+          <Box sx={{ borderLeft: '1px #454545 solid', overflowY: 'scroll', height: 'calc(100vh - 130px)' }} width={'23%'} >
+            <FeedbackComponentList />
+          </Box>
+        }
       </Box>
 
       <DynamicComponentModal

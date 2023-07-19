@@ -1,7 +1,7 @@
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
-import { getColorsFromTheme } from '../Utils/FeedbackUtils';
+import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
 
 function NPSDisplay(props: any) {
 
@@ -37,27 +37,32 @@ function NPSDisplay(props: any) {
 
     return (
         <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'}>
-            <Typography
-                fontSize={'28px'}
-                color={colors?.primaryColor}
-                fontWeight={200}
-                width={'fit-content'}
-                margin={'auto'}
-            >
-                {props?.data?.question}
-            </Typography>
-            <NpsCount
-                next={next}
-                colors={colors}
-            />
-            <Box
-                width={isSmallScreen ? '90%' : '80%'}
-                margin={'auto'}
-                display={'flex'}
-                justifyContent={'space-between'}
-            >
-                <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.leftText}</Typography>
-                <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.rightText}</Typography>
+            <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center' }} >
+                <Box marginTop={'10px'} sx={{ overflowY: 'scroll', overflowWrap: 'break-word' }} >
+
+                    <Typography
+                        fontSize={'28px'}
+                        color={colors?.primaryColor}
+                        fontWeight={200}
+                        width={'fit-content'}
+                        margin={'auto'}
+                    >
+                        {props?.data?.question}
+                    </Typography>
+                </Box>
+                <NpsCount
+                    next={next}
+                    colors={colors}
+                />
+                <Box
+                    width={isSmallScreen ? '90%' : '80%'}
+                    margin={'auto'}
+                    display={'flex'}
+                    justifyContent={'space-between'}
+                >
+                    <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.leftText}</Typography>
+                    <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.rightText}</Typography>
+                </Box>
             </Box>
         </Box>
     )

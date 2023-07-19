@@ -24,9 +24,6 @@ const notificationData = [
 ]
 
 export default function NotificationModal() {
-    React.useEffect(() => {
-        console.log("Initializing notification modal component");
-    }, []);
 
     return (
         <List sx={notificationMainStyle}>

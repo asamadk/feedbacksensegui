@@ -35,7 +35,7 @@ function SurveySettings(props: any) {
         <Box sx={LayoutStyles.settingLayoutStyle} >
             
             <Box display={'flex'} sx={{ textAlign: 'start' }} >
-                <IconButton color='warning' onClick={handleBackButtonClick} >
+                <IconButton color='info' onClick={handleBackButtonClick} >
                     <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
                 </IconButton>
                 <Typography 

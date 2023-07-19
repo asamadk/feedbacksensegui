@@ -5,6 +5,7 @@ import * as ButtonStyle from '../Styles/ButtonStyle'
 import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow, NodeToolbar, useReactFlow, MiniMap } from 'reactflow'
 import CustomNode from './CustomNode';
 import SaveIcon from '@mui/icons-material/Save';
+import Notification from '../Utils/Notification';
 
 let id = 0;
 const getId = () => `dndnode_${id++}${new Date().getMilliseconds()}`;
@@ -14,7 +15,7 @@ const nodeTypes = {
 };
 
 function FeedbackCanvas(props: any) {
-
+    const snackbarRef: any = useRef(null);
     const [surveyFlow, setSurveyFlow] = React.useState<any>(props.flow);
 
     useEffect(() => {
@@ -93,6 +94,10 @@ function FeedbackCanvas(props: any) {
     }, [reactFlowInstance, props.config]);
 
     const deleteNode = (id: string) => {
+        if(props?.published === true){
+            snackbarRef?.current?.show('Cannot delete enabled surveys.', 'error');
+            return;
+        }
         if (id != null) {
             setNodes(nds => nds.filter(node => node.id !== id));
             setEdges(edgs => edgs.filter(edgs => (edgs.source !== id && edgs.target !== id)))
@@ -168,6 +173,7 @@ function FeedbackCanvas(props: any) {
                     </Button>
                 </Box>
             </ReactFlow>
+            <Notification ref={snackbarRef} />
         </Box>
     )
 }

@@ -111,7 +111,7 @@ function CreateSurveyModal(props: any) {
                         <Typography fontFamily={'Apercu Pro'}  id="modal-modal-title" variant="h5" component="h2">
                             Create a new survey
                         </Typography>
-                        <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+                        <IconButton color='info' sx={{ color: '#f1f1f1' }} >
                             <CloseIcon onClick={handleClose} />
                         </IconButton>
                     </Box>

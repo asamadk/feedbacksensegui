@@ -252,7 +252,7 @@ function SurveysPanel(props: any) {
                         <Box sx={{ width: 'fit-content', margin: 'auto' }} >
                             <Logo />
                         </Box>
-                        <Typography style={{ color: '#f1f1f1' }} variant='h3'>Create your first survey to get started!</Typography>
+                        <Typography style={{ color: '#f1f1f1' }} variant='h4'>Create your first survey to get started!</Typography>
                         <Typography style={{ color: '#808080' }} variant='subtitle2'>Click the button below to add your first survey.</Typography>
                         <Button sx={containedButtonStyle} onClick={handleCreateNewSurvey} variant="contained">Get Started</Button>
                     </div>

@@ -39,7 +39,6 @@ function CreateOwnSurvey(){
 
     const handleCreateSurvey = () => {
         const url = `https://${window.location.host}/login`
-        console.log('URL',url)
         window.open(url,'__target');
     }
 

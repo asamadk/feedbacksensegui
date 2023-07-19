@@ -72,24 +72,25 @@ function WelcomModal(props: any) {
                             <Typography id="modal-modal-title" variant="h5" component="h2">
                                 {props.header}
                             </Typography>
-                            <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+                            <IconButton color='info' sx={{ color: '#f1f1f1' }} >
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
                         <Box sx={ModalStyles.modalBodyContainerStyle} >
                             <CssTextField
-                                sx={{ input: { color: 'white' } }}
+                                sx={{ input: { color: 'white' }, maxHeight: '50vh' }}
                                 id="outlined-basic"
                                 placeholder='Enter your message here.'
                                 variant="outlined"
                                 size={'small'}
                                 value={welcomeText}
+                                multiline
                                 style={{ width: '100%' }}
                                 onChange={(e) => setWelcomeText(e.target.value)}
                             />
-
-                            <Divider sx={{ marginTop: '10px', marginBottom: '10px' }} />
-
+                        </Box>
+                        <Box sx={ModalStyles.modalBodyContainerStyle} >
+                            <Box sx={{ marginTop: '10px', marginBottom: '10px' }} />
                             <CssTextField
                                 sx={{ input: { color: 'white' } }}
                                 id="outlined-basic"

@@ -1,7 +1,7 @@
 import { Box, Button, TextField, Typography, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
-import { getColorsFromTheme } from '../Utils/FeedbackUtils';
+import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
 
 function TextAnswerDisplay(props: any) {
 
@@ -47,28 +47,33 @@ function TextAnswerDisplay(props: any) {
     backgroundColor: colors?.shade,
     color: colors?.primaryColor,
     paddingBottom: '40px',
-    margin : 'auto'
+    margin: 'auto'
   }
 
   return (
     <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} >
-      <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
-      <Box marginTop={'20px'} >
-        <input
-          style={inputStyleCSS}
-          value={textAnswerValue}
-          placeholder='Type your answer here...'
-          onChange={(e) => setTextAnswerValue(e.target.value)}
-        />
+      <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center',overflowWrap : 'break-word' }} >
+        <Box marginTop={'20px'} sx={{ overflowY: 'scroll' }} >
+          <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
+          <Box marginTop={'20px'} >
+            <input
+              style={inputStyleCSS}
+              value={textAnswerValue}
+              placeholder='Type your answer here...'
+              onChange={(e) => setTextAnswerValue(e.target.value)}
+            />
+          </Box>
+          <Button
+            onClick={next}
+            style={{
+              width: 'fit-content',
+              margin: 'auto',
+              marginTop: '20px',
+              backgroundColor: colors?.primaryColor,
+              color: textColor
+            }} variant="contained" >{'NEXT'}</Button>
+        </Box>
       </Box>
-      <Button
-        onClick={next}
-        style={{
-          width: 'fit-content',
-          marginTop: '10px',
-          backgroundColor: colors?.primaryColor,
-          color: textColor
-        }} variant="contained" >{'NEXT'}</Button>
     </Box>
   )
 }

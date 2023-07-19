@@ -90,6 +90,12 @@ function App() {
 
   return (
     <>
+      <Routes>
+        <Route
+          path='/payment/success'
+          element={<PaymentSuccess />}
+        />
+      </Routes>
       <ThemeProvider theme={darkTheme} >
         {liveSurvey === false && <div style={globalBodyStyle} className="App">
           <Header surveyId={currentSurveyId} loggedIn={user != null} />
@@ -147,16 +153,11 @@ function App() {
               element={user ? <UpgradeSubscription /> : <Navigate to={'/login'} />}
             />
             <Route
-              path='/payment/success'
-              element={user ? <PaymentSuccess /> : <Navigate to={'/login'} />}
-            />
-            <Route
               path='/user/create/organization'
               element={<LoginSuccess />}
             />
           </Routes>
         </div>}
-
       </ThemeProvider>
       {liveSurvey === true &&
         <ThemeProvider theme={lightTheme} >

@@ -35,31 +35,6 @@ export const getCompConfigFromUiId = (props: any): any => {
     return compConfMap.get(props.uiId);
 }
 
-export const validateIsNodeDisconnected = (flow: any): boolean => {
-    const uniqueNodeIds = new Set<string>();
-    const edges: any[] = flow.edges;
-    const nodes: any[] = flow.nodes;
-
-    if ((edges === null || edges.length < 1) && (nodes != null && nodes.length > 1)) {
-        return false;
-    }
-
-    if (edges === null || edges.length < 1) {
-        return true;
-    }
-
-    for (const edge of edges) {
-        uniqueNodeIds.add(edge.source);
-        uniqueNodeIds.add(edge.target);
-    }
-
-    for (const node of nodes) {
-        if (!uniqueNodeIds.has(node.id)) {
-            return true;
-        }
-    }
-    return false;
-}
 
 export const validateSurveyDisplay = (data: any, componentId: number | undefined): string | null => {
     switch (componentId) {

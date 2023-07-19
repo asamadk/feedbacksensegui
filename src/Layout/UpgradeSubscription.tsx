@@ -145,28 +145,14 @@ export default function UpgradeSubscription() {
                 { amount: amount, localPlanId: planId },
                 { withCredentials: true }
             );
-
-            if (data?.statusCode === 200) {
-                if (data?.message === 'Subscription updated.') {
-                    snackbarRef?.current?.show(data?.message, 'success');
-                    setLoading(false);
-                    return;
-                }
-            }else{
-                snackbarRef?.current?.show(data?.message, 'error');
-                return;
-            }
-
             const sessionId = data?.sessionId;
             const stripe = await stripePromise;
             const { error }: any = await stripe?.redirectToCheckout({ sessionId });
             if (error) {
                 snackbarRef?.current?.show(error?.message, 'error');
             }
-
             setLoading(false);
         } catch (error: any) {
-            console.log("🚀 ~ file: UpgradeSubscription.tsx:165 ~ runChangeSubscription ~ error:", error)
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
@@ -179,7 +165,7 @@ export default function UpgradeSubscription() {
     return (
         <ThemeProvider theme={darkTheme} >
             <Grid container sx={{ overflow: 'scroll', py: { xs: 2, sm: 3 }, padding: '20px', height: 'calc(100vh - 55px)', }}>
-                <IconButton onClick={handleBackButtonClick} color='warning'  >
+                <IconButton onClick={handleBackButtonClick} color='info'  >
                     <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
                 </IconButton>
                 <Grid item xs={12} sx={{ mx: 'auto', maxWidth: '2xl', textAlign: { xs: 'center' } }}>

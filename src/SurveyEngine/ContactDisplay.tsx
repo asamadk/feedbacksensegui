@@ -52,7 +52,7 @@ function ContactDisplay(props: any) {
             tempAnswerResult[key] = val;
             setAnswerResult(tempAnswerResult);
         } catch (error) {
-            console.log("🚀 ~ handleTextChange ~ error:", error);
+            console.warn("Exception handleTextChange ~ error:", error);
         }
     }
 
@@ -72,39 +72,41 @@ function ContactDisplay(props: any) {
 
     return (
         <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} overflow={'scroll'} >
-            <Box overflow={'scroll'} sx={getCenterAlignmentStyle()} >
-                <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
-                <Box marginTop={'10px'} >
-                    {
-                        props?.data?.answerList?.map((answer: string) => {
-                            return (
-                                <Box key={answer} >
-                                    <Box key={answer} sx={{ padding: '5px', marginTop: '5px' }}>
-                                        <input
-                                            style={inputStyleCSS}
-                                            value={answerResult != null && answerResult[answer] != null ? answerResult[answer] : ''}
-                                            placeholder={answer}
-                                            onChange={(e) => handleTextChange(e, answer)}
-                                        />
+            <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center' }} >
+                <Box marginTop={'10px'} sx={{ overflowY: 'scroll',overflowWrap : 'break-word' }} >
+                    <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
+                    <Box marginTop={'10px'} >
+                        {
+                            props?.data?.answerList?.map((answer: string) => {
+                                return (
+                                    <Box key={answer} >
+                                        <Box key={answer} sx={{ padding: '5px', marginTop: '5px' }}>
+                                            <input
+                                                style={inputStyleCSS}
+                                                value={answerResult != null && answerResult[answer] != null ? answerResult[answer] : ''}
+                                                placeholder={answer}
+                                                onChange={(e) => handleTextChange(e, answer)}
+                                            />
+                                        </Box>
                                     </Box>
-                                </Box>
-                            )
-                        })
-                    }
+                                )
+                            })
+                        }
+                    </Box>
+                <Button
+                    onClick={next}
+                    style={{
+                        width: 'fit-content',
+                        backgroundColor: colors?.primaryColor,
+                        color: textColor,
+                        marginTop: '10px'
+                    }}
+                    variant="contained"
+                >
+                    Submit
+                </Button>
                 </Box>
             </Box>
-            <Button
-                onClick={next}
-                style={{
-                    width: 'fit-content',
-                    backgroundColor: colors?.primaryColor,
-                    color: textColor,
-                    marginTop: '10px'
-                }}
-                variant="contained"
-            >
-                Submit
-            </Button>
         </Box>
     )
 }

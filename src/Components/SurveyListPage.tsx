@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import Popover from './Popover';
 
 
 const surveyPageMainContainer = {
@@ -229,7 +230,7 @@ function SurveyListPage() {
                 <div style={{ display: 'flex', width: '15%', flexDirection: 'column', borderRight: '1px #454545 solid', justifyContent: 'space-between', padding: '10px 30px' }} >
                     <div style={{ width: '100%', overflowY: 'scroll' }} >
                         <div style={allSurveyFolder} className="all-folders-data" onClick={handleAllFolderClick} >
-                            <Typography variant='subtitle2' >All Surveys</Typography>
+                            <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >All Surveys</Typography>
                         </div>
                         <div style={folderText}>
                             <Typography variant='subtitle2' >FOLDERS</Typography>
@@ -247,9 +248,7 @@ function SurveyListPage() {
                             folderList?.map(folder => {
                                 return (
                                     <div key={folder.id} className="folders-data" style={surveyFolderText} onClick={(e) => handleFolderClick(e, folder.name, folder.id)} >
-                                        <Box sx={{cursor : 'default'}} >
-                                            <Typography variant='subtitle2' >{folder.name}</Typography>
-                                        </Box>
+                                        <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >{folder.name}</Typography>
                                         <IconButton
                                             onClick={() => handleDeleteFolderClick(folder.id)}
                                             style={{ padding: '0px' }}
@@ -275,8 +274,8 @@ function SurveyListPage() {
 
                         <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Active survey limit</Typography>
                         <LinearProgressWithLabel
-                            value={subscriptionDetails?.surveyLimitUsed / subscriptionDetails?.totalSurveyLimit * 100}
-                            text={subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}
+                            value={subscriptionDetails == null ? 0 : subscriptionDetails?.surveyLimitUsed / subscriptionDetails?.totalSurveyLimit * 100}
+                            text={subscriptionDetails == null ? '0' : subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}
                         />
                         <div style={{ marginTop: '40px' }} ></div>
                         <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade plan</Button>
