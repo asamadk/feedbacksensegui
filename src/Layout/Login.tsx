@@ -33,15 +33,37 @@ function Login() {
                 </Box>
             </Box>
             <Box width={'50%'} >
-                <Box overflow={'hidden'}  >
-                    <img style={{ width: '800px' }} alt='Banner' src='/banner.png' ></img>
-                    {/* <img
-                        className='image-shadow'
-                        style={{ borderRadius: '10px', marginTop: '0px' }}
-                        width={'60%'}
-                        alt='Hero'
-                        src='/analysis5.png' 
-                    /> */}
+                <Box 
+                    display={'flex'}
+                    flexDirection={'column'}
+                    // justifyContent={'center'}
+                    height={'calc(100vh - 100px)'}
+                    overflow={'hidden'}  
+                    padding={'20px 40px'} 
+                    sx={{backgroundColor : '#1A1A1A'}} 
+                >
+                    <img style={{ width: '150px',margin : '0 auto' }} alt='Banner' src='/logofeedback.png' ></img>
+                    <Typography 
+                        variant='h2'
+                        fontWeight={600}
+                        textAlign={'start'} 
+                        color={'#f1f1f1'} 
+                    >
+                        Welcome, Start your journey with us
+                    </Typography>
+                    <Typography 
+                        variant='h4' 
+                        textAlign={'start'} 
+                        color={'#006dff'} 
+                    >
+                        We make sense of your feedback
+                    </Typography>
+                    <Typography
+                        color={'#808080'} 
+                        textAlign={'start'} 
+                    >
+                    Our application is designed to cut through the noise, decipher the important messages, and present you with clear, actionable insight
+                    </Typography>
                 </Box>
             </Box>
         </Box>

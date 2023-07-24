@@ -225,6 +225,10 @@ function SurveysPanel(props: any) {
         setSearchText('');
     }
 
+    const updateSurveyList = () => {
+        getSurveys();
+    }
+
     const handleCreateNewSurvey = () => {
         setOpenCreateSurvey(true);
     }
@@ -309,6 +313,7 @@ function SurveysPanel(props: any) {
                                         delete={deleteSurvey}
                                         rerender={rerenderAfterFolderChange}
                                         update={props.update}
+                                        updateSurveyList={updateSurveyList}
                                     />
                                 </Grid>
                             ))}

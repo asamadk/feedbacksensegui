@@ -1,19 +1,7 @@
-import { Box, Typography } from '@mui/material'
+import { Box, IconButton, Typography } from '@mui/material'
 import React from 'react'
 import DynamicComponentIcon from './DynamicComponentIcon'
-
-const commonContainerStyle = {
-    backgroundColor: '#1E1E1E',
-    border: '1px #454545 solid',
-    margin: '10px',
-    borderRadius: '5px',
-    textAlign: 'start',
-    padding: '10px',
-    height: '60px',
-    display: 'flex',
-    overflowY: 'hidden',
-    cursor: 'pointer'
-}
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 const getCommonContainerStyle = (isAvailable : boolean) => {
     return {
@@ -122,7 +110,7 @@ const componentList = [
         id: 13,
         bgColor: '#9E4784',
         header: 'Date',
-        description: 'Let people enter a specific date',
+        description: 'Let people enter a specific date. This component is useful in areas where people need to select date/time',
         isAvailable : true
     },
 ];
@@ -135,12 +123,22 @@ function FeedbackComponentList() {
         event.dataTransfer.effectAllowed = 'move';
     };
 
+    const onHoverStart = (event : any) => {
+        event.currentTarget.style.border = '1px #f1f1f1 solid';
+    }
+
+    const onHoverEnd = (event : any) => {
+        event.currentTarget.style.border = '1px #454545 solid';
+    }
+
     return (
-        <Box height={'calc(100vh - 128px)'} >
+        <Box height={'calc(100vh - 128px)'} sx={{backgroundColor : '#1A1A1A'}}>
             {
                 componentList.map(component => {
                     return (
                         <Box 
+                            onMouseEnter={onHoverStart}
+                            onMouseLeave={onHoverEnd}
                             onDragStart={(e) => onDragStart(e, component)} 
                             key={component.id} 
                             draggable={component.isAvailable} 
@@ -151,7 +149,13 @@ function FeedbackComponentList() {
                             </Box>
                             <Box>
                                 <Typography color={component.bgColor} fontSize={15} >{component.header}</Typography>
-                                <Typography color={'#454545'} fontSize={12} >{component.description}</Typography>
+                                <Typography color={'#454545'} fontSize={12} >
+                                    {component.description.substring(0,68)}
+                                    {component.description.length > 68 ? '...' : ''}
+                                </Typography>
+                            </Box>
+                            <Box marginTop={'20px'} color={component.bgColor}>
+                                <DragIndicatorIcon/>
                             </Box>
                         </Box>
                     )

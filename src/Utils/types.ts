@@ -4,7 +4,8 @@ export type genericModalData = {
     warning : string,
     successButtonText : string,
     cancelButtonText : string,
-    type : string
+    type : string,
+    data? : any
 }
 
 export type surveyFlowType = {

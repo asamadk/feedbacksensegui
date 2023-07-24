@@ -12,7 +12,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs, isDayjs } from 'dayjs';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
-import { handleLogout } from '../Utils/FeedbackUtils';
+import { handleLogout, validateEmail } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -77,7 +77,7 @@ function ConfigureSurvey() {
           setShowStopSurveyDateData(tempTimeLimit);
         }
 
-        if(tempData?.emails != null){
+        if (tempData?.emails != null) {
           setNotifyUser(true);
           setEmailList(tempData?.emails);
         }
@@ -162,6 +162,16 @@ function ConfigureSurvey() {
     if (notifyUser === true && (emailList == null || emailList.length < 1)) {
       snackbarRef?.current?.show('Please fill all the details before saving.', 'warning');
       return false;
+    }
+
+    if (notifyUser === true) {
+      const emails = emailList.split(',');
+      for (const email of emails) {
+        if (validateEmail(email.trim()) == null) {
+          snackbarRef?.current?.show('Please give valid email.', 'warning');
+          return false;
+        }
+      }
     }
 
     return true;

@@ -17,6 +17,8 @@ import Notification from '../Utils/Notification';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import CustomPopover from './Popover';
+import { useDispatch } from 'react-redux';
+import { updateCurrentWorkflow } from '../Redux/Actions/currentWorkflowActions';
 
 const surveyBlockMainContainer = {
     border: '1px #454545 solid',
@@ -35,6 +37,7 @@ function SurveyBlock(props: any) {
 
     let navigation = useNavigate();
     const snackbarRef: any = useRef(null);
+    const dispatch = useDispatch<any>();
     const [survey, setSurvey] = React.useState<any>(props.survey);
     const [genericModalObj, setGenericModalObj] = React.useState<Types.genericModalData>();
     const [showEditTitle, setShowEditTitle] = React.useState(false);
@@ -94,6 +97,7 @@ function SurveyBlock(props: any) {
 
     const handleOpenSurvey = () => {
         let surveyId = survey.id;
+        dispatch(updateCurrentWorkflow(surveyId));
         navigation('/survey/detail/create/' + surveyId);
     }
 
@@ -136,6 +140,11 @@ function SurveyBlock(props: any) {
     const handleCloseAndUpdate = () => {
         setAnchorEl(null);
         props.update();
+    }
+
+    const updateSurveyList = () => {
+        setAnchorEl(null);
+        props.updateSurveyList();
     }
 
     return (
@@ -200,6 +209,7 @@ function SurveyBlock(props: any) {
                         open={open}
                         survey={survey}
                         closeAndUpdate={handleCloseAndUpdate}
+                        updateSurveyList={updateSurveyList}
                         close={handleCloseSingleSurveyAction}
                     />
                 </Box>

@@ -58,7 +58,7 @@ export const validateSurveyDisplay = (data: any, componentId: number | undefined
             }
             break;
         case 4:
-            if (data == null || data.selectedVal == null || data.selectedVal?.size < 1) {
+            if (data == null || data.selectedVal == null || data.selectedVal?.length < 1) {
                 return 'Please select something before moving forward.'
             }
             break;
@@ -232,3 +232,9 @@ export const handleLogout = () => {
         "_self"
     );
 }
+
+export const validateEmail = (email : string) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };

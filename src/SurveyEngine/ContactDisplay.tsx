@@ -77,10 +77,10 @@ function ContactDisplay(props: any) {
                     <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
                     <Box marginTop={'10px'} >
                         {
-                            props?.data?.answerList?.map((answer: string) => {
+                            props?.data?.answerList?.map((answer: string,index :number) => {
                                 return (
-                                    <Box key={answer} >
-                                        <Box key={answer} sx={{ padding: '5px', marginTop: '5px' }}>
+                                    <Box key={answer+index} >
+                                        <Box key={answer+index} sx={{ padding: '5px', marginTop: '5px' }}>
                                             <input
                                                 style={inputStyleCSS}
                                                 value={answerResult != null && answerResult[answer] != null ? answerResult[answer] : ''}
