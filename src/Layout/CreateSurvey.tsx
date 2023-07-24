@@ -1,4 +1,4 @@
-import { Alert, Box, Button, IconButton, Snackbar, styled, TextField, Typography } from '@mui/material'
+import { Box, Button, IconButton, styled, TextField, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import FeedbackCanvas from '../FlowComponents/FeedbackCanvas'
 import 'reactflow/dist/style.css';
@@ -20,6 +20,10 @@ import { genericModalData, surveyFlowType } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
+import { useSelector } from 'react-redux';
+import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
+import { useDispatch } from 'react-redux';
+import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -57,11 +61,14 @@ function CreateSurvey(props: any) {
   const [showSurveyName, setShowSurveyName] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
   const [saveFlowTemp, setSaveFlowTemp] = React.useState<any>();
-  const [isDirty, setIsDirty] = useState(false);
+  const [isWorkflowPublished, setIsWorkflowPublished] = useState(false);
+  const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
+  const workflowCheck = useSelector((state: any) => state.workflowCheck);
+  const dispatch = useDispatch<any>();
 
   useEffect(() => {
     getSingleSurvey();
-  }, [])
+  }, []);
 
   const getSingleSurvey = async () => {
     try {
@@ -75,6 +82,8 @@ function CreateSurvey(props: any) {
       if (data != null) {
         setSurveyDetail(data.data);
         if (data?.data?.workflows != null && data?.data.workflows.length > 0) {
+          const tempSurveyFlow = data?.data;
+          setIsWorkflowPublished(tempSurveyFlow?.is_published);
           setSurveyFlow(data?.data?.workflows[0]);
           populateComponentConfig(data?.data?.workflows[0]);
         }
@@ -107,6 +116,10 @@ function CreateSurvey(props: any) {
   }
 
   const handleSaveComponentConfig = (data: any) => {
+    if (isWorkflowPublished === true) {
+      snackbarRef?.current?.show('Please disable workflow to edit.', 'error');
+      return;
+    }
     let tempMap = componentConfig;
     if (componentId == null) {
       snackbarRef?.current?.show('A component error has been occurred.', 'error');
@@ -117,11 +130,24 @@ function CreateSurvey(props: any) {
       snackbarRef?.current?.show(validatedComp, 'error');
       return;
     }
-
     tempMap?.set(comUiId, JSON.parse(data));
     setComponentConfig(tempMap);
     setOpenEditModal(false);
     snackbarRef?.current?.show('Saved.', 'success');
+    checkWorkflow(true);
+    makeGlobalWorkflowDirty(true);
+  }
+
+  const checkWorkflow = (value: boolean) => {
+    const tempWorkflowDirty: any = {};
+    tempWorkflowDirty[currentWorkflowId] = value;
+    dispatch(updateWorkflowCheck(tempWorkflowDirty));
+  }
+
+  const makeGlobalWorkflowDirty = (values: boolean) => {
+    const tempWorkflowDirty: any = {};
+    tempWorkflowDirty[currentWorkflowId] = values;
+    dispatch(updateWorkflowDirty(tempWorkflowDirty));
   }
 
   const checkSurveyResponse = async (): Promise<boolean> => {
@@ -178,7 +204,7 @@ function CreateSurvey(props: any) {
   const handleSaveFlow = async (flow: any) => {
     try {
       const isSurveyAlreadyFilled = await checkSurveyResponse();
-      if (isSurveyAlreadyFilled === true) {
+      if (isSurveyAlreadyFilled === true && workflowCheck[currentWorkflowId] === true) {
         setSaveFlowTemp(flow);
         handleSurveyResetModal();
         return;
@@ -209,44 +235,13 @@ function CreateSurvey(props: any) {
     }
   }
 
-  const validateSurveyFlowOnSave = (flow: any): boolean => {
-    try {
-      const nodes: any[] = flow?.nodes;
-      for (const node of nodes) {
-        if (node == null || node.data == null) {
-          continue;
-        }
-        if (node?.data?.compConfig == null) {
-          snackbarRef?.current?.show('One or more components are have missing information.', 'error');
-          return false;
-        }
-        const validatedComp = FeedbackUtils.validateFlowComponent(JSON.parse(node?.data?.compConfig), node.data.compId);
-        if (validatedComp != null) {
-          snackbarRef?.current?.show(validatedComp, 'error');
-          return false;
-        }
-      }
-      return true;
-    } catch (error: any) {
-      snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
-      return false;
-    }
-  }
-
   const saveFlow = async (flow: any, deleteResponse: boolean) => {
     try {
+      if (isWorkflowPublished === true) {
+        snackbarRef?.current?.show('Cannot save enabled surveys.', 'error');
+        return;
+      }
       setLoading(true);
-      const isSurveyFlowValid = validateSurveyFlowOnSave(flow);
-      const isNodeDisconnected = FeedbackUtils.validateIsNodeDisconnected(flow);
-      if (isNodeDisconnected === true) {
-        setLoading(false);
-        snackbarRef?.current?.show('Please make sure all components are connected.', 'error');
-        return;
-      }
-      if (isSurveyFlowValid === false) {
-        setLoading(false);
-        return;
-      }
       if (surveyId == null) {
         return;
       }
@@ -257,6 +252,8 @@ function CreateSurvey(props: any) {
         return;
       }
       snackbarRef?.current?.show(data?.message, 'success');
+      checkWorkflow(false);
+      makeGlobalWorkflowDirty(false);
     } catch (error: any) {
       setLoading(false)
       snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
@@ -290,7 +287,7 @@ function CreateSurvey(props: any) {
       handleCloseEditName();
     } catch (error: any) {
       setLoading(false);
-      snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
         FeedbackUtils.handleLogout();
       }
@@ -316,6 +313,7 @@ function CreateSurvey(props: any) {
         snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
         const tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
         tempSurveyDetail.is_published = false;
+        setIsWorkflowPublished(false);
         setSurveyDetail(tempSurveyDetail);
       } catch (error: any) {
         setLoading(false);
@@ -337,6 +335,7 @@ function CreateSurvey(props: any) {
         if (data.success === true) {
           const tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
           tempSurveyDetail.is_published = true;
+          setIsWorkflowPublished(true);
           setSurveyDetail(tempSurveyDetail);
         }
       } catch (error: any) {
@@ -347,7 +346,6 @@ function CreateSurvey(props: any) {
         }
       }
     }
-    props.close();
   }
 
 
@@ -359,7 +357,8 @@ function CreateSurvey(props: any) {
             <Typography
               style={{ position: 'relative', top: '15px', paddingLeft: '20px', cursor: 'pointer', fontSize: '17px' }}
               color={'#f1f1f1'} >
-              {surveyDetail?.name}
+              {surveyDetail?.name?.substring(0,45)}
+              {surveyDetail?.name?.length > 45 ? '...' : ''}
             </Typography>
           }
           {showSurveyName &&
@@ -391,7 +390,7 @@ function CreateSurvey(props: any) {
           }
         </Box>
         <Button
-          endIcon={surveyDetail?.is_published === true ? <CloseIcon/> : <DoneIcon/>}
+          endIcon={surveyDetail?.is_published === true ? <CloseIcon /> : <DoneIcon />}
           onClick={handleDisableEnableSurvey}
           style={{ width: '110px' }}
           sx={ButtonStyles.containedButton}
@@ -401,18 +400,23 @@ function CreateSurvey(props: any) {
         </Button>
       </Box>
       <Box display={'flex'} >
-        <Box width={'77%'} >
+        <Box width={isWorkflowPublished === true ? '100%' : '77%'} >
           <FeedbackCanvas
+            published={isWorkflowPublished}
             flow={surveyFlow}
             config={componentConfig}
             surveyDetail={surveyDetail}
             onEdit={handleComponentEditClick}
             performSave={handleSaveFlow}
+            dirty={() => { checkWorkflow(true) }}
           />
         </Box>
-        <Box sx={{ borderLeft: '1px #454545 solid', overflowY: 'scroll', height: 'calc(100vh - 130px)' }} width={'23%'} >
-          <FeedbackComponentList />
-        </Box>
+        {
+          isWorkflowPublished === false &&
+          <Box sx={{ borderLeft: '1px #454545 solid', overflowY: 'scroll', height: 'calc(100vh - 130px)' }} width={'23%'} >
+            <FeedbackComponentList />
+          </Box>
+        }
       </Box>
 
       <DynamicComponentModal

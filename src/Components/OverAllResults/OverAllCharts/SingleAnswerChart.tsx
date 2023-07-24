@@ -1,5 +1,5 @@
 import { Box, Divider, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Bar, ComposedChart, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 import { getIconColorById } from '../../../Utils/FeedbackUtils'
 
@@ -16,6 +16,11 @@ type propsType = {
 }
 
 function SingleAnswerChart(props: propsType) {
+
+    useEffect(() => {
+        console.log("🚀 ~ file: SingleAnswerChart.tsx:23 ~ useEffect ~ props.data:", props.data)
+    },[]);
+
     return (
         <Box sx={mainContainer} >
             <Typography fontSize={20} color={'#f1f1f1'} paddingBottom={'10px'} >Question : {props?.data?.question}</Typography>
@@ -27,8 +32,11 @@ function SingleAnswerChart(props: propsType) {
                         <Box>
                             <Divider sx={{ borderTop: '1px #454545 solid', margin: '10px 0px' }} />
                             <Box display={'flex'} justifyContent={'space-between'} >
-                                <Typography color={'#808080'} >{answers?.name}</Typography>
-                                <Typography color={'#808080'} >{answers?.freq}%</Typography>
+                                <Typography 
+                                    color={'#808080'} 
+                                    sx={{flexWrap : 'wrap',overflowX : 'scroll',marginRight : '40px'}}
+                                >{answers?.name}</Typography>
+                                <Typography color={'#808080'} >{answers?.Frequency}%</Typography>
                             </Box>
                         </Box>
                     )
@@ -60,7 +68,7 @@ function SingleAnswerBarChart(props: any) {
                     <XAxis type="number" />
                     <YAxis dataKey="name" type="category" scale="band" />
                     <Legend/>
-                    <Bar dataKey="freq" barSize={20} fill={getIconColorById(props.id)} />
+                    <Bar dataKey="Frequency" barSize={20} fill={getIconColorById(props.id)} />
                 </ComposedChart>
             </ResponsiveContainer>
         </Box>

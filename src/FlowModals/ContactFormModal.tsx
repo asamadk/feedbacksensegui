@@ -44,7 +44,7 @@ function ContactFormModal(props: any) {
         if (compConfig?.answerList != null) {
             setAnswerChoiceList([...compConfig?.answerList]);
         }
-        if(props.theme != null){
+        if (props.theme != null) {
             const currentTheme = JSON.parse(props.theme);
             setBackground(currentTheme.background);
         }
@@ -101,65 +101,65 @@ function ContactFormModal(props: any) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={ModalStyles.modalStyleComponents}>
-                    <Box width={'40%'} marginRight={10} >
+                    <Box width={'40%'} marginRight={10} sx={{ overflowY: 'scroll' }}>
                         <Box sx={ModalStyles.modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">
                                 {props.header}
                             </Typography>
-                            <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+                            <IconButton color='info' sx={{ color: '#f1f1f1' }} >
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
 
                         <Box sx={ModalStyles.modalBodyContainerStyle} >
-
-                            <CssTextField
-                                value={questionText}
-                                onChange={(e) => setQuestionText(e.target.value)}
-                                sx={{ input: { color: 'white' } }}
-                                id="outlined-basic"
-                                placeholder='Enter your question here'
-                                variant="outlined"
-                                size={'small'}
-                                style={{ width: '100%' }}
-                            />
-
-                            <Box marginTop={'20px'} >
-                                <Typography sx={{ color: '#f1f1f1' }} >Answer choices</Typography>
-                                {
-                                    answerChoiceList.map((answer, index) => {
-                                        return (
-                                            <Box key={index} display={'flex'} >
-                                                <CssTextField
-                                                    onChange={(e) => handleAnswerChange(e, index)}
-                                                    value={answer}
-                                                    sx={{ input: { color: 'white' }, marginTop: '10px' }}
-                                                    id="outlined-basic"
-                                                    placeholder='Field label'
-                                                    variant="outlined"
-                                                    size={'small'}
-                                                    style={{ width: '100%' }}
-                                                />
-                                                <IconButton onClick={() => handleTextFieldRemove(index)} >
-                                                    <RemoveCircleIcon sx={{ color: '#f1f1f1' }} />
-                                                </IconButton>
-                                            </Box>
-                                        )
-                                    })
-                                }
-
-                                <Typography
-                                    sx={{ color: '#454545', fontSize: '13px', textDecoration: 'underline', cursor: 'pointer', marginTop: '20px' }}
-                                    onClick={handleAddAnswerChoice}
-                                >
-                                    Add an answer choice
-                                </Typography>
-
+                            <Box>
+                                <CssTextField
+                                    value={questionText}
+                                    onChange={(e) => setQuestionText(e.target.value)}
+                                    sx={{ input: { color: 'white' }, maxHeight: '50vh' }}
+                                    id="outlined-basic"
+                                    placeholder='Enter your question here'
+                                    variant="outlined"
+                                    size={'small'}
+                                    multiline
+                                    style={{ width: '100%' }}
+                                />
                             </Box>
-
                         </Box>
 
-                        <Box sx={ModalStyles.modalButtonContainerStyle} >
+                        <Box marginTop={'20px'} >
+                            <Typography sx={{ color: '#f1f1f1' }} >Answer choices</Typography>
+                            {
+                                answerChoiceList.map((answer, index) => {
+                                    return (
+                                        <Box key={index} display={'flex'} >
+                                            <CssTextField
+                                                onChange={(e) => handleAnswerChange(e, index)}
+                                                value={answer}
+                                                sx={{ input: { color: 'white' }, marginTop: '10px' }}
+                                                id="outlined-basic"
+                                                placeholder='Field label'
+                                                variant="outlined"
+                                                size={'small'}
+                                                style={{ width: '100%' }}
+                                            />
+                                            <IconButton onClick={() => handleTextFieldRemove(index)} >
+                                                <RemoveCircleIcon sx={{ color: '#f1f1f1' }} />
+                                            </IconButton>
+                                        </Box>
+                                    )
+                                })
+                            }
+
+                            <Typography
+                                sx={{ color: '#454545', fontSize: '13px', textDecoration: 'underline', cursor: 'pointer', marginTop: '20px' }}
+                                onClick={handleAddAnswerChoice}
+                            >
+                                Add an answer choice
+                            </Typography>
+
+                        </Box>
+                        <Box sx={ModalStyles.modalButtonContainerStyle} marginBottom={'50px'}>
                             <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
                             <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
                         </Box>

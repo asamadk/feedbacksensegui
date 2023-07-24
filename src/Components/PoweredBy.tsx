@@ -12,7 +12,7 @@ const mainContainerCss = {
     display : 'flex',
     position : 'fixed',
     marginLeft : '10px',
-    bottom : '20px'
+    bottom : '10px'
 }
 
 function PoweredBy() {

@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
 import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
@@ -71,14 +71,15 @@ function SingleAnswerSelectionDisplay(props: any) {
 
     const selectionBlock = {
         padding: '10px',
+        paddingBottom: '0',
         backgroundColor: colors?.shade,
         color: colors?.primaryColor,
         borderRadius: '10px',
-        height: '30px',
         textAlign: 'start',
         width: isSmallScreen === true ? '80%' : '55%',
         margin: "auto",
         marginBottom: '10px',
+        overflowX : 'scroll',
     }
 
     const RadioButtonStyle = {
@@ -90,9 +91,9 @@ function SingleAnswerSelectionDisplay(props: any) {
 
     return (
         <Box sx={getSurveyDisplayContainerStyle(position)} style={{ width: '95%' }} textAlign={'center'}>
-            <Box height={'90vh'} sx={getCenterAlignmentStyle()} overflow={'scroll'} >
-                <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={400} >{props?.data?.question}</Typography>
-                <Box marginTop={'10px'} >
+            <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll',overflowWrap : 'break-word' }} >
+                <Box marginTop={'10px'} sx={{overflowY : 'scroll'}} >
+                    <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={400} >{props?.data?.question}</Typography>
                     {
                         props.type === 'single' ?
                             <RadioGroup name="radio-buttons-group" >
@@ -101,10 +102,11 @@ function SingleAnswerSelectionDisplay(props: any) {
                                         return (
                                             <Box sx={selectionBlock} >
                                                 <FormControlLabel
-                                                    sx={{ position: 'relative', top: '-5px' }}
+                                                    sx={{ position: 'relative', top: '-5px',overflowWrap : 'break-word' }}
                                                     value={answer}
                                                     control={<Radio sx={RadioButtonStyle} />}
-                                                    label={answer}
+                                                    // label={answer}
+                                                    label={<Typography>{answer}</Typography>}
                                                     onChange={handleRadioChange}
                                                 />
                                             </Box>

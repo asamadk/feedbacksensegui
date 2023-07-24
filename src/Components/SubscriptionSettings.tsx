@@ -57,7 +57,6 @@ function SubscriptionSettings() {
             }
 
             let resData: any[] = data.data;
-            console.log("🚀 ~ file: SubscriptionSettings.tsx:60 ~ getSubscriptionDetails ~ resData:", resData)
             if (resData != null) {
                 setSubscriptionDetail(resData);
             }

@@ -89,28 +89,32 @@ function RatingScale(props: any) {
               <Typography id="modal-modal-title" variant="h5" component="h2">
                 {props.header}
               </Typography>
-              <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+              <IconButton color='info' sx={{ color: '#f1f1f1' }} >
                 <CloseIcon onClick={props.close} />
               </IconButton>
             </Box>
 
             <Box sx={ModalStyles.modalBodyContainerStyle} >
               <CssTextField
-                sx={{ input: { color: 'white' } }}
+                sx={{ input: { color: 'white' },maxHeight : '50vh'  }}
                 id="outlined-basic"
                 placeholder='Enter your question here'
                 variant="outlined"
                 size={'small'}
+                multiline
                 value={question}
                 style={{ width: '100%' }}
                 onChange={(e) => setQuestion(e.target.value)}
               />
 
+
+            </Box>
+
+            <Box>
               <Box sx={{ marginTop: '10px' }} >
                 <Typography color={'#454545'} >Select range</Typography>
                 <Slider onChange={handleSilderChange} sx={{ width: '95%', marginLeft: '10px' }} value={range} valueLabelDisplay="auto" step={1} marks min={3} max={7} />
               </Box>
-
             </Box>
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '20px' }} >

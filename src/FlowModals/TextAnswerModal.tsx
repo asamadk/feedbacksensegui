@@ -40,7 +40,7 @@ function TextAnswerModal(props: any) {
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
         setQuestion(compConfig?.question || '');
-        if(props.theme != null){
+        if (props.theme != null) {
             const currentTheme = JSON.parse(props.theme);
             setBackground(currentTheme.background);
         }
@@ -74,19 +74,20 @@ function TextAnswerModal(props: any) {
                             <Typography id="modal-modal-title" variant="h5" component="h2">
                                 {props.header}
                             </Typography>
-                            <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+                            <IconButton color='info' sx={{ color: '#f1f1f1' }} >
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
 
                         <Box sx={ModalStyles.modalBodyContainerStyle} >
                             <CssTextField
-                                sx={{ input: { color: 'white' } }}
+                                sx={{ input: { color: 'white' }, maxHeight: 'calc(100vh - 250px)' }}
                                 id="outlined-basic"
                                 placeholder='Enter your question here'
                                 variant="outlined"
                                 size={'small'}
                                 value={question}
+                                multiline
                                 style={{ width: '100%' }}
                                 onChange={(e) => setQuestion(e.target.value)}
                             />
@@ -97,7 +98,7 @@ function TextAnswerModal(props: any) {
                             <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
                         </Box>
                     </Box>
-                    <Box className={background?.value} sx={{ backgroundColor: '#ffffff', width: '55%' }} >
+                    <Box className={background?.value} sx={{ backgroundColor: '#ffffff', width: '55%', overflowY: 'scroll' }} >
                         <DynamicComponentDisplay
                             data={{ question: question }}
                             compId={props.compId}

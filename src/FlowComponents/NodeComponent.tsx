@@ -4,26 +4,11 @@ import DynamicComponentIcon from './DynamicComponentIcon'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Popover from '../Components/Popover';
 import { getIconColorById } from '../Utils/FeedbackUtils';
 
 const commonLogoStyle = {
     marginTop: '20px',
     marginRight: '10px'
-}
-
-const editButton = {
-    // position: 'absolute',
-    // top: '-30px',
-    // right: '40px',
-    // cursor : 'pointer'
-}
-
-const deleteButton = {
-    // position: 'absolute',
-    // top: '-30px',
-    // right: '10px',
-    // cursor : 'pointer'
 }
 
 function NodeComponent(props: any) {

@@ -1,10 +1,14 @@
 import { Box, Button, Fab } from '@mui/material'
-import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import 'reactflow/dist/style.css';
 import * as ButtonStyle from '../Styles/ButtonStyle'
 import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow, NodeToolbar, useReactFlow, MiniMap } from 'reactflow'
 import CustomNode from './CustomNode';
 import SaveIcon from '@mui/icons-material/Save';
+import Notification from '../Utils/Notification';
+import { useDispatch } from 'react-redux';
+import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
+import { useSelector } from 'react-redux';
 
 let id = 0;
 const getId = () => `dndnode_${id++}${new Date().getMilliseconds()}`;
@@ -14,8 +18,10 @@ const nodeTypes = {
 };
 
 function FeedbackCanvas(props: any) {
-
+    const snackbarRef: any = useRef(null);
     const [surveyFlow, setSurveyFlow] = React.useState<any>(props.flow);
+    const dispatch = useDispatch<any>();
+    const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
 
     useEffect(() => {
         if (props?.surveyDetail?.workflows != null && props?.surveyDetail?.workflows.length > 0) {
@@ -90,12 +96,18 @@ function FeedbackCanvas(props: any) {
             const flow = reactFlowInstance.toObject();
             props.performSave(flow);
         }
-    }, [reactFlowInstance, props.config]);
+    }, [reactFlowInstance, props.config,props.performSave]);
 
     const deleteNode = (id: string) => {
+        if(props?.published === true){
+            snackbarRef?.current?.show('Cannot delete enabled surveys.', 'error');
+            return;
+        }
         if (id != null) {
             setNodes(nds => nds.filter(node => node.id !== id));
             setEdges(edgs => edgs.filter(edgs => (edgs.source !== id && edgs.target !== id)))
+            props.dirty();
+            makeGlobalWorkflowDirty();
         }
     }
 
@@ -114,17 +126,21 @@ function FeedbackCanvas(props: any) {
             if (typeof compData === 'undefined' || !compData) {
                 return;
             }
-
             const position = reactFlowInstance.project({
                 x: event.clientX - reactFlowBounds.left,
                 y: event.clientY - reactFlowBounds.top,
             });
-
             createNodeFromComponentData(JSON.parse(compData), position);
-
+            makeGlobalWorkflowDirty();
         },
         [reactFlowInstance]
     );
+
+    const makeGlobalWorkflowDirty = () => {
+        const tempWorkflowDirty :any = {};
+        tempWorkflowDirty[currentWorkflowId] = true;
+        dispatch(updateWorkflowDirty(tempWorkflowDirty));
+    }
 
     const onNodesChange = useCallback(
         (changes: any) => setNodes((nds: any) => applyNodeChanges(changes, nds)),
@@ -154,7 +170,7 @@ function FeedbackCanvas(props: any) {
                 panOnScroll
                 selectionOnDrag
             >
-                {/* <MiniMap nodeColor={'#454545'} color={'#1E1E1E'} /> */}
+                <MiniMap nodeColor={'#1e1e1e'} color={'#1E1E1E'} style={{backgroundColor : '#454545'}}/>
                 <Background />
                 <Controls />
                 <Box sx={{ position: 'absolute', top: '10px', left: '-5px' }} >
@@ -168,6 +184,7 @@ function FeedbackCanvas(props: any) {
                     </Button>
                 </Box>
             </ReactFlow>
+            <Notification ref={snackbarRef} />
         </Box>
     )
 }

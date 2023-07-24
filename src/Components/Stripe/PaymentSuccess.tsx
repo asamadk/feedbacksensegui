@@ -7,7 +7,6 @@ function PaymentSuccess() {
 
     useEffect(() => {
         if (hydrate === false) {
-            console.log('Payment success....');
             hydrate = true;
         }
     });

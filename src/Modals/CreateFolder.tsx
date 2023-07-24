@@ -41,25 +41,22 @@ const textFieldStyle = {
 function CreateFolder(props: any) {
 
     const snackbarRef: any = useRef(null);
-    const navigate = useNavigate();
     const [folderName, setFolderName] = useState<string>('');
     const [loading, setLoading] = React.useState(false);
 
     const handleCreateButtonClick = async () => {
         try {
+            if(folderName == null || folderName.length < 1){
+                snackbarRef?.current?.show('Please give folder a name', 'error');
+                return;
+            }
             const currentUser: string | null = localStorage.getItem(USER_LOCAL_KEY);
             if (currentUser == null) {
                 snackbarRef?.current?.show('Unauthorized', 'error');
                 return;
             }
-            const authenticatedUser: authUser = JSON.parse(currentUser);
             setLoading(true);
-            const { data } =
-                await axios.post
-                    (createFolder(folderName),
-                        {},
-                        { withCredentials: true }
-                    );
+            const { data } = await axios.post(createFolder(folderName), {}, { withCredentials: true });
             setLoading(false);
 
             if (data.statusCode === 200) {
@@ -97,7 +94,7 @@ function CreateFolder(props: any) {
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Create folder
                         </Typography>
-                        <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+                        <IconButton color='info' sx={{ color: '#f1f1f1' }} >
                             <CloseIcon onClick={handleClose} />
                         </IconButton>
                     </Box>

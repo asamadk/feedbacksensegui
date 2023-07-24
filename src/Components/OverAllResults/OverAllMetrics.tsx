@@ -43,7 +43,6 @@ function OverAllMetrics(props : surveyIdProp) {
         try {
             setLoading(true);
             const { data } = await axios.get(getOverallMetricsResponse(props.surveyId),{withCredentials : true});
-            // console.log("🚀 ~ file: OverAllMetrics.tsx:46 ~ getOverAllMetrics ~ data:", data)
             setLoading(false);
             if(data.statusCode !== 200){
                 snackbarRef?.current?.show(data?.message, 'error');

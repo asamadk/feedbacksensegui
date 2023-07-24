@@ -145,28 +145,14 @@ export default function UpgradeSubscription() {
                 { amount: amount, localPlanId: planId },
                 { withCredentials: true }
             );
-
-            if (data?.statusCode === 200) {
-                if (data?.message === 'Subscription updated.') {
-                    snackbarRef?.current?.show(data?.message, 'success');
-                    setLoading(false);
-                    return;
-                }
-            }else{
-                snackbarRef?.current?.show(data?.message, 'error');
-                return;
-            }
-
             const sessionId = data?.sessionId;
             const stripe = await stripePromise;
             const { error }: any = await stripe?.redirectToCheckout({ sessionId });
             if (error) {
                 snackbarRef?.current?.show(error?.message, 'error');
             }
-
             setLoading(false);
         } catch (error: any) {
-            console.log("🚀 ~ file: UpgradeSubscription.tsx:165 ~ runChangeSubscription ~ error:", error)
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
@@ -179,7 +165,7 @@ export default function UpgradeSubscription() {
     return (
         <ThemeProvider theme={darkTheme} >
             <Grid container sx={{ overflow: 'scroll', py: { xs: 2, sm: 3 }, padding: '20px', height: 'calc(100vh - 55px)', }}>
-                <IconButton onClick={handleBackButtonClick} color='warning'  >
+                <IconButton onClick={handleBackButtonClick} color='info'  >
                     <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
                 </IconButton>
                 <Grid item xs={12} sx={{ mx: 'auto', maxWidth: '2xl', textAlign: { xs: 'center' } }}>
@@ -293,7 +279,7 @@ function SinglePlan({ plan, checkout }: any) {
                                 ${plan.price_cents}
                             </Typography>
                             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'text.secondary', fontSize: 'sm', lineHeight: '10', letterSpacing: 'wide' }}>
-                                USD / month
+                                USD / year
                             </Typography>
                         </Box>
                         <Button
@@ -322,8 +308,9 @@ function PlanDetailsTable() {
                 <TableHead>
                     <TableRow>
                         <TableCell>Feature</TableCell>
-                        <TableCell>Free $0 /mo</TableCell>
-                        <TableCell>Starter $25 /mo</TableCell>
+                        <TableCell>Free $0 /year</TableCell>
+                        <TableCell>Starter $25 /year</TableCell>
+                        <TableCell>Growth $49 /year</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -331,34 +318,41 @@ function PlanDetailsTable() {
                         <TableCell>Active surveys</TableCell>
                         <TableCell>1</TableCell>
                         <TableCell>5</TableCell>
+                        <TableCell>10</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Users</TableCell>
                         <TableCell>1</TableCell>
                         <TableCell>Unlimited</TableCell>
+                        <TableCell>Unlimited</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Response capacity / survey</TableCell>
-                        <TableCell>500</TableCell>
+                        <TableCell>50</TableCell>
                         <TableCell>2000</TableCell>
+                        <TableCell>5000</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Response store limit</TableCell>
-                        <TableCell>500</TableCell>
+                        <TableCell>50</TableCell>
                         <TableCell>2000</TableCell>
+                        <TableCell>5000</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Folders</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                         <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Personalized assistance</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
                         <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Questions in survey</TableCell>
+                        <TableCell>Unlimited</TableCell>
                         <TableCell>Unlimited</TableCell>
                         <TableCell>Unlimited</TableCell>
                     </TableRow>
@@ -366,9 +360,17 @@ function PlanDetailsTable() {
                         <TableCell>Detailed analysis</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
                         <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>AI analysis</TableCell>
+                        <TableCell><RemoveIcon /></TableCell>
+                        <TableCell><RemoveIcon /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Collection time / survey</TableCell>
+                        <TableCell>Unlimited</TableCell>
                         <TableCell>Unlimited</TableCell>
                         <TableCell>Unlimited</TableCell>
                     </TableRow>
@@ -376,30 +378,30 @@ function PlanDetailsTable() {
                         <TableCell>Notifications</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
                         <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Email support</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                         <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Exclusive Features</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
                         <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
+                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Result export</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
+                        <TableCell>Coming soon</TableCell>
                         <TableCell>Coming soon</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Custom logo</TableCell>
                         <TableCell><RemoveIcon /></TableCell>
                         <TableCell>Coming soon</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>AI analysis</TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
                         <TableCell>Coming soon</TableCell>
                     </TableRow>
                 </TableBody>

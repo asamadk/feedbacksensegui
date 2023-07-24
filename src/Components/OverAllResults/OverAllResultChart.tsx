@@ -50,10 +50,8 @@ function OverAllResultChart(props: propsType) {
         try {
             setLoading(true);
             const { data } = await axios.get(getOverallResponse(props.surveyId), { withCredentials: true });
-            // console.log("🚀 ~ file: OverAllResultChart.tsx:147 ~ getOverAllResponseForChart ~ data:", data)
             setLoading(false);
             if (data.statusCode !== 200) {
-                console.log('data?.message', data?.message);
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }

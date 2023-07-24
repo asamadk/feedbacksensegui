@@ -153,3 +153,7 @@ export const startSubScription = () => {
 export const cancelSubScription = () => {
     return `${BASE_URL}/stripe/api/cancel`
 }
+
+export const duplicateSurveyAPI = (surveyId : string) => {
+    return `${BASE_URL}/survey/duplicate/${surveyId}`;
+}

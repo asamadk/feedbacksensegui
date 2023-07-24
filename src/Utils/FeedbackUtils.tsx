@@ -35,31 +35,6 @@ export const getCompConfigFromUiId = (props: any): any => {
     return compConfMap.get(props.uiId);
 }
 
-export const validateIsNodeDisconnected = (flow: any): boolean => {
-    const uniqueNodeIds = new Set<string>();
-    const edges: any[] = flow.edges;
-    const nodes: any[] = flow.nodes;
-
-    if ((edges === null || edges.length < 1) && (nodes != null && nodes.length > 1)) {
-        return false;
-    }
-
-    if (edges === null || edges.length < 1) {
-        return true;
-    }
-
-    for (const edge of edges) {
-        uniqueNodeIds.add(edge.source);
-        uniqueNodeIds.add(edge.target);
-    }
-
-    for (const node of nodes) {
-        if (!uniqueNodeIds.has(node.id)) {
-            return true;
-        }
-    }
-    return false;
-}
 
 export const validateSurveyDisplay = (data: any, componentId: number | undefined): string | null => {
     switch (componentId) {
@@ -83,7 +58,7 @@ export const validateSurveyDisplay = (data: any, componentId: number | undefined
             }
             break;
         case 4:
-            if (data == null || data.selectedVal == null || data.selectedVal?.size < 1) {
+            if (data == null || data.selectedVal == null || data.selectedVal?.length < 1) {
                 return 'Please select something before moving forward.'
             }
             break;
@@ -257,3 +232,9 @@ export const handleLogout = () => {
         "_self"
     );
 }
+
+export const validateEmail = (email : string) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };

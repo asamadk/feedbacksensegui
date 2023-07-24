@@ -148,6 +148,10 @@ function IndividualResponse(props: IndividualResponseProps) {
                 tempSurveyResList[0].selected = true;
                 setSelectedResponse(tempSurveyResList[0]);
             }
+
+            if(tempSurveyResList.length === 0){
+                setIsEmpty(true);
+            }
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);

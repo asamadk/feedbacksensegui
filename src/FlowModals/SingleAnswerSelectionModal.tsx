@@ -72,7 +72,7 @@ function SingleAnswerSelectionModal(props: any) {
     }
 
     const handleAddAnswerChoice = () => {
-        if (answerChoiceList.length > 10) {
+        if (answerChoiceList.length > 30) {
             snackbarRef?.current?.show('Cannot use more than 10 answer chioces', 'error');
             return;
         }
@@ -114,7 +114,7 @@ function SingleAnswerSelectionModal(props: any) {
                             <Typography id="modal-modal-title" variant="h5" component="h2">
                                 {props.header}
                             </Typography>
-                            <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+                            <IconButton color='info' sx={{ color: '#f1f1f1' }} >
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
@@ -130,6 +130,7 @@ function SingleAnswerSelectionModal(props: any) {
                                 variant="outlined"
                                 size={'small'}
                                 style={{ width: '100%' }}
+                                multiline
                             />
 
                             <Box marginTop={'20px'} >

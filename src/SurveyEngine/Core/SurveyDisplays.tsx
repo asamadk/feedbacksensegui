@@ -58,7 +58,6 @@ function SurveyDisplays() {
             populateComponentData(resData.nodes[0]);
             localStorage.setItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`, v4());
         } catch (error: any) {
-            console.log("🚀 ~ file: SurveyDisplays.tsx:62 ~ fetchLiveSurveyNodes ~ error:", error)
             setLoading(false);
             setDisplayMssg({
                 message: error?.response?.data?.message,
@@ -108,7 +107,7 @@ function SurveyDisplays() {
                 </Box>
             }
             {displayMssg.type !== 'error' && showEnd === false &&
-                <Box className={background?.value} sx={{ height: '100vh', backgroundColor: '#ffffff' }} >
+                <Box className={background?.value} sx={{ height: '100vh', backgroundColor: '#ffffff',overflowY : 'scroll' }} >
                     <FSLoader show={loading} />
                     <Box>
                         <DynamicComponentDisplay

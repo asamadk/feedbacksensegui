@@ -257,7 +257,7 @@ function LoginSuccess() {
               />
             </Box>
             <Box marginTop={'20px'} >
-              <InputLabel sx={{ color: '#f1f1f1', marginBottom: '5px', marginTop: '10px' }} >Enter you country</InputLabel>
+              <InputLabel sx={{ color: '#f1f1f1', marginBottom: '5px', marginTop: '10px' }} >Enter you pin code</InputLabel>
               <CssTextField
                 size='small'
                 sx={{ input: { color: 'white' } }}

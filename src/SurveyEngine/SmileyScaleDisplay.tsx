@@ -1,49 +1,52 @@
 import { Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
-import { getColorsFromTheme } from '../Utils/FeedbackUtils';
+import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
 
 function SmileyScaleDisplay(props: any) {
 
-    const [position , setPosition] = useState('absolute');
+    const [position, setPosition] = useState('absolute');
     const [colors, setColors] = useState<any>();
 
     useEffect(() => {
         if (props.theme != null) {
             processThemeData();
         }
-        if(props.surveyId){
+        if (props.surveyId) {
             setPosition('absolute');
-        }else{
+        } else {
             setPosition('relative')
         }
-    },[props]);
+    }, [props]);
 
     const processThemeData = () => {
         const currentTheme = props.theme;
-        console.log("🚀 ~ file: SmileyScaleDisplay.tsx:24 ~ processThemeData ~ currentTheme:", currentTheme)
         setColors(getColorsFromTheme(currentTheme));
-      }
+    }
 
-    const next = (emojiId : string ) => {
+    const next = (emojiId: string) => {
         props.next({
-            emojiId : emojiId
+            emojiId: emojiId
         });
     }
 
     return (
         <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} padding={'15px'} >
-            <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
-            <SmileyDisplay  
-                next={next}
-            />
-            <Box display={'flex'} justifyContent={'space-around'} >
-                <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.leftText}</Typography>
-                <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
-                <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
-                <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.rightText}</Typography>
+            <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center',overflowWrap : 'break-word' }} >
+                <Box marginTop={'10px'} sx={{ overflowY: 'scroll' }} >
+                <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
+                    <SmileyDisplay
+                        next={next}
+                    />
+                    <Box display={'flex'} justifyContent={'space-around'} >
+                        <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.leftText}</Typography>
+                        <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
+                        <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
+                        <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
+                        <Typography fontSize={'20px'} color={colors?.primaryColor} fontWeight={200} ></Typography>
+                        <Typography fontSize={'12px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.rightText}</Typography>
+                    </Box>
+                </Box>
             </Box>
         </Box>
     )
@@ -51,14 +54,14 @@ function SmileyScaleDisplay(props: any) {
 
 export default SmileyScaleDisplay;
 
-function SmileyDisplay(props : any) {
+function SmileyDisplay(props: any) {
 
-    const handleMouseEnter = (e : any) => {
+    const handleMouseEnter = (e: any) => {
         e.target.style.fontSize = '78px'
         e.target.style.transition = '0.3s'
     }
 
-    const handleMouseLeave = (e : any) => {
+    const handleMouseLeave = (e: any) => {
         e.target.style.fontSize = '58px'
     }
 

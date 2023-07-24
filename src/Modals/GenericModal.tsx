@@ -25,7 +25,7 @@ function GenericModal(props: any) {
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             {payload?.header}
                         </Typography>
-                        <IconButton onClick={props.close} color='warning' sx={{ color: '#f1f1f1' }} >
+                        <IconButton onClick={props.close} color='info' sx={{ color: '#f1f1f1' }} >
                             <CloseIcon />
                         </IconButton>
                     </Box>

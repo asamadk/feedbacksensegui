@@ -12,7 +12,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs, isDayjs } from 'dayjs';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
-import { handleLogout } from '../Utils/FeedbackUtils';
+import { handleLogout, validateEmail } from '../Utils/FeedbackUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -48,7 +48,7 @@ function ConfigureSurvey() {
 
   const [notifyUser, setNotifyUser] = React.useState(false);
   const [emailList, setEmailList] = React.useState('');
-  const [showStopSurveyNumber, setShowStopSurveyNumber] = React.useState(false);
+  const [showStopSurveyNumber, setShowStopSurveyNumber] = React.useState(true);
   const [showStopSurveyDate, setShowStopSurveyDate] = React.useState(false);
   const [showStopSurveyDateData, setShowStopSurveyDateData] = React.useState<string | null>('');
   const [showStopSurveyNumberData, setShowStopSurveyNumberData] = React.useState<string>('');
@@ -77,7 +77,7 @@ function ConfigureSurvey() {
           setShowStopSurveyDateData(tempTimeLimit);
         }
 
-        if(tempData?.emails != null){
+        if (tempData?.emails != null) {
           setNotifyUser(true);
           setEmailList(tempData?.emails);
         }
@@ -164,6 +164,16 @@ function ConfigureSurvey() {
       return false;
     }
 
+    if (notifyUser === true) {
+      const emails = emailList.split(',');
+      for (const email of emails) {
+        if (validateEmail(email.trim()) == null) {
+          snackbarRef?.current?.show('Please give valid email.', 'warning');
+          return false;
+        }
+      }
+    }
+
     return true;
   }
 
@@ -179,7 +189,7 @@ function ConfigureSurvey() {
           <FormControlLabel
             sx={{ color: 'whitesmoke' }}
             control={<Switch onChange={(e) => setNotifyUser(e.target.checked)} checked={notifyUser} value={notifyUser} color="info" />}
-            label="Notify me."
+            label="Notify me"
           />
         </Box>
         {
@@ -202,13 +212,13 @@ function ConfigureSurvey() {
         <Typography marginTop={'20px'} textAlign={'start'} color={'#454545'} >
           Set the maximum number of responses you'd like to collect with this survey.
         </Typography>
-        <Box textAlign={'start'} >
+        {/* <Box textAlign={'start'} >
           <FormControlLabel
             sx={{ color: 'whitesmoke' }}
             control={<Switch onChange={(e) => setShowStopSurveyNumber(e.target.checked)} checked={showStopSurveyNumber} value={showStopSurveyNumber} color="info" />}
             label="Stop the survey after collecting a specific number of responses"
           />
-        </Box>
+        </Box> */}
         {showStopSurveyNumber === true &&
           <CssTextField
             size='small'

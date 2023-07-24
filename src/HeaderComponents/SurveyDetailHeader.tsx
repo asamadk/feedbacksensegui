@@ -1,20 +1,19 @@
 import React from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Button, IconButton } from '@mui/material';
-import * as ButtonStyles from '../Styles/ButtonStyle'
 import CustomTabSet from '../Components/CustomTabSet';
 import { useNavigate } from 'react-router';
-import { SURVEY_LOCAL_KEY } from '../Utils/Constants';
-
-const makeButtonUp = {
-    position: 'relative',
-    top: '-7px'
-}
+import { useSelector } from 'react-redux';
+import { genericModalData } from '../Utils/types';
+import GenericModal from '../Modals/GenericModal';
+import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
+import { useDispatch } from 'react-redux';
+import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
 
 const makeIconsUp = {
     position: 'relative',
     top: '-2px',
-    width : '50px'
+    width: '50px'
 }
 
 const tabsetList = [
@@ -26,17 +25,56 @@ const tabsetList = [
 ]
 
 function SurveyDetailHeader(props: any) {
-
     let navigate = useNavigate();
+    const dispatch = useDispatch<any>();
+
+    const [tabset, setTabset] = React.useState(parseInt(props.tabset))
+    const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
+    const workflowDirty = useSelector((state: any) => state.workflowDirty);
+    const [showGenericModal, setShowGenericModal] = React.useState(false);
+    const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
 
     const handleRouteToHome = () => {
-        // localStorage.removeItem(SURVEY_LOCAL_KEY);
+        const isWorkflowDirty = workflowDirty[currentWorkflowId];
+        if (isWorkflowDirty === true) {
+            setShowGenericModal(true);
+            let genDeleteObj: genericModalData = {
+                header: 'You have some unsaved changes in workflow',
+                warning: 'Warning: There\'s no turning back! I acknowledge that',
+                successButtonText: 'Continue without saving',
+                cancelButtonText: 'Cancel',
+                description: 'The changes will be removed permanently.',
+                type: 'home',
+            }
+            setGenericModalObj(genDeleteObj);
+            return;
+        }
         navigate('/');
     }
 
-    const [tabset, setTabset] = React.useState(parseInt(props.tabset))
-
     const changetabset = (value: number) => {
+        const isWorkflowDirty = workflowDirty[currentWorkflowId];
+        if (isWorkflowDirty === true) {
+            setShowGenericModal(true);
+            let genDeleteObj: genericModalData = {
+                header: 'You have some unsaved changes in workflow',
+                warning: 'Warning: There\'s no turning back! I acknowledge that',
+                successButtonText: 'Continue without saving',
+                cancelButtonText: 'Cancel',
+                description: 'The changes will be removed permanently.',
+                type: 'next',
+                data: {
+                    value: value
+                }
+            }
+            setGenericModalObj(genDeleteObj);
+            setTabset(tabset);
+            return;
+        }
+        changeTab(value);
+    }
+
+    const changeTab = (value: number) => {
         setTabset(value);
         if (value === 0) {
             navigate('/survey/detail/create/' + props.surveyId);
@@ -51,15 +89,26 @@ function SurveyDetailHeader(props: any) {
         }
     }
 
+    const handleSuccessButtonClick = () => {
+        if (genericModalObj?.type === 'next') {
+            const newValue = genericModalObj?.data.value;
+            changeTab(newValue);
+        } else if (genericModalObj?.type === 'home') {
+            navigate('/');
+        }
+        setShowGenericModal(false);
+        const tempWorkflowDirty: any = {};
+        tempWorkflowDirty[currentWorkflowId] = false;
+        dispatch(updateWorkflowDirty(tempWorkflowDirty));
+        dispatch(updateWorkflowCheck(tempWorkflowDirty));
+    }
+
     return (
         <Box sx={{ display: 'flex' }} >
             <Box sx={{ display: 'flex', justifyContent: 'center' }} >
                 <CustomTabSet tabsetList={tabsetList} change={(value: number) => changetabset(value)} index={props.tabset} />
             </Box>
             <Box sx={{ display: 'flex' }} >
-                {/* <Box sx={makeButtonUp} >
-                    <Button style={{ width: 'fit-content' }} sx={ButtonStyles.outlinedBlackButton} variant="contained">Next</Button>
-                </Box> */}
                 <IconButton
                     onClick={handleRouteToHome}
                     sx={makeIconsUp}
@@ -68,6 +117,12 @@ function SurveyDetailHeader(props: any) {
                     <CloseIcon sx={{ color: '#f1f1f1' }} />
                 </IconButton>
             </Box>
+            <GenericModal
+                payload={genericModalObj}
+                close={() => setShowGenericModal(false)}
+                open={showGenericModal}
+                callback={handleSuccessButtonClick}
+            />
         </Box>
     )
 }

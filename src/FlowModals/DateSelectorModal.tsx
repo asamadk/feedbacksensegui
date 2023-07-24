@@ -39,7 +39,7 @@ function DateSelectorModal(props: any) {
   const populateCompConfig = () => {
     const compConfig = getCompConfigFromUiId(props);
     setQuestion(compConfig?.question || '');
-    if(props.theme != null){
+    if (props.theme != null) {
       const currentTheme = JSON.parse(props.theme);
       setBackground(currentTheme.background);
     }
@@ -75,19 +75,20 @@ function DateSelectorModal(props: any) {
               <Typography id="modal-modal-title" variant="h5" component="h2">
                 {props.header}
               </Typography>
-              <IconButton color='warning' sx={{ color: '#f1f1f1' }} >
+              <IconButton color='info' sx={{ color: '#f1f1f1' }} >
                 <CloseIcon onClick={props.close} />
               </IconButton>
             </Box>
 
             <Box sx={ModalStyles.modalBodyContainerStyle} >
               <CssTextField
-                sx={{ input: { color: 'white' } }}
+                sx={{ input: { color: 'white' }, maxHeight: 'calc(100vh - 250px)' }}
                 id="outlined-basic"
                 placeholder='Enter your question here'
                 variant="outlined"
                 size={'small'}
                 value={question}
+                multiline
                 style={{ width: '100%' }}
                 onChange={(e) => setQuestion(e.target.value)}
               />

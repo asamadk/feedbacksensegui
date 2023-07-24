@@ -1,14 +1,14 @@
 import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
-import { getColorsFromTheme } from '../Utils/FeedbackUtils';
+import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
 
 function DateSelectorDisplay(props: any) {
 
   const [colors, setColors] = useState<any>();
   const [textColor, setTextColor] = useState('');
   const [position, setPosition] = useState('absolute');
-  const [date,setDate] = useState<string>('');
+  const [date, setDate] = useState<string>('');
   const isSmallScreen = useMediaQuery('(max-width: 600px)');
 
   useEffect(() => {
@@ -44,31 +44,35 @@ function DateSelectorDisplay(props: any) {
     backgroundColor: colors?.shade,
     color: colors?.primaryColor,
     margin: 'auto'
-}
+  }
 
   return (
     <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} >
-      <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
-      <input
-        type='date'
+      <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center' }} >
+      <Box marginTop={'10px'} sx={{ overflowY: 'scroll',overflowWrap : 'break-word' }} >
+        <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
+        <input
+          type='date'
           value={date}
           style={inputStyleCSS}
           placeholder='Type your answer here...'
           onChange={(e) => setDate(e.target.value)}
         />
-      <Box marginTop={'20px'} >
-        <Button 
-          onClick={next}
-          style={{
-            width: 'fit-content',
-            backgroundColor: colors?.primaryColor,
-            color: textColor
-          }} 
-          variant="contained" 
+        <Box marginTop={'20px'} >
+          <Button
+            onClick={next}
+            style={{
+              width: 'fit-content',
+              backgroundColor: colors?.primaryColor,
+              color: textColor
+            }}
+            variant="contained"
           >
             {'NEXT'}
           </Button>
+        </Box>
       </Box>
+    </Box>
     </Box>
   )
 }

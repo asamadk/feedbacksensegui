@@ -20,7 +20,6 @@ function OrgSettings(props : any) {
     const [tabset, setTabset] = React.useState(parseInt(props.tabset))
 
     useEffect(() => {
-        console.log("🚀 ~ file: OrgSettings.tsx:23 ~ useEffect ~ props.tabset:", props.tabset)
         changeTabSet(props.tabset);
     },[props.tabset]);
 
@@ -44,7 +43,7 @@ function OrgSettings(props : any) {
     return (
         <Box sx={LayoutStyles.settingLayoutStyle} >
             <Box display={'flex'} sx={{ textAlign: 'start' }} >
-                <IconButton color='warning' onClick={handleBackButtonClick} >
+                <IconButton color='info' onClick={handleBackButtonClick} >
                     <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
                 </IconButton>
                 <Typography 

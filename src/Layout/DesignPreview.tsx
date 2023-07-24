@@ -64,10 +64,10 @@ function DesignPreview() {
                         aria-label="device"
                         sx={{ marginTop: '5px' }}
                     >
-                        <ToggleButton color='warning' value="laptop" aria-label="laptop">
+                        <ToggleButton color='info' value="laptop" aria-label="laptop">
                             <LaptopIcon sx={{ color: '#f1f1f1' }} />
                         </ToggleButton>
-                        <ToggleButton color='warning' value="phone" aria-label="phone">
+                        <ToggleButton color='info' value="phone" aria-label="phone">
                             <PhoneAndroidIcon sx={{ color: '#f1f1f1' }} />
                         </ToggleButton>
                     </ToggleButtonGroup>

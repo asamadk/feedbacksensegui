@@ -1,7 +1,7 @@
 import { Box, Menu, MenuItem, ThemeProvider, Typography, createTheme } from '@mui/material'
 import axios from 'axios'
 import React, { useRef } from 'react'
-import { disableSurvey, enableSurvey, getShareSurveyLink, shareSurvey } from '../Utils/Endpoints'
+import { disableSurvey, duplicateSurveyAPI, enableSurvey, getShareSurveyLink, shareSurvey } from '../Utils/Endpoints'
 import Notification from '../Utils/Notification'
 import CustomAlert from './CustomAlert'
 import FSLoader from './FSLoader'
@@ -35,7 +35,7 @@ function SingleSurveyAction(props: any) {
             } catch (error: any) {
                 setLoading(false);
                 snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-                if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                     handleLogout();
                 }
             }
@@ -55,7 +55,7 @@ function SingleSurveyAction(props: any) {
             } catch (error: any) {
                 setLoading(false);
                 snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-                if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+                if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                     handleLogout();
                 }
             }
@@ -70,6 +70,32 @@ function SingleSurveyAction(props: any) {
         props.close();
     }
 
+    const handleDuplicateSurvey = async () => {
+        const surveyData = props?.survey;
+        const surveyId: string = surveyData.id;
+        console.log("🚀 ~ file: SingleSurveyAction.tsx:76 ~ handleDuplicateSurvey ~ surveyId:", surveyId);
+        if (surveyId == null || surveyId.length < 1) {
+            snackbarRef?.current?.show('Something went wrong.', 'error');
+            return;
+        }
+        try {
+            setLoading(true);
+            const {data} = await axios.post(duplicateSurveyAPI(surveyId),{},{withCredentials : true});
+            setLoading(false);
+            if (data.statusCode !== 200) {
+                snackbarRef?.current?.show(data.message, 'error');
+                return;
+            }
+            snackbarRef?.current?.show(data.message, 'success');
+            props.updateSurveyList();
+        } catch (error : any) {
+            setLoading(false);
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+                handleLogout();
+            }
+        }
+    }
 
     return (
         <>
@@ -87,14 +113,14 @@ function SingleSurveyAction(props: any) {
                 </MenuItem>
                 <MenuItem onClick={handleShareSurvey}>
                     Share
-                </MenuItem>
-                <MenuItem sx={{ cursor: 'not-allowed' }} >
+                </MenuItem >
+                <MenuItem onClick={handleDuplicateSurvey} >
                     Duplicate
                 </MenuItem>
                 <MenuItem onClick={props.changeFolder}>
                     Move to folder
                 </MenuItem>
-                <MenuItem sx={{color : 'red'}} onClick={() => props.delete(props?.survey?.id)}>
+                <MenuItem sx={{ color: 'red' }} onClick={() => props.delete(props?.survey?.id)}>
                     Delete
                 </MenuItem>
             </Menu>
