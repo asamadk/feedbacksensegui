@@ -103,6 +103,7 @@ function CreateSurvey(props: any) {
     const compConfMap = new Map<string, object>();
     flowMap?.nodes?.forEach((node) => {
       const compConfig = FeedbackUtils.getComponentConfigFromNode(node);
+      compConfig.existing = true;
       const compUiId = node?.id;
       compConfMap.set(compUiId, compConfig);
     });
@@ -126,15 +127,29 @@ function CreateSurvey(props: any) {
       return;
     }
     const validatedComp = FeedbackUtils.validateFlowComponent(JSON.parse(data), parseInt(componentId));
-    if (validatedComp !== null) {
+    if (validatedComp != null) {
       snackbarRef?.current?.show(validatedComp, 'error');
       return;
+    }
+    const tempComponentData :any = tempMap.get(comUiId);
+    const isComponentExisting : boolean | null = tempComponentData?.existing;
+    if(isComponentExisting === true){
+      const tempData = JSON.parse(data);
+      tempData.existing = true;
+      data = JSON.stringify(tempData);
+    }else{
+      const tempData = JSON.parse(data);
+      tempData.existing = false;
+      data = JSON.stringify(tempData);
     }
     tempMap?.set(comUiId, JSON.parse(data));
     setComponentConfig(tempMap);
     setOpenEditModal(false);
     snackbarRef?.current?.show('Saved.', 'success');
-    checkWorkflow(true);
+    //If changes are done in new component then we do not check to delete survey responses.
+    if(isComponentExisting === true){
+      checkWorkflow(true);
+    }
     makeGlobalWorkflowDirty(true);
   }
 
@@ -267,8 +282,11 @@ function CreateSurvey(props: any) {
     setShowSurveyName(false);
   }
 
-  const handleCloseEditName = () => {
+  const handleCloseEditName = (rerender : boolean) => {
     setShowSurveyName(true);
+    if(rerender === true){
+      getSingleSurvey();
+    }
   }
 
   const handleSaveNameClick = async () => {
@@ -284,7 +302,7 @@ function CreateSurvey(props: any) {
         return;
       }
       snackbarRef?.current?.show(data?.message, 'success');
-      handleCloseEditName();
+      handleCloseEditName(false);
     } catch (error: any) {
       setLoading(false);
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
@@ -384,7 +402,7 @@ function CreateSurvey(props: any) {
           }
           {
             showSurveyName === false &&
-            <IconButton onClick={handleCloseEditName} size='small' sx={iconStyle} >
+            <IconButton onClick={() => handleCloseEditName(true)} size='small' sx={iconStyle} >
               <CloseIcon sx={{ color: '#f1f1f1' }} />
             </IconButton>
           }

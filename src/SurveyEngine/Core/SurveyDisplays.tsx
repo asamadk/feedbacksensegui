@@ -115,6 +115,7 @@ function SurveyDisplays() {
                             compId={currentSurvey?.data?.compId}
                             data={currentPageData}
                             next={next}
+                            uiId={currentSurvey?.data?.uId}
                             surveyId={surveyId}
                         />
                     </Box>

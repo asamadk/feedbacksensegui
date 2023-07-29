@@ -60,6 +60,7 @@ function DynamicComponentDisplay(props: any) {
         try {
             const userDetails = getSurveyUserInformation();
             let tempResponse = {
+                uiId : props.uiId,
                 id: props.compId,
                 data: data,
                 compData: props.data,
