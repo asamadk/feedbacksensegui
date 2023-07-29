@@ -31,9 +31,9 @@ const mainTextStyle = {
 function DynamicCompOverallRes(props: any) {
 
   const snackbarRef: any = useRef(null);
-  const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
   const [overAllComponentData, setOverAllComponentData] = useState<any>({});
+  const [idMap,setIdMap] = useState<any>({});
 
   useEffect(() => {
     fetchOverAllComponentData();
@@ -48,11 +48,12 @@ function DynamicCompOverallRes(props: any) {
         snackbarRef?.current?.show(data?.message, 'error');
         return;
       }
-      setOverAllComponentData(data?.data);
+      setIdMap(data?.data?.idMap);
+      setOverAllComponentData(data?.data?.info);
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       setLoading(false);
-      if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
         handleLogout();
       }
     }
@@ -62,12 +63,11 @@ function DynamicCompOverallRes(props: any) {
     <Box>
       {
         Object.keys(overAllComponentData).map(key => {
-          return(
-            <ComponentOverAllResponse id={parseInt(key)} data={overAllComponentData[key]} />
+          return (
+            <ComponentOverAllResponse idMap={idMap} id={key} data={overAllComponentData[key]} />
           )
         })
       }
-      {/* <ComponentOverAllResponse id={8} /> */}
       <FSLoader show={loading} />
       <Notification ref={snackbarRef} />
     </Box>
@@ -81,8 +81,9 @@ const subContainerStyle = {
 }
 
 type propsType = {
-  id: number,
-  data : any
+  id: string,
+  data: any,
+  idMap :any
 }
 
 function ComponentOverAllResponse(props: propsType) {
@@ -90,12 +91,12 @@ function ComponentOverAllResponse(props: propsType) {
     <Box sx={mainContainer} >
       <Box sx={subContainerStyle} >
         <Box sx={{ marginTop: '10px', marginLeft: '10px' }} >
-          <DynamicComponentIcon id={props.id} />
+          <DynamicComponentIcon id={props.idMap[props?.id]} />
         </Box>
-        <Typography sx={mainTextStyle}>{getComponentNameById(props?.id)}</Typography>
+        <Typography sx={mainTextStyle}>{getComponentNameById(props.idMap[props?.id])}</Typography>
       </Box>
       <Divider sx={{ borderTop: '1px #454545 solid', marginBottom: '20px' }} />
-      <DynamicOverallCharts id={props.id} data={props.data}/>
+      <DynamicOverallCharts id={props.idMap[props?.id]} data={props.data} />
     </Box>
   )
 }
