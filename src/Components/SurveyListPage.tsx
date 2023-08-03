@@ -228,7 +228,7 @@ function SurveyListPage() {
         <>
             <div style={surveyPageMainContainer} >
                 <div style={{ display: 'flex', width: '15%', flexDirection: 'column', borderRight: '1px #454545 solid', justifyContent: 'space-between', padding: '10px 30px' }} >
-                    <div style={{ width: '100%', overflowY: 'scroll' }} >
+                    <div style={{ width: '100%', overflowY: 'scroll', paddingBottom: '20px' }} >
                         <div style={allSurveyFolder} className="all-folders-data" onClick={handleAllFolderClick} >
                             <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >All Surveys</Typography>
                         </div>
