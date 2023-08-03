@@ -289,7 +289,7 @@ function SurveysPanel(props: any) {
                                     })}
                                 </Select>
                             </Box>
-                            <Box>
+                            <Box marginTop={'9px'} >
                                 <CssTextField
                                     onChange={handleSearch}
                                     value={searchText}
