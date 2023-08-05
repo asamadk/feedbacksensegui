@@ -407,15 +407,17 @@ function CreateSurvey(props: any) {
             </IconButton>
           }
         </Box>
-        <Button
-          endIcon={surveyDetail?.is_published === true ? <CloseIcon /> : <DoneIcon />}
-          onClick={handleDisableEnableSurvey}
-          style={{ width: '110px' }}
-          sx={ButtonStyles.containedButton}
-          variant="contained"
-        >
-          {surveyDetail?.is_published === true ? 'Disable' : 'Enable'}
-        </Button>
+        <Box display={'flex'} >
+          <Button
+            endIcon={surveyDetail?.is_published === true ? <CloseIcon /> : <DoneIcon />}
+            onClick={handleDisableEnableSurvey}
+            style={{ width: '110px' }}
+            sx={ButtonStyles.containedButton}
+            variant="contained"
+          >
+            {surveyDetail?.is_published === true ? 'Disable' : 'Enable'}
+          </Button>
+        </Box>
       </Box>
       <Box display={'flex'} >
         <Box width={isWorkflowPublished === true ? '100%' : '77%'} >
