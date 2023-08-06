@@ -36,13 +36,13 @@ function Login() {
                 <Box 
                     display={'flex'}
                     flexDirection={'column'}
-                    // justifyContent={'center'}
+                    justifyContent={'center'}
                     height={'calc(100vh - 100px)'}
                     overflow={'hidden'}  
                     padding={'20px 40px'} 
                     sx={{backgroundColor : '#1A1A1A'}} 
                 >
-                    <img style={{ width: '150px',margin : '0 auto' }} alt='Banner' src='/logofeedback.png' ></img>
+                    {/* <img style={{ width: '150px',margin : '0 auto' }} alt='Banner' src='/logofeedback.png' ></img> */}
                     <Typography 
                         variant='h2'
                         fontWeight={600}
