@@ -64,6 +64,8 @@ function CreateSurvey(props: any) {
   const [isWorkflowPublished, setIsWorkflowPublished] = useState(false);
   const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
   const workflowCheck = useSelector((state: any) => state.workflowCheck);
+  const workflowDirty = useSelector((state: any) => state.workflowDirty)
+    
   const dispatch = useDispatch<any>();
 
   useEffect(() => {
@@ -193,6 +195,9 @@ function CreateSurvey(props: any) {
 
   const handleSuccessGenericButtonClick = () => {
     setShowGenericModal(false);
+    // if(genericModalObj?.type === 'workflow-check'){
+    //   return;
+    // }
     if (genericModalObj?.type !== 'save_survey') {
       return;
     }
@@ -215,6 +220,31 @@ function CreateSurvey(props: any) {
     }
     saveFlow(saveFlowTemp, true);
   }
+
+  // const handlePublishWithoutSaving = async () => {
+  //   try {
+  //     setLoading(true);
+  //     let { data } = await axios.post(enableSurvey(surveyDetail?.id), {}, { withCredentials: true });
+  //     setLoading(false);
+  //     if (data.statusCode !== 200) {
+  //       snackbarRef?.current?.show(data.message, 'error');
+  //       return;
+  //     }
+  //     snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
+  //     if (data.success === true) {
+  //       const tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
+  //       tempSurveyDetail.is_published = true;
+  //       setIsWorkflowPublished(true);
+  //       setSurveyDetail(tempSurveyDetail);
+  //     }
+  //   } catch (error: any) {
+  //     setLoading(false);
+  //     snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+  //     if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+  //       FeedbackUtils.handleLogout();
+  //     }
+  //   }
+  // }
 
   const handleSaveFlow = async (flow: any) => {
     try {
@@ -342,6 +372,21 @@ function CreateSurvey(props: any) {
       }
     } else {
       try {
+        const isWorkflowDirty = workflowDirty[currentWorkflowId];
+        if (isWorkflowDirty === true) {
+          setShowGenericModal(true);
+            let genDeleteObj: genericModalData = {
+                header: 'You have some unsaved changes in workflow',
+                warning: 'Please save those changes if you want them to reflect in survey.',
+                successButtonText: 'Close',
+                cancelButtonText: 'Cancel',
+                description: 'The changes will be removed permanently.',
+                type: 'workflow-check',
+                data: {}
+            }
+            setGenericModalObj(genDeleteObj);
+            return;
+        }
         setLoading(true);
         let { data } = await axios.post(enableSurvey(surveyDetail?.id), {}, { withCredentials: true });
         setLoading(false);
