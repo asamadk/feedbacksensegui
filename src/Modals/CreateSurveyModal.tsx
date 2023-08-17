@@ -1,4 +1,4 @@
-import React, {  useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import * as ModalStyles from '../Styles/ModalStyle'
 import * as ButtonStyles from '../Styles/ButtonStyle'
@@ -9,7 +9,10 @@ import { Box } from '@mui/system'
 import axios from 'axios';
 import Notification from '../Utils/Notification';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import { handleLogout } from '../Utils/FeedbackUtils';
+import { useNavigate } from 'react-router';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -35,6 +38,7 @@ const CssTextField = styled(TextField)({
 function CreateSurveyModal(props: any) {
 
     const snackbarRef: any = useRef(null);
+    const [showScratch, setShowScratch] = useState(false);
     const [loading, setLoading] = React.useState(false);
     const [surveyName, setSurveyName] = useState<string>('');
 
@@ -53,6 +57,7 @@ function CreateSurveyModal(props: any) {
             }
             snackbarRef?.current?.show(data.message, 'success');
             setSurveyName('');
+            setShowScratch(false);
             props.surveys.push(data.data);
             props.update();
         } catch (error: any) {
@@ -66,8 +71,13 @@ function CreateSurveyModal(props: any) {
 
     const handleClose = () => {
         setSurveyName('');
+        setShowScratch(false);
         setLoading(false);
         props.close();
+    }
+
+    const selectCreateFromScratch = () => {
+        setShowScratch(true);
     }
 
     return (
@@ -80,67 +90,52 @@ function CreateSurveyModal(props: any) {
             >
                 <Box sx={ModalStyles.modalStyle}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
-                        <Typography fontFamily={'Apercu Pro'}  id="modal-modal-title" variant="h5" component="h2">
+                        <Typography fontFamily={'Apercu Pro'} id="modal-modal-title" variant="h5" component="h2">
                             Create a new survey
                         </Typography>
-                        <IconButton color='info' sx={{ color: '#f1f1f1' }} >
+                        <IconButton sx={{ color: '#f1f1f1' }} >
                             <CloseIcon onClick={handleClose} />
                         </IconButton>
                     </Box>
 
-                    <Box sx={{ marginTop: '20px', marginBottom: '20px' }}>
-                        <CssTextField
-                            size='small'
-                            sx={{ input: { color: 'white' } }}
-                            id="outlined-basic"
-                            placeholder='Survey name'
-                            value={surveyName}
-                            variant="outlined"
-                            style={{ width: '100%' }}
-                            onChange={(e: any) => setSurveyName(e.target.value)}
-                        />
-                        {/* {
-                            surveyTypes.map(surveyType => {
-                                return (
-                                    <Box
-                                        onClick={() => handleSurveyTypeClick(surveyType.id)}
-                                        onMouseEnter={highlightTextBackGround}
-                                        onMouseLeave={unhighlightTextBackGround}
-                                        sx={typeContainer}
-                                        key={surveyType.id}
-                                    >
-                                        <Box display={'flex'} >
-                                            <PollIcon />
-                                            <Typography fontFamily={'Apercu Pro'} sx={{ paddingLeft: '5px' }} >{surveyType.label}</Typography>
-                                        </Box>
-                                        <Typography fontFamily={'Apercu Pro'} sx={{ fontSize: '14px' }} color={'#454545'} >Run targeted surveys on websites or inside products</Typography>
-                                        {selectedSurveyType === surveyType.id && <Box><CheckCircleIcon sx={{ color: '#006DFF', position: 'absolute', right: '20px' }} /></Box>}
-                                    </Box>
-                                )
-                            })
-                        } */}
+                    {
+                        showScratch === true ?
+                            <>
+                                <Box sx={{ marginTop: '20px', marginBottom: '20px' }}>
+                                    <CssTextField
+                                        size='small'
+                                        sx={{ input: { color: 'white' } }}
+                                        id="outlined-basic"
+                                        placeholder='Survey name'
+                                        value={surveyName}
+                                        variant="outlined"
+                                        style={{ width: '100%' }}
+                                        onChange={(e: any) => setSurveyName(e.target.value)}
+                                    />
+                                </Box>
 
-                    </Box>
-
-                    <Box sx={ModalStyles.modalButtonContainerStyle} >
-                        <Button
-                            style={{ width: 'fit-content', marginRight: '15px' }}
-                            sx={ButtonStyles.outlinedButton}
-                            onClick={handleClose}
-                            variant="contained">
-                            Cancel
-                        </Button>
-                        <LoadingButton
-                            style={{ width: 'fit-content' }}
-                            onClick={handleCreateSurvey}
-                            loading={loading}
-                            sx={ButtonStyles.containedButton}
-                            variant="contained">
-                            <span>
-                                Create
-                            </span>
-                        </LoadingButton>
-                    </Box>
+                                <Box sx={ModalStyles.modalButtonContainerStyle} >
+                                    <Button
+                                        style={{ width: 'fit-content', marginRight: '15px' }}
+                                        sx={ButtonStyles.outlinedButton}
+                                        onClick={handleClose}
+                                        variant="contained">
+                                        Cancel
+                                    </Button>
+                                    <LoadingButton
+                                        style={{ width: 'fit-content' }}
+                                        onClick={handleCreateSurvey}
+                                        loading={loading}
+                                        sx={ButtonStyles.containedButton}
+                                        variant="contained">
+                                        <span>
+                                            Create
+                                        </span>
+                                    </LoadingButton>
+                                </Box>
+                            </> :
+                            <CreateSurveyDefaultScreen create={selectCreateFromScratch} />
+                    }
                 </Box>
             </Modal>
             <Notification ref={snackbarRef} />
@@ -149,3 +144,25 @@ function CreateSurveyModal(props: any) {
 }
 
 export default CreateSurveyModal
+
+function CreateSurveyDefaultScreen(props: any) {
+
+    const navigate = useNavigate();
+
+    return (
+        <Box marginTop={'20px'} marginBottom={'20px'} display={'flex'} justifyContent={'space-around'}>
+            <Box>
+                <IconButton onClick={props.create} sx={{ borderRadius: '10px', marginBottom: '10px' }}>
+                    <ReceiptIcon sx={{ fontSize: '150px' }} />
+                </IconButton>
+                <Typography textAlign={'center'} >Start from scratch</Typography>
+            </Box>
+            <Box>
+                <IconButton onClick={() => navigate('/template')} sx={{ borderRadius: '10px', marginBottom: '10px' }}>
+                    <PostAddIcon sx={{ fontSize: '150px' }} />
+                </IconButton>
+                <Typography textAlign={'center'} >Start from template</Typography>
+            </Box>
+        </Box>
+    )
+}

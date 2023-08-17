@@ -2,6 +2,7 @@ import { Box, Button, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, 
 import React, { useEffect, useState } from 'react'
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
 import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
+import { TEMPLATE_KEY } from '../Utils/Constants';
 
 function SingleAnswerSelectionDisplay(props: any) {
 
@@ -90,7 +91,7 @@ function SingleAnswerSelectionDisplay(props: any) {
     }
 
     return (
-        <Box sx={getSurveyDisplayContainerStyle(position)} style={{ width: '95%' }} textAlign={'center'}>
+        <Box sx={getSurveyDisplayContainerStyle(position,props.surveyId === TEMPLATE_KEY)} style={{ width: '95%' }} textAlign={'center'}>
             <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll',overflowWrap : 'break-word' }} >
                 <Box marginTop={'10px'} sx={{overflowY : 'scroll'}} >
                     <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={400} >{props?.data?.question}</Typography>

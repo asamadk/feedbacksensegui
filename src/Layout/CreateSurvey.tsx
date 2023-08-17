@@ -283,7 +283,7 @@ function CreateSurvey(props: any) {
   const saveFlow = async (flow: any, deleteResponse: boolean) => {
     try {
       if (isWorkflowPublished === true) {
-        snackbarRef?.current?.show('Cannot save enabled surveys.', 'error');
+        snackbarRef?.current?.show('Cannot save published surveys.', 'error');
         return;
       }
       setLoading(true);
@@ -460,7 +460,7 @@ function CreateSurvey(props: any) {
             sx={ButtonStyles.containedButton}
             variant="contained"
           >
-            {surveyDetail?.is_published === true ? 'Disable' : 'Enable'}
+            {surveyDetail?.is_published === true ? 'Unpublish' : 'Publish'}
           </Button>
         </Box>
       </Box>

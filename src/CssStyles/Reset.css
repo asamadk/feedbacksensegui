@@ -1,0 +1,31 @@
+/* reset.css */
+/* Apply CSS reset to the entire component and its children */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Reset body and container styles to avoid unwanted effects */
+  body,
+  html {
+    height: auto;
+    width: auto;
+    overflow: visible;
+  }
+  
+  /* Add any additional reset styles you need */
+  
+  /* Example: Reset link styles */
+  a {
+    text-decoration: none;
+  }
+  
+  /* Example: Reset list styles */
+  ul,
+  ol {
+    list-style: none;
+  }
+  
+  /* Add more reset styles as needed */
+  

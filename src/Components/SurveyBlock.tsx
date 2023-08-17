@@ -187,7 +187,6 @@ function SurveyBlock(props: any) {
                         onClick={handleOpenSurvey}
                         onMouseEnter={handleShowEditTitle}
                         onMouseLeave={handleHideEditTitle}
-                        color='info'
                         sx={{ color: '#f1f1f1', width: '50px' }}
                     >
                         <EditIcon />
@@ -197,7 +196,6 @@ function SurveyBlock(props: any) {
                     </Box>
                     <IconButton id="basic-button"
                         onClick={handleClick}
-                        color='info'
                         sx={{ color: '#f1f1f1', width: '50px' }}
                     >
                         <MoreHorizIcon />

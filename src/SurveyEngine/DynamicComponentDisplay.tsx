@@ -12,7 +12,7 @@ import TextAnswerDisplay from './TextAnswerDisplay'
 import WelcomeDisplay from './WelcomeDisplay'
 import axios from 'axios';
 import { saveSurveyResponseDb } from '../Utils/Endpoints';
-import { LIVE_SURVEY_USER_ID } from '../Utils/Constants';
+import { LIVE_SURVEY_USER_ID, TEMPLATE_KEY } from '../Utils/Constants';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material';
 
@@ -45,6 +45,10 @@ function DynamicComponentDisplay(props: any) {
 
     const next = (data: any) => {
         if (props.surveyId == null) {
+            return;
+        }
+        if(props.surveyId === TEMPLATE_KEY){
+            props.next();
             return;
         }
         const isValidated = validateSurveyDisplay(data, props.compId);

@@ -112,7 +112,6 @@ function SurveyDetailHeader(props: any) {
                 <IconButton
                     onClick={handleRouteToHome}
                     sx={makeIconsUp}
-                    color='info'
                 >
                     <CloseIcon sx={{ color: '#f1f1f1' }} />
                 </IconButton>

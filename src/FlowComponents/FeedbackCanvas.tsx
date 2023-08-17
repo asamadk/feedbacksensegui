@@ -100,7 +100,7 @@ function FeedbackCanvas(props: any) {
 
     const deleteNode = (id: string) => {
         if(props?.published === true){
-            snackbarRef?.current?.show('Cannot delete enabled surveys.', 'error');
+            snackbarRef?.current?.show('Cannot delete publish surveys.', 'error');
             return;
         }
         if (id != null) {

@@ -1,7 +1,7 @@
-import { Box, Menu, MenuItem, ThemeProvider, Typography, createTheme } from '@mui/material'
+import {  Menu, MenuItem } from '@mui/material'
 import axios from 'axios'
 import React, { useRef } from 'react'
-import { disableSurvey, duplicateSurveyAPI, enableSurvey, getShareSurveyLink, shareSurvey } from '../Utils/Endpoints'
+import { disableSurvey, duplicateSurveyAPI, enableSurvey, getShareSurveyLink } from '../Utils/Endpoints'
 import Notification from '../Utils/Notification'
 import CustomAlert from './CustomAlert'
 import FSLoader from './FSLoader'
@@ -109,7 +109,7 @@ function SingleSurveyAction(props: any) {
                 }}
             >
                 <MenuItem onClick={handleDisableEnableSurvey}>
-                    {props?.survey?.is_published === 1 ? 'Disable' : 'Enable'}
+                    {props?.survey?.is_published === 1 ? 'Unpublish' : 'Publish'}
                 </MenuItem>
                 <MenuItem onClick={handleShareSurvey}>
                     Share

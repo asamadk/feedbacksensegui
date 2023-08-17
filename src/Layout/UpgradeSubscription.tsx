@@ -165,7 +165,7 @@ export default function UpgradeSubscription() {
     return (
         <ThemeProvider theme={darkTheme} >
             <Grid container sx={{ overflow: 'scroll', py: { xs: 2, sm: 3 }, padding: '20px', height: 'calc(100vh - 55px)', }}>
-                <IconButton onClick={handleBackButtonClick} color='info'  >
+                <IconButton onClick={handleBackButtonClick} >
                     <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
                 </IconButton>
                 <Grid item xs={12} sx={{ mx: 'auto', maxWidth: '2xl', textAlign: { xs: 'center' } }}>

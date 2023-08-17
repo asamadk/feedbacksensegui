@@ -94,7 +94,7 @@ function CreateFolder(props: any) {
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Create folder
                         </Typography>
-                        <IconButton color='info' sx={{ color: '#f1f1f1' }} >
+                        <IconButton sx={{ color: '#f1f1f1' }} >
                             <CloseIcon onClick={handleClose} />
                         </IconButton>
                     </Box>

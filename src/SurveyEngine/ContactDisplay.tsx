@@ -2,6 +2,7 @@ import { Box, Button, TextField, Typography, useMediaQuery } from '@mui/material
 import { useEffect, useRef, useState } from 'react';
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
 import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
+import { TEMPLATE_KEY } from '../Utils/Constants';
 
 function ContactDisplay(props: any) {
 
@@ -71,7 +72,7 @@ function ContactDisplay(props: any) {
     }
 
     return (
-        <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} overflow={'scroll'} >
+        <Box sx={getSurveyDisplayContainerStyle(position,props.surveyId === TEMPLATE_KEY)} textAlign={'center'} overflow={'scroll'} >
             <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center' }} >
                 <Box marginTop={'10px'} sx={{ overflowY: 'scroll',overflowWrap : 'break-word' }} >
                     <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>

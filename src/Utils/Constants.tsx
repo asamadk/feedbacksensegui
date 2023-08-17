@@ -7,6 +7,9 @@ export const LIVE_SURVEY_USER_ID = 'survey-user';
 
 export const USER_UNAUTH_TEXT = 'User is not authorized';
 
+export const ALL_TEMPLATE_KEY = 'All Templates';
+export const TEMPLATE_KEY = 'Templates';
+
 export const getBackgrounds = () :any[] => {
     let count = 0;
     return [
