@@ -4,6 +4,7 @@ import * as ButtonStyles from '../../Styles/ButtonStyle';
 const bodyStyle: {} = {
     backgroundColor: '#1E1E1E',
     height: '100vh',
+    textAlign : 'start'
 }
 
 const subContainerStyle = {

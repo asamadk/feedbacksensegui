@@ -46,6 +46,8 @@ function SingleAnswerSelectionModal(props: any) {
         setQuestionText(compConfig?.question || '');
         if (compConfig?.answerList != null) {
             setAnswerChoiceList([...compConfig?.answerList]);
+        }else{
+            setAnswerChoiceList(['']);
         }
         if(props.theme != null){
             const currentTheme = JSON.parse(props.theme);
@@ -158,10 +160,10 @@ function SingleAnswerSelectionModal(props: any) {
                                 }
 
                                 <Typography
-                                    sx={{ color: '#454545', fontSize: '13px', textDecoration: 'underline', cursor: 'pointer', marginTop: '20px' }}
+                                    sx={{ color: '#006dff', fontSize: '13px', cursor: 'pointer', marginTop: '20px' }}
                                     onClick={handleAddAnswerChoice}
                                 >
-                                    Add an answer choice
+                                    Add an answer choice +
                                 </Typography>
 
                             </Box>

@@ -51,7 +51,7 @@ function DateSelectorDisplay(props: any) {
     <Box sx={getSurveyDisplayContainerStyle(position,props.surveyId === TEMPLATE_KEY)} textAlign={'center'} >
       <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center' }} >
       <Box marginTop={'10px'} sx={{ overflowY: 'scroll',overflowWrap : 'break-word' }} >
-        <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
+        <Typography marginBottom={'20px'} fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
         <input
           type='date'
           value={date}

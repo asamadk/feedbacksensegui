@@ -76,7 +76,7 @@ function ContactDisplay(props: any) {
             <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center' }} >
                 <Box marginTop={'10px'} sx={{ overflowY: 'scroll',overflowWrap : 'break-word' }} >
                     <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
-                    <Box marginTop={'10px'} >
+                    <Box marginTop={'20px'} >
                         {
                             props?.data?.answerList?.map((answer: string,index :number) => {
                                 return (

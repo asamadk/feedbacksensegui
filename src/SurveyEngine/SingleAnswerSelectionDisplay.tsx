@@ -91,10 +91,10 @@ function SingleAnswerSelectionDisplay(props: any) {
     }
 
     return (
-        <Box sx={getSurveyDisplayContainerStyle(position,props.surveyId === TEMPLATE_KEY)} style={{ width: '95%' }} textAlign={'center'}>
+        <Box sx={getSurveyDisplayContainerStyle(position,props.surveyId === TEMPLATE_KEY)} textAlign={'center'}>
             <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll',overflowWrap : 'break-word' }} >
                 <Box marginTop={'10px'} sx={{overflowY : 'scroll'}} >
-                    <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={400} >{props?.data?.question}</Typography>
+                    <Typography marginBottom={'20px'} fontSize={'26px'} color={colors?.primaryColor} fontWeight={400} >{props?.data?.question}</Typography>
                     {
                         props.type === 'single' ?
                             <RadioGroup name="radio-buttons-group" >

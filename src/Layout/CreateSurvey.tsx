@@ -221,31 +221,6 @@ function CreateSurvey(props: any) {
     saveFlow(saveFlowTemp, true);
   }
 
-  // const handlePublishWithoutSaving = async () => {
-  //   try {
-  //     setLoading(true);
-  //     let { data } = await axios.post(enableSurvey(surveyDetail?.id), {}, { withCredentials: true });
-  //     setLoading(false);
-  //     if (data.statusCode !== 200) {
-  //       snackbarRef?.current?.show(data.message, 'error');
-  //       return;
-  //     }
-  //     snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
-  //     if (data.success === true) {
-  //       const tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
-  //       tempSurveyDetail.is_published = true;
-  //       setIsWorkflowPublished(true);
-  //       setSurveyDetail(tempSurveyDetail);
-  //     }
-  //   } catch (error: any) {
-  //     setLoading(false);
-  //     snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-  //     if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-  //       FeedbackUtils.handleLogout();
-  //     }
-  //   }
-  // }
-
   const handleSaveFlow = async (flow: any) => {
     try {
       const isSurveyAlreadyFilled = await checkSurveyResponse();
@@ -343,9 +318,7 @@ function CreateSurvey(props: any) {
   }
 
   const handleFlowNameChange = (e: any) => {
-    let tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
-    tempSurveyDetail.name = e.target.value;
-    setSurveyDetail(tempSurveyDetail);
+    setSurveyDetail((prevDetail: any) => ({ ...prevDetail, name: e.target.value }));
   }
 
   const handleDisableEnableSurvey = async (e: any) => {
@@ -359,10 +332,8 @@ function CreateSurvey(props: any) {
           return;
         }
         snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
-        const tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
-        tempSurveyDetail.is_published = false;
+        setSurveyDetail((prevDetail: any) => ({ ...prevDetail, is_published: true }));
         setIsWorkflowPublished(false);
-        setSurveyDetail(tempSurveyDetail);
       } catch (error: any) {
         setLoading(false);
         snackbarRef?.current?.show(error?.response?.data?.message, 'error');
@@ -396,10 +367,8 @@ function CreateSurvey(props: any) {
         }
         snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
         if (data.success === true) {
-          const tempSurveyDetail = JSON.parse(JSON.stringify(surveyDetail));
-          tempSurveyDetail.is_published = true;
+          setSurveyDetail((prevDetail: any) => ({ ...prevDetail, is_published: true }));
           setIsWorkflowPublished(true);
-          setSurveyDetail(tempSurveyDetail);
         }
       } catch (error: any) {
         setLoading(false);

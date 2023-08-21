@@ -2,7 +2,7 @@ import { Box, Button, Fab } from '@mui/material'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import 'reactflow/dist/style.css';
 import * as ButtonStyle from '../Styles/ButtonStyle'
-import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow, NodeToolbar, useReactFlow, MiniMap } from 'reactflow'
+import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow, NodeToolbar, useReactFlow, MiniMap, StraightEdge, StepEdge, SmoothStepEdge } from 'reactflow'
 import CustomNode from './CustomNode';
 import SaveIcon from '@mui/icons-material/Save';
 import Notification from '../Utils/Notification';
@@ -153,6 +153,11 @@ function FeedbackCanvas(props: any) {
 
     const onConnect = useCallback((params: any) => setEdges((eds: any) => addEdge(params, eds)), []);
 
+    const edgeTypes = {
+        default: StraightEdge,
+      };
+      
+
     return (
         <Box sx={{ backgroundColor: '#1E1E1E' }} height={'calc(100vh - 128px)'} ref={reactFlowWrapper} >
             <ReactFlow
@@ -164,6 +169,7 @@ function FeedbackCanvas(props: any) {
                 onConnect={onConnect}
                 onInit={setReactFlowInstance}
                 minZoom={0.5}
+                edgeTypes={edgeTypes}
                 maxZoom={3}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
