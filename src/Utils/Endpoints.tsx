@@ -158,3 +158,15 @@ export const cancelSubScription = () => {
 export const duplicateSurveyAPI = (surveyId : string) => {
     return `${BASE_URL}/survey/duplicate/${surveyId}`;
 }
+
+export const getTemplatesAPI = () => {
+    return `${BASE_URL}/template/list`
+}
+
+export const getTemplatesDisplayAPI = (templateId : string) => {
+    return `${BASE_URL}/template/test-display/${templateId}`
+}
+
+export const createSurveyFromTemplateAPI = (templateId : string) => {
+    return `${BASE_URL}/template/create-survey/${templateId}`
+}

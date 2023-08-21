@@ -6,6 +6,7 @@ import Popover from '../Components/Popover';
 import NotificationModal from '../Components/NotificationModal';
 import SettingsModal from '../Components/SettingsModal';
 import { useNavigate } from 'react-router';
+import { Box } from '@mui/material';
 
 const iconStyle: {} = {
     color: '#f1f1f1',
@@ -58,7 +59,7 @@ function MainHeaderIcons() {
     const handleShowProfileTitle = () => setShowProfileTitle(true);
     const handleHideProfileTitle = () => setShowProfileTitle(false);
     return (
-        <>
+        <Box>
             <AccountCircleIcon
                 onMouseEnter={handleShowProfileTitle}
                 onMouseLeave={handleHideProfileTitle}
@@ -85,7 +86,7 @@ function MainHeaderIcons() {
 
             {showNotificationModal && <NotificationModal />}
             {showSettingsModal && <SettingsModal close={handleSettingsClose} />}
-        </>
+        </Box>
     )
 }
 

@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material'
 import GoogleButton from 'react-google-button';
 import * as Endpoint from '../Utils/Endpoints'
 import Logo from '../Components/Logo';
+import GoogleSignInButton from '../Components/GoogleSignInButton';
 
 function Login() {
 
@@ -29,40 +30,40 @@ function Login() {
                     <span style={{ color: '#006DFF', marginLeft: '5px' }} >Feedback</span>Sense
                 </Typography>
                 <Box sx={{ width: 'fit-content', margin: 'auto', paddingTop: '20px' }} >
-                    <GoogleButton type='light' onClick={googleAuth} style={{ borderRadius: '6px' }} />
+                    <GoogleSignInButton onClick={googleAuth} />
                 </Box>
             </Box>
             <Box width={'50%'} >
-                <Box 
+                <Box
                     display={'flex'}
                     flexDirection={'column'}
                     justifyContent={'center'}
                     height={'calc(100vh - 100px)'}
-                    overflow={'hidden'}  
-                    padding={'20px 40px'} 
-                    sx={{backgroundColor : '#1A1A1A'}} 
+                    overflow={'hidden'}
+                    padding={'20px 40px'}
+                    sx={{ backgroundColor: '#1A1A1A' }}
                 >
                     {/* <img style={{ width: '150px',margin : '0 auto' }} alt='Banner' src='/logofeedback.png' ></img> */}
-                    <Typography 
+                    <Typography
                         variant='h2'
                         fontWeight={600}
-                        textAlign={'start'} 
-                        color={'#f1f1f1'} 
+                        textAlign={'start'}
+                        color={'#f1f1f1'}
                     >
                         Welcome, Start your journey with us
                     </Typography>
-                    <Typography 
-                        variant='h4' 
-                        textAlign={'start'} 
-                        color={'#006dff'} 
+                    <Typography
+                        variant='h4'
+                        textAlign={'start'}
+                        color={'#006dff'}
                     >
                         We make sense of your feedback
                     </Typography>
                     <Typography
-                        color={'#808080'} 
-                        textAlign={'start'} 
+                        color={'#808080'}
+                        textAlign={'start'}
                     >
-                    Our application is designed to cut through the noise, decipher the important messages, and present you with clear, actionable insight
+                        Our application is designed to cut through the noise, decipher the important messages, and present you with clear, actionable insight
                     </Typography>
                 </Box>
             </Box>

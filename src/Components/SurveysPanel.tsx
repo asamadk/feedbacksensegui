@@ -13,6 +13,7 @@ import axios from 'axios';
 import CreateSurveyModal from '../Modals/CreateSurveyModal';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import { useNavigate } from 'react-router';
 import Logo from './Logo';
 
@@ -61,8 +62,8 @@ function SurveysPanel(props: any) {
 
     useEffect(() => {
         getSurveys();
-        getUserList();
-        getSurveyTypes();
+        // getUserList();
+        // getSurveyTypes();
     }, [forceRerender]);
 
     useEffect(() => {
@@ -267,27 +268,35 @@ function SurveysPanel(props: any) {
                             <Box>
                                 <Button
                                     sx={ButtonStyles.containedButton}
-                                    style={{ width: 'fit-content', marginBottom: '15px', marginRight: '30px', textTransform: 'none' }}
+                                    style={{ width: 'fit-content', marginBottom: '15px', marginRight: '10px', textTransform: 'none' }}
                                     startIcon={<AddIcon />}
                                     variant='contained'
                                     onClick={handleCreateNewSurvey}
                                 >
                                     Create new survey
                                 </Button>
-                                <Select onChange={handleUserChange} sx={InputStyles.muiSelectStyle} value={selectedUser} size='small' >
+                                <Button
+                                    onClick={() => navigate('/template')}
+                                    sx={ButtonStyles.outlinedButton}
+                                    startIcon={<PostAddIcon />}
+                                    style={{ width: 'fit-content', marginBottom: '15px', marginRight: '30px', textTransform: 'none' }}
+                                >
+                                    Survey Templates
+                                </Button>
+                                {/* <Select onChange={handleUserChange} sx={InputStyles.muiSelectStyle} value={selectedUser} size='small' >
                                     {userList.map(user => {
                                         return (
                                             <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>
                                         );
                                     })}
-                                </Select>
-                                <Select onChange={handleSurveyTypeChange} value={selectedSurveyType} style={{ marginLeft: '10px' }} sx={InputStyles.muiSelectStyle} size='small' >
+                                </Select> */}
+                                {/* <Select onChange={handleSurveyTypeChange} value={selectedSurveyType} style={{ marginLeft: '10px' }} sx={InputStyles.muiSelectStyle} size='small' >
                                     {surveyTypes.map(type => {
                                         return (
                                             <MenuItem key={type.id} value={type.id}>{type.label}</MenuItem>
                                         )
                                     })}
-                                </Select>
+                                </Select> */}
                             </Box>
                             <Box marginTop={'9px'} >
                                 <CssTextField

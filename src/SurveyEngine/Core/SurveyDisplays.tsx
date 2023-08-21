@@ -92,6 +92,10 @@ function SurveyDisplays() {
                 setCurrentSurvey(nextPage);
                 populateComponentData(nextPage);
                 setCurrentPage(currentPage + 1);
+                setLoading(true);
+                setTimeout(() => {
+                    setLoading(false);
+                },100);
                 setShowEnd(false);
             }
         } else {

@@ -46,6 +46,8 @@ function SingleAnswerSelectionModal(props: any) {
         setQuestionText(compConfig?.question || '');
         if (compConfig?.answerList != null) {
             setAnswerChoiceList([...compConfig?.answerList]);
+        }else{
+            setAnswerChoiceList(['']);
         }
         if(props.theme != null){
             const currentTheme = JSON.parse(props.theme);
@@ -114,7 +116,7 @@ function SingleAnswerSelectionModal(props: any) {
                             <Typography id="modal-modal-title" variant="h5" component="h2">
                                 {props.header}
                             </Typography>
-                            <IconButton color='info' sx={{ color: '#f1f1f1' }} >
+                            <IconButton sx={{ color: '#f1f1f1' }} >
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
@@ -158,10 +160,10 @@ function SingleAnswerSelectionModal(props: any) {
                                 }
 
                                 <Typography
-                                    sx={{ color: '#454545', fontSize: '13px', textDecoration: 'underline', cursor: 'pointer', marginTop: '20px' }}
+                                    sx={{ color: '#006dff', fontSize: '13px', cursor: 'pointer', marginTop: '20px' }}
                                     onClick={handleAddAnswerChoice}
                                 >
-                                    Add an answer choice
+                                    Add an answer choice +
                                 </Typography>
 
                             </Box>

@@ -12,7 +12,7 @@ import TextAnswerDisplay from './TextAnswerDisplay'
 import WelcomeDisplay from './WelcomeDisplay'
 import axios from 'axios';
 import { saveSurveyResponseDb } from '../Utils/Endpoints';
-import { LIVE_SURVEY_USER_ID } from '../Utils/Constants';
+import { LIVE_SURVEY_USER_ID, TEMPLATE_KEY } from '../Utils/Constants';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material';
 
@@ -45,6 +45,10 @@ function DynamicComponentDisplay(props: any) {
 
     const next = (data: any) => {
         if (props.surveyId == null) {
+            return;
+        }
+        if(props.surveyId === TEMPLATE_KEY){
+            props.next();
             return;
         }
         const isValidated = validateSurveyDisplay(data, props.compId);
@@ -88,12 +92,14 @@ function DynamicComponentDisplay(props: any) {
         <>
             <ThemeProvider theme={lightTheme} >
                 {props.compId === 1 && <WelcomeDisplay
+                    key={props.uiId}
                     data={props.data}
                     theme={surveyColors}
                     surveyId={props.surveyId}
                     next={next}
                 />}
                 {props.compId === 3 && <SingleAnswerSelectionDisplay
+                    key={props.uiId}
                     data={props.data}
                     type={'single'}
                     theme={surveyColors}
@@ -101,6 +107,7 @@ function DynamicComponentDisplay(props: any) {
                     next={next}
                 />}
                 {props.compId === 4 && <SingleAnswerSelectionDisplay
+                    key={props.uiId}
                     type={'multiple'}
                     data={props.data}
                     theme={surveyColors}
@@ -108,36 +115,42 @@ function DynamicComponentDisplay(props: any) {
                     next={next}
                 />}
                 {props.compId === 5 && <TextAnswerDisplay
+                    key={props.uiId}
                     data={props.data}
                     theme={surveyColors}
                     surveyId={props.surveyId}
                     next={next}
                 />}
                 {props.compId === 6 && <SmileyScaleDisplay
+                    key={props.uiId}
                     data={props.data}
                     surveyId={props.surveyId}
                     theme={surveyColors}
                     next={next}
                 />}
                 {props.compId === 7 && <RatingScaleDisplay
+                    key={props.uiId}
                     data={props.data}
                     surveyId={props.surveyId}
                     next={next}
                     theme={surveyColors}
                 />}
                 {props.compId === 8 && <NPSDisplay
+                    key={props.uiId}
                     data={props.data}
                     surveyId={props.surveyId}
                     next={next}
                     theme={surveyColors}
                 />}
                 {props.compId === 11 && <ContactDisplay
+                    key={props.uiId}
                     data={props.data}
                     theme={surveyColors}
                     surveyId={props.surveyId}
                     next={next}
                 />}
                 {props.compId === 13 && <DateSelectorDisplay
+                    key={props.uiId}
                     data={props.data}
                     theme={surveyColors}
                     surveyId={props.surveyId}

@@ -43,7 +43,7 @@ function OrgSettings(props : any) {
     return (
         <Box sx={LayoutStyles.settingLayoutStyle} >
             <Box display={'flex'} sx={{ textAlign: 'start' }} >
-                <IconButton color='info' onClick={handleBackButtonClick} >
+                <IconButton onClick={handleBackButtonClick} >
                     <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
                 </IconButton>
                 <Typography 

@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
 import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
+import { TEMPLATE_KEY } from '../Utils/Constants';
 
 function SmileyScaleDisplay(props: any) {
 
@@ -31,10 +32,10 @@ function SmileyScaleDisplay(props: any) {
     }
 
     return (
-        <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} padding={'15px'} >
-            <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center',overflowWrap : 'break-word' }} >
+        <Box sx={getSurveyDisplayContainerStyle(position, props.surveyId === TEMPLATE_KEY)} textAlign={'center'} padding={'15px'} >
+            <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center', overflowWrap: 'break-word' }} >
                 <Box marginTop={'10px'} sx={{ overflowY: 'scroll' }} >
-                <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
+                    <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
                     <SmileyDisplay
                         next={next}
                     />

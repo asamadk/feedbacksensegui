@@ -2,6 +2,7 @@ import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
 import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
+import { TEMPLATE_KEY } from '../Utils/Constants';
 
 function DateSelectorDisplay(props: any) {
 
@@ -47,10 +48,10 @@ function DateSelectorDisplay(props: any) {
   }
 
   return (
-    <Box sx={getSurveyDisplayContainerStyle(position)} textAlign={'center'} >
+    <Box sx={getSurveyDisplayContainerStyle(position,props.surveyId === TEMPLATE_KEY)} textAlign={'center'} >
       <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center' }} >
       <Box marginTop={'10px'} sx={{ overflowY: 'scroll',overflowWrap : 'break-word' }} >
-        <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
+        <Typography marginBottom={'20px'} fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
         <input
           type='date'
           value={date}

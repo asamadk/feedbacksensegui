@@ -19,6 +19,8 @@ import { USER_LOCAL_KEY } from './Utils/Constants';
 import SurveyDisplays from './SurveyEngine/Core/SurveyDisplays';
 import { ThemeProvider, createTheme } from '@mui/material';
 import PaymentSuccess from './Components/Stripe/PaymentSuccess';
+import TemplateLayout from './Layout/TemplateLayout';
+import TemplateDetailLayout from './Layout/TemplateDetailLayout';
 
 const globalBodyStyle = {
   backgroundColor: '#1E1E1E',
@@ -107,6 +109,14 @@ function App() {
             <Route
               path='/login'
               element={user ? <MainBody /> : <Login />}
+            />
+            <Route
+              path='/template'
+              element={user ? <TemplateLayout /> : <Login />}
+            />
+            <Route
+              path='/template/details/:templateId'
+              element={user ? <TemplateDetailLayout /> : <Login />}
             />
             <Route
               path='/org/general'
