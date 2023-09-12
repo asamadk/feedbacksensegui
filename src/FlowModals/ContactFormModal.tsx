@@ -4,8 +4,9 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, Select, Slider, styled, TextField, Typography } from '@mui/material';
-import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfigFromUiId, modalTabList } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
+import CustomTabSet from '../Components/CustomTabSet';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -32,18 +33,19 @@ function ContactFormModal(props: any) {
 
     useEffect(() => {
         populateCompConfig();
-    }, [props.uiId]);
+    }, [props.open]);
 
     const [background, setBackground] = useState<any>();
     const [answerChoiceList, setAnswerChoiceList] = useState<string[]>(['']);
     const [questionText, setQuestionText] = useState('');
+    const [value, setValue] = React.useState(0);
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
         setQuestionText(compConfig?.question || '');
         if (compConfig?.answerList != null) {
             setAnswerChoiceList([...compConfig?.answerList]);
-        }else{
+        } else {
             setAnswerChoiceList(['']);
         }
         if (props.theme != null) {
@@ -94,6 +96,10 @@ function ContactFormModal(props: any) {
         setAnswerChoiceList(newArr);
     }
 
+    const handleTabChange = (newValue: number) => {
+        setValue(newValue);
+    };
+
     return (
         <>
             <Modal
@@ -113,53 +119,52 @@ function ContactFormModal(props: any) {
                             </IconButton>
                         </Box>
 
-                        <Box sx={ModalStyles.modalBodyContainerStyle} >
-                            <Box>
-                                <CssTextField
-                                    value={questionText}
-                                    onChange={(e) => setQuestionText(e.target.value)}
-                                    sx={{ input: { color: 'white' }, maxHeight: '50vh' }}
-                                    id="outlined-basic"
-                                    placeholder='Enter your question here'
-                                    variant="outlined"
-                                    size={'small'}
-                                    multiline
-                                    style={{ width: '100%' }}
-                                />
+                        <Box>
+                            <Box sx={ModalStyles.modalBodyContainerStyle} >
+                                <Box>
+                                    <CssTextField
+                                        value={questionText}
+                                        onChange={(e) => setQuestionText(e.target.value)}
+                                        sx={{ input: { color: 'white' }, maxHeight: '50vh' }}
+                                        id="outlined-basic"
+                                        placeholder='Enter your question here'
+                                        variant="outlined"
+                                        size={'small'}
+                                        multiline
+                                        style={{ width: '100%' }}
+                                    />
+                                </Box>
                             </Box>
-                        </Box>
-
-                        <Box marginTop={'20px'} >
-                            <Typography sx={{ color: '#f1f1f1' }} >Answer choices</Typography>
-                            {
-                                answerChoiceList.map((answer, index) => {
-                                    return (
-                                        <Box key={index} display={'flex'} >
-                                            <CssTextField
-                                                onChange={(e) => handleAnswerChange(e, index)}
-                                                value={answer}
-                                                sx={{ input: { color: 'white' }, marginTop: '10px' }}
-                                                id="outlined-basic"
-                                                placeholder='Field label'
-                                                variant="outlined"
-                                                size={'small'}
-                                                style={{ width: '100%' }}
-                                            />
-                                            <IconButton onClick={() => handleTextFieldRemove(index)} >
-                                                <RemoveCircleIcon sx={{ color: '#f1f1f1' }} />
-                                            </IconButton>
-                                        </Box>
-                                    )
-                                })
-                            }
-
-                            <Typography
-                                sx={{ color: '#006dff', fontSize: '13px', cursor: 'pointer', marginTop: '20px' }}
-                                onClick={handleAddAnswerChoice}
-                            >
-                                Add an answer choice +
-                            </Typography>
-
+                            <Box marginTop={'20px'} >
+                                <Typography sx={{ color: '#f1f1f1' }} >Answer choices</Typography>
+                                {
+                                    answerChoiceList.map((answer, index) => {
+                                        return (
+                                            <Box key={index} display={'flex'} >
+                                                <CssTextField
+                                                    onChange={(e) => handleAnswerChange(e, index)}
+                                                    value={answer}
+                                                    sx={{ input: { color: 'white' }, marginTop: '10px' }}
+                                                    id="outlined-basic"
+                                                    placeholder='Field label'
+                                                    variant="outlined"
+                                                    size={'small'}
+                                                    style={{ width: '100%' }}
+                                                />
+                                                <IconButton onClick={() => handleTextFieldRemove(index)} >
+                                                    <RemoveCircleIcon sx={{ color: '#f1f1f1' }} />
+                                                </IconButton>
+                                            </Box>
+                                        )
+                                    })
+                                }
+                                <Typography
+                                    sx={{ color: '#006dff', fontSize: '13px', cursor: 'pointer', marginTop: '20px' }}
+                                    onClick={handleAddAnswerChoice}
+                                >
+                                    Add an answer choice +
+                                </Typography>
+                            </Box>
                         </Box>
                         <Box sx={ModalStyles.modalButtonContainerStyle} marginBottom={'50px'}>
                             <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>

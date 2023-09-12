@@ -6,9 +6,9 @@ import FSLoader from '../../Components/FSLoader';
 import { getLiveSurveyData } from '../../Utils/Endpoints';
 import DynamicComponentDisplay from '../DynamicComponentDisplay';
 import { v4 as uuidv4, v4 } from "uuid";
-
 import { LIVE_SURVEY_USER_ID } from '../../Utils/Constants';
 import SurveyEndPage from './SurveyEndPage';
+import { CoreUtils } from '../CoreUtils/CoreUtils';
 
 function SurveyDisplays() {
 
@@ -16,10 +16,9 @@ function SurveyDisplays() {
 
     let initialized = false;
     const [loading, setLoading] = React.useState(false);
-    const [currentPage, setCurrentPage] = useState(0);
     const [surveyTheme, setSurveyTheme] = useState<any>();
     const [background, setBackground] = useState<any>();
-    const [surveyDiplays, setSurveyDisplays] = useState<any[]>([]);
+    const [surveyDisplays, setSurveyDisplays] = useState<any[]>([]);
     const [currentSurvey, setCurrentSurvey] = useState<any>();
     const [currentPageData, setCurrentPagedata] = useState<any>();
     const [displayMssg, setDisplayMssg] = useState({
@@ -41,7 +40,7 @@ function SurveyDisplays() {
             const url = getLiveSurveyData(surveyId);
             const { data } = await axios.get(url, { withCredentials: true });
             setLoading(false);
-            const isAlreadyTaken = checkIfSurveyAlreadytaken();
+            const isAlreadyTaken = checkIfSurveyAlreadyTaken();
             if (isAlreadyTaken === true) {
                 return;
             }
@@ -50,12 +49,12 @@ function SurveyDisplays() {
                 type: data?.success === true ? 'success' : 'error'
             });
             const resData = data.data;
-            setCurrentPage(0);
             setSurveyDisplays(resData.nodes);
             setSurveyTheme(resData.theme);
             setBackground(resData.background)
-            setCurrentSurvey(resData.nodes[0]);
-            populateComponentData(resData.nodes[0]);
+            const initialNode = CoreUtils.getInitialNode(resData.nodes);
+            setCurrentSurvey(initialNode);
+            populateComponentData(initialNode);
             localStorage.setItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`, v4());
         } catch (error: any) {
             setLoading(false);
@@ -66,7 +65,7 @@ function SurveyDisplays() {
         }
     }
 
-    const checkIfSurveyAlreadytaken = (): boolean => {
+    const checkIfSurveyAlreadyTaken = (): boolean => {
         if (localStorage.getItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`) != null) {
             setDisplayMssg({
                 message: 'You have already taken this survey.',
@@ -85,21 +84,17 @@ function SurveyDisplays() {
         }
     }
 
-    const next = () => {
-        if (currentPage < surveyDiplays?.length - 1) {
-            const nextPage = surveyDiplays[currentPage + 1];
-            if (nextPage != null) {
+    const next = (answerData : any) => {
+        if (currentSurvey) {
+            const nextNodeId = CoreUtils.determineNextNode(currentSurvey, answerData);
+            const nextPage = surveyDisplays.find(node => node.uId === nextNodeId);
+            if (nextPage) {
                 setCurrentSurvey(nextPage);
                 populateComponentData(nextPage);
-                setCurrentPage(currentPage + 1);
-                setLoading(true);
-                setTimeout(() => {
-                    setLoading(false);
-                },100);
                 setShowEnd(false);
+            } else {
+                setShowEnd(true);
             }
-        } else {
-            setShowEnd(true);
         }
     }
 
@@ -111,7 +106,7 @@ function SurveyDisplays() {
                 </Box>
             }
             {displayMssg.type !== 'error' && showEnd === false &&
-                <Box className={background?.value} sx={{ height: '100vh', backgroundColor: '#ffffff',overflowY : 'scroll' }} >
+                <Box className={background?.value} sx={{ height: '100vh', backgroundColor: '#ffffff', overflowY: 'scroll' }} >
                     <FSLoader show={loading} />
                     <Box>
                         <DynamicComponentDisplay

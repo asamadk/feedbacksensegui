@@ -4,9 +4,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import * as ModalStyles from '../Styles/ModalStyle'
 import React, { useEffect, useRef, useState } from 'react'
-import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
+import { getCompConfigFromUiId, modalTabList } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import Notification from '../Utils/Notification';
+import CustomTabSet from '../Components/CustomTabSet';
+import CreateLogic from '../Components/Logic/CreateLogic';
+import { logicType } from '../Utils/types';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -32,11 +35,16 @@ const CssTextField = styled(TextField)({
 function SingleAnswerSelectionModal(props: any) {
 
     const snackbarRef: any = useRef(null);
+    const createLogicRef = useRef<any>(null); // Create a ref for the child component
+
+    const [logicData, setLogicData] = useState<logicType[]>([]);
+
 
     useEffect(() => {
         populateCompConfig();
-    }, [props.uiId]);
+    }, [props.open]);
 
+    const [value, setValue] = React.useState(0);
     const [background, setBackground] = useState<any>();
     const [answerChoiceList, setAnswerChoiceList] = useState<string[]>(['']);
     const [questionText, setQuestionText] = useState('');
@@ -44,28 +52,30 @@ function SingleAnswerSelectionModal(props: any) {
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
         setQuestionText(compConfig?.question || '');
+        setLogicData(compConfig?.logic || []);
         if (compConfig?.answerList != null) {
             setAnswerChoiceList([...compConfig?.answerList]);
-        }else{
+        } else {
             setAnswerChoiceList(['']);
         }
-        if(props.theme != null){
+        if (props.theme != null) {
             const currentTheme = JSON.parse(props.theme);
             setBackground(currentTheme.background);
         }
     }
 
     const handleSave = () => {
+        const logicData = createLogicRef?.current?.fetchData(); // Call fetchData() in child
         let obj = {
             question: questionText,
             answerList: answerChoiceList,
-            type: props.type
+            type: props.type,
+            logic: logicData
         }
 
         if (verifyComponent() === false) {
             return;
         }
-
         props.save(JSON.stringify(obj));
     }
 
@@ -102,6 +112,10 @@ function SingleAnswerSelectionModal(props: any) {
         setAnswerChoiceList(newArr);
     }
 
+    const handleTabChange = (newValue: number) => {
+        setValue(newValue);
+    };
+
     return (
         <>
             <Modal
@@ -120,56 +134,66 @@ function SingleAnswerSelectionModal(props: any) {
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
+                        <CustomTabSet
+                            tabsetList={modalTabList}
+                            change={(value: number) => handleTabChange(value)}
+                            index={value}
+                        ></CustomTabSet>
+                        {
+                            value === 0 &&
+                            <Box sx={ModalStyles.modalBodyContainerStyle} >
+                                <Typography sx={{ color: '#f1f1f1' }} >Question</Typography>
+                                <CssTextField
+                                    value={questionText}
+                                    onChange={(e) => setQuestionText(e.target.value)}
+                                    sx={{ input: { color: 'white' }, marginTop: '10px' }}
+                                    id="outlined-basic"
+                                    placeholder='Enter your question here'
+                                    variant="outlined"
+                                    size={'small'}
+                                    style={{ width: '100%' }}
+                                    multiline
+                                />
 
-                        <Box sx={ModalStyles.modalBodyContainerStyle} >
-
-                            <CssTextField
-                                value={questionText}
-                                onChange={(e) => setQuestionText(e.target.value)}
-                                sx={{ input: { color: 'white' } }}
-                                id="outlined-basic"
-                                placeholder='Enter your question here'
-                                variant="outlined"
-                                size={'small'}
-                                style={{ width: '100%' }}
-                                multiline
-                            />
-
-                            <Box marginTop={'20px'} >
-                                <Typography sx={{ color: '#f1f1f1' }} >Answer choices</Typography>
-                                {
-                                    answerChoiceList?.map((answer, index) => {
-                                        return (
-                                            <Box key={index} display={'flex'} >
-                                                <CssTextField
-                                                    onChange={(e) => handleAnswerChange(e, index)}
-                                                    value={answer}
-                                                    sx={{ input: { color: 'white' }, marginTop: '10px' }}
-                                                    id="outlined-basic"
-                                                    placeholder='Enter your answer here'
-                                                    variant="outlined"
-                                                    size={'small'}
-                                                    style={{ width: '100%' }}
-                                                />
-                                                <IconButton onClick={() => handleTextFieldRemove(index)} >
-                                                    <RemoveCircleIcon sx={{ color: '#f1f1f1' }} />
-                                                </IconButton>
-                                            </Box>
-                                        )
-                                    })
-                                }
-
-                                <Typography
-                                    sx={{ color: '#006dff', fontSize: '13px', cursor: 'pointer', marginTop: '20px' }}
-                                    onClick={handleAddAnswerChoice}
-                                >
-                                    Add an answer choice +
-                                </Typography>
-
+                                <Box marginTop={'20px'} >
+                                    <Typography sx={{ color: '#f1f1f1' }} >Answer choices</Typography>
+                                    {
+                                        answerChoiceList?.map((answer, index) => {
+                                            return (
+                                                <Box key={index} display={'flex'} >
+                                                    <CssTextField
+                                                        onChange={(e) => handleAnswerChange(e, index)}
+                                                        value={answer}
+                                                        sx={{ input: { color: 'white' }, marginTop: '10px' }}
+                                                        id="outlined-basic"
+                                                        placeholder='Enter your answer here'
+                                                        variant="outlined"
+                                                        size={'small'}
+                                                        style={{ width: '100%' }}
+                                                    />
+                                                    <IconButton onClick={() => handleTextFieldRemove(index)} >
+                                                        <RemoveCircleIcon sx={{ color: '#f1f1f1' }} />
+                                                    </IconButton>
+                                                </Box>
+                                            )
+                                        })
+                                    }
+                                    <Typography
+                                        sx={{ color: '#006dff', fontSize: '13px', cursor: 'pointer', marginTop: '20px' }}
+                                        onClick={handleAddAnswerChoice}
+                                    >
+                                        Add an answer choice +
+                                    </Typography>
+                                </Box>
                             </Box>
-
-                        </Box>
-
+                        }
+                        <CreateLogic
+                            open={value === 1}
+                            type={props.compId}
+                            values={answerChoiceList}
+                            data={logicData}
+                            ref={createLogicRef}
+                        />
                         <Box sx={ModalStyles.modalButtonContainerStyle} >
                             <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
                             <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>

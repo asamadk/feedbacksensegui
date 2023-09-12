@@ -34,8 +34,15 @@ export const modalButtonContainerStyle = {
 }
 
 export const modalBodyContainerStyle = {
-    marginTop : '10px',
-    marginBotton : '10px',
+    marginTop : '30px',
+    marginBottom : '10px',
     maxHeight : '600px',
+    overflowY : 'scroll'
+}
+
+export const modalLogicStyle = {
+    marginTop : '30px',
+    marginBottom : '10px',
+    maxHeight : 'calc(100vh - 230px)',
     overflowY : 'scroll'
 }

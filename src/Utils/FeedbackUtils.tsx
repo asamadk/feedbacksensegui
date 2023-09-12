@@ -1,6 +1,7 @@
 import { Dayjs } from "dayjs";
 import { SURVEY_LOCAL_KEY, USER_LOCAL_KEY } from "./Constants";
 import { logout } from "./Endpoints";
+import { logicType } from "./types";
 
 export const getUserId = (): string => {
     let userStr = localStorage.getItem(USER_LOCAL_KEY);
@@ -79,10 +80,13 @@ export const validateSurveyDisplay = (data: any, componentId: number | undefined
 }
 
 export const validateFlowComponent = (data: any, componentId: number | undefined): string | null => {
+    if(data == null){
+        return 'Empty config.';
+    }
     switch (componentId) {
         case 1:
             if (data.welcomeText == null || data.welcomeText?.length < 1) {
-                return 'Please fill in all required fields before saving.';
+                return 'Important: Don\'t forget to fill the required fields.'
             }
 
             if (data.buttonText == null || data.buttonText?.length < 1) {
@@ -93,7 +97,7 @@ export const validateFlowComponent = (data: any, componentId: number | undefined
         case 4:
         case 11:
             if (data.question == null || data.question?.length < 1) {
-                return 'Question field cannot be empty.'
+                return 'Important: Don\'t forget to fill in the question field.'
             }
             if (data.answerList == null) {
                 return 'Component should have at least one answer choice.'
@@ -101,7 +105,7 @@ export const validateFlowComponent = (data: any, componentId: number | undefined
                 const comChoiceList: string[] = data.answerList;
                 for (const choice of comChoiceList) {
                     if (choice == null || choice.length < 1) {
-                        return 'Answer fields cannot be empty.'
+                        return 'Important: Please fill in the answer fields.'
                     }
                 }
             }
@@ -109,29 +113,84 @@ export const validateFlowComponent = (data: any, componentId: number | undefined
         case 5:
         case 13:
             if (data.question == null || data.question?.length < 1) {
-                return 'Question field cannot be empty.'
+                return 'Important: Don\'t forget to fill in the question field.'
             }
             break;
         case 6:
         case 7:
         case 8:
             if (data.question == null || data.question?.length < 1) {
-                return 'Question field cannot be empty.'
+                return 'Important: Don\'t forget to fill in the question field.'
             }
 
-            if (data.leftText == null || data.leftText?.length < 1) {
-                return 'Left text field cannot be empty.'
-            }
+            // if (data.leftText == null || data.leftText?.length < 1) {
+            //     return 'Left text field cannot be empty.'
+            // }
 
-            if (data.rightText == null || data.rightText?.length < 1) {
-                return 'Right text field cannot be empty.'
-            }
+            // if (data.rightText == null || data.rightText?.length < 1) {
+            //     return 'Right text field cannot be empty.'
+            // }
             break;
+        case 14:
+            return 'Important : Please update the selector node.';
         default:
             break;
     }
     return null;
 }
+
+export const validateComponentLogic = (data: any, componentId: number | undefined): string | null => {
+    if(data == null){
+        return 'Empty config.';
+    }
+    const logics: logicType[] = data?.logic;
+    const answerList: string[] = data?.answerList;
+    const range: number = data?.range;
+    if (logics == null || logics.length < 1) { return null }
+    for (let i = 0; i < logics.length; i++) {
+        const logic = logics[i];
+        switch (componentId) {
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 13:
+                {
+                    if (!logic.operator) {
+                        return 'Essential: Please specify the logic operator.';
+                    }
+                    if (!logic.path) {
+                        return 'Essential: Please define the logic path.';
+                    }
+                    if (componentId === 3 || componentId === 4) {
+                        if ((!logic.value || !answerList?.includes(logic.value)) && !answerNotNeededSet.has(logic.operator)) {
+                            return 'Essential: Specify a valid logic value from the available answers.';
+                        }
+                    }
+
+                    if (componentId === 5 || componentId === 6 || componentId === 8) {
+                        if ((!logic.value) && !answerNotNeededSet.has(logic.operator)) {
+                            return 'Essential: Specify a valid logic value from the available answers.';
+                        }
+                    }
+                    if (componentId === 7) {
+                        if ((!logic.value || parseInt(logic.value) > range) && !answerNotNeededSet.has(logic.operator)) {
+                            return 'Essential: Specify a valid logic value from the available answers.';
+                        }
+                    }
+                    break;
+                }
+        }
+    }
+    return null;
+}
+
+export const answerNotNeededSet = new Set<string>([
+    'has any value', 'includes all of the following', 'answer has any value', 'question is answered',
+    'question is not answered'
+]);
 
 export const getColorsFromTheme = (theme: any) => {
     if (theme == null) {
@@ -233,8 +292,13 @@ export const handleLogout = () => {
     );
 }
 
-export const validateEmail = (email : string) => {
+export const validateEmail = (email: string) => {
     return email.match(
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
-  };
+};
+
+export const modalTabList = [
+    { id: 1, name: 'GENERAL' },
+    { id: 2, name: 'LOGIC' },
+];

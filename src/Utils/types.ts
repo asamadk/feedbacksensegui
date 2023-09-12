@@ -1,3 +1,6 @@
+import { CSSProperties } from "react"
+import { EdgeMarkerType } from "reactflow"
+
 export type genericModalData = {
     header : string,
     description : string,
@@ -33,3 +36,31 @@ export type authUser = {
     updated_at : Date,
     emailVerified : boolean
 }
+
+export type logicType = {
+    id : string,
+    operator : string,
+    value : string,
+    path : string,
+    showValue ?: boolean
+}
+
+export type DefaultEdgeOptions = {
+	type?: string;
+	labelStyle?: CSSProperties;
+	labelShowBg?: boolean;
+	labelBgStyle?: CSSProperties;
+	labelBgPadding?: [number, number];
+	labelBgBorderRadius?: number;
+	style?: CSSProperties;
+	animated?: boolean;
+	hidden?: boolean;
+	deletable?: boolean;
+	className?: string;
+	selected?: boolean;
+	markerStart?: EdgeMarkerType;
+	markerEnd?: EdgeMarkerType;
+	zIndex?: number;
+	ariaLabel?: string;
+	interactionWidth?: number;
+};

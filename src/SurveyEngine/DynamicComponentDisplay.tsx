@@ -48,7 +48,7 @@ function DynamicComponentDisplay(props: any) {
             return;
         }
         if(props.surveyId === TEMPLATE_KEY){
-            props.next();
+            props.next(data);
             return;
         }
         const isValidated = validateSurveyDisplay(data, props.compId);
@@ -57,7 +57,7 @@ function DynamicComponentDisplay(props: any) {
             return;
         }
         saveSurveyResponse(data);
-        props.next();
+        props.next(data);
     }
 
     const saveSurveyResponse = (data: any): void => {

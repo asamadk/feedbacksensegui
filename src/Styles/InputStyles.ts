@@ -1,9 +1,13 @@
 export const muiSelectStyle = {
-    color: '#f1f1f1',
+    color: 'white',
+    // '&.MuiOutlinedInput-root:hover': {
+    //     border : '1px #006DFF solid',
+    // },
     '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#454545'
+        borderColor: '#454545',
+        // border : '1px #006DFF solid',
     },
     '& .MuiSvgIcon-root': {
-        color: 'white'
+        color: '#006dff'
     }
 }
