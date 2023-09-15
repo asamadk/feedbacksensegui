@@ -16,9 +16,6 @@ import { componentList } from '../Utils/Constants';
 import CustomConnectionLine from './CustomConnectionLine';
 import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
 
-let id = 0;
-const getId = () => `dndnode_${id++}${new Date().getMilliseconds()}`;
-
 const elevateEdgesOnSelect = true;
 const proOptions = { hideAttribution: true };
 

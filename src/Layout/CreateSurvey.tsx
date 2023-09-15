@@ -1,6 +1,7 @@
 import { Box, Button, IconButton, styled, TextField, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import FeedbackCanvas from '../FlowComponents/FeedbackCanvas'
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import 'reactflow/dist/style.css';
 import FeedbackComponentList from '../FlowComponents/FeedbackComponentList'
 import * as ButtonStyles from '../Styles/ButtonStyle'
@@ -9,7 +10,7 @@ import * as Endpoints from '../Utils/Endpoints';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import DynamicComponentModal from '../FlowComponents/DynamicComponentModal';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import axios from 'axios';
 import Notification from '../Utils/Notification';
@@ -47,7 +48,9 @@ const CssTextField = styled(TextField)({
 });
 
 function CreateSurvey(props: any) {
+
   const snackbarRef: any = useRef(null);
+  const navigate = useNavigate();
   const childRef = useRef<any>(null);
 
   const { surveyId } = useParams();
@@ -358,17 +361,7 @@ function CreateSurvey(props: any) {
       try {
         const isWorkflowDirty = workflowDirty[currentWorkflowId];
         if (isWorkflowDirty === true) {
-          setShowGenericModal(true);
-          let genDeleteObj: genericModalData = {
-            header: 'You have some unsaved changes in workflow',
-            warning: 'Please save those changes if you want them to reflect in survey.',
-            successButtonText: 'Close',
-            cancelButtonText: 'Cancel',
-            description: 'The changes will be removed permanently.',
-            type: 'workflow-check',
-            data: {}
-          }
-          setGenericModalObj(genDeleteObj);
+          showUnsavedWarning();
           return;
         }
         setLoading(true);
@@ -391,6 +384,30 @@ function CreateSurvey(props: any) {
         }
       }
     }
+  }
+
+  const showPreview = () => {
+    const isWorkflowDirty = workflowDirty[currentWorkflowId];
+    if (isWorkflowDirty === true) {
+      showUnsavedWarning();
+      return;
+    }
+    //! TODO validate workflow first so that we show correct preview
+    window.open(`/share/survey/preview/${currentWorkflowId}`)
+  }
+
+  const showUnsavedWarning = () => {
+    setShowGenericModal(true);
+    let genDeleteObj: genericModalData = {
+      header: 'You have some unsaved changes in workflow',
+      warning: 'Please save those changes if you want them to reflect in survey.',
+      successButtonText: 'Close',
+      cancelButtonText: 'Cancel',
+      description: 'The changes will be removed permanently.',
+      type: 'workflow-check',
+      data: {}
+    }
+    setGenericModalObj(genDeleteObj);
   }
 
 
@@ -435,6 +452,18 @@ function CreateSurvey(props: any) {
           }
         </Box>
         <Box display={'flex'} >
+          {
+            surveyDetail?.is_published === true &&
+            <Button
+              endIcon={<VisibilityIcon />}
+              onClick={showPreview}
+              style={{ width: '110px', marginRight: '10px' }}
+              sx={ButtonStyles.outlinedButton}
+              variant="text"
+            >
+              Preview
+            </Button>
+          }
           <Button
             endIcon={surveyDetail?.is_published === true ? <CloseIcon /> : <DoneIcon />}
             onClick={handleDisableEnableSurvey}

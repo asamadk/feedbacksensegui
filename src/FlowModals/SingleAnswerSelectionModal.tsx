@@ -37,9 +37,6 @@ function SingleAnswerSelectionModal(props: any) {
     const snackbarRef: any = useRef(null);
     const createLogicRef = useRef<any>(null); // Create a ref for the child component
 
-    const [logicData, setLogicData] = useState<logicType[]>([]);
-
-
     useEffect(() => {
         populateCompConfig();
     }, [props.open]);
@@ -48,6 +45,7 @@ function SingleAnswerSelectionModal(props: any) {
     const [background, setBackground] = useState<any>();
     const [answerChoiceList, setAnswerChoiceList] = useState<string[]>(['']);
     const [questionText, setQuestionText] = useState('');
+    const [logicData, setLogicData] = useState<logicType[]>([]);
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);

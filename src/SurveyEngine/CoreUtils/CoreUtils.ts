@@ -1,6 +1,6 @@
 import {
     CONDITION_ANSWER_CONTAINS, CONDITION_ANY_VALUE, CONDITION_HAS_ANY_VALUE,
-    CONDITION_IS, CONDITION_IS_EXACTLY, CONDITION_IS_NOT, CONDITION_QUESTION_IS_ANSWERED, DEFAULT_KEY
+    CONDITION_IS, CONDITION_IS_EXACTLY, CONDITION_IS_NOT, CONDITION_QUESTION_IS_ANSWERED, DEFAULT_KEY, SMILEY_EXTREMELY_HAPPY, SMILEY_EXTREMELY_UNSATISFIED, SMILEY_HAPPY, SMILEY_NEUTRAL, SMILEY_UNSATISFIED
 } from "./CoreConstants";
 
 export class CoreUtils {
@@ -16,14 +16,20 @@ export class CoreUtils {
             return paths[0].uId;
         }
         for (let path of paths) {
-            if (this.evaluateCondition(path.condition, path.value, this.extractCurrentAnswer(answer, compId)) === true) {
+            if (this.evaluateCondition(path.condition, path.value, this.extractCurrentAnswer(answer, compId), compId) === true) {
                 return path.uId;
             }
         }
-        return null; // Or handle default path
+        return null;
     }
 
-    static evaluateCondition(condition: any, expectedAnswer: string, answer: any): boolean {
+    static evaluateCondition(condition: any, expectedAnswer: string, answer: any, compId: number): boolean {
+        if (compId === 6) {
+            answer = this.getSmileyScaleNames(parseInt(answer));
+        }
+        if (compId === 8) {
+            answer = parseInt(answer);
+        }
         if (
             condition === CONDITION_HAS_ANY_VALUE ||
             condition === CONDITION_QUESTION_IS_ANSWERED ||
@@ -77,5 +83,21 @@ export class CoreUtils {
             return data;
         }
         return null;
+    }
+
+    static getSmileyScaleNames(smileyNum: number): string {
+        console.log("🚀 ~ file: CoreUtils.ts:90 ~ CoreUtils ~ getSmileyScaleNames ~ smileyNum:", smileyNum)
+        if (smileyNum === 0) {
+            return SMILEY_EXTREMELY_UNSATISFIED
+        } else if (smileyNum === 1) {
+            return SMILEY_UNSATISFIED
+        } else if (smileyNum === 2) {
+            return SMILEY_NEUTRAL;
+        } else if (smileyNum === 3) {
+            return SMILEY_HAPPY;
+        } else if (smileyNum === 4) {
+            return SMILEY_EXTREMELY_HAPPY
+        }
+        return '';
     }
 }

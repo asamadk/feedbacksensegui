@@ -84,7 +84,7 @@ function SurveyDisplays() {
         }
     }
 
-    const next = (answerData : any) => {
+    const next = (answerData: any) => {
         if (currentSurvey) {
             const nextNodeId = CoreUtils.determineNextNode(currentSurvey, answerData);
             const nextPage = surveyDisplays.find(node => node.uId === nextNodeId);

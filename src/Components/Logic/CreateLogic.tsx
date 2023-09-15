@@ -82,7 +82,9 @@ function CreateLogic(props: propType, ref: any) {
 
     const populateData = () => {
         if (props.data != null && props.data?.length > 0) {
-            setLogicList(props.data || []);
+            setLogicList(props.data);
+        }else{
+            setLogicList([]);
         }
     }
 
