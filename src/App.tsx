@@ -174,10 +174,10 @@ function App() {
         <ThemeProvider theme={lightTheme} >
           <div>
             <Routes>
-              <Route path='/share/survey/:surveyId' element={<SurveyDisplays />} />
+              <Route path='/share/survey/:effectiveSurveyId' element={<SurveyDisplays source='live' mode='live' />} />
             </Routes>
             <Routes>
-              <Route path='/share/survey/preview/:surveyId' element={<PreviewSurveyLayout />} />
+              <Route path='/share/survey/preview/:effectiveSurveyId' element={<PreviewSurveyLayout />} />
             </Routes>
           </div>
         </ThemeProvider>

@@ -134,7 +134,7 @@ function CreateSurvey(props: any) {
       return;
     }
     const validatedComp = FeedbackUtils.validateFlowComponent(JSON.parse(data), parseInt(componentId));
-    const validatedLogic = FeedbackUtils.validateComponentLogic(JSON.parse(data), parseInt(componentId));
+    const validatedLogic = FeedbackUtils.validateComponentLogic(JSON.parse(data), null, parseInt(componentId), []);
     if (validatedComp != null) {
       snackbarRef?.current?.show(validatedComp, 'warning');
       // return;

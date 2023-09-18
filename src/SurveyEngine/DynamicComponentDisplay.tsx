@@ -17,6 +17,7 @@ import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material';
 
 function DynamicComponentDisplay(props: any) {
+
     //props.surveyId if null that mean we are in edit mode else we are live
     const snackbarRef: any = useRef(null);
     const [surveyColors, setSurveyColors] = useState<any>();
@@ -47,36 +48,14 @@ function DynamicComponentDisplay(props: any) {
         if (props.surveyId == null) {
             return;
         }
-        if(props.surveyId === TEMPLATE_KEY){
-            props.next(data);
-            return;
-        }
-        const isValidated = validateSurveyDisplay(data, props.compId);
-        if (isValidated != null) {
-            snackbarRef?.current?.show(isValidated, 'error');
-            return;
-        }
-        saveSurveyResponse(data);
-        props.next(data);
-    }
-
-    const saveSurveyResponse = (data: any): void => {
-        try {
-            const userDetails = getSurveyUserInformation();
-            let tempResponse = {
-                uiId : props.uiId,
-                id: props.compId,
-                data: data,
-                compData: props.data,
+        if (props.surveyId !== TEMPLATE_KEY && props.mode !== 'test') {
+            const isValidated = validateSurveyDisplay(data, props.compId);
+            if (isValidated != null) {
+                snackbarRef?.current?.show(isValidated, 'error');
+                return;
             }
-            axios.post(saveSurveyResponseDb(props.surveyId), {
-                data: tempResponse,
-                info: userDetails,
-                anUserId: localStorage.getItem(`${props.surveyId}_${LIVE_SURVEY_USER_ID}`)
-            }, { withCredentials: true });
-        } catch (error: any) {
-            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
         }
+        props.next(data);
     }
 
     const lightTheme = createTheme({

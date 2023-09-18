@@ -78,7 +78,7 @@ function TemplateLeftPanel(
     return (
         <Box height={'calc(100vh - 62px)'} padding={'0px 20px'} borderRight={'1px #454545 solid'} >
             <Box textAlign={'start'}>
-                <IconButton sx={{ marginTop: '10px' }} onClick={handleBackButtonClick} color='info'  >
+                <IconButton sx={{ marginTop: '10px' }} onClick={handleBackButtonClick}  >
                     <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
                 </IconButton>
             </Box>

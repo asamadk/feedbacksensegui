@@ -1,8 +1,9 @@
 import React from 'react'
+import SurveyDisplays from '../SurveyEngine/Core/SurveyDisplays'
 
 function PreviewSurveyLayout() {
   return (
-    <div>PreviewSurveyLayout</div>
+    <SurveyDisplays source='preview' mode='test' />
   )
 }
 

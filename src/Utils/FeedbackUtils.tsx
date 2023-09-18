@@ -2,6 +2,7 @@ import { Dayjs } from "dayjs";
 import { SURVEY_LOCAL_KEY, USER_LOCAL_KEY } from "./Constants";
 import { logout } from "./Endpoints";
 import { logicType } from "./types";
+import { DEFAULT_KEY } from "../SurveyEngine/CoreUtils/CoreConstants";
 
 export const getUserId = (): string => {
     let userStr = localStorage.getItem(USER_LOCAL_KEY);
@@ -80,7 +81,7 @@ export const validateSurveyDisplay = (data: any, componentId: number | undefined
 }
 
 export const validateFlowComponent = (data: any, componentId: number | undefined): string | null => {
-    if(data == null){
+    if (data == null) {
         return 'Empty config.';
     }
     switch (componentId) {
@@ -139,8 +140,8 @@ export const validateFlowComponent = (data: any, componentId: number | undefined
     return null;
 }
 
-export const validateComponentLogic = (data: any, componentId: number | undefined): string | null => {
-    if(data == null){
+export const validateComponentLogic = (data: any, uniqueId: string | null, componentId: number | undefined, edges: any[]): string | null => {
+    if (data == null) {
         return 'Empty config.';
     }
     const logics: logicType[] = data?.logic;
@@ -158,10 +159,11 @@ export const validateComponentLogic = (data: any, componentId: number | undefine
             case 8:
             case 13:
                 {
+                    const logicPath = logic.path;
                     if (!logic.operator) {
                         return 'Essential: Please specify the logic operator.';
                     }
-                    if (!logic.path) {
+                    if (!logicPath) {
                         return 'Essential: Please define the logic path.';
                     }
                     if (componentId === 3 || componentId === 4) {
@@ -178,6 +180,29 @@ export const validateComponentLogic = (data: any, componentId: number | undefine
                     if (componentId === 7) {
                         if ((!logic.value || parseInt(logic.value) > range) && !answerNotNeededSet.has(logic.operator)) {
                             return 'Essential: Specify a valid logic value from the available answers.';
+                        }
+                    }
+                    if (uniqueId != null) {
+                        let labelFound = false;
+                        let defaultLabelFound = false;
+                        for (const edge of edges) {
+                            const label = edge.label;
+                            const nodeId: string = edge.source;
+                            if (nodeId === uniqueId) {
+                                if (logicPath.length > 0 && label === logicPath) {
+                                    labelFound = true;
+                                }
+                                if (label === DEFAULT_KEY) {
+                                    defaultLabelFound = true;
+                                }
+                            }
+                        }
+                        if (labelFound === false) {
+                            return `Path : ${logicPath} not present`
+                        }
+
+                        if (defaultLabelFound === false) {
+                            return 'Path : Default not present.'
                         }
                     }
                     break;

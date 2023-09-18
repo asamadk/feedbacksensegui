@@ -3,7 +3,7 @@ import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo
 import 'reactflow/dist/style.css';
 import { v4 as uuidv4, v4 } from "uuid";
 import * as ButtonStyle from '../Styles/ButtonStyle'
-import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow, NodeToolbar, useReactFlow, MiniMap, StraightEdge, StepEdge, SmoothStepEdge, Edge, updateEdge } from 'reactflow'
+import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow, NodeToolbar, useReactFlow, MiniMap, StraightEdge, StepEdge, SmoothStepEdge, Edge, updateEdge, ReactFlowProvider } from 'reactflow'
 import CustomNode from './CustomNode';
 import SaveIcon from '@mui/icons-material/Save';
 import Notification from '../Utils/Notification';
@@ -22,10 +22,6 @@ const proOptions = { hideAttribution: true };
 const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
     const [surveyFlow, setSurveyFlow] = React.useState<any>(props.flow);
-
-    const nodeTypes = useMemo(() => ({
-        selectorNode: (params: any) => <CustomNode config={props.config} onNodeSelection={handleNodeSelection} {...params} />,
-    }), [props.config]);
 
     const snackbarRef: any = useRef(null);
     const edgeUpdateSuccessful = useRef(true);
@@ -65,6 +61,10 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     const [nodes, setNodes] = useState<any[]>([]);
     const [edges, setEdges] = useState<any[]>([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+
+    const nodeTypes = useMemo(() => ({
+        selectorNode: (params: any) => <CustomNode edges={edges} config={props.config} onNodeSelection={handleNodeSelection} {...params} />,
+    }), [props.config, edges]);
 
     const getComponentStyle = (color: string): React.CSSProperties => {
         return {
@@ -207,7 +207,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                     const checkPathKey = `${componentId}-${componentData.path}`;
                     if (edgePathMap[checkPathKey] == null) {
                         //If logic does not have a path do not create edge and node
-                        if(componentData.path == null || componentData?.path?.length < 1){
+                        if (componentData.path == null || componentData?.path?.length < 1) {
                             return;
                         }
                         const newNode: any = createNewNode(
@@ -277,7 +277,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
             function createNewEdge(newNode: any, componentData: any) {
                 let source = componentId;
                 let target = newNode.id;
-                let label : string = componentData.path;
+                let label: string = componentData.path;
                 const edge: any = {
                     source: source,
                     target: target,
@@ -437,17 +437,20 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
     const onEdgeUpdateEnd = useCallback(
         (_: any, edge: any) => {
+            if (!edgeUpdateSuccessful.current) {
+				setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+			}
             edgeUpdateSuccessful.current = true;
             makeWorkflowDirty();
         },
         [reactFlowInstance]
     );
 
-    const onEdgeUpdate = useCallback((oldEdge: any, newConnection: any) =>  {
+    const onEdgeUpdate = useCallback((oldEdge: any, newConnection: any) => {
+		edgeUpdateSuccessful.current = true;
         setEdges((els) => updateEdge(oldEdge, newConnection, els));
     }, [reactFlowInstance]);
 
-    // const onConnect = useCallback((params: any) => setEdges((eds: any) => addEdge(params, eds)), []);
 
     const onConnect = useCallback(
         (x: any) => setEdges((eds) => addEdge({ ...x, animated: false }, eds)),
@@ -463,52 +466,56 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
 
     return (
-        <Box sx={{ backgroundColor: '#1E1E1E' }} height={'calc(100vh - 128px)'} ref={reactFlowWrapper} >
-            <ReactFlow
-                onConnect={onConnect}
-                onInit={setReactFlowInstance}
-                // nodes
-                nodes={nodes}
-                onNodesChange={onNodesChange}
-                nodeTypes={nodeTypes}
+        <>
+            <ReactFlowProvider>
+                <Box sx={{ backgroundColor: '#1E1E1E' }} height={'calc(100vh - 128px)'} ref={reactFlowWrapper} >
+                    <ReactFlow
+                        onConnect={onConnect}
+                        onInit={setReactFlowInstance}
+                        // nodes
+                        nodes={nodes}
+                        onNodesChange={onNodesChange}
+                        nodeTypes={nodeTypes}
 
-                //edges
-                edges={edges}
-                onEdgesChange={onEdgesChange}
-                defaultEdgeOptions={defaultEdgeOptions}
-                edgesFocusable={elevateEdgesOnSelect}
-                edgesUpdatable={elevateEdgesOnSelect}
-                onEdgeUpdateStart={onEdgeUpdateStart}
-                onEdgeUpdateEnd={onEdgeUpdateEnd}
-                onEdgeUpdate={onEdgeUpdate}
-                elevateEdgesOnSelect={elevateEdgesOnSelect}
-                connectionLineComponent={CustomConnectionLine}
+                        //edges
+                        edges={edges}
+                        onEdgesChange={onEdgesChange}
+                        defaultEdgeOptions={defaultEdgeOptions}
+                        edgesFocusable={elevateEdgesOnSelect}
+                        edgesUpdatable={elevateEdgesOnSelect}
+                        onEdgeUpdateStart={onEdgeUpdateStart}
+                        onEdgeUpdateEnd={onEdgeUpdateEnd}
+                        onEdgeUpdate={onEdgeUpdate}
+                        elevateEdgesOnSelect={elevateEdgesOnSelect}
+                        connectionLineComponent={CustomConnectionLine}
 
-                //utils
-                proOptions={proOptions}
-                minZoom={0.5}
-                maxZoom={3}
-                onDrop={onDrop}
-                onDragOver={onDragOver}
-                panOnScroll
-                selectionOnDrag
-            >
-                {/* <MiniMap nodeColor={'#1e1e1e'} color={'#1E1E1E'} style={{ backgroundColor: '#454545' }} /> */}
-                <Background />
-                <Controls />
-                <Box sx={{ position: 'absolute', top: '10px', left: '-5px' }} >
-                    <Button
-                        endIcon={<SaveIcon />}
-                        style={{ position: 'relative', zIndex: '100', }}
-                        sx={ButtonStyle.containedButton}
-                        onClick={handleSaveWorkflow}
+                        //utils
+                        proOptions={proOptions}
+                        minZoom={0.5}
+                        maxZoom={3}
+                        onDrop={onDrop}
+                        onDragOver={onDragOver}
+                        panOnScroll
+                        selectionOnDrag
                     >
-                        Save
-                    </Button>
+                        <MiniMap nodeColor={'#1e1e1e'} color={'#1E1E1E'} style={{ backgroundColor: '#454545' }} />
+                        <Background />
+                        <Controls />
+                        <Box sx={{ position: 'absolute', top: '10px', left: '-5px' }} >
+                            <Button
+                                endIcon={<SaveIcon />}
+                                style={{ position: 'relative', zIndex: '100', }}
+                                sx={ButtonStyle.containedButton}
+                                onClick={handleSaveWorkflow}
+                            >
+                                Save
+                            </Button>
+                        </Box>
+                    </ReactFlow>
                 </Box>
-            </ReactFlow>
+            </ReactFlowProvider>
             <Notification ref={snackbarRef} />
-        </Box>
+        </>
     )
 });
 

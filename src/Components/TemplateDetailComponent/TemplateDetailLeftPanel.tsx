@@ -70,7 +70,7 @@ function TemplateDetailLeftPanel({
     >
       <Box>
         <Box textAlign={'start'}>
-          <IconButton sx={{ marginTop: '10px' }} onClick={handleBackButtonClick} color='info'  >
+          <IconButton sx={{ marginTop: '10px' }} onClick={handleBackButtonClick}  >
             <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
           </IconButton>
         </Box>

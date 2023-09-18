@@ -23,7 +23,7 @@ function NodeComponent(props: any) {
         if (componentConfigMap != null) {
             const componentConfig = componentConfigMap.get(props.uniqueId);
             const validatedComp = validateFlowComponent(componentConfig, props.compId);
-            const validatedLogic = validateComponentLogic(componentConfig, props.compId);
+            const validatedLogic = validateComponentLogic(componentConfig, props.uniqueId, props.compId, props.edges);
             if (validatedComp != null) {
                 setShowError(true);
                 setErrorMsg(validatedComp);
@@ -78,7 +78,7 @@ function NodeComponent(props: any) {
                     <Box textAlign={'start'} display={'flex'} overflow={'hidden'} onDoubleClick={handleEditButtonClick}>
                         {
                             showError &&
-                            <NodeError message={errorMsg}/>
+                            <NodeError message={errorMsg} />
                         }
                         <Box sx={commonLogoStyle} >
                             <DynamicComponentIcon id={props.compId} />

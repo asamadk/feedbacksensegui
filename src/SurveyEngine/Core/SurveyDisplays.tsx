@@ -3,18 +3,27 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import FSLoader from '../../Components/FSLoader';
-import { getLiveSurveyData } from '../../Utils/Endpoints';
+import { getLiveSurveyData, getTemplatesDisplayAPI, saveSurveyResponseDb } from '../../Utils/Endpoints';
 import DynamicComponentDisplay from '../DynamicComponentDisplay';
 import { v4 as uuidv4, v4 } from "uuid";
-import { LIVE_SURVEY_USER_ID } from '../../Utils/Constants';
+import { LIVE_SURVEY_USER_ID, TEMPLATE_KEY } from '../../Utils/Constants';
 import SurveyEndPage from './SurveyEndPage';
 import { CoreUtils } from '../CoreUtils/CoreUtils';
+import { getSurveyUserInformation } from '../../Utils/FeedbackUtils';
 
-function SurveyDisplays() {
+type propType = {
+    mode: 'test' | 'live',
+    templateId?: string,
+    source: 'template' | 'preview' | 'live'
+}
 
-    const { surveyId } = useParams();
+function SurveyDisplays({ mode, templateId, source }: propType) {
+
+    const { effectiveSurveyId } = useParams();
 
     let initialized = false;
+
+    const [surveyId, setSurveyId] = useState(templateId == null ? effectiveSurveyId : templateId);
     const [loading, setLoading] = React.useState(false);
     const [surveyTheme, setSurveyTheme] = useState<any>();
     const [background, setBackground] = useState<any>();
@@ -37,7 +46,7 @@ function SurveyDisplays() {
         try {
             initialized = true;
             setLoading(true);
-            const url = getLiveSurveyData(surveyId);
+            const url = source === 'template' ? getTemplatesDisplayAPI(surveyId) : getLiveSurveyData(surveyId);
             const { data } = await axios.get(url, { withCredentials: true });
             setLoading(false);
             const isAlreadyTaken = checkIfSurveyAlreadyTaken();
@@ -55,7 +64,9 @@ function SurveyDisplays() {
             const initialNode = CoreUtils.getInitialNode(resData.nodes);
             setCurrentSurvey(initialNode);
             populateComponentData(initialNode);
-            localStorage.setItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`, v4());
+            if (mode === 'live') {
+                localStorage.setItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`, v4());
+            }
         } catch (error: any) {
             setLoading(false);
             setDisplayMssg({
@@ -66,6 +77,7 @@ function SurveyDisplays() {
     }
 
     const checkIfSurveyAlreadyTaken = (): boolean => {
+        if (mode === 'test') { return false; }
         if (localStorage.getItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`) != null) {
             setDisplayMssg({
                 message: 'You have already taken this survey.',
@@ -89,12 +101,37 @@ function SurveyDisplays() {
             const nextNodeId = CoreUtils.determineNextNode(currentSurvey, answerData);
             const nextPage = surveyDisplays.find(node => node.uId === nextNodeId);
             if (nextPage) {
+                saveSurveyResponse(answerData, false);
                 setCurrentSurvey(nextPage);
                 populateComponentData(nextPage);
                 setShowEnd(false);
             } else {
+                saveSurveyResponse(answerData, true);
                 setShowEnd(true);
             }
+        }
+    }
+
+    const saveSurveyResponse = (data: any, surveyCompleted: boolean): void => {
+        if (surveyId === TEMPLATE_KEY || mode === 'test') {
+            return;
+        }
+        data.surveyCompleted = surveyCompleted;
+        try {
+            const userDetails = getSurveyUserInformation();
+            let tempResponse = {
+                uiId: currentSurvey?.data?.uId,
+                id: currentSurvey?.data?.compId,
+                data: data,
+                compData: currentPageData,
+            }
+            axios.post(saveSurveyResponseDb(surveyId), {
+                data: tempResponse,
+                info: userDetails,
+                anUserId: localStorage.getItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`)
+            }, { withCredentials: true });
+        } catch (error: any) {
+            console.warn("🚀 ~ file: IndividualResponse.tsx:81 ~ fetchSurveyResponseList ~ error:", error)
         }
     }
 
@@ -111,6 +148,7 @@ function SurveyDisplays() {
                     <Box>
                         <DynamicComponentDisplay
                             theme={surveyTheme}
+                            mode={mode}
                             compId={currentSurvey?.data?.compId}
                             data={currentPageData}
                             next={next}
