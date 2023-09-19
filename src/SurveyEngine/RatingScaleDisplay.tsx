@@ -42,7 +42,19 @@ function RatingScaleDisplay(props: any) {
                 <Box marginTop={'10px'} sx={{ overflowY: 'scroll' }} >
                     <Typography fontSize={'28px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
                     <Rating
-                        sx={{ fontSize: '40px', color: colors?.primaryColor, }}
+                        // sx={{ fontSize: '40px', color: colors?.primaryColor, }}
+                        sx={{
+                            fontSize : '40px',
+                            // '& .MuiRating-iconEmpty': {
+                            //   color: colors?.shade,
+                            // },
+                            '& .MuiRating-iconFocus': {
+                              color: colors?.primaryColor,
+                            },
+                            '& .MuiRating-iconHover': {
+                              color: colors?.primaryColor,
+                            },
+                        }}
                         size='large'
                         max={props?.data?.range}
                         name="simple-controlled"

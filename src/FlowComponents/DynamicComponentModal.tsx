@@ -64,7 +64,7 @@ function DynamicComponentModal(props: any) {
           header={'Smiley scale'} 
           save={props.save} 
           open={props.open} 
-          close={props.close} 
+          close={props.close}
           theme={props.theme}
       />}
 

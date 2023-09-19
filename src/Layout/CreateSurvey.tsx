@@ -1,6 +1,7 @@
 import { Box, Button, IconButton, styled, TextField, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import FeedbackCanvas from '../FlowComponents/FeedbackCanvas'
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import 'reactflow/dist/style.css';
 import FeedbackComponentList from '../FlowComponents/FeedbackComponentList'
 import * as ButtonStyles from '../Styles/ButtonStyle'
@@ -9,7 +10,7 @@ import * as Endpoints from '../Utils/Endpoints';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import DynamicComponentModal from '../FlowComponents/DynamicComponentModal';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import axios from 'axios';
 import Notification from '../Utils/Notification';
@@ -47,9 +48,13 @@ const CssTextField = styled(TextField)({
 });
 
 function CreateSurvey(props: any) {
+
   const snackbarRef: any = useRef(null);
+  const navigate = useNavigate();
+  const childRef = useRef<any>(null);
 
   const { surveyId } = useParams();
+
   const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
   const [showGenericModal, setShowGenericModal] = React.useState(false);
   const [openEditModal, setOpenEditModal] = React.useState(false);
@@ -65,7 +70,7 @@ function CreateSurvey(props: any) {
   const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
   const workflowCheck = useSelector((state: any) => state.workflowCheck);
   const workflowDirty = useSelector((state: any) => state.workflowDirty)
-    
+
   const dispatch = useDispatch<any>();
 
   useEffect(() => {
@@ -123,23 +128,30 @@ function CreateSurvey(props: any) {
       snackbarRef?.current?.show('Please disable workflow to edit.', 'error');
       return;
     }
-    let tempMap = componentConfig;
+    let tempMap = new Map(componentConfig);
     if (componentId == null) {
       snackbarRef?.current?.show('A component error has been occurred.', 'error');
       return;
     }
     const validatedComp = FeedbackUtils.validateFlowComponent(JSON.parse(data), parseInt(componentId));
+    const validatedLogic = FeedbackUtils.validateComponentLogic(JSON.parse(data), null, parseInt(componentId), []);
     if (validatedComp != null) {
-      snackbarRef?.current?.show(validatedComp, 'error');
-      return;
+      snackbarRef?.current?.show(validatedComp, 'warning');
+      // return;
+    } else {
+      if (validatedLogic != null) {
+        snackbarRef?.current?.show(validatedLogic, 'warning');
+        // return;
+      }
     }
-    const tempComponentData :any = tempMap.get(comUiId);
-    const isComponentExisting : boolean | null = tempComponentData?.existing;
-    if(isComponentExisting === true){
+
+    const tempComponentData: any = tempMap.get(comUiId);
+    const isComponentExisting: boolean | null = tempComponentData?.existing;
+    if (isComponentExisting === true) {
       const tempData = JSON.parse(data);
       tempData.existing = true;
       data = JSON.stringify(tempData);
-    }else{
+    } else {
       const tempData = JSON.parse(data);
       tempData.existing = false;
       data = JSON.stringify(tempData);
@@ -147,9 +159,13 @@ function CreateSurvey(props: any) {
     tempMap?.set(comUiId, JSON.parse(data));
     setComponentConfig(tempMap);
     setOpenEditModal(false);
-    snackbarRef?.current?.show('Saved.', 'success');
+    if (validatedComp == null && validatedLogic == null) {
+      snackbarRef?.current?.show('Saved.', 'success');
+    }
+    const dataObj = JSON.parse(data);
+    childRef?.current.createEdge(dataObj, comUiId, Array.from(tempMap.keys()));
     //If changes are done in new component then we do not check to delete survey responses.
-    if(isComponentExisting === true){
+    if (isComponentExisting === true) {
       checkWorkflow(true);
     }
     makeGlobalWorkflowDirty(true);
@@ -287,9 +303,9 @@ function CreateSurvey(props: any) {
     setShowSurveyName(false);
   }
 
-  const handleCloseEditName = (rerender : boolean) => {
+  const handleCloseEditName = (rerender: boolean) => {
     setShowSurveyName(true);
-    if(rerender === true){
+    if (rerender === true) {
       getSingleSurvey();
     }
   }
@@ -332,7 +348,7 @@ function CreateSurvey(props: any) {
           return;
         }
         snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
-        setSurveyDetail((prevDetail: any) => ({ ...prevDetail, is_published: true }));
+        setSurveyDetail((prevDetail: any) => ({ ...prevDetail, is_published: false }));
         setIsWorkflowPublished(false);
       } catch (error: any) {
         setLoading(false);
@@ -345,18 +361,8 @@ function CreateSurvey(props: any) {
       try {
         const isWorkflowDirty = workflowDirty[currentWorkflowId];
         if (isWorkflowDirty === true) {
-          setShowGenericModal(true);
-            let genDeleteObj: genericModalData = {
-                header: 'You have some unsaved changes in workflow',
-                warning: 'Please save those changes if you want them to reflect in survey.',
-                successButtonText: 'Close',
-                cancelButtonText: 'Cancel',
-                description: 'The changes will be removed permanently.',
-                type: 'workflow-check',
-                data: {}
-            }
-            setGenericModalObj(genDeleteObj);
-            return;
+          showUnsavedWarning();
+          return;
         }
         setLoading(true);
         let { data } = await axios.post(enableSurvey(surveyDetail?.id), {}, { withCredentials: true });
@@ -380,6 +386,29 @@ function CreateSurvey(props: any) {
     }
   }
 
+  const showPreview = () => {
+    const isWorkflowDirty = workflowDirty[currentWorkflowId];
+    if (isWorkflowDirty === true) {
+      showUnsavedWarning();
+      return;
+    }
+    window.open(`/share/survey/preview/${currentWorkflowId}`)
+  }
+
+  const showUnsavedWarning = () => {
+    setShowGenericModal(true);
+    let genDeleteObj: genericModalData = {
+      header: 'You have some unsaved changes in workflow',
+      warning: 'Please save those changes if you want them to reflect in survey.',
+      successButtonText: 'Close',
+      cancelButtonText: 'Cancel',
+      description: 'The changes will be removed permanently.',
+      type: 'workflow-check',
+      data: {}
+    }
+    setGenericModalObj(genDeleteObj);
+  }
+
 
   return (
     <Box sx={{ backgroundColor: '#1E1E1E', height: 'calc(100vh - 69px)' }} >
@@ -389,7 +418,7 @@ function CreateSurvey(props: any) {
             <Typography
               style={{ position: 'relative', top: '15px', paddingLeft: '20px', cursor: 'pointer', fontSize: '17px' }}
               color={'#f1f1f1'} >
-              {surveyDetail?.name?.substring(0,45)}
+              {surveyDetail?.name?.substring(0, 45)}
               {surveyDetail?.name?.length > 45 ? '...' : ''}
             </Typography>
           }
@@ -422,6 +451,18 @@ function CreateSurvey(props: any) {
           }
         </Box>
         <Box display={'flex'} >
+          {
+            surveyDetail?.is_published === true &&
+            <Button
+              endIcon={<VisibilityIcon />}
+              onClick={showPreview}
+              style={{ width: '110px', marginRight: '10px' }}
+              sx={ButtonStyles.outlinedButton}
+              variant="text"
+            >
+              Test Run
+            </Button>
+          }
           <Button
             endIcon={surveyDetail?.is_published === true ? <CloseIcon /> : <DoneIcon />}
             onClick={handleDisableEnableSurvey}
@@ -443,6 +484,7 @@ function CreateSurvey(props: any) {
             onEdit={handleComponentEditClick}
             performSave={handleSaveFlow}
             dirty={() => { checkWorkflow(true) }}
+            ref={childRef}
           />
         </Box>
         {

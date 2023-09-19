@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, styled, TextField, Typography } from '@mui/material';
-import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfigFromUiId, modalTabList } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
+import CustomTabSet from '../Components/CustomTabSet';
+import CreateLogic from '../Components/Logic/CreateLogic';
+import { logicType } from '../Utils/types';
 
 
 const CssTextField = styled(TextField)({
@@ -32,13 +35,19 @@ function TextAnswerModal(props: any) {
 
     useEffect(() => {
         populateCompConfig();
-    }, [props.uiId]);
+    }, [props.open]);
+    //previously here the dependency array was  props.uid
+
+    const createLogicRef = useRef<any>(null); // Create a ref for the child component
 
     const [question, setQuestion] = useState('');
     const [background, setBackground] = useState<any>();
+    const [value, setValue] = React.useState(0);
+    const [logicData, setLogicData] = useState<logicType[]>([]);
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
+        setLogicData(compConfig?.logic || []);
         setQuestion(compConfig?.question || '');
         if (props.theme != null) {
             const currentTheme = JSON.parse(props.theme);
@@ -47,8 +56,11 @@ function TextAnswerModal(props: any) {
     }
 
     const handleSave = () => {
+        const logicData = createLogicRef?.current?.fetchData(); // Call fetchData() in child
+        console.log("🚀 ~ file: TextAnswerModal.tsx:59 ~ handleSave ~ logicData:", logicData)
         let obj = {
-            question: question
+            question: question,
+            logic: logicData
         }
         if (verifyComponent() === false) {
             return;
@@ -59,6 +71,10 @@ function TextAnswerModal(props: any) {
     const verifyComponent = (): Boolean => {
         return true;
     }
+
+    const handleTabChange = (newValue: number) => {
+        setValue(newValue);
+    };
 
     return (
         <>
@@ -78,21 +94,35 @@ function TextAnswerModal(props: any) {
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
-
-                        <Box sx={ModalStyles.modalBodyContainerStyle} >
-                            <CssTextField
-                                sx={{ input: { color: 'white' }, maxHeight: 'calc(100vh - 250px)' }}
-                                id="outlined-basic"
-                                placeholder='Enter your question here'
-                                variant="outlined"
-                                size={'small'}
-                                value={question}
-                                multiline
-                                style={{ width: '100%' }}
-                                onChange={(e) => setQuestion(e.target.value)}
-                            />
-                        </Box>
-
+                        <CustomTabSet
+                            tabsetList={modalTabList}
+                            change={(value: number) => handleTabChange(value)}
+                            index={value}
+                        >
+                        </CustomTabSet>
+                        {
+                            value === 0 &&
+                            <Box sx={ModalStyles.modalBodyContainerStyle} >
+                                <CssTextField
+                                    sx={{ input: { color: 'white' }, maxHeight: 'calc(100vh - 250px)' }}
+                                    id="outlined-basic"
+                                    placeholder='Enter your question here'
+                                    variant="outlined"
+                                    size={'small'}
+                                    value={question}
+                                    multiline
+                                    style={{ width: '100%' }}
+                                    onChange={(e) => setQuestion(e.target.value)}
+                                />
+                            </Box>
+                        }
+                        <CreateLogic
+                            open={value === 1}
+                            type={props.compId}
+                            values={[]}
+                            data={logicData}
+                            ref={createLogicRef}
+                        />
                         <Box sx={ModalStyles.modalButtonContainerStyle} >
                             <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
                             <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>

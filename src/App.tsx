@@ -21,6 +21,7 @@ import { ThemeProvider, createTheme } from '@mui/material';
 import PaymentSuccess from './Components/Stripe/PaymentSuccess';
 import TemplateLayout from './Layout/TemplateLayout';
 import TemplateDetailLayout from './Layout/TemplateDetailLayout';
+import PreviewSurveyLayout from './Layout/PreviewSurveyLayout';
 
 const globalBodyStyle = {
   backgroundColor: '#1E1E1E',
@@ -173,7 +174,10 @@ function App() {
         <ThemeProvider theme={lightTheme} >
           <div>
             <Routes>
-              <Route path='/share/survey/:surveyId' element={<SurveyDisplays />} />
+              <Route path='/share/survey/:effectiveSurveyId' element={<SurveyDisplays source='live' mode='live' />} />
+            </Routes>
+            <Routes>
+              <Route path='/share/survey/preview/:effectiveSurveyId' element={<PreviewSurveyLayout />} />
             </Routes>
           </div>
         </ThemeProvider>

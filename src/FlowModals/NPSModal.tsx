@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { Box, Button, Divider, IconButton, Modal, Select, Slider, styled, TextField, Typography } from '@mui/material';
-import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
+import { getColorsFromTheme, getCompConfigFromUiId, modalTabList } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
+import CustomTabSet from '../Components/CustomTabSet';
+import CreateLogic from '../Components/Logic/CreateLogic';
+import { logicType } from '../Utils/types';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -29,31 +32,38 @@ const CssTextField = styled(TextField)({
 
 function NPSModal(props: any) {
 
+  const createLogicRef = useRef<any>(null); // Create a ref for the child component
+
   useEffect(() => {
     populateCompConfig();
-  }, [props.uiId]);
+  }, [props.open]);
 
+  const [value, setValue] = React.useState(0);
   const [background, setBackground] = useState<any>();
   const [question, setQuestion] = useState('');
   const [leftText, setLeftText] = useState('');
   const [rightText, setRightText] = useState('');
+  const [logicData, setLogicData] = useState<logicType[]>([]);
 
   const populateCompConfig = () => {
     const compConfig = getCompConfigFromUiId(props);
     setQuestion(compConfig?.question || '');
     setLeftText(compConfig?.leftText || '');
     setRightText(compConfig?.rightText || '');
-    if(props.theme != null){
+    setLogicData(compConfig?.logic || []);
+    if (props.theme != null) {
       const currentTheme = JSON.parse(props.theme);
       setBackground(currentTheme.background);
+    }
   }
-}
 
   const handleSave = () => {
+    const logicData = createLogicRef?.current?.fetchData(); // Call fetchData() in child
     let obj = {
       question: question,
       leftText: leftText,
-      rightText: rightText
+      rightText: rightText,
+      logic: logicData
     }
 
     if (verifyComponent() === false) {
@@ -66,6 +76,10 @@ function NPSModal(props: any) {
   const verifyComponent = (): Boolean => {
     return true;
   }
+
+  const handleTabChange = (newValue: number) => {
+    setValue(newValue);
+  };
 
   return (
     <>
@@ -86,42 +100,60 @@ function NPSModal(props: any) {
               </IconButton>
             </Box>
 
-            <Box sx={ModalStyles.modalBodyContainerStyle} >
-              <CssTextField
-                sx={{ input: { color: 'white' },maxHeight : '50vh'  }}
-                id="outlined-basic"
-                placeholder='Enter your question here'
-                variant="outlined"
-                size={'small'}
-                value={question}
-                multiline
-                style={{ width: '100%' }}
-                onChange={(e) => setQuestion(e.target.value)}
-              />
+            <CustomTabSet
+              tabsetList={modalTabList}
+              change={(value: number) => handleTabChange(value)}
+              index={value}
+            ></CustomTabSet>
 
-            </Box>
+            {
+              value === 0 &&
+              <Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '20px' }} >
-              <CssTextField
-                sx={{ input: { color: 'white' } }}
-                id="outlined-basic"
-                placeholder='Text on the very left'
-                variant="outlined"
-                size={'small'}
-                value={leftText}
-                onChange={(e) => setLeftText(e.target.value)}
-              />
-              <CssTextField
-                sx={{ input: { color: 'white' } }}
-                id="outlined-basic"
-                placeholder='Text on the very right'
-                variant="outlined"
-                size={'small'}
-                value={rightText}
-                onChange={(e) => setRightText(e.target.value)}
-              />
-            </Box>
+                <Box sx={ModalStyles.modalBodyContainerStyle} >
+                  <CssTextField
+                    sx={{ input: { color: 'white' }, maxHeight: '50vh' }}
+                    id="outlined-basic"
+                    placeholder='Enter your question here'
+                    variant="outlined"
+                    size={'small'}
+                    value={question}
+                    multiline
+                    style={{ width: '100%' }}
+                    onChange={(e) => setQuestion(e.target.value)}
+                  />
 
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '20px' }} >
+                  <CssTextField
+                    sx={{ input: { color: 'white' } }}
+                    id="outlined-basic"
+                    placeholder='Text on the very left'
+                    variant="outlined"
+                    size={'small'}
+                    value={leftText}
+                    onChange={(e) => setLeftText(e.target.value)}
+                  />
+                  <CssTextField
+                    sx={{ input: { color: 'white' } }}
+                    id="outlined-basic"
+                    placeholder='Text on the very right'
+                    variant="outlined"
+                    size={'small'}
+                    value={rightText}
+                    onChange={(e) => setRightText(e.target.value)}
+                  />
+                </Box>
+              </Box>
+            }
+            <CreateLogic
+              open={value === 1}
+              type={props.compId}
+              values={Array.from({ length: 10 }, (_, i) => i + 1)}
+              data={logicData}
+              ref={createLogicRef}
+            />
             <Box sx={ModalStyles.modalButtonContainerStyle} >
               <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
               <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>

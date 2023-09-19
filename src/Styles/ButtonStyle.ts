@@ -12,6 +12,14 @@ export const containedButton = {
     textTransform : 'none'
 }
 
+export const textButton = {
+    width : '100%',
+    marginTop: '10px',
+    color : '#006DFF',
+    fontWeight : 500,
+    textTransform : 'none',
+}
+
 export const outlinedButton = {
     "&.MuiButtonBase-root:hover": {
         bgcolor: "#1E1E1E",

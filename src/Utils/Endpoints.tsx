@@ -118,7 +118,7 @@ export const logout = () => {
     return BASE_URL + '/auth/logout';
 }
 
-export const saveSurveyResponseDb = (surveyId : string) => {
+export const saveSurveyResponseDb = (surveyId : string | undefined) => {
     return BASE_URL + `/live/survey/response/${surveyId}`;
 }
 
@@ -163,7 +163,7 @@ export const getTemplatesAPI = () => {
     return `${BASE_URL}/template/list`
 }
 
-export const getTemplatesDisplayAPI = (templateId : string) => {
+export const getTemplatesDisplayAPI = (templateId : string | undefined) => {
     return `${BASE_URL}/template/test-display/${templateId}`
 }
 
