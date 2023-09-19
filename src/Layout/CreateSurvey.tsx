@@ -392,7 +392,6 @@ function CreateSurvey(props: any) {
       showUnsavedWarning();
       return;
     }
-    //! TODO validate workflow first so that we show correct preview
     window.open(`/share/survey/preview/${currentWorkflowId}`)
   }
 
@@ -461,7 +460,7 @@ function CreateSurvey(props: any) {
               sx={ButtonStyles.outlinedButton}
               variant="text"
             >
-              Preview
+              Test Run
             </Button>
           }
           <Button
