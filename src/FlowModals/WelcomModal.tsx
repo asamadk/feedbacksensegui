@@ -6,6 +6,7 @@ import { Box, Button, Divider, IconButton, Modal, TextField, Typography } from '
 import { styled } from '@mui/system';
 import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
+import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -76,6 +77,7 @@ function WelcomModal(props: any) {
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
+                        <ModalSnippets published={props.isPublished} />
                         <Box sx={ModalStyles.modalBodyContainerStyle} >
                             <CssTextField
                                 sx={{ input: { color: 'white' }, maxHeight: '50vh' }}

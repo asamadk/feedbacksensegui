@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Modal, styled, TextField, Typography } from '@mui/material'
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, IconButton, Modal, styled, TextField, Typography } from '@mui/material'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import CloseIcon from '@mui/icons-material/Close';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
@@ -10,6 +10,7 @@ import Notification from '../Utils/Notification';
 import CustomTabSet from '../Components/CustomTabSet';
 import CreateLogic from '../Components/Logic/CreateLogic';
 import { logicType } from '../Utils/types';
+import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -82,10 +83,10 @@ function SingleAnswerSelectionModal(props: any) {
     }
 
     const handleAddAnswerChoice = () => {
-        if (answerChoiceList.length > 30) {
-            snackbarRef?.current?.show('Cannot use more than 10 answer chioces', 'error');
-            return;
-        }
+        // if (answerChoiceList.length > 30) {
+        //     snackbarRef?.current?.show('Cannot use more than 10 answer chioces', 'error');
+        //     return;
+        // }
         setAnswerChoiceList([...answerChoiceList, '']);
     }
 
@@ -132,6 +133,7 @@ function SingleAnswerSelectionModal(props: any) {
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
+                        <ModalSnippets published={props.isPublished} />
                         <CustomTabSet
                             tabsetList={modalTabList}
                             change={(value: number) => handleTabChange(value)}

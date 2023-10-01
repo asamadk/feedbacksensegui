@@ -1,6 +1,6 @@
 import { Box, Divider, Fab, IconButton, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
-import { Bar, BarChart, CartesianAxis, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianAxis, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { getOverallResponse } from '../../Utils/Endpoints';
 import axios from 'axios';
 import FSLoader from '../FSLoader';
@@ -99,6 +99,7 @@ function OverAllResultChart(props: propsType) {
                 <ResponsiveContainer>
                     <BarChart data={overAllResultGraph}>
                         <YAxis />
+                        <Tooltip/>
                         <XAxis dataKey="date" />
                         <Bar barSize={40} dataKey="Response" fill="#006DFF" />
                     </BarChart>

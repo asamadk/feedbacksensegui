@@ -5,7 +5,7 @@ import { Typography, Grid, Button, styled, createTheme, ThemeProvider, Box, Icon
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
-import { getAllPlanList, startSubScription } from '../Utils/Endpoints';
+import { getAllPlanList, informSupportUserPricingAPI, startSubScription } from '../Utils/Endpoints';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import FSLoader from '../Components/FSLoader';
@@ -106,7 +106,7 @@ export default function UpgradeSubscription() {
     const handleSuccessButtonClick = () => {
         setShowGenericModal(false);
         if (genericModalObj?.type === 'cancel') {
-            let freePlanId : string | null = null;
+            let freePlanId: string | null = null;
             surveyPlans?.forEach(plan => {
                 if (plan.price_cents === 0) {
                     freePlanId = plan.id;
@@ -114,7 +114,7 @@ export default function UpgradeSubscription() {
                 }
             });
 
-            if(freePlanId != null){
+            if (freePlanId != null) {
                 runChangeSubscription(freePlanId, 0);
             }
         }
@@ -161,6 +161,21 @@ export default function UpgradeSubscription() {
         }
     }
 
+    const handleGetAccessClick = async (planId: string, price: number) => {
+        try {
+            setLoading(true);
+            const { data } = await axios.post(informSupportUserPricingAPI(), { price: price,planId : planId }, { withCredentials: true })
+            setLoading(false);
+            snackbarRef?.current?.show(data?.message, 'success');
+        } catch (error: any) {
+            setLoading(false);
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+                handleLogout();
+            }
+        }
+    }
+
 
     return (
         <ThemeProvider theme={darkTheme} >
@@ -179,7 +194,7 @@ export default function UpgradeSubscription() {
                 {
                     surveyPlans?.map(plan => {
                         return (
-                            <SinglePlan plan={plan} checkout={() => handleCheckoutClick(plan.id, plan.price_cents)} key={plan.id} />
+                            <SinglePlan handleGetAccessClick={handleGetAccessClick} plan={plan} checkout={() => handleCheckoutClick(plan.id, plan.price_cents)} key={plan.id} />
                         )
                     })
                 }
@@ -198,7 +213,7 @@ export default function UpgradeSubscription() {
 }
 
 
-function SinglePlan({ plan, checkout }: any) {
+function SinglePlan({ plan, checkout, handleGetAccessClick }: any) {
 
 
     const [planDesc, setPlanDesc] = useState<any>();
@@ -284,9 +299,10 @@ function SinglePlan({ plan, checkout }: any) {
                         </Box>
                         <Button
                             variant="contained"
-                            style={{width : '50%'}}
+                            style={{ width: '50%' }}
                             sx={containedButton}
-                            onClick={() => checkout(plan.id, plan.price_cents)}
+                            // onClick={() => checkout(plan.id, plan.price_cents)}
+                            onClick={() => handleGetAccessClick(plan.id, plan.price_cents)}
                         >
                             Get access
                         </Button>

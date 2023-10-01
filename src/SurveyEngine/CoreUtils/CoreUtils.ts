@@ -15,6 +15,7 @@ export class CoreUtils {
         if (paths != null && paths.length === 1 && paths[0].condition === DEFAULT_KEY) {
             return paths[0].uId;
         }
+        if(paths == null){return null}
         for (let path of paths) {
             if (this.evaluateCondition(path.condition, path.value, this.extractCurrentAnswer(answer, compId), compId) === true) {
                 return path.uId;
@@ -86,7 +87,6 @@ export class CoreUtils {
     }
 
     static getSmileyScaleNames(smileyNum: number): string {
-        console.log("🚀 ~ file: CoreUtils.ts:90 ~ CoreUtils ~ getSmileyScaleNames ~ smileyNum:", smileyNum)
         if (smileyNum === 0) {
             return SMILEY_EXTREMELY_UNSATISFIED
         } else if (smileyNum === 1) {

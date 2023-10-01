@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
-import { Box, Button, Divider, IconButton, Modal, styled, TextField, Typography } from '@mui/material';
-import { getColorsFromTheme, getCompConfigFromUiId, modalTabList } from '../Utils/FeedbackUtils';
+import { Box, Button, Checkbox, Divider, FormControlLabel, FormGroup, IconButton, Modal, styled, TextField, Typography } from '@mui/material';
+import { getColorsFromTheme, getCompConfigFromUiId, modalTabList, modalTabList2 } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import CustomTabSet from '../Components/CustomTabSet';
 import CreateLogic from '../Components/Logic/CreateLogic';
 import { logicType } from '../Utils/types';
+import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 
 
 const CssTextField = styled(TextField)({
@@ -44,11 +45,13 @@ function TextAnswerModal(props: any) {
     const [background, setBackground] = useState<any>();
     const [value, setValue] = React.useState(0);
     const [logicData, setLogicData] = useState<logicType[]>([]);
+    const [required, setRequired] = useState(false);
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
         setLogicData(compConfig?.logic || []);
         setQuestion(compConfig?.question || '');
+        setRequired(compConfig?.required || false);
         if (props.theme != null) {
             const currentTheme = JSON.parse(props.theme);
             setBackground(currentTheme.background);
@@ -57,10 +60,10 @@ function TextAnswerModal(props: any) {
 
     const handleSave = () => {
         const logicData = createLogicRef?.current?.fetchData(); // Call fetchData() in child
-        console.log("🚀 ~ file: TextAnswerModal.tsx:59 ~ handleSave ~ logicData:", logicData)
         let obj = {
             question: question,
-            logic: logicData
+            logic: logicData,
+            required: required
         }
         if (verifyComponent() === false) {
             return;
@@ -75,6 +78,30 @@ function TextAnswerModal(props: any) {
     const handleTabChange = (newValue: number) => {
         setValue(newValue);
     };
+
+    const handleRequiredCheckbox = (event: any) => {
+        setRequired(event.target.checked);
+    }
+
+    const ModalSettings = () => {
+        return (
+            <>
+                {
+                    value === 2 &&
+                    <Box padding={'10px'} margin={'10px'} >
+                        <FormGroup>
+                            <FormControlLabel
+                                onClick={handleRequiredCheckbox}
+                                control={<Checkbox checked={required} />}
+                                label="Answer required."
+                            />
+                        </FormGroup>
+                    </Box>
+                }
+            </>
+        )
+    }
+
 
     return (
         <>
@@ -94,6 +121,7 @@ function TextAnswerModal(props: any) {
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
+                        <ModalSnippets published={props.isPublished} />
                         <CustomTabSet
                             tabsetList={modalTabList}
                             change={(value: number) => handleTabChange(value)}
@@ -123,6 +151,7 @@ function TextAnswerModal(props: any) {
                             data={logicData}
                             ref={createLogicRef}
                         />
+                        {ModalSettings()}
                         <Box sx={ModalStyles.modalButtonContainerStyle} >
                             <Button style={{ width: 'fit-content', marginRight: '15px' }} sx={ButtonStyles.outlinedButton} onClick={props.close} variant="contained">Cancel</Button>
                             <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>

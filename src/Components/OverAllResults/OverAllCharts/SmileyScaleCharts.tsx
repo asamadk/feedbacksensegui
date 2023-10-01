@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import React from 'react'
-import { Bar, BarChart, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { getIconColorById } from '../../../Utils/FeedbackUtils'
 
 type propsType = {
@@ -21,6 +21,7 @@ function SmileyScaleCharts(props: propsType) {
             <Legend />
             <YAxis dataKey="percentage" />
             <XAxis dataKey="satisfaction" />
+            <Tooltip />
             <Bar barSize={40} dataKey='percentage' fill={getIconColorById(props.id)} />
           </BarChart>
         </ResponsiveContainer>

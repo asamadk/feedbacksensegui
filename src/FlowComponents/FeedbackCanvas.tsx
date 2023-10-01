@@ -28,6 +28,12 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
     const dispatch = useDispatch<any>();
     const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
+    const [isWorkflowPublished , setIsWorkflowPublished] = useState<boolean>(props.published);
+
+    useEffect(() => {
+        console.log('USE EFFECT PUBLISH CHANGE',props.published);
+        setIsWorkflowPublished(props.published);
+    },[props.published]);
 
     useEffect(() => {
         if (props?.surveyDetail?.workflows != null && props?.surveyDetail?.workflows.length > 0) {
@@ -37,6 +43,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
     useEffect(() => {
         restoreFlow();
+        console.log('USE EFFECT RESTORE FLOW');
     }, [surveyFlow]);
 
 
@@ -49,7 +56,6 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
         if (flow) {
             let nodeList: any[] = flow.nodes;
             for (let i = 0; i < nodeList.length; i++) {
-                nodeList[i].data.onDelete = deleteNode;
                 nodeList[i].data.onEdit = props.onEdit;
             }
             setNodes(flow.nodes || []);
@@ -63,8 +69,8 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
     const nodeTypes = useMemo(() => ({
-        selectorNode: (params: any) => <CustomNode edges={edges} config={props.config} onNodeSelection={handleNodeSelection} {...params} />,
-    }), [props.config, edges]);
+        selectorNode: (params: any) => <CustomNode edges={edges} onDelete={deleteNode} config={props.config} onNodeSelection={handleNodeSelection} {...params} />,
+    }), [props.config, edges , isWorkflowPublished]);
 
     const getComponentStyle = (color: string): React.CSSProperties => {
         return {
@@ -96,7 +102,6 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                     compId: selectedCompId,
                     label: comp.header,
                     description: comp.description,
-                    onDelete: deleteNode,
                     onEdit: props.onEdit
                 },
                 style: getComponentStyle(comp.bgColor),
@@ -119,7 +124,6 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                 compId: componentData.id,
                 label: componentData.header,
                 description: componentData.description,
-                onDelete: deleteNode,
                 onEdit: props.onEdit
             },
             style: getComponentStyle(componentData.bgColor),
@@ -379,7 +383,8 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     }, [reactFlowInstance, props.config, props.performSave]);
 
     const deleteNode = (id: string) => {
-        if (props?.published === true) {
+        console.log("🚀 ~ file: FeedbackCanvas.tsx:390 ~ isWorkflowPublished:", isWorkflowPublished)
+        if (isWorkflowPublished === true) {
             snackbarRef?.current?.show('Cannot delete publish surveys.', 'error');
             return;
         }

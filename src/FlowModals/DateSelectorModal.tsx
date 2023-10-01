@@ -8,6 +8,7 @@ import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import CustomTabSet from '../Components/CustomTabSet';
 import CreateLogic from '../Components/Logic/CreateLogic';
 import { logicType } from '../Utils/types';
+import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -93,7 +94,7 @@ function DateSelectorModal(props: any) {
                 <CloseIcon onClick={props.close} />
               </IconButton>
             </Box>
-
+            <ModalSnippets published={props.isPublished} />
             <CustomTabSet
               tabsetList={modalTabList}
               change={(value: number) => handleTabChange(value)}

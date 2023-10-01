@@ -1,6 +1,6 @@
 import { Box, Divider, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
-import { Bar, ComposedChart, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Bar, Cell, ComposedChart, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { getIconColorById } from '../../../Utils/FeedbackUtils'
 
 const mainContainer = {
@@ -19,7 +19,7 @@ function SingleAnswerChart(props: propsType) {
 
     useEffect(() => {
         console.log("🚀 ~ file: SingleAnswerChart.tsx:23 ~ useEffect ~ props.data:", props.data)
-    },[]);
+    }, []);
 
     return (
         <Box sx={mainContainer} >
@@ -32,9 +32,9 @@ function SingleAnswerChart(props: propsType) {
                         <Box>
                             <Divider sx={{ borderTop: '1px #454545 solid', margin: '10px 0px' }} />
                             <Box display={'flex'} justifyContent={'space-between'} >
-                                <Typography 
-                                    color={'#808080'} 
-                                    sx={{flexWrap : 'wrap',overflowX : 'scroll',marginRight : '40px'}}
+                                <Typography
+                                    color={'#808080'}
+                                    sx={{ flexWrap: 'wrap', overflowX: 'scroll', marginRight: '40px' }}
                                 >{answers?.name}</Typography>
                                 <Typography color={'#808080'} >{answers?.Frequency}%</Typography>
                             </Box>
@@ -50,6 +50,7 @@ export default SingleAnswerChart
 
 
 function SingleAnswerBarChart(props: any) {
+
     return (
         <Box sx={{ width: '100%', height: 300 }} marginTop={3} marginBottom={3} >
             <ResponsiveContainer>
@@ -67,7 +68,7 @@ function SingleAnswerBarChart(props: any) {
                 >
                     <XAxis type="number" />
                     <YAxis dataKey="name" type="category" scale="band" />
-                    <Legend/>
+                    <Tooltip />
                     <Bar dataKey="Frequency" barSize={20} fill={getIconColorById(props.id)} />
                 </ComposedChart>
             </ResponsiveContainer>

@@ -2,7 +2,8 @@ import React, { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import NodeComponent from './NodeComponent';
 
-export default memo(({ data, isConnectable, onNodeSelection, config,edges }: any) => {
+// export default memo(({ data, isConnectable, onNodeSelection, config,edges }: any) => {
+function CustomNode({ data, isConnectable, onNodeSelection, config, edges, onDelete }: any) {
 
   return (
     <>
@@ -15,7 +16,7 @@ export default memo(({ data, isConnectable, onNodeSelection, config,edges }: any
       />
       <div>
         <NodeComponent
-          delete={data.onDelete}
+          delete={onDelete}
           uniqueId={data.uId}
           label={data.label}
           description={data.description}
@@ -36,4 +37,6 @@ export default memo(({ data, isConnectable, onNodeSelection, config,edges }: any
       />
     </>
   );
-});
+};
+
+export default CustomNode;
