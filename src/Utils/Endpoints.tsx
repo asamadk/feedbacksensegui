@@ -78,6 +78,10 @@ export const getSubscriptionDetailHome = () => {
     return BASE_URL + `/subscription/sub/details`;
 }
 
+export const informSupportUserPricingAPI = () => {
+    return BASE_URL + `/subscription/support`;
+}
+
 export const getAllPlanList = () => {
     return BASE_URL + `/plan/list/all`;
 }

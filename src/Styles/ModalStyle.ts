@@ -23,6 +23,14 @@ export const modalStyleComponents = {
     display : 'flex'
 };
 
+export const workflowLiveWarning = {
+    backgroundColor: '#cc3300', 
+    borderRadius: '4px', 
+    padding: '10px', 
+    marginBottom: '5px',
+    marginTop: '5px'
+}
+
 export const modalHeaderStyle = {
     display : 'flex',
     justifyContent : 'space-between'
@@ -36,7 +44,8 @@ export const modalButtonContainerStyle = {
 export const modalBodyContainerStyle = {
     marginTop : '30px',
     marginBottom : '10px',
-    maxHeight : '600px',
+    // maxHeight : '600px',
+    maxHeight : 'calc(100vh - 220px)',
     overflowY : 'scroll'
 }
 

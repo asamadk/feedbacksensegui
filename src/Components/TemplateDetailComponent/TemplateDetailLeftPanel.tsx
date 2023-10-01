@@ -11,6 +11,7 @@ import { createSurveyFromTemplateAPI } from '../../Utils/Endpoints';
 import { updateCurrentWorkflow } from '../../Redux/Actions/currentWorkflowActions';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
+import CreateSurveyModal from '../../Modals/CreateSurveyModal';
 
 function TemplateDetailLeftPanel({
   template
@@ -21,7 +22,7 @@ function TemplateDetailLeftPanel({
   const snackbarRef: any = useRef(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<any>();
-
+  const [openCreateSurvey , setOpenCreateSurvey] = useState(false);
 
   const handleBackButtonClick = () => {
     window.history.back();
@@ -82,16 +83,11 @@ function TemplateDetailLeftPanel({
         </Typography>
       </Box>
       <Box marginBottom={'20px'} >
-        <Box marginBottom={'30px'} >
+        <Box >
           <Button variant='contained' onClick={handleCreateSurveyFromTemplate} sx={containedButton} >
             Use this template
           </Button>
         </Box>
-        <Divider sx={{ marginBottom: '10px' }} />
-        <Typography color={'#808080'} >Got your own survey idea ?</Typography>
-        <Button variant='outlined' sx={outlinedButton} >
-          Start from scratch
-        </Button>
       </Box>
       <Notification ref={snackbarRef} />
       <FSLoader show={loading} />

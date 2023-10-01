@@ -43,12 +43,11 @@ export const validateSurveyDisplay = (data: any, componentId: number | undefined
         case 1:
             break;
         case 5:
-            if (data.answer == null || data.answer?.length < 1) {
+            if (data.required === true && (data.answer == null || data.answer?.length < 1)) {
                 return 'Please provide an answer before moving forward.';
             }
             break;
         case 13:
-            // const dateData: Dayjs | null = data;
             const dateData = data;
             if (dateData == null) {
                 return 'Selected date is not valid';
@@ -327,3 +326,10 @@ export const modalTabList = [
     { id: 1, name: 'GENERAL' },
     { id: 2, name: 'LOGIC' },
 ];
+
+export const modalTabList2 = [
+    { id: 1, name: 'GENERAL' },
+    { id: 2, name: 'LOGIC' },
+    { id: 3, name: 'ADVANCED' },
+];
+

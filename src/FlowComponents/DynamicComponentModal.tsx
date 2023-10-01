@@ -20,6 +20,7 @@ function DynamicComponentModal(props: any) {
         open={props.open}
         close={props.close}
         theme={props.theme}
+        isPublished={props.isPublished}
       />}
 
       {props.compId === 3 && <SingleAnswerSelectionModal
@@ -32,6 +33,7 @@ function DynamicComponentModal(props: any) {
         open={props.open}
         close={props.close}
         theme={props.theme}
+        isPublished={props.isPublished}
       />}
 
       {props.compId === 4 && <SingleAnswerSelectionModal 
@@ -44,6 +46,7 @@ function DynamicComponentModal(props: any) {
         open={props.open} 
         close={props.close} 
         theme={props.theme}
+        isPublished={props.isPublished}
       />}
 
       {props.compId === 5 && <TextAnswerModal 
@@ -55,6 +58,7 @@ function DynamicComponentModal(props: any) {
         open={props.open} 
         close={props.close} 
         theme={props.theme}
+        isPublished={props.isPublished}
       />}
 
       {props.compId === 6 && <SmileyScaleModal 
@@ -66,6 +70,7 @@ function DynamicComponentModal(props: any) {
           open={props.open} 
           close={props.close}
           theme={props.theme}
+          isPublished={props.isPublished}
       />}
 
       {props.compId === 7 && <RatingScaleModal 
@@ -77,6 +82,7 @@ function DynamicComponentModal(props: any) {
         open={props.open} 
         close={props.close} 
         theme={props.theme}
+        isPublished={props.isPublished}
       />}
 
       {props.compId === 8 && <NPSModal 
@@ -88,6 +94,7 @@ function DynamicComponentModal(props: any) {
         open={props.open} 
         close={props.close} 
         theme={props.theme}
+        isPublished={props.isPublished}
       />}
 
       {props.compId === 11 && <ContactFormModal 
@@ -99,6 +106,7 @@ function DynamicComponentModal(props: any) {
         open={props.open} 
         close={props.close} 
         theme={props.theme}
+        isPublished={props.isPublished}
       />}
 
       {props.compId === 13 && <DateSelectorModal 
@@ -110,6 +118,7 @@ function DynamicComponentModal(props: any) {
         open={props.open} 
         close={props.close} 
         theme={props.theme}
+        isPublished={props.isPublished}
       />}
     </>
   )

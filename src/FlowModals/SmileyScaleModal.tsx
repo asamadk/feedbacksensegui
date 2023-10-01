@@ -9,6 +9,7 @@ import CustomTabSet from '../Components/CustomTabSet';
 import CreateLogic from '../Components/Logic/CreateLogic';
 import { smileyEmojiName } from '../Utils/Constants';
 import { logicType } from '../Utils/types';
+import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -101,7 +102,7 @@ function SmileyScaleModal(props: any) {
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
-
+                        <ModalSnippets published={props.isPublished} />
                         <Box marginLeft={'10px'} >
                             <CustomTabSet
                                 tabsetList={modalTabList}

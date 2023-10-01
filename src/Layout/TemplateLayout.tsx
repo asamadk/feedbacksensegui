@@ -38,7 +38,8 @@ function TemplateLayout() {
                 return;
             }
             setTemplates(resData);
-            setFilteredTemplates(resData);
+            // setFilteredTemplates(resData);
+            populateUniqueSurveys(resData);
             setSelectedCategory(ALL_TEMPLATE_KEY);
             setSelectedSubCategory('');
             populateTemplatesStructure(resData);
@@ -70,7 +71,7 @@ function TemplateLayout() {
         setSelectedCategory(category);
         setSelectedSubCategory(subCategory);
         if (category === ALL_TEMPLATE_KEY) {
-            setFilteredTemplates(templates);
+            populateUniqueSurveys(templates);
             return;
         }
         const tempTemplates: any[] = JSON.parse(JSON.stringify(templates));
@@ -81,6 +82,18 @@ function TemplateLayout() {
             }
         });
         setFilteredTemplates(filteredData);
+    }
+
+    const populateUniqueSurveys = (templateList : any[]) => {
+        const allTemplatesList: any[] = [];
+        const templateNames = new Set<string>();
+        templateList.forEach(template => {
+            if(!templateNames.has(template.name)){
+                allTemplatesList.push(template);
+                templateNames.add(template.name);
+            }
+        });
+        setFilteredTemplates(allTemplatesList);
     }
 
     const populateTemplateOptions = (templates: any[]) => {

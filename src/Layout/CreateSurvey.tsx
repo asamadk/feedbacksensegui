@@ -77,6 +77,18 @@ function CreateSurvey(props: any) {
     getSingleSurvey();
   }, []);
 
+  useEffect(() => {
+    const handleBeforeUnload = (event: any) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   const getSingleSurvey = async () => {
     try {
       setLoading(true);
@@ -502,6 +514,7 @@ function CreateSurvey(props: any) {
         compId={componentId}
         save={handleSaveComponentConfig}
         data={componentConfig}
+        isPublished={isWorkflowPublished}
         theme={surveyDetail?.survey_design_json}
       />
 

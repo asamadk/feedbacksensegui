@@ -38,7 +38,7 @@ function TemplateBlock({ template }: any) {
                 </Typography>
             </Box>
             <Divider sx={{ color: '#454545' }} />
-            <Box marginBottom={'50px'} padding={'15px'} >
+            <Box height={'50px'} marginBottom={'50px'} padding={'15px'} >
                 <Typography
                     textAlign={'start'}
                     fontSize={14}

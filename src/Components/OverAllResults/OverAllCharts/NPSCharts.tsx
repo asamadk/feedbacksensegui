@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { getIconColorById } from '../../../Utils/FeedbackUtils'
 import GaugeChart from 'react-gauge-chart';
 
@@ -29,6 +29,7 @@ function NPSCharts(props : propsType) {
           <BarChart width={600} height={250} data={props?.data?.chart}>
             <YAxis dataKey="percentage" />
             <XAxis dataKey="value" />
+            <Tooltip />
             <Bar barSize={40} dataKey='percentage' fill={getIconColorById(props.id)} />
           </BarChart>
         </ResponsiveContainer>

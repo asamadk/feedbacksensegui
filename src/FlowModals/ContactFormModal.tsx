@@ -7,6 +7,7 @@ import { Box, Button, Divider, IconButton, Modal, Select, Slider, styled, TextFi
 import { getColorsFromTheme, getCompConfigFromUiId, modalTabList } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import CustomTabSet from '../Components/CustomTabSet';
+import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -118,7 +119,7 @@ function ContactFormModal(props: any) {
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
-
+                        <ModalSnippets published={props.isPublished} />
                         <Box>
                             <Box sx={ModalStyles.modalBodyContainerStyle} >
                                 <Box>
