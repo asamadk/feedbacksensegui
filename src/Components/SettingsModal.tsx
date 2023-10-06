@@ -9,7 +9,7 @@ import { handleLogout } from "../Utils/FeedbackUtils";
 
 const settingsMainStyle = {
   width: "100%",
-  maxWidth: 234,
+  maxWidth: 204,
   backgroundColor: "#121212",
   color: "#f1f1f1",
   position: "absolute",
@@ -76,7 +76,7 @@ export default function SettingsModal(props: any) {
           primary="Survey Settings"
         />
       </ListItem>
-      <ListItem>
+      {/* <ListItem>
         <ListItemText
           onMouseOver={changeBackground}
           onMouseLeave={revertBackground}
@@ -85,8 +85,8 @@ export default function SettingsModal(props: any) {
           primary="Subscription"
           onClick={() => handleSettingsRouting('/org/subscription')}
         />
-      </ListItem>
-      <ListItem>
+      </ListItem> */}
+      {/* <ListItem>
         <ListItemText
           onMouseOver={changeBackground}
           onMouseLeave={revertBackground}
@@ -95,16 +95,16 @@ export default function SettingsModal(props: any) {
           primary="Invite Teammates"
           onClick={() => handleSettingsRouting('/org/teammates')}
         />
-      </ListItem>
+      </ListItem> */}
 
-      <ListItem>
+      {/* <ListItem>
         <ListItemText
           style={{ color: "#323533", fontSize: "14" }}
           id="profile"
           primary="Profile"
         />
-      </ListItem>
-      <ListItem>
+      </ListItem> */}
+      {/* <ListItem>
         <ListItemText
           onMouseOver={changeBackground}
           onMouseLeave={revertBackground}
@@ -113,7 +113,7 @@ export default function SettingsModal(props: any) {
           primary="Profile & Password"
           onClick={() => handleSettingsRouting('/org/general')}
         />
-      </ListItem>
+      </ListItem> */}
       <ListItem>
         <ListItemText
           onMouseOver={changeBackground}

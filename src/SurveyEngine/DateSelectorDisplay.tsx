@@ -34,7 +34,10 @@ function DateSelectorDisplay(props: any) {
   }
 
   const next = () => {
-    props.next(date);
+    // props.next(date);
+    props.next({
+      value : date
+    });
   }
 
   const inputStyleCSS = {

@@ -32,6 +32,7 @@ function Header(props: any) {
 
     React.useEffect(() => {
         let currentPath: string = location.pathname;
+        console.log("🚀 ~ file: Header.tsx:35 ~ React.useEffect ~ currentPath:", currentPath)
         if (currentPath.includes('/user/create/organization')) {
             setInOrgSelectionMode(true);
         } else {

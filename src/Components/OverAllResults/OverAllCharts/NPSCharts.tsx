@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { getIconColorById } from '../../../Utils/FeedbackUtils'
 import GaugeChart from 'react-gauge-chart';
+import FSTooltip from '../../FSTooltip';
 
 type propsType = {
   id: number,
@@ -29,7 +30,10 @@ function NPSCharts(props : propsType) {
           <BarChart width={600} height={250} data={props?.data?.chart}>
             <YAxis dataKey="percentage" />
             <XAxis dataKey="value" />
-            <Tooltip />
+            <Tooltip
+              cursor={{ fill: '#1e1e1e' }}
+              content={<FSTooltip percent={true} />}
+            />
             <Bar barSize={40} dataKey='percentage' fill={getIconColorById(props.id)} />
           </BarChart>
         </ResponsiveContainer>

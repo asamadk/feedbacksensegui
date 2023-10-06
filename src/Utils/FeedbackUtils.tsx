@@ -48,7 +48,7 @@ export const validateSurveyDisplay = (data: any, componentId: number | undefined
             }
             break;
         case 13:
-            const dateData = data;
+            const dateData = data.value;
             if (dateData == null) {
                 return 'Selected date is not valid';
             }
