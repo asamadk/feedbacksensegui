@@ -215,7 +215,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                 <Box sx={answerContainer} >
                     <Typography>Answer</Typography>
                     <Divider sx={{ margin: '5px', background: '#454545' }} />
-                    <Typography>{new Date(data?.data)?.toLocaleDateString()}</Typography>
+                    <Typography>{new Date(data?.data?.value)?.toLocaleDateString()}</Typography>
                 </Box>
             </>}
         </Box>

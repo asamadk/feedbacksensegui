@@ -15,7 +15,7 @@ export class CoreUtils {
         if (paths != null && paths.length === 1 && paths[0].condition === DEFAULT_KEY) {
             return paths[0].uId;
         }
-        if(paths == null){return null}
+        if (paths == null) { return null }
         for (let path of paths) {
             if (this.evaluateCondition(path.condition, path.value, this.extractCurrentAnswer(answer, compId), compId) === true) {
                 return path.uId;
@@ -78,9 +78,9 @@ export class CoreUtils {
             return data.selectedVal;
         } else if (compId === 6) {
             return data.emojiId;
-        } else if (compId === 7 || compId === 8) {
+        } else if (compId === 7 || compId === 8 || compId === 13) {
             return data.value;
-        } else if (compId === 11 || compId === 13) {
+        } else if (compId === 11) {
             return data;
         }
         return null;

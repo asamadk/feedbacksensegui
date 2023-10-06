@@ -11,6 +11,7 @@ import { handleLogout } from '../../Utils/FeedbackUtils';
 import html2canvas from 'html2canvas';
 import DownloadIcon from '@mui/icons-material/Download';
 import { iconStyle } from '../../Layout/CreateSurvey';
+import FSTooltip from '../FSTooltip';
 
 const mainContainer = {
     margin: '20px',
@@ -99,7 +100,10 @@ function OverAllResultChart(props: propsType) {
                 <ResponsiveContainer>
                     <BarChart data={overAllResultGraph}>
                         <YAxis />
-                        <Tooltip/>
+                        <Tooltip 
+                            cursor={{fill: '#1e1e1e'}} 
+                            content={<FSTooltip />} 
+                        />
                         <XAxis dataKey="date" />
                         <Bar barSize={40} dataKey="Response" fill="#006DFF" />
                     </BarChart>

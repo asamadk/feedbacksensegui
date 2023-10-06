@@ -208,7 +208,8 @@ function SurveyListPage() {
     }
 
     const handleUpgradePlanClick = () => {
-        navigate('/upgrade/plan');
+        // navigate('/upgrade/plan');
+        window.open('https://www.feedbacksense.io/pricing','__blank');
     }
 
     const handleRerenderSurveyCreate = () => {

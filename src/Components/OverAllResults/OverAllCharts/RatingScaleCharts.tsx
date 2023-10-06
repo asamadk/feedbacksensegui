@@ -2,6 +2,7 @@ import React from 'react'
 import { Box, Divider, Typography } from '@mui/material'
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { getIconColorById } from '../../../Utils/FeedbackUtils'
+import FSTooltip from '../../FSTooltip'
 
 type propsType = {
   id: number,
@@ -18,10 +19,12 @@ function RatingScaleCharts(props: propsType) {
       <Box sx={{ width: '100%', height: 300 }} margin={'auto'} width={'fit-content'} >
         <ResponsiveContainer>
           <BarChart data={props?.data?.statsArr}>
-            {/* <CartesianGrid strokeDasharray="4 3" /> */}
             <YAxis dataKey="percentage" />
             <XAxis dataKey="range" />
-            <Tooltip />
+            <Tooltip
+              cursor={{ fill: '#1e1e1e' }}
+              content={<FSTooltip percent={true} />}
+            />
             <Bar barSize={40} dataKey='percentage' fill={getIconColorById(props.id)} />
           </BarChart>
         </ResponsiveContainer>

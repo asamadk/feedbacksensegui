@@ -2,6 +2,7 @@ import { Box, Divider, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import { Bar, Cell, ComposedChart, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { getIconColorById } from '../../../Utils/FeedbackUtils'
+import FSTooltip from '../../FSTooltip'
 
 const mainContainer = {
     marginTop: '20px',
@@ -50,6 +51,7 @@ export default SingleAnswerChart
 
 
 function SingleAnswerBarChart(props: any) {
+    console.log("🚀 ~ file: SingleAnswerChart.tsx:62 ~ SingleAnswerBarChart ~ props?.data?.statsArr:", props?.data?.statsArr)
 
     return (
         <Box sx={{ width: '100%', height: 300 }} marginTop={3} marginBottom={3} >
@@ -66,10 +68,12 @@ function SingleAnswerBarChart(props: any) {
                         left: 20
                     }}
                 >
-                    <XAxis type="number" />
-                    <YAxis dataKey="name" type="category" scale="band" />
-                    <Tooltip />
-                    <Bar dataKey="Frequency" barSize={20} fill={getIconColorById(props.id)} />
+                    <XAxis dataKey="Frequency" type="number" />
+                    <YAxis dataKey="name" type="category" />
+                    <Tooltip
+                        content={<FSTooltip percent={true} />}
+                    />
+                    <Bar dataKey="Frequency" barSize={40} fill={getIconColorById(props.id)} />
                 </ComposedChart>
             </ResponsiveContainer>
         </Box>
