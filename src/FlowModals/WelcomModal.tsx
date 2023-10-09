@@ -7,6 +7,7 @@ import { styled } from '@mui/system';
 import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtils';
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
+import { useSelector } from 'react-redux';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -38,6 +39,7 @@ function WelcomModal(props: any) {
     const [background, setBackground] = useState<any>();
     const [welcomeText, setWelcomeText] = React.useState('');
     const [buttonText, setButtonText] = React.useState('');
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
@@ -67,7 +69,7 @@ function WelcomModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyleComponents}>
+                <Box sx={ModalStyles.modalStyleComponents(defaultColor?.secondaryColor)}>
                     <Box width={'40%'} marginRight={10} >
                         <Box sx={ModalStyles.modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">

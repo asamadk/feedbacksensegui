@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material'
 import React from 'react'
 import { CopyBlock, dracula } from 'react-code-blocks'
 import * as LayoutStyles from '../Styles/LayoutStyles'
+import { useSelector } from 'react-redux'
 
 // let integrationCode = `<!-- Start of feedbacksense (www.feedbacksense.com) code -->
 // <script type='text/javascript'>
@@ -21,11 +22,14 @@ let integrationCode = `
     FeedbackSense to your website or app. Thank you for your continued support!"`
 
 function SurveySettingsWeb() {
+
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+
     return (
-        <Box sx={LayoutStyles.globalSettingSubContainers} >
+        <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.primaryColor)} >
             <Box textAlign={'start'} >
                 <Typography color={'#f1f1f1'} sx={{ marginBottom: '5px' }} >Install FeedbackSense on your own (Comming Soon) </Typography>
-                <Typography color={'#454545'} sx={{ marginBottom: '10px' }} >
+                <Typography color={'#808080'} sx={{ marginBottom: '10px' }} >
                     Add the FeedbackSense snippet using one of the methods below so you can start collecting website and in-product surveys feedback.
                 </Typography>
                 <Box >

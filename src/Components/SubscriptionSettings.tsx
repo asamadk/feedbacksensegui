@@ -12,10 +12,11 @@ import Notification from '../Utils/Notification';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { genericModalData } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
+import { useSelector } from 'react-redux';
 
 
 const subscriptionSubContainer = {
-    border: '1px #454545 solid',
+    border: '1px #808080 solid',
     color: '#f1f1f1',
     borderRadius: '5px',
     padding: '20px',
@@ -27,7 +28,7 @@ const subscriptionSubContainer = {
 const subscriptionDetailList = {
     display: 'flex',
     justifyContent: 'space-between',
-    borderBottom: '1px #454545 solid',
+    borderBottom: '1px #808080 solid',
     paddingTop: '10px',
     paddingBottom: '10px'
 }
@@ -41,6 +42,7 @@ function SubscriptionSettings() {
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
     const [loading, setLoading] = React.useState(false);
     const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     useEffect(() => {
         getSubscriptionDetails();
@@ -70,7 +72,8 @@ function SubscriptionSettings() {
     }
 
     const handleUpgradePlanClick = () => {
-        navigate('/upgrade/plan');
+        // navigate('/upgrade/plan');
+        window.open('https://www.feedbacksense.io/pricing','__blank')
     }
 
     const handleCancelSubscription = () => {
@@ -114,7 +117,7 @@ function SubscriptionSettings() {
     }
 
     return (
-        <Box sx={LayoutStyles.globalSettingSubContainers} >
+        <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.primaryColor)} >
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
                 <Box sx={subscriptionSubContainer} >
                     <Box sx={{ textAlign: 'start' }} >
@@ -138,39 +141,39 @@ function SubscriptionSettings() {
                     <Typography color={'#f1f1f1'} fontSize={20} >Subscription Details</Typography>
                 </Box>
 
-                <Box sx={subscriptionDetailList} style={{ borderTop: '1px #454545 solid' }} >
-                    <Typography color={'#454545'} >Subscription Name </Typography>
-                    <Typography color={'#454545'} >{subscriptionDetails?.name}</Typography>
+                <Box sx={subscriptionDetailList} style={{ borderTop: '1px #808080 solid' }} >
+                    <Typography color={'#808080'} >Subscription Name </Typography>
+                    <Typography color={'#808080'} >{subscriptionDetails?.name}</Typography>
                 </Box>
                 <Box sx={subscriptionDetailList} >
-                    <Typography color={'#454545'} >Billing cycle </Typography>
-                    <Typography color={'#454545'} >{subscriptionDetails?.billingCycle}</Typography>
+                    <Typography color={'#808080'} >Billing cycle </Typography>
+                    <Typography color={'#808080'} >{subscriptionDetails?.billingCycle}</Typography>
                 </Box>
                 <Box sx={subscriptionDetailList} >
-                    <Typography color={'#454545'} >Next invoice date </Typography>
-                    <Typography color={'#454545'} >
+                    <Typography color={'#808080'} >Next invoice date </Typography>
+                    <Typography color={'#808080'} >
                         {subscriptionDetails?.endDate}
                     </Typography>
                 </Box>
                 {/* <Box sx={subscriptionDetailList} >
-                    <Typography color={'#454545'} >Response usage </Typography>
-                    <Typography color={'#454545'} >2/25000 </Typography>
+                    <Typography color={'#808080'} >Response usage </Typography>
+                    <Typography color={'#808080'} >2/25000 </Typography>
                 </Box> */}
                 <Box sx={subscriptionDetailList} >
-                    <Typography color={'#454545'} >Response usage reset cycle  </Typography>
-                    <Typography color={'#454545'} >{subscriptionDetails?.billingCycle}</Typography>
+                    <Typography color={'#808080'} >Response usage reset cycle  </Typography>
+                    <Typography color={'#808080'} >{subscriptionDetails?.billingCycle}</Typography>
                 </Box>
                 <Box sx={subscriptionDetailList} >
-                    <Typography color={'#454545'} >Survey active   </Typography>
-                    <Typography color={'#454545'} >{subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}</Typography>
+                    <Typography color={'#808080'} >Survey active   </Typography>
+                    <Typography color={'#808080'} >{subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}</Typography>
                 </Box>
                 <Box sx={subscriptionDetailList} >
-                    <Typography color={'#454545'} >Survey response capacity  </Typography>
-                    <Typography color={'#454545'} >{subscriptionDetails?.responseCapacity}</Typography>
+                    <Typography color={'#808080'} >Survey response capacity  </Typography>
+                    <Typography color={'#808080'} >{subscriptionDetails?.responseCapacity}</Typography>
                 </Box>
                 <Box sx={subscriptionDetailList} >
-                    <Typography color={'#454545'} >Survey response store limit  </Typography>
-                    <Typography color={'#454545'} >{subscriptionDetails?.responseStoreLimit}</Typography>
+                    <Typography color={'#808080'} >Survey response store limit  </Typography>
+                    <Typography color={'#808080'} >{subscriptionDetails?.responseStoreLimit}</Typography>
                 </Box>
                 {/* <Box width={'fit-content'} >
                     <Typography

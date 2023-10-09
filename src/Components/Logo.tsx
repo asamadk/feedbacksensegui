@@ -3,7 +3,7 @@ import React from 'react'
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 
 const mainContainerCss = {
-    backgroundColor : '#323533', 
+    backgroundColor : '#212a2b', 
     width : 'fit-content',
     display : 'flex',
     borderRadius : '10px',
@@ -19,14 +19,6 @@ function Logo() {
                 <Typography style={{ color: '#ffffff', fontSize: '22px' }} variant='h4'>Sense</Typography>
             </Box>
         </Box>
-        // <Box display={'flex'} >
-        //     <Box sx={{backgroundColor : '#f1f1f1',padding : '5px',width : '70px'}} >
-        //         <Typography>Feedback</Typography>
-        //     </Box>
-        //     <Box sx={{backgroundColor : '#006dff',padding : '5px',width : '70px'}} >
-        //         <Typography color={'#f1f1f1'} >Sense</Typography>
-        //     </Box>
-        // </Box>
     )
 }
 

@@ -5,9 +5,9 @@ import React, { useState } from 'react'
 import IndividualResponse from '../Components/IndividualResponse';
 import { useParams } from 'react-router';
 import OverAllResult from '../Components/OverAllResult';
+import { useSelector } from 'react-redux';
 
 const mainContainerCss = {
-  backgroundColor: '#1E1E1E',
   height: 'calc(100vh - 69px)',
   display: 'flex',
 }
@@ -16,6 +16,7 @@ function AnalyzeSurvey() {
 
   const { surveyId } = useParams();
 
+  const defaultColor = useSelector((state: any) => state.colorReducer);
   const [selectedTab, setSelectedTab] = useState(0);
 
   const handleSelectedTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -33,7 +34,7 @@ function AnalyzeSurvey() {
   }
 
   return (
-    <Box sx={mainContainerCss} >
+    <Box sx={{...mainContainerCss,backgroundColor : defaultColor?.backgroundColor}} >
       <Box width={'6%'} >
         <Tabs
           orientation="vertical"

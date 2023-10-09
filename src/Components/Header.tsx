@@ -11,18 +11,13 @@ import { useDispatch } from 'react-redux';
 import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
 import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
 
-const bodyStyle: {} = {
-    backgroundColor: '#1E1E1E',
-    padding: '10px 20px',
-    borderBottom: '1px #454545 solid'
-}
-
 function Header(props: any) {
 
     let navigate = useNavigate();
     let location = useLocation();
     const dispatch = useDispatch<any>();
-
+        
+    const defaultColor = useSelector((state: any) => state.colorReducer);
     const [showSurveyDetailHeader, setShowSurveyDetailHeader] = React.useState<Boolean>(false);
     const [inOrgSelectionMode, setInOrgSelectionMode] = React.useState<Boolean>(false);
     const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
@@ -30,9 +25,14 @@ function Header(props: any) {
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
 
+    const bodyStyle: {} = {
+        backgroundColor: defaultColor,
+        padding: '10px 20px',
+        borderBottom: '1px #454545 solid'
+    }
+
     React.useEffect(() => {
         let currentPath: string = location.pathname;
-        console.log("🚀 ~ file: Header.tsx:35 ~ React.useEffect ~ currentPath:", currentPath)
         if (currentPath.includes('/user/create/organization')) {
             setInOrgSelectionMode(true);
         } else {
@@ -77,7 +77,7 @@ function Header(props: any) {
     }
 
     return (
-        <div style={bodyStyle} >
+        <Box sx={{...bodyStyle,backgroundColor : defaultColor}} >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 {inOrgSelectionMode === false && showSurveyDetailHeader === false &&
                     <Box sx={{ marginLeft: '10px' }} onClick={handleRouteToHome} >
@@ -100,7 +100,7 @@ function Header(props: any) {
                 open={showGenericModal}
                 callback={handleSuccessButtonClick}
             />
-        </div>
+        </Box>
     )
 }
 

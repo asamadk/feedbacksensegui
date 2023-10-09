@@ -38,7 +38,7 @@ export const getSurveyDetails = (surveyId : string | undefined) : string => {
     return BASE_URL + `/survey/details/${surveyId}`
 }
 
-export const getUserList = () : string => {
+export const getUserListAPI = () : string => {
     return BASE_URL + `/user/list/org`
 }
 
@@ -173,4 +173,16 @@ export const getTemplatesDisplayAPI = (templateId : string | undefined) => {
 
 export const createSurveyFromTemplateAPI = (templateId : string) => {
     return `${BASE_URL}/template/create-survey/${templateId}`
+}
+
+export const inviteUserAPI = () => {
+    return `${BASE_URL}/user/invite`
+}
+
+export const updateUserRoleAPI = () => {
+    return `${BASE_URL}/user/role`
+}
+
+export const deleteUserRoleAPI = () => {
+    return `${BASE_URL}/user/delete/org`
 }

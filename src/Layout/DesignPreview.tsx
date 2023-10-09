@@ -8,6 +8,7 @@ import BackgroundTemplates from '../Components/BackgroundTemplates';
 import { useParams } from 'react-router';
 import PoweredBy from '../Components/PoweredBy';
 import '../Styles/CSS/Backgrounds.css'
+import { useSelector } from 'react-redux';
 
 const tabsetList = [
     { id: 1, name: 'COLORS' },
@@ -24,6 +25,7 @@ const localNavbar = {
 function DesignPreview() {
     const { surveyId } = useParams();
 
+    const defaultColor = useSelector((state: any) => state.colorReducer);
     const [selectedTheme, setSelectedTheme] = React.useState<any>();
     const [selectedBackground, setSelectedBackground] = React.useState<any>();
     const [tabset, setTabset] = React.useState(0);
@@ -51,7 +53,7 @@ function DesignPreview() {
     }
 
     return (
-        <Box sx={{ backgroundColor: '#1E1E1E', height: 'calc(100vh - 69px)', overflowY: 'hidden' }} >
+        <Box sx={{ backgroundColor: defaultColor?.backgroundColor, height: 'calc(100vh - 69px)', overflowY: 'hidden' }} >
             <Box sx={localNavbar} >
                 <Box sx={{ position: 'relative', right: '-20px' }}>
                     <CustomTabSet tabsetList={tabsetList} change={(value: number) => changetabset(value)} index={tabset} />

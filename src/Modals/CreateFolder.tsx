@@ -12,6 +12,7 @@ import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router';
 import { handleLogout } from '../Utils/FeedbackUtils';
+import { useSelector } from 'react-redux';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -43,6 +44,7 @@ function CreateFolder(props: any) {
     const snackbarRef: any = useRef(null);
     const [folderName, setFolderName] = useState<string>('');
     const [loading, setLoading] = React.useState(false);
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     const handleCreateButtonClick = async () => {
         try {
@@ -89,7 +91,7 @@ function CreateFolder(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyle}>
+                <Box sx={ModalStyles.modalStyle(defaultColor?.secondaryColor)}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Create folder

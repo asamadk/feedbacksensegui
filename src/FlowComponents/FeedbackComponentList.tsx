@@ -7,10 +7,10 @@ import { STATUS } from 'react-joyride';
 import { CallBackProps } from 'react-joyride';
 import { Step } from 'react-joyride';
 import { componentList } from '../Utils/Constants';
+import { useSelector } from 'react-redux';
 
 const getCommonContainerStyle = () => {
     return {
-        backgroundColor: '#1E1E1E',
         border: '1px #454545 solid',
         margin: '10px',
         borderRadius: '5px',
@@ -39,6 +39,7 @@ function FeedbackComponentList() {
     }
 
     const [showJoyride, setShowJoyride] = useState(false);
+    const defaultColor = useSelector((state: any) => state.colorReducer);
     const [{ run, steps }, setState] = useState<State>({
         run: false,
         steps: [
@@ -125,7 +126,7 @@ function FeedbackComponentList() {
     }
 
     return (
-        <Box height={'calc(100vh - 128px)'} sx={{ backgroundColor: '#1A1A1A' }}>
+        <Box height={'calc(100vh - 128px)'} sx={{ backgroundColor: defaultColor?.backgroundColor }}>
             <Joyride
                 callback={handleJoyrideCallback}
                 continuous
@@ -161,14 +162,14 @@ function FeedbackComponentList() {
                                     onDragStart={(e) => onDragStart(e, component)}
                                     key={component.id}
                                     draggable={true}
-                                    sx={getCommonContainerStyle()}
+                                    sx={{...getCommonContainerStyle(),backgroundColor: defaultColor?.primaryColor}}
                                 >
                                     <Box sx={commonLogoStyle} >
                                         <DynamicComponentIcon id={component.id} />
                                     </Box>
                                     <Box>
                                         <Typography color={component.bgColor} fontSize={15} >{component.header}</Typography>
-                                        <Typography color={'#454545'} fontSize={12} >
+                                        <Typography color={'#808080'} fontSize={12} >
                                             {component.description.substring(0, 68)}
                                             {component.description.length > 68 ? '...' : ''}
                                         </Typography>

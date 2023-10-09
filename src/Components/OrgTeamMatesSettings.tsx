@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Chip, IconButton, MenuItem, Select, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import InviteMemberModal from '../Modals/InviteMemberModal'
 import DeleteIcon from '@mui/icons-material/Delete';
 import * as ButtonStyles from '../Styles/ButtonStyle'
@@ -8,14 +8,23 @@ import EditIcon from '@mui/icons-material/Edit';
 import UserDetailsModal from '../Modals/UserDetailsModal'
 import GenericModal from '../Modals/GenericModal';
 import { genericModalData } from '../Utils/types';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { handleLogout } from '../Utils/FeedbackUtils';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { deleteUserRoleAPI, getUserListAPI } from '../Utils/Endpoints';
+import FSLoader from './FSLoader';
+import Notification from '../Utils/Notification';
 
-const singleUserContainer = {
-  backgroundColor: '#323533',
-  borderRadius: '10px',
-  marginTop: '15px',
-  padding: '10px',
-  display: 'flex',
-  justifyContent: 'space-between'
+const singleUserContainer = (bgColor: string) => {
+  return {
+    backgroundColor: bgColor,
+    borderRadius: '10px',
+    marginTop: '15px',
+    padding: '10px',
+    display: 'flex',
+    justifyContent: 'space-between'
+  }
 }
 
 const usersList = [
@@ -55,11 +64,19 @@ const userRoles = [
 
 function OrgTeamMatesSettings() {
 
+  const snackbarRef: any = useRef(null);
   const [openInviteModal, setOpenInviteModal] = React.useState(false);
   const [openDetailsModal, setOpenDetailsModal] = React.useState(false);
   const [showGenericModal, setShowGenericModal] = React.useState(false);
   const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
-  const [selectedUser, setSelectedUser] = useState({});
+  const [selectedUser, setSelectedUser] = useState<any>({});
+  const [loading, setLoading] = React.useState(false);
+  const [userList, setUserList] = useState<any[]>([]);
+  const defaultColor = useSelector((state: any) => state.colorReducer);
+
+  useEffect(() => {
+    getUserList();
+  }, []);
 
   const handleOpenInviteModal = () => setOpenInviteModal(true);
   const handleCloseInviteModal = () => setOpenInviteModal(false);
@@ -69,12 +86,29 @@ function OrgTeamMatesSettings() {
   }
   const handleCloseDetailModal = () => setOpenDetailsModal(false);
 
-  const handleSuccessButtonClick = () => {
-    console.log('DELETE USER');
+  const handleSuccessButtonClick = async () => {
     setShowGenericModal(false);
+    try {
+      setLoading(true);
+      const { data } = await axios.post(
+        deleteUserRoleAPI(),
+        { ...genericModalObj?.data },
+        { withCredentials: true }
+      );
+      setLoading(false);
+      snackbarRef?.current?.show(data?.message, 'success');
+      deleteUserRerender(genericModalObj?.data.userId);
+    } catch (error: any) {
+      setLoading(false);
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      setLoading(false);
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        handleLogout();
+      }
+    }
   }
 
-  const handleDeleteButtonClick = () => {
+  const handleDeleteButtonClick = (userId: string) => {
     setShowGenericModal(true);
     let genDeleteObj: genericModalData = {
       header: 'You are removing a user!',
@@ -83,14 +117,54 @@ function OrgTeamMatesSettings() {
       cancelButtonText: 'Cancel',
       description: 'The user will be removed from FeedbackSense.',
       type: 'delete',
+      data: {
+        userId: userId
+      }
     }
     setGenericModalObj(genDeleteObj);
   }
 
+  const getUserList = async (): Promise<void> => {
+    try {
+      setLoading(true);
+      let { data } = await axios.get(getUserListAPI(), { withCredentials: true });
+      setLoading(false);
+      if (data?.statusCode !== 200) {
+        snackbarRef?.current?.show(data?.message, 'error');
+        return;
+      }
+
+      if (data.data != null) {
+        setUserList(data.data);
+      }
+    } catch (error: any) {
+      setLoading(false);
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        handleLogout();
+      }
+    }
+  }
+
+  const deleteUserRerender = (userId: string) => {
+    const updatedUserList = userList.filter(user => user.id !== userId);
+    setUserList(updatedUserList);
+  }
+
+  const updateUser = (newRole: string) => {
+    const tempUser: any[] = JSON.parse(JSON.stringify(userList));
+    tempUser.forEach(usr => {
+      if (usr.id === selectedUser.id) {
+        usr.role = newRole
+        return
+      }
+    });
+    setUserList(tempUser);
+  }
 
   const SingleUserList = (user: any) => {
     return (
-      <Box sx={singleUserContainer} >
+      <Box sx={singleUserContainer(defaultColor?.primaryColor)} >
         <Box display={'flex'} >
           <Avatar sx={{ bgcolor: '#006DFF', width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
           <Box textAlign={'start'} >
@@ -103,7 +177,7 @@ function OrgTeamMatesSettings() {
           <IconButton onClick={() => handleOpenDetailModal(user)} sx={{ marginLeft: '10px' }} >
             <EditIcon sx={{ color: '#808080' }} />
           </IconButton>
-          <IconButton onClick={handleDeleteButtonClick} sx={{ marginLeft: '5px' }} >
+          <IconButton onClick={() => handleDeleteButtonClick(user?.id)} sx={{ marginLeft: '5px' }} >
             <DeleteIcon sx={{ color: '#808080' }} />
           </IconButton>
         </Box>
@@ -112,14 +186,14 @@ function OrgTeamMatesSettings() {
   }
 
   return (
-    <Box sx={LayoutStyles.globalSettingSubContainers} >
+    <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.secondaryColor)} >
       <Box sx={{ display: 'flex', marginBottom: '50px', justifyContent: 'space-between' }} >
         <Typography variant='h5' color={'white'} marginTop={'10px'} >Users</Typography>
         <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} onClick={handleOpenInviteModal} variant="contained">Invite Teammantes</Button>
       </Box>
       <Box>
         {
-          usersList.map((user) => {
+          userList?.map((user) => {
             return (
               <Box key={user.email} >
                 {SingleUserList(user)}
@@ -134,6 +208,7 @@ function OrgTeamMatesSettings() {
         open={openDetailsModal}
         close={handleCloseDetailModal}
         roles={userRoles}
+        updateUser={updateUser}
       />
       <GenericModal
         payload={genericModalObj}
@@ -141,6 +216,8 @@ function OrgTeamMatesSettings() {
         open={showGenericModal}
         callback={handleSuccessButtonClick}
       />
+      <FSLoader show={loading} />
+      <Notification ref={snackbarRef} />
     </Box>
   )
 }

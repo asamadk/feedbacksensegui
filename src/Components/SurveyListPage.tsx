@@ -15,6 +15,7 @@ import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import Popover from './Popover';
+import { useSelector } from 'react-redux';
 
 
 const surveyPageMainContainer = {
@@ -23,14 +24,16 @@ const surveyPageMainContainer = {
     color: '#f1f1f1'
 }
 
-const allSurveyFolder = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '10px',
-    paddingBottom: '10px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    backgroundColor: '#454545'
+const allSurveyFolder = (bgColor : string) => {
+    return {
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '10px',
+        paddingBottom: '10px',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        backgroundColor: bgColor
+    }
 }
 
 const surveyFolderText = {
@@ -62,6 +65,7 @@ function SurveyListPage() {
     const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
     const [selectedFolder, setSelectedFolder] = React.useState<string>('All Surveys');
     const [selectedFolderId, setSelectedFolderId] = React.useState<string>('0');
+    const defaultColor = useSelector((state: any) => state.colorReducer);
     const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
@@ -127,10 +131,10 @@ function SurveyListPage() {
         setSelectedFolderId('0');
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = '#1E1E1E';
+            element.style.background = defaultColor?.backgroundColor;
         });
 
-        e.target.style.background = '#323533';
+        e.target.style.background = defaultColor?.primaryColor;
 
     }
 
@@ -149,13 +153,13 @@ function SurveyListPage() {
         setSelectedFolderId(folderId);
 
         document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
-            element.style.background = '#1E1E1E';
+            element.style.background = defaultColor?.backgroundColor;
         })
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = '#1E1E1E';
+            element.style.background = defaultColor?.backgroundColor;
         });
-        e.target.style.background = '#323533';
+        e.target.style.background = defaultColor?.primaryColor;
     }
 
     const handleOpenInviteModal = () => setOpeninviteModal(true);
@@ -175,7 +179,7 @@ function SurveyListPage() {
     }
 
     const unhighlightCreateFolder = (e: any) => {
-        e.target.style.color = '#323533';
+        e.target.style.color = defaultColor?.primaryColor;
     }
 
     const handleDeleteFolderClick = async (folderId: string) => {
@@ -192,7 +196,7 @@ function SurveyListPage() {
             setSelectedFolder('All Surveys');
             setSelectedFolderId('0');
             document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
-                element.style.background = '#323533';
+                element.style.background = defaultColor?.primaryColor;
             });
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
@@ -217,11 +221,11 @@ function SurveyListPage() {
         setSelectedFolderId('0');
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = '#1E1E1E';
+            element.style.background = defaultColor?.backgroundColor;
         });
 
         document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
-            element.style.background = '#323533';
+            element.style.background = defaultColor?.primaryColor;
         })
     }
 
@@ -230,7 +234,7 @@ function SurveyListPage() {
             <div style={surveyPageMainContainer} >
                 <div style={{ display: 'flex', width: '15%', flexDirection: 'column', borderRight: '1px #454545 solid', justifyContent: 'space-between', padding: '10px 30px' }} >
                     <div style={{ width: '100%', overflowY: 'scroll', paddingBottom: '20px' }} >
-                        <div style={allSurveyFolder} className="all-folders-data" onClick={handleAllFolderClick} >
+                        <div style={allSurveyFolder(defaultColor?.primaryColor)} className="all-folders-data" onClick={handleAllFolderClick} >
                             <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >All Surveys</Typography>
                         </div>
                         <div style={folderText}>

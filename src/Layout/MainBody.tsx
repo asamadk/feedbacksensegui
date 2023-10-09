@@ -1,14 +1,19 @@
 import React from 'react'
 import SurveyListPage from '../Components/SurveyListPage';
+import { useSelector } from 'react-redux';
+import { Box } from '@mui/material';
 
 function MainBody() {
+
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+
     return (
-        <div style={{
-            backgroundColor: '#1E1E1E',
+        <Box style={{
+            backgroundColor: defaultColor?.backgroundColor,
             height : 'calc(100vh - 58px)'
         }} >
             <SurveyListPage />
-        </div>
+        </Box>
     )
 }
 

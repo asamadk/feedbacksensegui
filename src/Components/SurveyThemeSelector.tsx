@@ -97,15 +97,6 @@ function SurveyThemeSelector(props: any) {
       <Box sx={{ textAlign: 'start', marginBottom: '40px' }} >
         <Box display={'flex'} justifyContent={'space-between'}>
           <Typography sx={{ color: '#f1f1f1', fontSize: '20px', marginBottom: '10px' }} >Selected theme</Typography>
-          {/* {
-            selectedTheme != null &&
-            <Button 
-              sx={ButtonStyles.containedButton} style={{width : 'fit-content', color : '#f1f1f1', margin : 0, marginBottom : '15px'}} 
-              onClick={handleSaveClick}
-            >
-              Save
-            </Button> 
-          } */}
         </Box>
         <ThemeComponent
           color1={selectedTheme?.color[0]}
@@ -138,10 +129,10 @@ function SurveyThemeSelector(props: any) {
 export default SurveyThemeSelector
 
 function ThemeComponent(props: any) {
+  
   return (
     <Box sx={{ cursor: 'pointer', height: '90px', border: '1px #454545 solid', borderRadius: '5px', display: 'flex', marginBottom: '10px' }} >
       <Box sx={{ width: '25%', borderRight: '1px #454545 solid', backgroundColor: props.color1 }} ></Box>
-      {/* <Box sx={{ width: '25%', borderRight: '1px #454545 solid', backgroundColor: props.color2 }} ></Box> */}
       <Box sx={{ width: '75%', margin: 'auto', paddingLeft: '20px' }} >
         <Typography sx={{ color: '#f1f1f1' }} >{props.textHeading}</Typography>
         <Typography sx={{ color: '#454545' }} >{props.textSecond}</Typography>

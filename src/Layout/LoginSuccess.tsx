@@ -10,6 +10,7 @@ import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
+import { useSelector } from 'react-redux';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -55,7 +56,6 @@ const StyledDropdown = styled(Autocomplete)({
 
 const subContainerCss = {
   borderRadius: '5px',
-  backgroundColor: '#181818',
   border: '1px #454545 solid',
   padding: '20px',
   position: 'absolute' as 'absolute',
@@ -80,6 +80,7 @@ function LoginSuccess() {
   const [selectedOrg, setSelectedOrg] = useState<string | null>(orgList[0]);
   const [selectedOrgValue, setSelectedOrgValue] = useState<any>('');
   const [loading, setLoading] = React.useState(false);
+  const defaultColor = useSelector((state: any) => state.colorReducer);
 
   useEffect(() => {
     fetchAllOrgList();
@@ -187,8 +188,11 @@ function LoginSuccess() {
   }
 
   return (
-    <Box sx={LayoutStyles.settingLayoutStyle} style={{ height: 'calc(100vh - 120px)' }} >
-      <Box sx={subContainerCss} >
+    <Box 
+      sx={{...LayoutStyles.settingLayoutStyle,backgroundColor : defaultColor?.backgroundColor}} 
+      style={{ height: 'calc(100vh - 120px)' }} 
+    >
+      <Box sx={{...subContainerCss,backgroundColor: defaultColor?.secondaryColor}} >
         <Box marginBottom={'10px'} >
           <Typography color='#f1f1f1' fontSize={'22px'} >Share a few details about you</Typography>
           <Typography color='#808080' fontSize={'14px'} >It will help us to get to know your better</Typography>

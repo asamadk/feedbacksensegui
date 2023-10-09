@@ -1,5 +1,4 @@
 export const settingLayoutStyle = {
-    backgroundColor: '#1E1E1E',
     height: 'calc(100vh - 158px)',
     padding: '50px 70px',
     overflowY : 'scroll'
@@ -11,12 +10,14 @@ export const settingsHeaderTextStyle = {
     textAlighn: 'start'
 }
 
-export const globalSettingSubContainers = {
-    borderRadius: '5px',
-    backgroundColor: '#181818',
-    border: '1px #454545 solid',
-    padding: '20px',
-    marginTop: '20px'
+export const globalSettingSubContainers = (bgColor : string) => {
+    return {
+        borderRadius: '5px',
+        backgroundColor: bgColor,
+        border: '1px #454545 solid',
+        padding: '20px',
+        marginTop: '20px'
+    }
 }
 
 export const localSurveyNavbar = {

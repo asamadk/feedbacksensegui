@@ -11,6 +11,7 @@ import CustomTabSet from '../Components/CustomTabSet';
 import CreateLogic from '../Components/Logic/CreateLogic';
 import { logicType } from '../Utils/types';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
+import { useSelector } from 'react-redux';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -37,6 +38,7 @@ function SingleAnswerSelectionModal(props: any) {
 
     const snackbarRef: any = useRef(null);
     const createLogicRef = useRef<any>(null); // Create a ref for the child component
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     useEffect(() => {
         populateCompConfig();
@@ -83,10 +85,6 @@ function SingleAnswerSelectionModal(props: any) {
     }
 
     const handleAddAnswerChoice = () => {
-        // if (answerChoiceList.length > 30) {
-        //     snackbarRef?.current?.show('Cannot use more than 10 answer chioces', 'error');
-        //     return;
-        // }
         setAnswerChoiceList([...answerChoiceList, '']);
     }
 
@@ -123,7 +121,7 @@ function SingleAnswerSelectionModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyleComponents}>
+                <Box sx={ModalStyles.modalStyleComponents(defaultColor?.secondaryColor)}>
                     <Box width={'40%'} marginRight={10} >
                         <Box sx={ModalStyles.modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">

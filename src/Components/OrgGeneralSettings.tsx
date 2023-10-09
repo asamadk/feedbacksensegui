@@ -8,6 +8,7 @@ import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import { useNavigate } from 'react-router';
 import { handleLogout } from '../Utils/FeedbackUtils';
+import { useSelector } from 'react-redux';
 
 
 function OrgGeneralSettings() {
@@ -16,6 +17,7 @@ function OrgGeneralSettings() {
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
   const [userDetail, setUserDetail] = useState<any>();
+  const defaultColor = useSelector((state: any) => state.colorReducer);
 
   useEffect(() => {
     getUserDetails();
@@ -41,36 +43,32 @@ function OrgGeneralSettings() {
   }
 
   return (
-    <Box sx={LayoutStyles.globalSettingSubContainers} >
+    <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.primaryColor)} >
       <Box display={'flex'} marginBottom={2}  >
         <Typography width={200} textAlign={'start'} color={'#f1f1f1'} >Organization Id </Typography>
-        <Typography color={'#454545'} >{userDetail?.organization_id}</Typography>
+        <Typography color={'#808080'} >{userDetail?.organization_id}</Typography>
       </Box>
-      {/* <Box display={'flex'} marginBottom={2}>
-        <Typography width={200} textAlign={'start'} color={'#f1f1f1'} >Organization Owner </Typography>
-        <Typography color={'#454545'} >Abdul Samad Kirmani</Typography>
-      </Box> */}
       <Box display={'flex'} marginBottom={2}>
         <Typography width={200} textAlign={'start'} color={'#f1f1f1'} >User’s Name </Typography>
-        <Typography color={'#454545'} >{userDetail?.name}</Typography>
+        <Typography color={'#808080'} >{userDetail?.name}</Typography>
       </Box>
       <Box display={'flex'} marginBottom={2}>
         <Typography width={200} textAlign={'start'} color={'#f1f1f1'} >User’s Email </Typography>
-        <Typography color={'#454545'} >{userDetail?.email}</Typography>
+        <Typography color={'#808080'} >{userDetail?.email}</Typography>
       </Box>
       <Box display={'flex'} marginBottom={2}>
         <Typography width={200} textAlign={'start'} color={'#f1f1f1'} >User Email Verified </Typography>
-        <Typography color={'#454545'} >
+        <Typography color={'#808080'} >
           {userDetail?.emailVerified === true ? 'Verified' : 'Not verified'}
         </Typography>
       </Box>
       <Box display={'flex'} marginBottom={2}>
         <Typography width={200} textAlign={'start'} color={'#f1f1f1'} >Joined on </Typography>
-        <Typography color={'#454545'} >{new Date(userDetail?.created_at)?.toDateString()}</Typography>
+        <Typography color={'#808080'} >{new Date(userDetail?.created_at)?.toDateString()}</Typography>
       </Box>
       <Box display={'flex'} marginBottom={2}>
         <Typography width={200} textAlign={'start'} color={'#f1f1f1'} >Authorized by </Typography>
-        <Typography color={'#454545'} >{userDetail?.oauth_provider.toUpperCase()}</Typography>
+        <Typography color={'#808080'} >{userDetail?.oauth_provider.toUpperCase()}</Typography>
       </Box>
       <FSLoader show={loading} />
       <Notification ref={snackbarRef} />

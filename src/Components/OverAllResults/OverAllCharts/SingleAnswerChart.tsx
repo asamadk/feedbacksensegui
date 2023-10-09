@@ -18,10 +18,6 @@ type propsType = {
 
 function SingleAnswerChart(props: propsType) {
 
-    useEffect(() => {
-        console.log("🚀 ~ file: SingleAnswerChart.tsx:23 ~ useEffect ~ props.data:", props.data)
-    }, []);
-
     return (
         <Box sx={mainContainer} >
             <Typography fontSize={20} color={'#f1f1f1'} paddingBottom={'10px'} >Question : {props?.data?.question}</Typography>
@@ -51,7 +47,6 @@ export default SingleAnswerChart
 
 
 function SingleAnswerBarChart(props: any) {
-    console.log("🚀 ~ file: SingleAnswerChart.tsx:62 ~ SingleAnswerBarChart ~ props?.data?.statsArr:", props?.data?.statsArr)
 
     return (
         <Box sx={{ width: '100%', height: 300 }} marginTop={3} marginBottom={3} >

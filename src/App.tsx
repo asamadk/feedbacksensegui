@@ -22,15 +22,13 @@ import PaymentSuccess from './Components/Stripe/PaymentSuccess';
 import TemplateLayout from './Layout/TemplateLayout';
 import TemplateDetailLayout from './Layout/TemplateDetailLayout';
 import PreviewSurveyLayout from './Layout/PreviewSurveyLayout';
-
-const globalBodyStyle = {
-  backgroundColor: '#1E1E1E',
-}
+import { useSelector } from 'react-redux';
 
 function App() {
 
   let navigate = useNavigate();
-
+  
+  const defaultColor = useSelector((state: any) => state.colorReducer);
   const [user, setUser] = useState(null);
   const [currentSurveyId, setCurrentSurveyId] = useState('');
   const dataFetchedRef = useRef(false);
@@ -50,6 +48,7 @@ function App() {
       }
 
       const currentUser = data.data;
+      console.log("🚀 ~ file: App.tsx:51 ~ getUser ~ currentUser:", currentUser)
       if (currentUser.organization_id == null || currentUser.organization_id === '') {
         setUser(currentUser);
         navigate('/user/create/organization');
@@ -100,7 +99,7 @@ function App() {
         />
       </Routes>
       <ThemeProvider theme={darkTheme} >
-        {liveSurvey === false && <div style={globalBodyStyle} className="App">
+        {liveSurvey === false && <div style={{backgroundColor : defaultColor?.backgroundColor}} className="App">
           <Header surveyId={currentSurveyId} loggedIn={user != null} />
           <Routes>
             <Route

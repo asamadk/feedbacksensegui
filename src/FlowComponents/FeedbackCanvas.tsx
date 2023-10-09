@@ -29,9 +29,9 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     const dispatch = useDispatch<any>();
     const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
     const [isWorkflowPublished , setIsWorkflowPublished] = useState<boolean>(props.published);
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     useEffect(() => {
-        console.log('USE EFFECT PUBLISH CHANGE',props.published);
         setIsWorkflowPublished(props.published);
     },[props.published]);
 
@@ -78,7 +78,6 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
             border: `1px ${color} solid`,
             width: '300px',
             height: '82px',
-            backgroundColor: '#1E1E1E',
             borderRadius: '5px',
             padding: '10px'
         }
@@ -104,7 +103,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                     description: comp.description,
                     onEdit: props.onEdit
                 },
-                style: getComponentStyle(comp.bgColor),
+                style: {...getComponentStyle(comp.bgColor),backgroundColor: defaultColor?.backgroundColor},
             };
             return newNodes;
         });
@@ -126,7 +125,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                 description: componentData.description,
                 onEdit: props.onEdit
             },
-            style: getComponentStyle(componentData.bgColor),
+            style: {...getComponentStyle(componentData.bgColor),backgroundColor: defaultColor?.backgroundColor},
             position: position,
         }
 
@@ -473,7 +472,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     return (
         <>
             <ReactFlowProvider>
-                <Box sx={{ backgroundColor: '#1E1E1E' }} height={'calc(100vh - 128px)'} ref={reactFlowWrapper} >
+                <Box sx={{ backgroundColor: defaultColor?.backgroundColor }} height={'calc(100vh - 128px)'} ref={reactFlowWrapper} >
                     <ReactFlow
                         onConnect={onConnect}
                         onInit={setReactFlowInstance}
@@ -503,7 +502,11 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                         panOnScroll
                         selectionOnDrag
                     >
-                        <MiniMap nodeColor={'#1e1e1e'} color={'#1E1E1E'} style={{ backgroundColor: '#454545' }} />
+                        <MiniMap 
+                            nodeColor={defaultColor?.backgroundColor} 
+                            color={defaultColor?.backgroundColor} 
+                            style={{ backgroundColor: '#454545' }} 
+                        />
                         <Background />
                         <Controls />
                         <Box sx={{ position: 'absolute', top: '10px', left: '-5px' }} >

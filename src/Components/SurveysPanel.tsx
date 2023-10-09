@@ -108,7 +108,7 @@ function SurveysPanel(props: any) {
     const getUserList = async (): Promise<void> => {
         try {
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getUserList(), { withCredentials: true });
+            let { data } = await axios.get(Endpoints.getUserListAPI(), { withCredentials: true });
             setLoading(false);
             if (data?.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');

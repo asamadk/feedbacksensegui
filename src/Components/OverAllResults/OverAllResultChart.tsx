@@ -12,13 +12,16 @@ import html2canvas from 'html2canvas';
 import DownloadIcon from '@mui/icons-material/Download';
 import { iconStyle } from '../../Layout/CreateSurvey';
 import FSTooltip from '../FSTooltip';
+import { useSelector } from 'react-redux';
 
-const mainContainer = {
-    margin: '20px',
-    marginTop: '25px',
-    border: '1px #454545 solid',
-    borderRadius: '6px',
-    backgroundColor: '#1A1A1A'
+const mainContainer = (bgColor : string) => {
+    return {
+        margin: '20px',
+        marginTop: '25px',
+        border: '1px #454545 solid',
+        borderRadius: '6px',
+        backgroundColor: bgColor
+    }
 };
 
 const mainTextStyle = {
@@ -41,6 +44,7 @@ function OverAllResultChart(props: propsType) {
     const snackbarRef: any = useRef(null);
     const navigate = useNavigate();
     const [loading, setLoading] = React.useState(false);
+    const defaultColor = useSelector((state: any) => state.colorReducer);
     const [overAllResultGraph, setOverAllResultGraph] = useState<any[]>([]);
 
     useEffect(() => {
@@ -88,7 +92,7 @@ function OverAllResultChart(props: propsType) {
     };
 
     return (
-        <Box sx={mainContainer}>
+        <Box sx={mainContainer(defaultColor?.primaryColor)}>
             <Box display={'flex'} justifyContent={'space-between'} >
                 <Typography sx={mainTextStyle}>Response</Typography>
                 <IconButton sx={iconStyle} onClick={handleDownload} size='small' aria-label="add">
@@ -101,7 +105,7 @@ function OverAllResultChart(props: propsType) {
                     <BarChart data={overAllResultGraph}>
                         <YAxis />
                         <Tooltip 
-                            cursor={{fill: '#1e1e1e'}} 
+                            cursor={{fill: 'none'}} 
                             content={<FSTooltip />} 
                         />
                         <XAxis dataKey="date" />

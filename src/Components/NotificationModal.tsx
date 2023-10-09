@@ -3,17 +3,21 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import ListItemText from "@mui/material/ListItemText";
+import { useSelector } from "react-redux";
 
-const notificationMainStyle = {
-    width: "100%",
-    maxWidth: 360,
-    bgcolor: "background.paper",
-    position: "absolute",
-    right: "10px",
-    borderRadius: "5px",
-    transition: "all .2s",
-    zIndex: 10,
-    color : '#f1f1f1'
+const notificationMainStyle = (bgColor : string) => {
+    return {
+        width: "100%",
+        maxWidth: 360,
+        bgcolor: bgColor,
+        position: "absolute",
+        right: "10px",
+        borderRadius: "5px",
+        transition: "all .2s",
+        zIndex: 10,
+        color : '#f1f1f1',
+        border : '1px #454545 solid'
+    }
 };
 
 const notificationData = [
@@ -25,8 +29,10 @@ const notificationData = [
 
 export default function NotificationModal() {
 
+  const defaultColor = useSelector((state: any) => state.colorReducer);
+
     return (
-        <List sx={notificationMainStyle}>
+        <List sx={notificationMainStyle(defaultColor?.primaryColor)}>
             {
                 notificationData.map(notify => {
                     return (
@@ -41,7 +47,6 @@ export default function NotificationModal() {
                                     }
                                 />
                             </ListItem>
-                            <Divider variant="inset" component="li" />
                         </>
                     )
                 })

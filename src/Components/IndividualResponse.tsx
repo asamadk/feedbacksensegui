@@ -13,26 +13,31 @@ import EmptyAnalysis from './OverAllResults/EmptyAnalysis';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { useNavigate } from 'react-router';
 import { handleLogout } from '../Utils/FeedbackUtils';
+import { useSelector } from 'react-redux';
 
-const responseStyle = {
-    padding: '10px',
-    margin: '10px',
-    textAlign: 'start',
-    cursor: 'pointer',
-    borderRadius: '6px',
-    transition: '0.3s',
-    backgroundColor: '#1A1A1A'
+const responseStyle = (bgColor : string) => {
+    return {
+        padding: '10px',
+        margin: '10px',
+        textAlign: 'start',
+        cursor: 'pointer',
+        borderRadius: '6px',
+        transition: '0.3s',
+        backgroundColor: bgColor
+    }
 }
 
-const selectedResponseStyle = {
-    padding: '10px',
-    margin: '10px',
-    textAlign: 'start',
-    cursor: 'pointer',
-    borderRadius: '6px',
-    border: '1px #454545 solid',
-    transition: '0.3s',
-    backgroundColor: '#1A1A1A'
+const selectedResponseStyle = (bgColor : string) => {
+    return {
+        padding: '10px',
+        margin: '10px',
+        textAlign: 'start',
+        cursor: 'pointer',
+        borderRadius: '6px',
+        border: '1px #454545 solid',
+        transition: '0.3s',
+        backgroundColor: bgColor
+    }
 }
 
 type IndividualResponseProps = {
@@ -43,6 +48,7 @@ function IndividualResponse(props: IndividualResponseProps) {
     const snackbarRef: any = useRef(null);
     const navigate = useNavigate();
 
+    const defaultColor = useSelector((state: any) => state.colorReducer);
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<Types.genericModalData>();
     const [surveyResponseList, setSurveyResponseList] = useState<any[]>([]);
@@ -191,7 +197,7 @@ function IndividualResponse(props: IndividualResponseProps) {
                                         key={res.id}
                                         id={res.id}
                                         onClick={() => handleResponseListClick(res.id)}
-                                        sx={res?.selected === true ? selectedResponseStyle : responseStyle}
+                                        sx={res?.selected === true ? selectedResponseStyle(defaultColor?.primaryColor) : responseStyle(defaultColor?.secondaryColor)}
                                     >
                                         <Typography fontSize={'14px'} fontWeight={'600'} color={'#f1f1f1'} >{'Anonymous Response'}</Typography>
                                         <Typography sx={{ fontSize: '13px' }} color={'#808080'} >{res?.id}</Typography>

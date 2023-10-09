@@ -13,6 +13,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs, isDayjs } from 'dayjs';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { handleLogout, validateEmail } from '../Utils/FeedbackUtils';
+import { useSelector } from 'react-redux';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -41,6 +42,7 @@ function ConfigureSurvey() {
 
   const snackbarRef: any = useRef(null);
   const navigate = useNavigate();
+  const defaultColor = useSelector((state: any) => state.colorReducer);
 
   useEffect(() => {
     getSurveyConfig();
@@ -178,11 +180,11 @@ function ConfigureSurvey() {
   }
 
   return (
-    <Box sx={settingLayoutStyle} >
+    <Box sx={{...settingLayoutStyle,backgroundColor : defaultColor?.backgroundColor}} >
 
-      <Box sx={globalSettingSubContainers} >
+      <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
         <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Response notification</Typography>
-        <Typography marginTop={'20px'} textAlign={'start'} color={'#454545'} >
+        <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
           Would you like to receive notifications when someone fills out the survey?
         </Typography>
         <Box textAlign={'start'} >
@@ -207,9 +209,9 @@ function ConfigureSurvey() {
         }
       </Box>
 
-      <Box sx={globalSettingSubContainers} >
+      <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
         <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Responses limit</Typography>
-        <Typography marginTop={'20px'} textAlign={'start'} color={'#454545'} >
+        <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
           Set the maximum number of responses you'd like to collect with this survey.
         </Typography>
         {/* <Box textAlign={'start'} >
@@ -234,9 +236,9 @@ function ConfigureSurvey() {
         }
       </Box>
 
-      <Box sx={globalSettingSubContainers} >
+      <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
         <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >End date</Typography>
-        <Typography marginTop={'20px'} textAlign={'start'} color={'#454545'} >
+        <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
           Set a cut-off date on which this survey will close and stop accepting responses.
         </Typography>
         <Box textAlign={'start'} >

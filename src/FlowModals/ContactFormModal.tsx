@@ -8,6 +8,7 @@ import { getColorsFromTheme, getCompConfigFromUiId, modalTabList } from '../Util
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import CustomTabSet from '../Components/CustomTabSet';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
+import { useSelector } from 'react-redux';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -39,7 +40,7 @@ function ContactFormModal(props: any) {
     const [background, setBackground] = useState<any>();
     const [answerChoiceList, setAnswerChoiceList] = useState<string[]>(['']);
     const [questionText, setQuestionText] = useState('');
-    const [value, setValue] = React.useState(0);
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
@@ -97,10 +98,6 @@ function ContactFormModal(props: any) {
         setAnswerChoiceList(newArr);
     }
 
-    const handleTabChange = (newValue: number) => {
-        setValue(newValue);
-    };
-
     return (
         <>
             <Modal
@@ -109,7 +106,7 @@ function ContactFormModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyleComponents}>
+                <Box sx={ModalStyles.modalStyleComponents(defaultColor?.secondaryColor)}>
                     <Box width={'40%'} marginRight={10} sx={{ overflowY: 'scroll' }}>
                         <Box sx={ModalStyles.modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">

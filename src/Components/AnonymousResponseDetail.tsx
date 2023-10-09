@@ -2,6 +2,7 @@ import { Box, Divider, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import DynamicComponentIcon from '../FlowComponents/DynamicComponentIcon'
 import { getEmojiFromId, getIconColorById } from '../Utils/FeedbackUtils'
+import { useSelector } from 'react-redux'
 
 type propsType = {
     data: any
@@ -11,8 +12,7 @@ const containerStyle = {
     padding: '10px',
     margin: '10px',
     textAlign: 'start',
-    overflowY: 'scroll',
-    // backgroundColor : '#1A1A1A'
+    overflowY: 'scroll'
 }
 
 function AnonymousResponseDetail(props: propsType) {
@@ -47,14 +47,16 @@ function AnonymousResponseDetail(props: propsType) {
 
 export default AnonymousResponseDetail
 
-const answerContainer = {
-    padding: '10px',
-    margin: '10px',
-    textAlign: 'start',
-    cursor: 'pointer',
-    borderRadius: '6px',
-    backgroundColor: '#1A1A1A',
-    color: '#ffffff'
+const answerContainer = (bgColor : string) => {
+    return {
+        padding: '10px',
+        margin: '10px',
+        textAlign: 'start',
+        cursor: 'pointer',
+        borderRadius: '6px',
+        backgroundColor: bgColor,
+        color: '#ffffff'
+    }
 }
 
 const questionStyle = {
@@ -64,6 +66,9 @@ const questionStyle = {
 }
 
 function DynamicComponentSingleResponse({ id, data }: any) {
+    
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+
     return (
         <Box >
             {id === 1 && <>
@@ -76,7 +81,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.welcomeText}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer} >
+                <Box sx={answerContainer(defaultColor?.primaryColor)} >
                     <Typography>Answer</Typography>
                     <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{`Action performed : ${data?.data?.click}`}</Typography>
@@ -92,7 +97,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer} >
+                <Box sx={answerContainer(defaultColor?.primaryColor)} >
                     <Typography>Answer</Typography>
                     <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{`${data?.data?.selectedVal}`}</Typography>
@@ -108,7 +113,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer} >
+                <Box sx={answerContainer(defaultColor?.primaryColor)} >
                     <Typography>Answer</Typography>
                     <Divider sx={{ margin: '5px', background: '#454545' }} />
                     {data?.data?.selectedVal?.map((val: string) => {
@@ -128,7 +133,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer} >
+                <Box sx={answerContainer(defaultColor?.primaryColor)} >
                     <Typography>Answer</Typography>
                     <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{`${data?.data?.answer}`}</Typography>
@@ -144,7 +149,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer} >
+                <Box sx={answerContainer(defaultColor?.primaryColor)} >
                     <Typography>Answer</Typography>
                     <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{getEmojiFromId(data?.data?.emojiId)}</Typography>
@@ -160,7 +165,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer} >
+                <Box sx={answerContainer(defaultColor?.primaryColor)} >
                     <Typography>Answer</Typography>
                     <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{`${data?.data?.value}`}</Typography>
@@ -176,7 +181,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer} >
+                <Box sx={answerContainer(defaultColor?.primaryColor)} >
                     <Typography>Answer</Typography>
                     <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{`${data?.data?.value}`}</Typography>
@@ -192,7 +197,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer} >
+                <Box sx={answerContainer(defaultColor?.primaryColor)} >
                     <Typography>Answer</Typography>
                     <Divider sx={{ margin: '5px', background: '#454545' }} />
                     {data?.compData?.answerList?.map((val: string) => {
@@ -212,7 +217,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer} >
+                <Box sx={answerContainer(defaultColor?.primaryColor)} >
                     <Typography>Answer</Typography>
                     <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{new Date(data?.data?.value)?.toLocaleDateString()}</Typography>

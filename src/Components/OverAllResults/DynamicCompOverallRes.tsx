@@ -9,13 +9,16 @@ import Notification from '../../Utils/Notification'
 import axios from 'axios'
 import { USER_UNAUTH_TEXT } from '../../Utils/Constants'
 import { useNavigate } from 'react-router'
+import { useSelector } from 'react-redux'
 
-const mainContainer = {
-  margin: '20px',
-  marginTop: '25px',
-  border: '1px #454545 solid',
-  borderRadius: '6px',
-  backgroundColor: '#1A1A1A'
+const mainContainer = (bgColor : string) => {
+  return {
+    margin: '20px',
+    marginTop: '25px',
+    border: '1px #454545 solid',
+    borderRadius: '6px',
+    backgroundColor: bgColor
+  }
 }
 
 const mainTextStyle = {
@@ -87,8 +90,11 @@ type propsType = {
 }
 
 function ComponentOverAllResponse(props: propsType) {
+
+  const defaultColor = useSelector((state: any) => state.colorReducer);
+
   return (
-    <Box sx={mainContainer} >
+    <Box sx={mainContainer(defaultColor?.primaryColor)} >
       <Box sx={subContainerStyle} >
         <Box sx={{ marginTop: '10px', marginLeft: '10px' }} >
           <DynamicComponentIcon id={props.idMap[props?.id]} />

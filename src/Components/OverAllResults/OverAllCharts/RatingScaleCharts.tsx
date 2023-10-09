@@ -22,7 +22,7 @@ function RatingScaleCharts(props: propsType) {
             <YAxis dataKey="percentage" />
             <XAxis dataKey="range" />
             <Tooltip
-              cursor={{ fill: '#1e1e1e' }}
+              cursor={{ fill: 'none' }}
               content={<FSTooltip percent={true} />}
             />
             <Bar barSize={40} dataKey='percentage' fill={getIconColorById(props.id)} />

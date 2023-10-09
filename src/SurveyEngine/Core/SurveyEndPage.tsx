@@ -1,8 +1,8 @@
 import { Box, Button, Typography } from '@mui/material'
 import * as ButtonStyles from '../../Styles/ButtonStyle';
+import { useSelector } from 'react-redux';
 
 const bodyStyle: {} = {
-    backgroundColor: '#1E1E1E',
     height: '100vh',
     textAlign : 'start'
 }
@@ -16,8 +16,10 @@ const subContainerStyle = {
 
 function SurveyEndPage() {
 
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+
     return (
-        <Box sx={bodyStyle} >
+        <Box sx={{...bodyStyle,backgroundColor : defaultColor?.backgroundColor}} >
             <Box sx={subContainerStyle} >
                 <Box display={'flex'} >
                     <Typography style={{ color: '#f1f1f1', fontSize: '30px' }} variant='h4' >Feedback</Typography>

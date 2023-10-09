@@ -2,8 +2,11 @@ import { Box, Typography } from '@mui/material'
 import * as Endpoint from '../Utils/Endpoints'
 import Logo from '../Components/Logo';
 import GoogleSignInButton from '../Components/GoogleSignInButton';
+import { useSelector } from 'react-redux';
 
 function Login() {
+
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     const googleAuth = () => {
         window.open(
@@ -16,12 +19,12 @@ function Login() {
         width: '50%',
         margin: 'auto',
         padding: '50px 0px',
-        backgroundColor: '#1A1A1A',
+        // backgroundColor: '#1A1A1A',
         height: 'calc(100vh - 158px)',
     }
 
     return (
-        <Box sx={{ backgroundColor: '#1E1E1E', height: 'calc(100vh - 58px)', display: 'flex' }} >
+        <Box sx={{ backgroundColor: defaultColor?.backgroundColor, height: 'calc(100vh - 58px)', display: 'flex' }} >
             <Box width={'50%'}>
                 <Box
                     display={'flex'}
@@ -32,7 +35,6 @@ function Login() {
                     padding={'20px 40px'}
                     sx={{ backgroundColor: '#006dff' }}
                 >
-                    {/* <img style={{ width: '150px',margin : '0 auto' }} alt='Banner' src='/logofeedback.png' ></img> */}
                     <Typography
                         variant='h2'
                         fontWeight={600}
@@ -56,8 +58,7 @@ function Login() {
                     </Typography>
                 </Box>
             </Box>
-            {/* <img style={{width : '50%'}} src='slide 8.png' alt='Slide' ></img> */}
-            <Box sx={subContainerStyle} >
+            <Box sx={{...subContainerStyle,backgroundColor: defaultColor?.backgroundColor}} >
                 <Typography sx={{ color: '#f1f1f1', fontSize: '25px',marginTop : '30%' }} >
                     Welcome to
                     <span style={{ color: '#006DFF', marginLeft: '5px' }} >Feedback</span>Sense
