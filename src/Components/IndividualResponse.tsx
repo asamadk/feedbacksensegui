@@ -10,12 +10,13 @@ import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import GenericModal from '../Modals/GenericModal';
 import EmptyAnalysis from './OverAllResults/EmptyAnalysis';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
 import { useNavigate } from 'react-router';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 
-const responseStyle = (bgColor : string) => {
+const responseStyle = (bgColor: string) => {
     return {
         padding: '10px',
         margin: '10px',
@@ -27,7 +28,7 @@ const responseStyle = (bgColor : string) => {
     }
 }
 
-const selectedResponseStyle = (bgColor : string) => {
+const selectedResponseStyle = (bgColor: string) => {
     return {
         padding: '10px',
         margin: '10px',
@@ -55,6 +56,7 @@ function IndividualResponse(props: IndividualResponseProps) {
     const [selectedResponse, setSelectedResponse] = useState<any>();
     const [loading, setLoading] = React.useState(false);
     const [isEmpty, setIsEmpty] = useState(false);
+    const userRole: Types.userRoleType = useSelector((state: any) => state.userRole);
 
     useEffect(() => {
         fetchSurveyResponseList()
@@ -89,7 +91,7 @@ function IndividualResponse(props: IndividualResponseProps) {
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                 handleLogout();
             }
         }
@@ -155,13 +157,13 @@ function IndividualResponse(props: IndividualResponseProps) {
                 setSelectedResponse(tempSurveyResList[0]);
             }
 
-            if(tempSurveyResList.length === 0){
+            if (tempSurveyResList.length === 0) {
                 setIsEmpty(true);
             }
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
-            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                 handleLogout();
             }
         }
@@ -213,10 +215,15 @@ function IndividualResponse(props: IndividualResponseProps) {
                                 <Box marginLeft={'10px'} marginRight={'10px'} color={'#f1f1f1'} display={'flex'} justifyContent={'space-between'} padding={'12px'} >
                                     <Typography fontWeight={'600'} fontSize={'14px'} >Anonymous response</Typography>
                                     <Box sx={{ position: 'relative', top: '-8px', left: '20px' }} >
-                                        <Button onClick={handleShareResponseClick} style={{ width: 'fit-content', margin: '0', padding: '0' }} sx={outlinedButton} >Share</Button>
-                                        <IconButton onClick={handleDeleteResponseClick} >
-                                            <DeleteIcon sx={{ color: '#808080' }} />
-                                        </IconButton>
+                                        {
+                                            CoreUtils.isComponentVisible(userRole, componentName.DELETE_SURVEY_RESPONSE) &&
+                                            <>
+                                                <Button onClick={handleShareResponseClick} style={{ width: 'fit-content', margin: '0', padding: '0' }} sx={outlinedButton} >Share</Button>
+                                                <IconButton onClick={handleDeleteResponseClick} >
+                                                    <DeleteIcon sx={{ color: '#808080' }} />
+                                                </IconButton>
+                                            </>
+                                        }
                                     </Box>
                                 </Box>
                                 <AnonymousResponseDetail

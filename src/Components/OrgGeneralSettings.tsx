@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import * as LayoutStyles from '../Styles/LayoutStyles'
 import React, { useEffect, useRef, useState } from 'react'
-import { USER_LOCAL_KEY, USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { checkLoginStatus } from '../Utils/Endpoints';
 import axios from 'axios';
 import FSLoader from './FSLoader';

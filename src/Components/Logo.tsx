@@ -6,7 +6,7 @@ const mainContainerCss = {
     backgroundColor : '#212a2b', 
     width : 'fit-content',
     display : 'flex',
-    borderRadius : '10px',
+    borderRadius : '5px',
     padding : '5px 12px'
 }
 

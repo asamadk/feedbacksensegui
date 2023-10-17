@@ -5,7 +5,6 @@ import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import * as InputStyles from '../Styles/InputStyles';
 import React, { useEffect, useRef } from 'react'
-import { getOrgId } from '../Utils/FeedbackUtils';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import * as Endpoints from '../Utils/Endpoints';
 import axios from 'axios';
@@ -31,11 +30,6 @@ function ChangeFolderModal(props: any) {
 
     const getFolders = async () => {
         try {
-            let orgId = getOrgId();
-            if (orgId == null) {
-                snackbarRef?.current?.show('Something went wrong , please contact FeedbackSense help', 'error');
-                return;
-            }
             setLoading(true);
             let folderRes = await axios.get(Endpoints.getFolders(), { withCredentials: true });
             setLoading(false);

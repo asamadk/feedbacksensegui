@@ -9,10 +9,12 @@ import axios from 'axios'
 import { useNavigate } from 'react-router';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
-import { genericModalData } from '../Utils/types';
+import { PERM_ISSUE_TEXT, USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
+import { genericModalData, userRoleType } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
 import { useSelector } from 'react-redux';
+import UnAuthorisedComponent from './UnauthorisedComponent';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 
 
 const subscriptionSubContainer = {
@@ -35,8 +37,8 @@ const subscriptionDetailList = {
 
 function SubscriptionSettings() {
 
-    let navigate = useNavigate();
     const snackbarRef: any = useRef(null);
+    const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
@@ -63,8 +65,11 @@ function SubscriptionSettings() {
                 setSubscriptionDetail(resData);
             }
         } catch (error: any) {
-            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
+            if (error?.response?.data?.message === PERM_ISSUE_TEXT) {
+                return;
+            }
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                 FeedbackUtils.handleLogout();
             }
@@ -73,7 +78,7 @@ function SubscriptionSettings() {
 
     const handleUpgradePlanClick = () => {
         // navigate('/upgrade/plan');
-        window.open('https://www.feedbacksense.io/pricing','__blank')
+        window.open('https://www.feedbacksense.io/pricing', '__blank')
     }
 
     const handleCancelSubscription = () => {
@@ -118,70 +123,71 @@ function SubscriptionSettings() {
 
     return (
         <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.primaryColor)} >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
-                <Box sx={subscriptionSubContainer} >
-                    <Box sx={{ textAlign: 'start' }} >
-                        <Typography fontSize={14} >Current subscription : </Typography>
-                        <Typography fontSize={24} >{subscriptionDetails?.name}</Typography>
-                    </Box>
-                    <Box>
-                        <Box sx={{ border: '1px #006DFF solid', color: '#006DFF', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
-                            {subscriptionDetails?.status?.substring(0,21)}
+            {
+                CoreUtils.isComponentVisible(userRole,componentName.SUBSCRIPTION) ?
+                <>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
+                        <Box sx={subscriptionSubContainer} >
+                            <Box sx={{ textAlign: 'start' }} >
+                                <Typography fontSize={14} >Current subscription : </Typography>
+                                <Typography fontSize={24} >{subscriptionDetails?.name}</Typography>
+                            </Box>
+                            <Box>
+                                <Box sx={{ border: '1px #006DFF solid', color: '#006DFF', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
+                                    {subscriptionDetails?.status?.substring(0, 21)}
+                                </Box>
+                            </Box>
+                        </Box>
+                        <Box sx={{ marginLeft: '20px' }} >
+                            <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade Subscription</Button>
                         </Box>
                     </Box>
-                </Box>
-                <Box sx={{ marginLeft: '20px' }} >
-                    <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade Subscription</Button>
-                    {/* <Button sx={ButtonStyles.outlinedButton} variant="outlined">Update billing info</Button> */}
-                </Box>
-            </Box>
 
-            <Box>
-                <Box sx={{ textAlign: 'start', marginTop: '50px', marginBottom: '20px' }} >
-                    <Typography color={'#f1f1f1'} fontSize={20} >Subscription Details</Typography>
-                </Box>
+                    <Box>
+                        <Box sx={{ textAlign: 'start', marginTop: '50px', marginBottom: '20px' }} >
+                            <Typography color={'#f1f1f1'} fontSize={20} >Subscription Details</Typography>
+                        </Box>
 
-                <Box sx={subscriptionDetailList} style={{ borderTop: '1px #808080 solid' }} >
-                    <Typography color={'#808080'} >Subscription Name </Typography>
-                    <Typography color={'#808080'} >{subscriptionDetails?.name}</Typography>
-                </Box>
-                <Box sx={subscriptionDetailList} >
-                    <Typography color={'#808080'} >Billing cycle </Typography>
-                    <Typography color={'#808080'} >{subscriptionDetails?.billingCycle}</Typography>
-                </Box>
-                <Box sx={subscriptionDetailList} >
-                    <Typography color={'#808080'} >Next invoice date </Typography>
-                    <Typography color={'#808080'} >
-                        {subscriptionDetails?.endDate}
-                    </Typography>
-                </Box>
-                {/* <Box sx={subscriptionDetailList} >
-                    <Typography color={'#808080'} >Response usage </Typography>
-                    <Typography color={'#808080'} >2/25000 </Typography>
-                </Box> */}
-                <Box sx={subscriptionDetailList} >
-                    <Typography color={'#808080'} >Response usage reset cycle  </Typography>
-                    <Typography color={'#808080'} >{subscriptionDetails?.billingCycle}</Typography>
-                </Box>
-                <Box sx={subscriptionDetailList} >
-                    <Typography color={'#808080'} >Survey active   </Typography>
-                    <Typography color={'#808080'} >{subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}</Typography>
-                </Box>
-                <Box sx={subscriptionDetailList} >
-                    <Typography color={'#808080'} >Survey response capacity  </Typography>
-                    <Typography color={'#808080'} >{subscriptionDetails?.responseCapacity}</Typography>
-                </Box>
-                <Box sx={subscriptionDetailList} >
-                    <Typography color={'#808080'} >Survey response store limit  </Typography>
-                    <Typography color={'#808080'} >{subscriptionDetails?.responseStoreLimit}</Typography>
-                </Box>
-                {/* <Box width={'fit-content'} >
-                    <Typography
-                        sx={{ color: '#808080', fontSize: '13px', textDecoration: 'underline', cursor: 'pointer', marginTop: '20px' }}
-                        onClick={handleCancelSubscription}
-                    >Cancel Subscription</Typography>
-                </Box> */}
-            </Box>
+                        <Box sx={subscriptionDetailList} style={{ borderTop: '1px #808080 solid' }} >
+                            <Typography color={'#808080'} >Subscription Name </Typography>
+                            <Typography color={'#808080'} >{subscriptionDetails?.name}</Typography>
+                        </Box>
+                        <Box sx={subscriptionDetailList} >
+                            <Typography color={'#808080'} >Billing cycle </Typography>
+                            <Typography color={'#808080'} >{subscriptionDetails?.billingCycle}</Typography>
+                        </Box>
+                        <Box sx={subscriptionDetailList} >
+                            <Typography color={'#808080'} >Next invoice date </Typography>
+                            <Typography color={'#808080'} >
+                                {subscriptionDetails?.endDate}
+                            </Typography>
+                        </Box>
+                        <Box sx={subscriptionDetailList} >
+                            <Typography color={'#808080'} >Response usage reset cycle  </Typography>
+                            <Typography color={'#808080'} >{subscriptionDetails?.billingCycle}</Typography>
+                        </Box>
+                        <Box sx={subscriptionDetailList} >
+                            <Typography color={'#808080'} >Survey active   </Typography>
+                            <Typography color={'#808080'} >{subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}</Typography>
+                        </Box>
+                        <Box sx={subscriptionDetailList} >
+                            <Typography color={'#808080'} >Survey response capacity  </Typography>
+                            <Typography color={'#808080'} >{subscriptionDetails?.responseCapacity}</Typography>
+                        </Box>
+                        <Box sx={subscriptionDetailList} >
+                            <Typography color={'#808080'} >Survey response store limit  </Typography>
+                            <Typography color={'#808080'} >{subscriptionDetails?.responseStoreLimit}</Typography>
+                        </Box>
+                        {/* <Box width={'fit-content'} >
+                            <Typography
+                                sx={{ color: '#808080', fontSize: '13px', textDecoration: 'underline', cursor: 'pointer', marginTop: '20px' }}
+                                onClick={handleCancelSubscription}
+                            >Cancel Subscription</Typography>
+                        </Box> */}
+                    </Box>
+                </> : 
+                <UnAuthorisedComponent color='#808080' />
+            }
             <Notification ref={snackbarRef} />
             <FSLoader show={loading} />
             <GenericModal

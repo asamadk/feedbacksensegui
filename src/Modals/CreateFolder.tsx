@@ -3,14 +3,11 @@ import React, { useRef, useState } from 'react'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import CloseIcon from '@mui/icons-material/Close';
-import { USER_LOCAL_KEY, USER_UNAUTH_TEXT } from '../Utils/Constants';
-import { authUser } from '../Utils/types';
+import {  USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { createFolder } from '../Utils/Endpoints';
 import axios from 'axios';
-import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
-import { useNavigate } from 'react-router';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
 
@@ -50,11 +47,6 @@ function CreateFolder(props: any) {
         try {
             if(folderName == null || folderName.length < 1){
                 snackbarRef?.current?.show('Please give folder a name', 'error');
-                return;
-            }
-            const currentUser: string | null = localStorage.getItem(USER_LOCAL_KEY);
-            if (currentUser == null) {
-                snackbarRef?.current?.show('Unauthorized', 'error');
                 return;
             }
             setLoading(true);

@@ -3,14 +3,33 @@ import { CONDITION_ANSWER_CONTAINS, CONDITION_ANY_VALUE, CONDITION_HAS_ANY_VALUE
 export const EMAIL_LINK_SURVEY_TYPE = 'email/link';
 export const APP_WEB_SURVEY_TYPE = 'app/web';
 
-export const USER_LOCAL_KEY = 'user';
 export const SURVEY_LOCAL_KEY = 'currentSurvey';
 export const LIVE_SURVEY_USER_ID = 'survey-user';
 
 export const USER_UNAUTH_TEXT = 'User is not authorized';
+export const PERM_ISSUE_TEXT = 'You do not have permission to access this resource';
 
 export const ALL_TEMPLATE_KEY = 'All Templates';
 export const TEMPLATE_KEY = 'Templates';
+
+export const componentName = {
+    SUBSCRIPTION : 'SUBSCRIPTION',
+    BILLING_INFO_HOME : 'BILLING_INFO_HOME',
+    TEAMMATES_INVITE : 'TEAMMATES_INVITE',
+    MANAGE_USER : 'MANAGE_USER',
+    DELETE_USER : 'DELETE_USER',
+    CREATE_SURVEY_BUTTON : 'CREATE_SURVEY_BUTTON',
+    SAVE_SURVEY_BUTTON : 'SAVE_SURVEY_BUTTON',
+    DELETE_SURVEY : 'DELETE_SURVEY',
+    DISABLE_SURVEY : 'DISABLE_SURVEY',
+    DELETE_SURVEY_RESPONSE : 'DELETE_SURVEY_RESPONSE'
+}
+
+export const ignoreAuthPaths = [
+    '/invite',
+    '/failure',
+    '/payment/success'
+]
 
 export const getBackgrounds = (): any[] => {
     let count = 0;

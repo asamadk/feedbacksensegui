@@ -91,7 +91,7 @@ function Header(props: any) {
                         <Logo />
                     </Box>
                 }
-                {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === true && <div><SurveyDetailHeader surveyId={props.surveyId} tabset={0} /></div>}
+                {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === true && <div><SurveyDetailHeader surveyId={currentWorkflowId} tabset={0} /></div>}
 
             </div>
             <GenericModal

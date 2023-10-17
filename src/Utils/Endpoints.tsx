@@ -90,14 +90,6 @@ export const createOrgForuser = () => {
     return BASE_URL + `/org/create`;
 }
 
-export const getOrgList = () => {
-    return BASE_URL + `/org/list`;
-}
-
-export const pointOrgToUser = () => {
-    return BASE_URL + `/org/point`;
-}
-
 export const updateSurveyName = (surveyId : string) => {
     return BASE_URL + `/survey/update/name/${surveyId}`;
 }
@@ -185,4 +177,12 @@ export const updateUserRoleAPI = () => {
 
 export const deleteUserRoleAPI = () => {
     return `${BASE_URL}/user/delete/org`
+}
+
+export const processInviteAPI = (code : string) => {
+    return `${BASE_URL}/auth/invite?code=${code}`
+}
+
+export const acceptCleanInviteAPI = (code : string) => {
+    return `${BASE_URL}/auth/process/clean/invite?code=${code}`
 }

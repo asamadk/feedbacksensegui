@@ -7,9 +7,11 @@ import { getColorsFromTheme, getCompConfigFromUiId, modalTabList } from '../Util
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import CustomTabSet from '../Components/CustomTabSet';
 import CreateLogic from '../Components/Logic/CreateLogic';
-import { logicType } from '../Utils/types';
+import { logicType, userRoleType } from '../Utils/types';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 import { useSelector } from 'react-redux';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import { componentName } from '../Utils/Constants';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -48,6 +50,7 @@ function RatingScale(props: any) {
   const [value, setValue] = React.useState(0);
   const [logicData, setLogicData] = useState<logicType[]>([]);
   const defaultColor = useSelector((state: any) => state.colorReducer);
+  const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
   const populateCompConfig = () => {
     const compConfig = getCompConfigFromUiId(props);
@@ -110,7 +113,11 @@ function RatingScale(props: any) {
                 <CloseIcon onClick={props.close} />
               </IconButton>
             </Box>
-            <ModalSnippets published={props.isPublished} />
+            <ModalSnippets text={'To make changes, please unpublish the workflow'} published={props.isPublished} />
+            <ModalSnippets
+              text={'Guest cannot edit the surveys'}
+              published={!CoreUtils.isComponentVisible(userRole, componentName.SAVE_SURVEY_BUTTON)}
+            />
             <CustomTabSet
               tabsetList={modalTabList}
               change={(value: number) => handleTabChange(value)}

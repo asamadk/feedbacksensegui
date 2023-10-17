@@ -16,8 +16,8 @@ import axios from 'axios';
 import Notification from '../Utils/Notification';
 import FSLoader from '../Components/FSLoader';
 import { enableSurvey } from '../Utils/Endpoints';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
-import { genericModalData, surveyFlowType } from '../Utils/types';
+import { componentName, USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { genericModalData, surveyFlowType, userRoleType } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
@@ -28,6 +28,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
 import WorkflowMore from '../FlowComponents/WorkflowMore';
 import SurveyLogsModal from '../Modals/SurveyLogsModal';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -75,7 +76,8 @@ function CreateSurvey(props: any) {
   const workflowDirty = useSelector((state: any) => state.workflowDirty);
   const defaultColor = useSelector((state: any) => state.colorReducer);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [openSurveyLogs , setOpenSurveyLogs] = useState(false);
+  const userRole: userRoleType = useSelector((state: any) => state.userRole);
+  const [openSurveyLogs, setOpenSurveyLogs] = useState(false);
   const open = Boolean(anchorEl);
 
   const dispatch = useDispatch<any>();
@@ -113,7 +115,6 @@ function CreateSurvey(props: any) {
           setSurveyFlow(data?.data?.workflows[0]);
           populateComponentConfig(data?.data?.workflows[0]);
         }
-        props.updateSurveyId(data.data.id)
       }
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
@@ -357,6 +358,11 @@ function CreateSurvey(props: any) {
   }
 
   const handleDisableEnableSurvey = async (e: any) => {
+    if (!CoreUtils.isComponentVisible(userRole, componentName.DISABLE_SURVEY)) {
+      snackbarRef?.current?.show('Guests cannot publish/unpublish surveys', 'error');
+      props.close();
+      return;
+    }
     if (surveyDetail?.is_published === true) {
       try {
         setLoading(true);
@@ -498,7 +504,7 @@ function CreateSurvey(props: any) {
           <IconButton onClick={handleClick} sx={{ width: '40px', marginTop: '10px', marginLeft: '10px' }} >
             <MoreVertIcon />
           </IconButton>
-          <WorkflowMore 
+          <WorkflowMore
             anchor={anchorEl}
             open={open}
             close={() => setAnchorEl(null)}

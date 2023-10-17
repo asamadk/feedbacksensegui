@@ -11,9 +11,11 @@ import FSLoader from '../Components/FSLoader';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs, isDayjs } from 'dayjs';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
 import { handleLogout, validateEmail } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import { userRoleType } from '../Utils/types';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -54,6 +56,7 @@ function ConfigureSurvey() {
   const [showStopSurveyDate, setShowStopSurveyDate] = React.useState(false);
   const [showStopSurveyDateData, setShowStopSurveyDateData] = React.useState<string | null>('');
   const [showStopSurveyNumberData, setShowStopSurveyNumberData] = React.useState<string>('');
+  const userRole: userRoleType = useSelector((state: any) => state.userRole);
   const [loading, setLoading] = React.useState(false);
 
   const getSurveyConfig = async () => {
@@ -94,6 +97,10 @@ function ConfigureSurvey() {
   }
 
   const handleSaveClick = async () => {
+    if (!CoreUtils.isComponentVisible(userRole, componentName.SAVE_SURVEY_BUTTON)) {
+      snackbarRef?.current?.show('Guest cannot edit the surveys', 'error');
+      return;
+    }
     try {
       let saveObj: any = {};
       const toContinue: boolean = validateSave();
@@ -180,7 +187,7 @@ function ConfigureSurvey() {
   }
 
   return (
-    <Box sx={{...settingLayoutStyle,backgroundColor : defaultColor?.backgroundColor}} >
+    <Box sx={{ ...settingLayoutStyle, backgroundColor: defaultColor?.backgroundColor }} >
 
       <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
         <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Response notification</Typography>

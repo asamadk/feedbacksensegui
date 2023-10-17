@@ -7,14 +7,15 @@ import * as LayoutStyles from '../Styles/LayoutStyles'
 import EditIcon from '@mui/icons-material/Edit';
 import UserDetailsModal from '../Modals/UserDetailsModal'
 import GenericModal from '../Modals/GenericModal';
-import { genericModalData } from '../Utils/types';
+import { genericModalData, userRoleType } from '../Utils/types';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { handleLogout } from '../Utils/FeedbackUtils';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, componentList, componentName } from '../Utils/Constants';
 import { deleteUserRoleAPI, getUserListAPI } from '../Utils/Endpoints';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 
 const singleUserContainer = (bgColor: string) => {
   return {
@@ -73,6 +74,7 @@ function OrgTeamMatesSettings() {
   const [loading, setLoading] = React.useState(false);
   const [userList, setUserList] = useState<any[]>([]);
   const defaultColor = useSelector((state: any) => state.colorReducer);
+  const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
   useEffect(() => {
     getUserList();
@@ -174,12 +176,18 @@ function OrgTeamMatesSettings() {
         </Box>
         <Box marginTop={'5px'} >
           <Chip sx={{ width: '70px' }} label={user?.role} />
-          <IconButton onClick={() => handleOpenDetailModal(user)} sx={{ marginLeft: '10px' }} >
-            <EditIcon sx={{ color: '#808080' }} />
-          </IconButton>
-          <IconButton onClick={() => handleDeleteButtonClick(user?.id)} sx={{ marginLeft: '5px' }} >
-            <DeleteIcon sx={{ color: '#808080' }} />
-          </IconButton>
+          {
+            CoreUtils.isComponentVisible(userRole, componentName.MANAGE_USER) &&
+            <IconButton onClick={() => handleOpenDetailModal(user)} sx={{ marginLeft: '10px' }} >
+              <EditIcon sx={{ color: '#808080' }} />
+            </IconButton>
+          }
+          {
+            CoreUtils.isComponentVisible(userRole, componentName.DELETE_USER) &&
+            <IconButton onClick={() => handleDeleteButtonClick(user?.id)} sx={{ marginLeft: '5px' }} >
+              <DeleteIcon sx={{ color: '#808080' }} />
+            </IconButton>
+          }
         </Box>
       </Box>
     )
@@ -189,7 +197,15 @@ function OrgTeamMatesSettings() {
     <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.secondaryColor)} >
       <Box sx={{ display: 'flex', marginBottom: '50px', justifyContent: 'space-between' }} >
         <Typography variant='h5' color={'white'} marginTop={'10px'} >Users</Typography>
-        <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} onClick={handleOpenInviteModal} variant="contained">Invite Teammantes</Button>
+        {
+          CoreUtils.isComponentVisible(userRole, componentName.TEAMMATES_INVITE) &&
+          <Button
+            style={{ width: 'fit-content' }}
+            sx={ButtonStyles.containedButton}
+            onClick={handleOpenInviteModal}
+            variant="contained"
+          >Invite Teammantes</Button>
+        }
       </Box>
       <Box>
         {

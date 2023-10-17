@@ -13,9 +13,12 @@ import CustomAlert from './CustomAlert';
 import { useNavigate } from 'react-router';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { PERM_ISSUE_TEXT, USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
 import Popover from './Popover';
 import { useSelector } from 'react-redux';
+import { userRoleType } from '../Utils/types';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import UnAuthorisedComponent from './UnauthorisedComponent';
 
 
 const surveyPageMainContainer = {
@@ -24,7 +27,7 @@ const surveyPageMainContainer = {
     color: '#f1f1f1'
 }
 
-const allSurveyFolder = (bgColor : string) => {
+const allSurveyFolder = (bgColor: string) => {
     return {
         display: 'flex',
         justifyContent: 'space-between',
@@ -56,7 +59,6 @@ const folderText = {
 
 function SurveyListPage() {
 
-    let navigate = useNavigate();
     const snackbarRef: any = useRef(null);
 
     const [folderList, setFolderList] = React.useState<any[]>([]);
@@ -66,6 +68,7 @@ function SurveyListPage() {
     const [selectedFolder, setSelectedFolder] = React.useState<string>('All Surveys');
     const [selectedFolderId, setSelectedFolderId] = React.useState<string>('0');
     const defaultColor = useSelector((state: any) => state.colorReducer);
+    const userRole: userRoleType = useSelector((state: any) => state.userRole);
     const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
@@ -88,8 +91,11 @@ function SurveyListPage() {
                 setSubscriptionDetail(resData);
             }
         } catch (error: any) {
-            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
+            if (error?.response?.data?.message === PERM_ISSUE_TEXT) {
+                return;
+            }
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                 FeedbackUtils.handleLogout();
             }
@@ -213,7 +219,7 @@ function SurveyListPage() {
 
     const handleUpgradePlanClick = () => {
         // navigate('/upgrade/plan');
-        window.open('https://www.feedbacksense.io/pricing','__blank');
+        window.open('https://www.feedbacksense.io/pricing', '__blank');
     }
 
     const handleRerenderSurveyCreate = () => {
@@ -266,26 +272,29 @@ function SurveyListPage() {
                         }
 
                     </div>
-                    <div style={{ borderTop: '1px #454545 solid' }} >
-                        <div style={{ color: '#808080', paddingTop: '10px' }}>
-                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Subscription</Typography>
-                        </div>
-                        <Typography style={{ textAlign: 'start' }} variant='subtitle2' >{subscriptionDetails?.name}</Typography>
+                    {
+                        CoreUtils.isComponentVisible(userRole, componentName.BILLING_INFO_HOME) &&
+                        <div style={{ borderTop: '1px #454545 solid' }} >
+                            <div style={{ color: '#808080', paddingTop: '10px' }}>
+                                <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Subscription</Typography>
+                            </div>
+                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >{subscriptionDetails?.name}</Typography>
 
-                        <div style={{ color: '#808080', paddingTop: '10px' }}>
-                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Billing cycle</Typography>
-                        </div>
-                        <Typography style={{ textAlign: 'start', paddingBottom: '30px' }} variant='subtitle2' >{subscriptionDetails?.billingCycle}</Typography>
+                            <div style={{ color: '#808080', paddingTop: '10px' }}>
+                                <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Billing cycle</Typography>
+                            </div>
+                            <Typography style={{ textAlign: 'start', paddingBottom: '30px' }} variant='subtitle2' >{subscriptionDetails?.billingCycle}</Typography>
 
-                        <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Active survey limit</Typography>
-                        <LinearProgressWithLabel
-                            value={subscriptionDetails == null ? 0 : subscriptionDetails?.surveyLimitUsed / subscriptionDetails?.totalSurveyLimit * 100}
-                            text={subscriptionDetails == null ? '0' : subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}
-                        />
-                        <div style={{ marginTop: '40px' }} ></div>
-                        <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade plan</Button>
-                        <Button sx={ButtonStyles.outlinedButton} onClick={handleOpenInviteModal} variant="outlined">Invite teammates</Button>
-                    </div>
+                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Active survey limit</Typography>
+                            <LinearProgressWithLabel
+                                value={subscriptionDetails == null ? 0 : subscriptionDetails?.surveyLimitUsed / subscriptionDetails?.totalSurveyLimit * 100}
+                                text={subscriptionDetails == null ? '0' : subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}
+                            />
+                            <div style={{ marginTop: '40px' }} ></div>
+                            <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade plan</Button>
+                            <Button sx={ButtonStyles.outlinedButton} onClick={handleOpenInviteModal} variant="outlined">Invite teammates</Button>
+                        </div>
+                    }
                 </div>
                 <div style={{ width: '85%' }} >
                     <SurveysPanel

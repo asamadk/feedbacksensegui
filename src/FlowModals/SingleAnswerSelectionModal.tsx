@@ -9,9 +9,11 @@ import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import Notification from '../Utils/Notification';
 import CustomTabSet from '../Components/CustomTabSet';
 import CreateLogic from '../Components/Logic/CreateLogic';
-import { logicType } from '../Utils/types';
+import { logicType, userRoleType } from '../Utils/types';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 import { useSelector } from 'react-redux';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import { componentName } from '../Utils/Constants';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -39,6 +41,7 @@ function SingleAnswerSelectionModal(props: any) {
     const snackbarRef: any = useRef(null);
     const createLogicRef = useRef<any>(null); // Create a ref for the child component
     const defaultColor = useSelector((state: any) => state.colorReducer);
+    const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
     useEffect(() => {
         populateCompConfig();
@@ -131,7 +134,11 @@ function SingleAnswerSelectionModal(props: any) {
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
-                        <ModalSnippets published={props.isPublished} />
+                        <ModalSnippets text={'To make changes, please unpublish the workflow'} published={props.isPublished} />
+                        <ModalSnippets 
+                            text={'Guest cannot edit the surveys'} 
+                            published={!CoreUtils.isComponentVisible(userRole,componentName.SAVE_SURVEY_BUTTON)} 
+                        />
                         <CustomTabSet
                             tabsetList={modalTabList}
                             change={(value: number) => handleTabChange(value)}

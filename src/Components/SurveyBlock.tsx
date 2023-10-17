@@ -149,7 +149,9 @@ function SurveyBlock(props: any) {
 
     return (
         <Box sx={{...surveyBlockMainContainer,backgroundColor : defaultColor?.secondaryColor}} >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid', height: '50px' }} >
+            <Box 
+                sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid', height: '50px',backgroundColor : '#212a2b' }} 
+            >
                 <Box>
 
                     <Typography

@@ -8,6 +8,9 @@ import { getColorsFromTheme, getCompConfigFromUiId } from '../Utils/FeedbackUtil
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 import { useSelector } from 'react-redux';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import { componentName } from '../Utils/Constants';
+import { userRoleType } from '../Utils/types';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -40,6 +43,7 @@ function WelcomModal(props: any) {
     const [welcomeText, setWelcomeText] = React.useState('');
     const [buttonText, setButtonText] = React.useState('');
     const defaultColor = useSelector((state: any) => state.colorReducer);
+    const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
@@ -79,7 +83,11 @@ function WelcomModal(props: any) {
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
-                        <ModalSnippets published={props.isPublished} />
+                        <ModalSnippets text={'To make changes, please unpublish the workflow'} published={props.isPublished} />
+                        <ModalSnippets 
+                            text={'Guest cannot edit the surveys'} 
+                            published={!CoreUtils.isComponentVisible(userRole,componentName.SAVE_SURVEY_BUTTON)} 
+                        />
                         <Box sx={ModalStyles.modalBodyContainerStyle} >
                             <CssTextField
                                 sx={{ input: { color: 'white' }, maxHeight: '50vh' }}

@@ -15,7 +15,6 @@ import ShareSurvey from './Layout/ShareSurvey';
 import SurveySettings from './Layout/SurveySettings';
 import UpgradeSubscription from './Layout/UpgradeSubscription';
 import LoginSuccess from './Layout/LoginSuccess';
-import { USER_LOCAL_KEY } from './Utils/Constants';
 import SurveyDisplays from './SurveyEngine/Core/SurveyDisplays';
 import { ThemeProvider, createTheme } from '@mui/material';
 import PaymentSuccess from './Components/Stripe/PaymentSuccess';
@@ -23,16 +22,22 @@ import TemplateLayout from './Layout/TemplateLayout';
 import TemplateDetailLayout from './Layout/TemplateDetailLayout';
 import PreviewSurveyLayout from './Layout/PreviewSurveyLayout';
 import { useSelector } from 'react-redux';
+import HttpFailureComponent from './Components/HttpFailure/HttpFailureComponent';
+import { handleLogout } from './Utils/FeedbackUtils';
+import ProcessInvite from './Layout/ProcessInvite';
+import { ignoreAuthPaths } from './Utils/Constants';
+import { setUserRole } from './Redux/Actions/userRoleAction';
+import { useDispatch } from 'react-redux';
 
 function App() {
 
   let navigate = useNavigate();
-  
+
   const defaultColor = useSelector((state: any) => state.colorReducer);
   const [user, setUser] = useState(null);
-  const [currentSurveyId, setCurrentSurveyId] = useState('');
   const dataFetchedRef = useRef(false);
   const [liveSurvey, setLiveSurvey] = useState(false);
+  const dispatch = useDispatch<any>();
 
   const getUser = async () => {
     try {
@@ -43,12 +48,9 @@ function App() {
       }
       const url = Endpoint.checkLoginStatus();
       const { data } = await axios.get(url, { withCredentials: true });
-      if (data.data != null) {
-        localStorage.setItem(USER_LOCAL_KEY, JSON.stringify(data.data));
-      }
 
       const currentUser = data.data;
-      console.log("🚀 ~ file: App.tsx:51 ~ getUser ~ currentUser:", currentUser)
+      dispatch(setUserRole(currentUser.role));
       if (currentUser.organization_id == null || currentUser.organization_id === '') {
         setUser(currentUser);
         navigate('/user/create/organization');
@@ -56,21 +58,21 @@ function App() {
       }
       setUser(currentUser);
       navigate('/');
-    } catch (err) {
+    } catch (err: any) {
+      if(err?.response?.data?.statusCode === 404){
+        navigate(`/failure?message=${err.response?.data?.message}&code=${err?.response?.data?.statusCode}`);
+      }
       console.error('Error in auth', err);
-      localStorage.setItem(USER_LOCAL_KEY, '{}');
     }
   };
 
   useEffect(() => {
     if (dataFetchedRef.current === true) return;
+    let currentPath: string = window.location.pathname;
+    if(ignoreAuthPaths.includes(currentPath)){return;}
     getUser();
     dataFetchedRef.current = true;
   }, []);
-
-  const handleUpdateSurveyId = (surveyId: string) => {
-    setCurrentSurveyId(surveyId);
-  }
 
   const darkTheme = createTheme({
     palette: {
@@ -92,15 +94,9 @@ function App() {
 
   return (
     <>
-      <Routes>
-        <Route
-          path='/payment/success'
-          element={<PaymentSuccess />}
-        />
-      </Routes>
       <ThemeProvider theme={darkTheme} >
-        {liveSurvey === false && <div style={{backgroundColor : defaultColor?.backgroundColor}} className="App">
-          <Header surveyId={currentSurveyId} loggedIn={user != null} />
+        {liveSurvey === false && <div style={{ backgroundColor: defaultColor?.backgroundColor }} className="App">
+          <Header loggedIn={user != null} />
           <Routes>
             <Route
               path='/'
@@ -140,7 +136,7 @@ function App() {
             />
             <Route
               path='/survey/detail/create/:surveyId'
-              element={user ? <CreateSurvey updateSurveyId={handleUpdateSurveyId} /> : <Navigate to={'/login'} />}
+              element={user ? <CreateSurvey /> : <Navigate to={'/login'} />}
             />
             <Route
               path='/survey/detail/design/:surveyId'
@@ -181,6 +177,20 @@ function App() {
           </div>
         </ThemeProvider>
       }
+      <Routes>
+        <Route
+          path='/payment/success'
+          element={<PaymentSuccess />}
+        />
+        <Route
+          path='/failure'
+          element={<HttpFailureComponent />}
+        />
+        <Route
+          path='/invite'
+          element={<ProcessInvite />}
+        />
+      </Routes>
     </>
   );
 }
