@@ -6,6 +6,7 @@ import CustomTabSet from '../Components/CustomTabSet';
 import SurveyGeneralSettings from '../Components/SurveyGeneralSettings';
 import SurveySettingsWeb from '../Components/SurveySettingsWeb';
 import * as LayoutStyles from '../Styles/LayoutStyles'
+import { useSelector } from 'react-redux';
 
 const tabsetList = [
     { id : 1,name : 'GENERAL' },
@@ -17,6 +18,7 @@ function SurveySettings(props: any) {
 
     let navigation = useNavigate();
     const [tabset, setTabset] = React.useState(parseInt(props.tabset))
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     const changetabset = (value: number) => {
         setTabset(value);
@@ -32,7 +34,7 @@ function SurveySettings(props: any) {
     }
 
     return (
-        <Box sx={LayoutStyles.settingLayoutStyle} >
+        <Box sx={{...LayoutStyles.settingLayoutStyle,backgroundColor : defaultColor?.backgroundColor}} >
             
             <Box display={'flex'} sx={{ textAlign: 'start' }} >
                 <IconButton onClick={handleBackButtonClick} >

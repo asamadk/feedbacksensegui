@@ -3,6 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router';
 import TemplateBlockList from './TemplateBlockList';
+import { useSelector } from 'react-redux';
 
 function TemplateRightPanel({
     header, templates
@@ -14,8 +15,11 @@ function TemplateRightPanel({
         navigate('/');
     }
 
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+
+
     return (
-        <Box sx={{ backgroundColor: '#181818', overflowY: 'scroll' }} height={'calc(100vh - 62px)'} >
+        <Box sx={{ backgroundColor: defaultColor?.backgroundColor, overflowY: 'scroll' }} height={'calc(100vh - 62px)'} >
             <TemplateRightSubHeader header={header} close={handleClose} />
             <TemplateBlockList templates={templates} />
         </Box>
@@ -25,9 +29,10 @@ function TemplateRightPanel({
 export default TemplateRightPanel
 
 function TemplateRightSubHeader(props: any) {
+    const defaultColor = useSelector((state: any) => state.colorReducer);
     return (
         <Box
-            sx={{ backgroundColor: '#1E1E1E' }}
+            sx={{ backgroundColor: defaultColor?.backgroundColor }}
             display={'flex'}
             justifyContent={'space-between'}
             padding={'12px'}

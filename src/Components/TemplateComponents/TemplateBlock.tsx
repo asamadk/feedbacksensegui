@@ -1,8 +1,11 @@
 import { Box, Divider, Typography } from '@mui/material'
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 function TemplateBlock({ template }: any) {
+
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     const onHoverStart = (event: any) => {
         event.currentTarget.style.border = '1px #808080 solid';
@@ -25,7 +28,7 @@ function TemplateBlock({ template }: any) {
         <Box
             onMouseEnter={onHoverStart}
             onMouseLeave={onHoverEnd}
-            sx={{ margin: '10px', borderRadius: '10px', border: '1px #454545 solid', backgroundColor: '#1E1E1E', cursor: 'pointer'}}
+            sx={{ margin: '10px', borderRadius: '10px', border: '1px #454545 solid', backgroundColor: defaultColor?.backgroundColor, cursor: 'pointer'}}
             onClick={() => handleClickTemplateDetails(template?.id)}
         >
             <Box sx={{ backgroundColor: '#006dff', borderRadius: '10px 10px 0px 0px' }} padding={'15px'} >

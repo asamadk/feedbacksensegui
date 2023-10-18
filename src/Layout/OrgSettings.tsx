@@ -8,6 +8,7 @@ import CustomTabSet from '../Components/CustomTabSet'
 import OrgGeneralSettings from '../Components/OrgGeneralSettings'
 import OrgTeamMatesSettings from '../Components/OrgTeamMatesSettings'
 import SubscriptionSettings from '../Components/SubscriptionSettings'
+import { useSelector } from 'react-redux';
 
 const tabsetList = [
     { id : 1,name : 'GENERAL' },
@@ -18,6 +19,8 @@ const tabsetList = [
 function OrgSettings(props : any) {
 
     const [tabset, setTabset] = React.useState(parseInt(props.tabset))
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+
 
     useEffect(() => {
         changeTabSet(props.tabset);
@@ -41,7 +44,7 @@ function OrgSettings(props : any) {
     }
 
     return (
-        <Box sx={LayoutStyles.settingLayoutStyle} >
+        <Box sx={{...LayoutStyles.settingLayoutStyle,backgroundColor : defaultColor?.backgroundColor}} >
             <Box display={'flex'} sx={{ textAlign: 'start' }} >
                 <IconButton onClick={handleBackButtonClick} >
                     <ArrowBackIcon sx={{ color: '#f1f1f1' }} />

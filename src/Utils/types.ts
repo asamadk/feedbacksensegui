@@ -64,3 +64,5 @@ export type DefaultEdgeOptions = {
 	ariaLabel?: string;
 	interactionWidth?: number;
 };
+
+export type userRoleType = 'OWNER' | 'ADMIN' | 'USER' | 'GUEST';

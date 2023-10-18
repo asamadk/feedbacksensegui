@@ -7,9 +7,11 @@ import { getColorsFromTheme, getCompConfigFromUiId, modalTabList } from '../Util
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import CustomTabSet from '../Components/CustomTabSet';
 import CreateLogic from '../Components/Logic/CreateLogic';
-import { smileyEmojiName } from '../Utils/Constants';
-import { logicType } from '../Utils/types';
+import { componentName, smileyEmojiName } from '../Utils/Constants';
+import { logicType, userRoleType } from '../Utils/types';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
+import { useSelector } from 'react-redux';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -46,6 +48,8 @@ function SmileyScaleModal(props: any) {
     const [leftText, setLeftText] = useState('');
     const [rightText, setRightText] = useState('');
     const [logicData, setLogicData] = useState<logicType[]>([]);
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+    const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
@@ -92,7 +96,7 @@ function SmileyScaleModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyleComponents}>
+                <Box sx={ModalStyles.modalStyleComponents(defaultColor?.secondaryColor)}>
                     <Box width={'40%'} marginRight={10} overflow={'scroll'}>
                         <Box sx={ModalStyles.modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">
@@ -102,7 +106,11 @@ function SmileyScaleModal(props: any) {
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
-                        <ModalSnippets published={props.isPublished} />
+                        <ModalSnippets text={'To make changes, please unpublish the workflow'} published={props.isPublished} />
+                        <ModalSnippets 
+                            text={'Guest cannot edit the surveys'} 
+                            published={!CoreUtils.isComponentVisible(userRole,componentName.SAVE_SURVEY_BUTTON)} 
+                        />
                         <Box marginLeft={'10px'} >
                             <CustomTabSet
                                 tabsetList={modalTabList}

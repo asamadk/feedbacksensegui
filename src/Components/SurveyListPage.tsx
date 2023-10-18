@@ -13,8 +13,12 @@ import CustomAlert from './CustomAlert';
 import { useNavigate } from 'react-router';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { PERM_ISSUE_TEXT, USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
 import Popover from './Popover';
+import { useSelector } from 'react-redux';
+import { userRoleType } from '../Utils/types';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import UnAuthorisedComponent from './UnauthorisedComponent';
 
 
 const surveyPageMainContainer = {
@@ -23,14 +27,16 @@ const surveyPageMainContainer = {
     color: '#f1f1f1'
 }
 
-const allSurveyFolder = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '10px',
-    paddingBottom: '10px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    backgroundColor: '#454545'
+const allSurveyFolder = (bgColor: string) => {
+    return {
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '10px',
+        paddingBottom: '10px',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        backgroundColor: bgColor
+    }
 }
 
 const surveyFolderText = {
@@ -53,7 +59,6 @@ const folderText = {
 
 function SurveyListPage() {
 
-    let navigate = useNavigate();
     const snackbarRef: any = useRef(null);
 
     const [folderList, setFolderList] = React.useState<any[]>([]);
@@ -62,6 +67,8 @@ function SurveyListPage() {
     const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
     const [selectedFolder, setSelectedFolder] = React.useState<string>('All Surveys');
     const [selectedFolderId, setSelectedFolderId] = React.useState<string>('0');
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+    const userRole: userRoleType = useSelector((state: any) => state.userRole);
     const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
@@ -84,8 +91,11 @@ function SurveyListPage() {
                 setSubscriptionDetail(resData);
             }
         } catch (error: any) {
-            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
+            if (error?.response?.data?.message === PERM_ISSUE_TEXT) {
+                return;
+            }
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                 FeedbackUtils.handleLogout();
             }
@@ -127,10 +137,10 @@ function SurveyListPage() {
         setSelectedFolderId('0');
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = '#1E1E1E';
+            element.style.background = defaultColor?.backgroundColor;
         });
 
-        e.target.style.background = '#323533';
+        e.target.style.background = defaultColor?.primaryColor;
 
     }
 
@@ -149,13 +159,13 @@ function SurveyListPage() {
         setSelectedFolderId(folderId);
 
         document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
-            element.style.background = '#1E1E1E';
+            element.style.background = defaultColor?.backgroundColor;
         })
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = '#1E1E1E';
+            element.style.background = defaultColor?.backgroundColor;
         });
-        e.target.style.background = '#323533';
+        e.target.style.background = defaultColor?.primaryColor;
     }
 
     const handleOpenInviteModal = () => setOpeninviteModal(true);
@@ -175,7 +185,7 @@ function SurveyListPage() {
     }
 
     const unhighlightCreateFolder = (e: any) => {
-        e.target.style.color = '#323533';
+        e.target.style.color = defaultColor?.primaryColor;
     }
 
     const handleDeleteFolderClick = async (folderId: string) => {
@@ -192,7 +202,7 @@ function SurveyListPage() {
             setSelectedFolder('All Surveys');
             setSelectedFolderId('0');
             document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
-                element.style.background = '#323533';
+                element.style.background = defaultColor?.primaryColor;
             });
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
@@ -209,7 +219,7 @@ function SurveyListPage() {
 
     const handleUpgradePlanClick = () => {
         // navigate('/upgrade/plan');
-        window.open('https://www.feedbacksense.io/pricing','__blank');
+        window.open('https://www.feedbacksense.io/pricing', '__blank');
     }
 
     const handleRerenderSurveyCreate = () => {
@@ -217,11 +227,11 @@ function SurveyListPage() {
         setSelectedFolderId('0');
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = '#1E1E1E';
+            element.style.background = defaultColor?.backgroundColor;
         });
 
         document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
-            element.style.background = '#323533';
+            element.style.background = defaultColor?.primaryColor;
         })
     }
 
@@ -230,7 +240,7 @@ function SurveyListPage() {
             <div style={surveyPageMainContainer} >
                 <div style={{ display: 'flex', width: '15%', flexDirection: 'column', borderRight: '1px #454545 solid', justifyContent: 'space-between', padding: '10px 30px' }} >
                     <div style={{ width: '100%', overflowY: 'scroll', paddingBottom: '20px' }} >
-                        <div style={allSurveyFolder} className="all-folders-data" onClick={handleAllFolderClick} >
+                        <div style={allSurveyFolder(defaultColor?.primaryColor)} className="all-folders-data" onClick={handleAllFolderClick} >
                             <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >All Surveys</Typography>
                         </div>
                         <div style={folderText}>
@@ -262,26 +272,29 @@ function SurveyListPage() {
                         }
 
                     </div>
-                    <div style={{ borderTop: '1px #454545 solid' }} >
-                        <div style={{ color: '#808080', paddingTop: '10px' }}>
-                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Subscription</Typography>
-                        </div>
-                        <Typography style={{ textAlign: 'start' }} variant='subtitle2' >{subscriptionDetails?.name}</Typography>
+                    {
+                        CoreUtils.isComponentVisible(userRole, componentName.BILLING_INFO_HOME) &&
+                        <div style={{ borderTop: '1px #454545 solid' }} >
+                            <div style={{ color: '#808080', paddingTop: '10px' }}>
+                                <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Subscription</Typography>
+                            </div>
+                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >{subscriptionDetails?.name}</Typography>
 
-                        <div style={{ color: '#808080', paddingTop: '10px' }}>
-                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Billing cycle</Typography>
-                        </div>
-                        <Typography style={{ textAlign: 'start', paddingBottom: '30px' }} variant='subtitle2' >{subscriptionDetails?.billingCycle}</Typography>
+                            <div style={{ color: '#808080', paddingTop: '10px' }}>
+                                <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Billing cycle</Typography>
+                            </div>
+                            <Typography style={{ textAlign: 'start', paddingBottom: '30px' }} variant='subtitle2' >{subscriptionDetails?.billingCycle}</Typography>
 
-                        <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Active survey limit</Typography>
-                        <LinearProgressWithLabel
-                            value={subscriptionDetails == null ? 0 : subscriptionDetails?.surveyLimitUsed / subscriptionDetails?.totalSurveyLimit * 100}
-                            text={subscriptionDetails == null ? '0' : subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}
-                        />
-                        <div style={{ marginTop: '40px' }} ></div>
-                        <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade plan</Button>
-                        <Button sx={ButtonStyles.outlinedButton} onClick={handleOpenInviteModal} variant="outlined">Invite teammates</Button>
-                    </div>
+                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Active survey limit</Typography>
+                            <LinearProgressWithLabel
+                                value={subscriptionDetails == null ? 0 : subscriptionDetails?.surveyLimitUsed / subscriptionDetails?.totalSurveyLimit * 100}
+                                text={subscriptionDetails == null ? '0' : subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}
+                            />
+                            <div style={{ marginTop: '40px' }} ></div>
+                            <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade plan</Button>
+                            <Button sx={ButtonStyles.outlinedButton} onClick={handleOpenInviteModal} variant="outlined">Invite teammates</Button>
+                        </div>
+                    }
                 </div>
                 <div style={{ width: '85%' }} >
                     <SurveysPanel

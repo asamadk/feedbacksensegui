@@ -16,15 +16,19 @@ import axios from 'axios';
 import Notification from '../Utils/Notification';
 import FSLoader from '../Components/FSLoader';
 import { enableSurvey } from '../Utils/Endpoints';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
-import { genericModalData, surveyFlowType } from '../Utils/types';
+import { componentName, USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { genericModalData, surveyFlowType, userRoleType } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
 import DoneIcon from '@mui/icons-material/Done';
 import CloseIcon from '@mui/icons-material/Close';
 import { useSelector } from 'react-redux';
 import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
 import { useDispatch } from 'react-redux';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
+import WorkflowMore from '../FlowComponents/WorkflowMore';
+import SurveyLogsModal from '../Modals/SurveyLogsModal';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -69,7 +73,12 @@ function CreateSurvey(props: any) {
   const [isWorkflowPublished, setIsWorkflowPublished] = useState(false);
   const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
   const workflowCheck = useSelector((state: any) => state.workflowCheck);
-  const workflowDirty = useSelector((state: any) => state.workflowDirty)
+  const workflowDirty = useSelector((state: any) => state.workflowDirty);
+  const defaultColor = useSelector((state: any) => state.colorReducer);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const userRole: userRoleType = useSelector((state: any) => state.userRole);
+  const [openSurveyLogs, setOpenSurveyLogs] = useState(false);
+  const open = Boolean(anchorEl);
 
   const dispatch = useDispatch<any>();
 
@@ -83,7 +92,7 @@ function CreateSurvey(props: any) {
       event.returnValue = '';
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
-    
+
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
@@ -106,7 +115,6 @@ function CreateSurvey(props: any) {
           setSurveyFlow(data?.data?.workflows[0]);
           populateComponentConfig(data?.data?.workflows[0]);
         }
-        props.updateSurveyId(data.data.id)
       }
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
@@ -350,6 +358,11 @@ function CreateSurvey(props: any) {
   }
 
   const handleDisableEnableSurvey = async (e: any) => {
+    if (!CoreUtils.isComponentVisible(userRole, componentName.DISABLE_SURVEY)) {
+      snackbarRef?.current?.show('Guests cannot publish/unpublish surveys', 'error');
+      props.close();
+      return;
+    }
     if (surveyDetail?.is_published === true) {
       try {
         setLoading(true);
@@ -421,9 +434,13 @@ function CreateSurvey(props: any) {
     setGenericModalObj(genDeleteObj);
   }
 
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
 
   return (
-    <Box sx={{ backgroundColor: '#1E1E1E', height: 'calc(100vh - 69px)' }} >
+    <Box sx={{ backgroundColor: defaultColor?.backgroundColor, height: 'calc(100vh - 69px)' }} >
       <Box sx={LayoutStyles.localSurveyNavbar} >
         <Box display={'flex'} >
           {showSurveyName &&
@@ -484,6 +501,15 @@ function CreateSurvey(props: any) {
           >
             {surveyDetail?.is_published === true ? 'Unpublish' : 'Publish'}
           </Button>
+          {/* <IconButton onClick={handleClick} sx={{ width: '40px', marginTop: '10px', marginLeft: '10px' }} >
+            <MoreVertIcon />
+          </IconButton> */}
+          <WorkflowMore
+            anchor={anchorEl}
+            open={open}
+            close={() => setAnchorEl(null)}
+            openLogs={() => setOpenSurveyLogs(true)}
+          />
         </Box>
       </Box>
       <Box display={'flex'} >
@@ -525,6 +551,11 @@ function CreateSurvey(props: any) {
         close={() => setShowGenericModal(false)}
         open={showGenericModal}
         callback={handleSuccessGenericButtonClick}
+      />
+      <SurveyLogsModal
+        surveyId={currentWorkflowId}
+        open={openSurveyLogs}
+        close={() => setOpenSurveyLogs(false)}
       />
     </Box>
   )

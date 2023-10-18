@@ -7,6 +7,7 @@ import { styled } from '@mui/system';
 import { getShareSurveyLink } from '../Utils/Endpoints';
 import { useParams } from 'react-router';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useSelector } from 'react-redux';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -48,6 +49,8 @@ function ShareSurvey() {
   const [surveyType, setSurveyType] = React.useState<string>(Constants.EMAIL_LINK_SURVEY_TYPE);
   const [headerText, setHeaderText] = React.useState('Survey Link');
   const [open, setOpen] = React.useState(false);
+  const defaultColor = useSelector((state: any) => state.colorReducer);
+
 
   React.useEffect(() => {
     if (surveyType.toLowerCase() === Constants.EMAIL_LINK_SURVEY_TYPE) {
@@ -71,7 +74,7 @@ function ShareSurvey() {
 
   return (
     <Box sx={{ height: 'calc(100vh - 70px)', overflowY: 'hidden', padding: '50px 30px' }} >
-      <Box sx={{ border: '1px #454545 solid', borderRadius: '5px', backgroundColor: '#1A1A1A' }} >
+      <Box sx={{ border: '1px #454545 solid', borderRadius: '5px', backgroundColor: defaultColor?.primaryColor }} >
         <Box sx={{ textAlign: 'start', padding: '15px', borderBottom: '1px #454545 solid' }} >
           <Typography sx={{ color: '#f1f1f1', fontSize: '20px' }} >{headerText}</Typography>
         </Box>
@@ -80,7 +83,7 @@ function ShareSurvey() {
         {/* for link or email survey */}
         {surveyType.toLowerCase() === Constants.EMAIL_LINK_SURVEY_TYPE &&
           <Box sx={{ padding: '20px', textAlign: 'start' }} >
-            <Typography sx={{ color: '#454545', fontSize: '16',marginBottom : '10px' }} >Share this link with anyone you want and start getting responses to your survey.</Typography>
+            <Typography sx={{ color: '#808080', fontSize: '16',marginBottom : '10px' }} >Share this link with anyone you want and start getting responses to your survey.</Typography>
             <Box sx={{ display: 'flex' }} >
               <Button
                 startIcon={<ContentCopyIcon/>}

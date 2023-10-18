@@ -1,90 +1,241 @@
-import { Box, Button, Typography } from '@mui/material'
-import React from 'react'
+import { Avatar, Box, Button, Chip, IconButton, MenuItem, Select, Typography } from '@mui/material'
+import React, { useEffect, useRef, useState } from 'react'
 import InviteMemberModal from '../Modals/InviteMemberModal'
+import DeleteIcon from '@mui/icons-material/Delete';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as LayoutStyles from '../Styles/LayoutStyles'
+import EditIcon from '@mui/icons-material/Edit';
+import UserDetailsModal from '../Modals/UserDetailsModal'
+import GenericModal from '../Modals/GenericModal';
+import { genericModalData, userRoleType } from '../Utils/types';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { handleLogout } from '../Utils/FeedbackUtils';
+import { USER_UNAUTH_TEXT, componentList, componentName } from '../Utils/Constants';
+import { deleteUserRoleAPI, getUserListAPI } from '../Utils/Endpoints';
+import FSLoader from './FSLoader';
+import Notification from '../Utils/Notification';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 
-
-const subscriptionDetailList = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  borderBottom: '1px #454545 solid',
-  paddingTop: '10px',
-  paddingBottom: '10px'
+const singleUserContainer = (bgColor: string) => {
+  return {
+    backgroundColor: bgColor,
+    borderRadius: '10px',
+    marginTop: '15px',
+    padding: '10px',
+    display: 'flex',
+    justifyContent: 'space-between'
+  }
 }
 
 const usersList = [
   {
     name: 'Abdul Samad Kirmani',
-    email: 'abdulSamad@gmail.com'
+    email: 'samad@feedbacksense.io',
+    role: 'OWNER'
   },
   {
-    name: 'Abdul Samad Kirmani bin Khalid Hasan',
-    email: 'abdulSamad@gmail.com'
+    name: 'Adam Perret',
+    email: 'adam@feedbacksense.io',
+    role: 'ADMIN'
   },
   {
-    name: 'Abdul Samad Kirmani',
-    email: 'abdulSamad@gmail.com'
+    name: 'Brett Quizo',
+    email: 'brett@feedbacksense.io',
+    role: 'USER'
   },
   {
-    name: 'Abdul Samad Kirmani',
-    email: 'abdulSamad@gmail.com'
+    name: 'Dino James',
+    email: 'dino@feedbacksense.io',
+    role: 'GUEST'
   },
+  {
+    name: 'Ankit',
+    email: 'ankit@feedbacksense.io',
+    role: 'GUEST'
+  },
+]
+
+const userRoles = [
+  'OWNER',
+  'ADMIN',
+  'USER',
+  'GUEST'
 ]
 
 function OrgTeamMatesSettings() {
 
-  const [openInviteModal, setOpeninviteModal] = React.useState(false);
+  const snackbarRef: any = useRef(null);
+  const [openInviteModal, setOpenInviteModal] = React.useState(false);
+  const [openDetailsModal, setOpenDetailsModal] = React.useState(false);
+  const [showGenericModal, setShowGenericModal] = React.useState(false);
+  const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
+  const [selectedUser, setSelectedUser] = useState<any>({});
+  const [loading, setLoading] = React.useState(false);
+  const [userList, setUserList] = useState<any[]>([]);
+  const defaultColor = useSelector((state: any) => state.colorReducer);
+  const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
-  const handleOpenInviteModal = () => setOpeninviteModal(true);
-  const handleCloseInviteModal = () => setOpeninviteModal(false);
+  useEffect(() => {
+    getUserList();
+  }, []);
 
+  const handleOpenInviteModal = () => setOpenInviteModal(true);
+  const handleCloseInviteModal = () => setOpenInviteModal(false);
+  const handleOpenDetailModal = (user: any) => {
+    setOpenDetailsModal(true);
+    setSelectedUser(user);
+  }
+  const handleCloseDetailModal = () => setOpenDetailsModal(false);
+
+  const handleSuccessButtonClick = async () => {
+    setShowGenericModal(false);
+    try {
+      setLoading(true);
+      const { data } = await axios.post(
+        deleteUserRoleAPI(),
+        { ...genericModalObj?.data },
+        { withCredentials: true }
+      );
+      setLoading(false);
+      snackbarRef?.current?.show(data?.message, 'success');
+      deleteUserRerender(genericModalObj?.data.userId);
+    } catch (error: any) {
+      setLoading(false);
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      setLoading(false);
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        handleLogout();
+      }
+    }
+  }
+
+  const handleDeleteButtonClick = (userId: string) => {
+    setShowGenericModal(true);
+    let genDeleteObj: genericModalData = {
+      header: 'You are removing a user!',
+      warning: 'Warning: There\'s no turning back! I acknowledge that',
+      successButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+      description: 'The user will be removed from FeedbackSense.',
+      type: 'delete',
+      data: {
+        userId: userId
+      }
+    }
+    setGenericModalObj(genDeleteObj);
+  }
+
+  const getUserList = async (): Promise<void> => {
+    try {
+      setLoading(true);
+      let { data } = await axios.get(getUserListAPI(), { withCredentials: true });
+      setLoading(false);
+      if (data?.statusCode !== 200) {
+        snackbarRef?.current?.show(data?.message, 'error');
+        return;
+      }
+
+      if (data.data != null) {
+        setUserList(data.data);
+      }
+    } catch (error: any) {
+      setLoading(false);
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        handleLogout();
+      }
+    }
+  }
+
+  const deleteUserRerender = (userId: string) => {
+    const updatedUserList = userList.filter(user => user.id !== userId);
+    setUserList(updatedUserList);
+  }
+
+  const updateUser = (newRole: string) => {
+    const tempUser: any[] = JSON.parse(JSON.stringify(userList));
+    tempUser.forEach(usr => {
+      if (usr.id === selectedUser.id) {
+        usr.role = newRole
+        return
+      }
+    });
+    setUserList(tempUser);
+  }
+
+  const SingleUserList = (user: any) => {
+    return (
+      <Box sx={singleUserContainer(defaultColor?.primaryColor)} >
+        <Box display={'flex'} >
+          <Avatar sx={{ bgcolor: '#006DFF', width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
+          <Box textAlign={'start'} >
+            <Typography variant='h6' color={'white'}>{user?.name}</Typography>
+            <Typography fontSize={'13px'} color={'#808080'} >{user?.email}</Typography>
+          </Box>
+        </Box>
+        <Box marginTop={'5px'} >
+          <Chip sx={{ width: '70px' }} label={user?.role} />
+          {
+            CoreUtils.isComponentVisible(userRole, componentName.MANAGE_USER) &&
+            <IconButton onClick={() => handleOpenDetailModal(user)} sx={{ marginLeft: '10px' }} >
+              <EditIcon sx={{ color: '#808080' }} />
+            </IconButton>
+          }
+          {
+            CoreUtils.isComponentVisible(userRole, componentName.DELETE_USER) &&
+            <IconButton onClick={() => handleDeleteButtonClick(user?.id)} sx={{ marginLeft: '5px' }} >
+              <DeleteIcon sx={{ color: '#808080' }} />
+            </IconButton>
+          }
+        </Box>
+      </Box>
+    )
+  }
 
   return (
-    // <Box sx={LayoutStyles.globalSettingSubContainers} >
-    //   <Box sx={{ textAlign: 'end', marginBottom: '50px' }} >
-    //     <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} onClick={handleOpenInviteModal} variant="contained">Invite Teammantes</Button>
-    //   </Box>
-    //   <Box>
-    //     <Box sx={subscriptionDetailList} style={{ border: 'none' }}>
-    //       <Typography color={'#f1f1f1'} >Name </Typography>
-    //       <Typography color={'#f1f1f1'} >E-mail </Typography>
-    //       {/* <Typography color={'#454545'} > </Typography> */}
-    //     </Box>
-    //     {
-    //       usersList.map((user) => {
-    //         return (
-    //           <Box sx={subscriptionDetailList} style={{ borderTop: '1px #454545 solid' }} >
-    //             <Typography color={'#454545'} >{user.name} </Typography>
-    //             <Typography color={'#454545'} >{user.email} </Typography>
-    //           </Box>
-    //         )
-    //       })
-    //     }
-    //   </Box>
-    //   <InviteMemberModal open={openInviteModal}  close={handleCloseInviteModal} />
-    // </Box>
-    <Box sx={LayoutStyles.globalSettingSubContainers} >
-      <InviteCommingSoon/>
+    <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.secondaryColor)} >
+      <Box sx={{ display: 'flex', marginBottom: '50px', justifyContent: 'space-between' }} >
+        <Typography variant='h5' color={'white'} marginTop={'10px'} >Users</Typography>
+        {
+          CoreUtils.isComponentVisible(userRole, componentName.TEAMMATES_INVITE) &&
+          <Button
+            style={{ width: 'fit-content' }}
+            sx={ButtonStyles.containedButton}
+            onClick={handleOpenInviteModal}
+            variant="contained"
+          >Invite Teammantes</Button>
+        }
+      </Box>
+      <Box>
+        {
+          userList?.map((user) => {
+            return (
+              <Box key={user.email} >
+                {SingleUserList(user)}
+              </Box>
+            )
+          })
+        }
+      </Box>
+      <InviteMemberModal open={openInviteModal} close={handleCloseInviteModal} />
+      <UserDetailsModal
+        user={selectedUser}
+        open={openDetailsModal}
+        close={handleCloseDetailModal}
+        roles={userRoles}
+        updateUser={updateUser}
+      />
+      <GenericModal
+        payload={genericModalObj}
+        close={() => setShowGenericModal(false)}
+        open={showGenericModal}
+        callback={handleSuccessButtonClick}
+      />
+      <FSLoader show={loading} />
+      <Notification ref={snackbarRef} />
     </Box>
   )
 }
 
 export default OrgTeamMatesSettings
-
-function InviteCommingSoon(){
-  return(
-      <Box height={150} textAlign={'start'} >
-          <Typography color={'#f1f1f1'} fontSize={30} paddingTop={'20px'} >
-              Comming <span style={{color : '#006DFF'}} >soon</span>
-          </Typography>
-          <Typography color={'#454545'} paddingBottom={'20px'} >
-              Exciting News! Team Feature Coming Soon! Stay tuned for the new team feature that 
-              will enhance collaboration and streamline your workflow. Get ready to level up your teamwork!
-          </Typography>
-          <Typography style={{color : '#006DFF'}} >
-              #TeamworkMakesTheDreamWork
-          </Typography>
-      </Box>
-  )
-}

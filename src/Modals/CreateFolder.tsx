@@ -3,15 +3,13 @@ import React, { useRef, useState } from 'react'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import CloseIcon from '@mui/icons-material/Close';
-import { USER_LOCAL_KEY, USER_UNAUTH_TEXT } from '../Utils/Constants';
-import { authUser } from '../Utils/types';
+import {  USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { createFolder } from '../Utils/Endpoints';
 import axios from 'axios';
-import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
-import { useNavigate } from 'react-router';
 import { handleLogout } from '../Utils/FeedbackUtils';
+import { useSelector } from 'react-redux';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -43,16 +41,12 @@ function CreateFolder(props: any) {
     const snackbarRef: any = useRef(null);
     const [folderName, setFolderName] = useState<string>('');
     const [loading, setLoading] = React.useState(false);
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     const handleCreateButtonClick = async () => {
         try {
             if(folderName == null || folderName.length < 1){
                 snackbarRef?.current?.show('Please give folder a name', 'error');
-                return;
-            }
-            const currentUser: string | null = localStorage.getItem(USER_LOCAL_KEY);
-            if (currentUser == null) {
-                snackbarRef?.current?.show('Unauthorized', 'error');
                 return;
             }
             setLoading(true);
@@ -89,7 +83,7 @@ function CreateFolder(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyle}>
+                <Box sx={ModalStyles.modalStyle(defaultColor?.secondaryColor)}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Create folder

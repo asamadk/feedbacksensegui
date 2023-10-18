@@ -19,14 +19,13 @@ import { handleLogout } from '../Utils/FeedbackUtils';
 import CustomPopover from './Popover';
 import { useDispatch } from 'react-redux';
 import { updateCurrentWorkflow } from '../Redux/Actions/currentWorkflowActions';
+import { useSelector } from 'react-redux';
 
 const surveyBlockMainContainer = {
     border: '1px #454545 solid',
     borderRadius: '5px',
-    backgroundColor: '#181818',
     cursor: 'pointer',
     height: '200px',
-    // width : '360px'
 }
 
 function SurveyBlock(props: any) {
@@ -48,6 +47,7 @@ function SurveyBlock(props: any) {
     const [loading, setLoading] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [nameAnchorEl, setNameAnchorEl] = React.useState<HTMLElement | null>(null);
+    const defaultColor = useSelector((state: any) => state.colorReducer);
     const openName = Boolean(nameAnchorEl);
 
     const open = Boolean(anchorEl);
@@ -148,8 +148,10 @@ function SurveyBlock(props: any) {
     }
 
     return (
-        <Box sx={surveyBlockMainContainer} >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid', height: '50px' }} >
+        <Box sx={{...surveyBlockMainContainer,backgroundColor : defaultColor?.secondaryColor}} >
+            <Box 
+                sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid', height: '50px',backgroundColor : '#212a2b' }} 
+            >
                 <Box>
 
                     <Typography

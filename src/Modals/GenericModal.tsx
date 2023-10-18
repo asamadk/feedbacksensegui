@@ -3,8 +3,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import * as Types from '../Utils/types'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
+import { useSelector } from 'react-redux';
 
 function GenericModal(props: any) {
+
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     let payload: Types.genericModalData = props.payload;
 
@@ -20,7 +23,7 @@ function GenericModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyle}>
+                <Box sx={ModalStyles.modalStyle(defaultColor?.secondaryColor)}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             {payload?.header}

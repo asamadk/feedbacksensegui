@@ -1,27 +1,7 @@
-import { Dayjs } from "dayjs";
-import { SURVEY_LOCAL_KEY, USER_LOCAL_KEY } from "./Constants";
 import { logout } from "./Endpoints";
 import { logicType } from "./types";
 import { DEFAULT_KEY } from "../SurveyEngine/CoreUtils/CoreConstants";
 
-export const getUserId = (): string => {
-    let userStr = localStorage.getItem(USER_LOCAL_KEY);
-    if (userStr == null) {
-        return '';
-    }
-    let userData = JSON.parse(userStr);
-    return userData.id;
-}
-
-export const getOrgId = (): string => {
-    let userStr = localStorage.getItem(USER_LOCAL_KEY);
-    if (userStr == null) {
-        return '';
-    }
-
-    let userData = JSON.parse(userStr);
-    return userData?.organization_id;
-}
 
 export const getComponentConfigFromNode = (node: any) => {
     const compData = node?.data;

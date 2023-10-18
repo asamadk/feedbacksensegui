@@ -11,6 +11,7 @@ import { dateAnswerOperators, multipleAnswerOperators, singleAnswerOperators, te
 import { answerNotNeededSet } from '../../Utils/FeedbackUtils';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useSelector } from 'react-redux';
 
 
 const logicSelectContainer = {
@@ -20,22 +21,26 @@ const logicSelectContainer = {
     borderRadius: '6px',
 }
 
-const logicListContainer = {
-    padding: '10px',
-    marginTop: '20px',
-    border: '0.5px solid #454545',
-    borderRadius: '6px',
-    backgroundColor: '#1a1a1a',
-    cursor: 'pointer'
+const logicListContainer = (bgColor : string) => {
+    return {
+        padding: '10px',
+        marginTop: '20px',
+        border: '0.5px solid #454545',
+        borderRadius: '6px',
+        backgroundColor: bgColor,
+        cursor: 'pointer'
+    }
 }
 
-const logicIconsContainer = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    backgroundColor : '#323533',
-    padding: '5px',
-    marginBottom: '10px',
-    borderRadius: '10px'
+const logicIconsContainer = (bgColor : string) => {
+    return {
+        display: 'flex',
+        justifyContent: 'space-between',
+        backgroundColor : bgColor,
+        padding: '5px',
+        marginBottom: '10px',
+        borderRadius: '10px'
+    }
 }
 
 const CssTextField = styled(TextField)({
@@ -282,6 +287,8 @@ export default React.forwardRef(CreateLogic)
 
 function DraggableLogicItem({ logic, index, ...otherProps }: any) {
 
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+    
     const [, refDrag] = useDrag({
         type: 'LOGIC_ITEM',
         item: { index },
@@ -301,8 +308,8 @@ function DraggableLogicItem({ logic, index, ...otherProps }: any) {
 
     return (
         <Box ref={combinedRef} key={logic.id} >
-            <Box sx={logicListContainer} >
-                <Box sx={logicIconsContainer} >
+            <Box sx={logicListContainer(defaultColor?.secondaryColor)} >
+                <Box sx={logicIconsContainer(defaultColor?.primaryColor)} >
                     <Box textAlign={'end'} >
                         <IconButton sx={{cursor : 'grab'}} >
                             <DragIndicatorIcon sx={{ color: '#ffffff' }} />

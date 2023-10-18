@@ -16,6 +16,9 @@ import Notification from '../Utils/Notification';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { useNavigate } from 'react-router';
 import Logo from './Logo';
+import { useSelector } from 'react-redux';
+import { userRoleType } from '../Utils/types';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 
 const buttonContainerStyles = {
     marginTop: '10px',
@@ -59,6 +62,7 @@ function SurveysPanel(props: any) {
     const [loading, setLoading] = React.useState(false);
     const [isEmpty, setIsEmpty] = React.useState<Boolean>(false);
     const [forceRerender, setForceRerender] = React.useState(false);
+    const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
     useEffect(() => {
         getSurveys();
@@ -108,7 +112,7 @@ function SurveysPanel(props: any) {
     const getUserList = async (): Promise<void> => {
         try {
             setLoading(true);
-            let { data } = await axios.get(Endpoints.getUserList(), { withCredentials: true });
+            let { data } = await axios.get(Endpoints.getUserListAPI(), { withCredentials: true });
             setLoading(false);
             if (data?.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
@@ -266,6 +270,8 @@ function SurveysPanel(props: any) {
                         <Typography sx={{ textAlign: 'start' }} variant='h5'>{props.folder}</Typography>
                         <Box sx={buttonContainerStyles} >
                             <Box>
+                                {
+                                CoreUtils.isComponentVisible(userRole,Constants.componentName.CREATE_SURVEY_BUTTON) &&
                                 <Button
                                     sx={ButtonStyles.containedButton}
                                     style={{ width: 'fit-content', marginBottom: '15px', marginRight: '10px', textTransform: 'none' }}
@@ -275,6 +281,7 @@ function SurveysPanel(props: any) {
                                 >
                                     Create new survey
                                 </Button>
+                                }
                                 <Button
                                     onClick={() => navigate('/template')}
                                     sx={ButtonStyles.outlinedButton}

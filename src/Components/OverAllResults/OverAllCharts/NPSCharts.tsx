@@ -31,7 +31,7 @@ function NPSCharts(props : propsType) {
             <YAxis dataKey="percentage" />
             <XAxis dataKey="value" />
             <Tooltip
-              cursor={{ fill: '#1e1e1e' }}
+              cursor={{ fill: 'none' }}
               content={<FSTooltip percent={true} />}
             />
             <Bar barSize={40} dataKey='percentage' fill={getIconColorById(props.id)} />

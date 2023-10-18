@@ -11,15 +11,18 @@ import { getOverallMetricsResponse } from '../../Utils/Endpoints';
 import { USER_UNAUTH_TEXT } from '../../Utils/Constants';
 import { useNavigate } from 'react-router';
 import { handleLogout } from '../../Utils/FeedbackUtils';
+import { useSelector } from 'react-redux';
 
-const subContainerStyle = {
-    border: '1px #454545 solid',
-    padding: '10px',
-    width: '33%',
-    borderRadius: '6px',
-    margin: '20px',
-    marginTop: '25px',
-    backgroundColor : '#1A1A1A'
+const subContainerStyle = (bgColor : string) => {
+    return {
+        border: '1px #454545 solid',
+        padding: '10px',
+        width: '33%',
+        borderRadius: '6px',
+        margin: '20px',
+        marginTop: '25px',
+        backgroundColor : bgColor
+    }
 }
 
 const mainContainer = {
@@ -31,6 +34,7 @@ const mainContainer = {
 function OverAllMetrics(props : surveyIdProp) {
 
     const navigate = useNavigate();
+    const defaultColor = useSelector((state: any) => state.colorReducer);
     const snackbarRef: any = useRef(null);
     const [loading , setLoading] = React.useState(false);
     const [overAllMetrics, setOverAllMetrics] = React.useState<any>();
@@ -60,7 +64,7 @@ function OverAllMetrics(props : surveyIdProp) {
 
     return (
         <Box sx={mainContainer}>
-            <Box sx={subContainerStyle} >
+            <Box sx={subContainerStyle(defaultColor?.primaryColor)} >
                 <Box display={'flex'}  >
                     <Box sx={{ backgroundColor: '#454545', borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
                         <TextSnippetIcon sx={{ color: '#f1f1f1' }} />
@@ -71,7 +75,7 @@ function OverAllMetrics(props : surveyIdProp) {
                     </Box>
                 </Box>
             </Box>
-            <Box sx={subContainerStyle} >
+            <Box sx={subContainerStyle(defaultColor?.primaryColor)} >
                 <Box display={'flex'}  >
                     <Box sx={{ backgroundColor: '#454545', borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
                         <BarChartIcon sx={{ color: '#f1f1f1' }} />
@@ -82,7 +86,7 @@ function OverAllMetrics(props : surveyIdProp) {
                     </Box>
                 </Box>
             </Box>
-            <Box sx={subContainerStyle} >
+            <Box sx={subContainerStyle(defaultColor?.primaryColor)} >
                 <Box display={'flex'}  >
                     <Box sx={{ backgroundColor: '#454545', borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
                         <RemoveRedEyeIcon sx={{ color: '#f1f1f1' }} />

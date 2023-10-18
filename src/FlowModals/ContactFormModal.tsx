@@ -8,6 +8,10 @@ import { getColorsFromTheme, getCompConfigFromUiId, modalTabList } from '../Util
 import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import CustomTabSet from '../Components/CustomTabSet';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
+import { useSelector } from 'react-redux';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import { componentName } from '../Utils/Constants';
+import { userRoleType } from '../Utils/types';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -39,7 +43,8 @@ function ContactFormModal(props: any) {
     const [background, setBackground] = useState<any>();
     const [answerChoiceList, setAnswerChoiceList] = useState<string[]>(['']);
     const [questionText, setQuestionText] = useState('');
-    const [value, setValue] = React.useState(0);
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+    const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
@@ -97,10 +102,6 @@ function ContactFormModal(props: any) {
         setAnswerChoiceList(newArr);
     }
 
-    const handleTabChange = (newValue: number) => {
-        setValue(newValue);
-    };
-
     return (
         <>
             <Modal
@@ -109,7 +110,7 @@ function ContactFormModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyleComponents}>
+                <Box sx={ModalStyles.modalStyleComponents(defaultColor?.secondaryColor)}>
                     <Box width={'40%'} marginRight={10} sx={{ overflowY: 'scroll' }}>
                         <Box sx={ModalStyles.modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">
@@ -119,7 +120,11 @@ function ContactFormModal(props: any) {
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
-                        <ModalSnippets published={props.isPublished} />
+                        <ModalSnippets text={'To make changes, please unpublish the workflow'} published={props.isPublished} />
+                        <ModalSnippets 
+                            text={'Guest cannot edit the surveys'} 
+                            published={!CoreUtils.isComponentVisible(userRole,componentName.SAVE_SURVEY_BUTTON)} 
+                        />
                         <Box>
                             <Box sx={ModalStyles.modalBodyContainerStyle} >
                                 <Box>

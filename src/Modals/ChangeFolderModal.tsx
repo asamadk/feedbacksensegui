@@ -5,7 +5,6 @@ import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import * as InputStyles from '../Styles/InputStyles';
 import React, { useEffect, useRef } from 'react'
-import { getOrgId } from '../Utils/FeedbackUtils';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import * as Endpoints from '../Utils/Endpoints';
 import axios from 'axios';
@@ -14,6 +13,7 @@ import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 function ChangeFolderModal(props: any) {
 
@@ -22,7 +22,7 @@ function ChangeFolderModal(props: any) {
     const [folderList, setFolderList] = React.useState<any[]>([]);
     const [selectedFolder, setSelectedFolder] = React.useState<string>('0');
     const [loading, setLoading] = React.useState(false);
-
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     useEffect(() => {
         getFolders();
@@ -30,11 +30,6 @@ function ChangeFolderModal(props: any) {
 
     const getFolders = async () => {
         try {
-            let orgId = getOrgId();
-            if (orgId == null) {
-                snackbarRef?.current?.show('Something went wrong , please contact FeedbackSense help', 'error');
-                return;
-            }
             setLoading(true);
             let folderRes = await axios.get(Endpoints.getFolders(), { withCredentials: true });
             setLoading(false);
@@ -95,7 +90,7 @@ function ChangeFolderModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyle}>
+                <Box sx={ModalStyles.modalStyle(defaultColor?.secondaryColor)}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Move to folder

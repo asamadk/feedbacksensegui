@@ -1,3 +1,5 @@
+import { componentName } from "../../Utils/Constants";
+import { userRoleType } from "../../Utils/types";
 import {
     CONDITION_ANSWER_CONTAINS, CONDITION_ANY_VALUE, CONDITION_HAS_ANY_VALUE,
     CONDITION_IS, CONDITION_IS_EXACTLY, CONDITION_IS_NOT, CONDITION_QUESTION_IS_ANSWERED, DEFAULT_KEY, SMILEY_EXTREMELY_HAPPY, SMILEY_EXTREMELY_UNSATISFIED, SMILEY_HAPPY, SMILEY_NEUTRAL, SMILEY_UNSATISFIED
@@ -99,5 +101,32 @@ export class CoreUtils {
             return SMILEY_EXTREMELY_HAPPY
         }
         return '';
+    }
+
+    static isComponentVisible(role: userRoleType, compName: string): boolean {
+        if (
+            compName === componentName.SUBSCRIPTION ||
+            compName === componentName.BILLING_INFO_HOME ||
+            compName === componentName.TEAMMATES_INVITE ||
+            compName === componentName.MANAGE_USER ||
+            compName === componentName.DELETE_SURVEY ||
+            compName === componentName.DELETE_SURVEY_RESPONSE
+        ) {
+            return role === 'ADMIN' || role === 'OWNER';
+        }
+
+        if (compName === componentName.DELETE_USER) {
+            return role === 'OWNER';
+        }
+
+        if (
+            compName === componentName.CREATE_SURVEY_BUTTON ||
+            compName === componentName.SAVE_SURVEY_BUTTON ||
+            compName === componentName.DISABLE_SURVEY
+        ) {
+            return role !== 'GUEST'
+        }
+
+        return false;
     }
 }

@@ -5,18 +5,21 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import { useNavigate } from "react-router";
 import { handleLogout } from "../Utils/FeedbackUtils";
+import { useSelector } from "react-redux";
 
 
-const settingsMainStyle = {
-  width: "100%",
-  maxWidth: 204,
-  backgroundColor: "#121212",
-  color: "#f1f1f1",
-  position: "absolute",
-  border: "1px #454545 solid",
-  right: "10px",
-  borderRadius: "5px",
-  zIndex: 10
+const settingsMainStyle = (bgColor : string) => {
+  return {
+    width: "100%",
+    maxWidth: 204,
+    backgroundColor: bgColor,
+    color: "#f1f1f1",
+    position: "absolute",
+    border: "1px #454545 solid",
+    right: "10px",
+    borderRadius: "5px",
+    zIndex: 10
+  }
 };
 
 const singleElementStyle = {
@@ -26,6 +29,7 @@ const singleElementStyle = {
 export default function SettingsModal(props: any) {
 
   const navigation = useNavigate();
+  const defaultColor = useSelector((state: any) => state.colorReducer);
 
   const changeBackground = (e: any) => {
     e.target.style.color = '#006DFF';
@@ -43,12 +47,12 @@ export default function SettingsModal(props: any) {
 
   return (
     <List
-      sx={settingsMainStyle}
+      sx={settingsMainStyle(defaultColor?.primaryColor)}
       subheader={
         <ListSubheader
           style={{
-            backgroundColor: "#121212",
-            color: "#323533",
+            backgroundColor: defaultColor?.primaryColor,
+            color: "#808080",
             textAlign: "start",
           }}
         >
@@ -76,7 +80,7 @@ export default function SettingsModal(props: any) {
           primary="Survey Settings"
         />
       </ListItem>
-      {/* <ListItem>
+      <ListItem>
         <ListItemText
           onMouseOver={changeBackground}
           onMouseLeave={revertBackground}
@@ -85,17 +89,17 @@ export default function SettingsModal(props: any) {
           primary="Subscription"
           onClick={() => handleSettingsRouting('/org/subscription')}
         />
-      </ListItem> */}
-      {/* <ListItem>
+      </ListItem>
+      <ListItem>
         <ListItemText
           onMouseOver={changeBackground}
           onMouseLeave={revertBackground}
           style={singleElementStyle}
           id="Invite-Teammates"
-          primary="Invite Teammates"
+          primary="Teammates"
           onClick={() => handleSettingsRouting('/org/teammates')}
         />
-      </ListItem> */}
+      </ListItem>
 
       {/* <ListItem>
         <ListItemText

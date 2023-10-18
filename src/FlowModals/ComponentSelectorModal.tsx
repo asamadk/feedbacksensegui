@@ -5,9 +5,12 @@ import { modalButtonContainerStyle, modalHeaderStyle, modalStyle } from '../Styl
 import { containedButton, outlinedButton } from '../Styles/ButtonStyle';
 import { componentList } from '../Utils/Constants';
 import DynamicComponentIcon from '../FlowComponents/DynamicComponentIcon';
+import { useSelector } from 'react-redux';
 
 function ComponentSelectorModal(props: any) {
 
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+    
     const handleComponentClick = (componentId: number) => {
         props.onSelection(componentId);
     }
@@ -20,7 +23,7 @@ function ComponentSelectorModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={modalStyle}>
+                <Box sx={modalStyle(defaultColor?.secondaryColor)}>
                     <Box >
                         <Box sx={modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">

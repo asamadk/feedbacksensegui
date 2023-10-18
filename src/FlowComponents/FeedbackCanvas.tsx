@@ -11,10 +11,11 @@ import { useDispatch } from 'react-redux';
 import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
 import { useSelector } from 'react-redux';
 import { defaultEdgeOptions, getConnectionMap, getEdgeKey, getEdgePathMap, getEdgesFromJson, getEdgesLabelMap } from '../Utils/WorkflowHelper';
-import { logicType } from '../Utils/types';
-import { componentList } from '../Utils/Constants';
+import { logicType, userRoleType } from '../Utils/types';
+import { componentList, componentName } from '../Utils/Constants';
 import CustomConnectionLine from './CustomConnectionLine';
 import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
+import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 
 const elevateEdgesOnSelect = true;
 const proOptions = { hideAttribution: true };
@@ -25,15 +26,15 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
     const snackbarRef: any = useRef(null);
     const edgeUpdateSuccessful = useRef(true);
-
     const dispatch = useDispatch<any>();
+    const userRole: userRoleType = useSelector((state: any) => state.userRole);
     const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
-    const [isWorkflowPublished , setIsWorkflowPublished] = useState<boolean>(props.published);
+    const [isWorkflowPublished, setIsWorkflowPublished] = useState<boolean>(props.published);
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     useEffect(() => {
-        console.log('USE EFFECT PUBLISH CHANGE',props.published);
         setIsWorkflowPublished(props.published);
-    },[props.published]);
+    }, [props.published]);
 
     useEffect(() => {
         if (props?.surveyDetail?.workflows != null && props?.surveyDetail?.workflows.length > 0) {
@@ -70,7 +71,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
     const nodeTypes = useMemo(() => ({
         selectorNode: (params: any) => <CustomNode edges={edges} onDelete={deleteNode} config={props.config} onNodeSelection={handleNodeSelection} {...params} />,
-    }), [props.config, edges , isWorkflowPublished]);
+    }), [props.config, edges, isWorkflowPublished]);
 
     const getComponentStyle = (color: string): React.CSSProperties => {
         return {
@@ -78,7 +79,6 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
             border: `1px ${color} solid`,
             width: '300px',
             height: '82px',
-            backgroundColor: '#1E1E1E',
             borderRadius: '5px',
             padding: '10px'
         }
@@ -104,7 +104,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                     description: comp.description,
                     onEdit: props.onEdit
                 },
-                style: getComponentStyle(comp.bgColor),
+                style: { ...getComponentStyle(comp.bgColor), backgroundColor: defaultColor?.backgroundColor },
             };
             return newNodes;
         });
@@ -126,7 +126,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                 description: componentData.description,
                 onEdit: props.onEdit
             },
-            style: getComponentStyle(componentData.bgColor),
+            style: { ...getComponentStyle(componentData.bgColor), backgroundColor: defaultColor?.backgroundColor },
             position: position,
         }
 
@@ -443,8 +443,8 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     const onEdgeUpdateEnd = useCallback(
         (_: any, edge: any) => {
             if (!edgeUpdateSuccessful.current) {
-				setEdges((eds) => eds.filter((e) => e.id !== edge.id));
-			}
+                setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+            }
             edgeUpdateSuccessful.current = true;
             makeWorkflowDirty();
         },
@@ -452,7 +452,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     );
 
     const onEdgeUpdate = useCallback((oldEdge: any, newConnection: any) => {
-		edgeUpdateSuccessful.current = true;
+        edgeUpdateSuccessful.current = true;
         setEdges((els) => updateEdge(oldEdge, newConnection, els));
     }, [reactFlowInstance]);
 
@@ -473,7 +473,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     return (
         <>
             <ReactFlowProvider>
-                <Box sx={{ backgroundColor: '#1E1E1E' }} height={'calc(100vh - 128px)'} ref={reactFlowWrapper} >
+                <Box sx={{ backgroundColor: defaultColor?.backgroundColor }} height={'calc(100vh - 128px)'} ref={reactFlowWrapper} >
                     <ReactFlow
                         onConnect={onConnect}
                         onInit={setReactFlowInstance}
@@ -503,19 +503,26 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                         panOnScroll
                         selectionOnDrag
                     >
-                        <MiniMap nodeColor={'#1e1e1e'} color={'#1E1E1E'} style={{ backgroundColor: '#454545' }} />
+                        <MiniMap
+                            nodeColor={defaultColor?.backgroundColor}
+                            color={defaultColor?.backgroundColor}
+                            style={{ backgroundColor: '#454545' }}
+                        />
                         <Background />
                         <Controls />
-                        <Box sx={{ position: 'absolute', top: '10px', left: '-5px' }} >
-                            <Button
-                                endIcon={<SaveIcon />}
-                                style={{ position: 'relative', zIndex: '100', }}
-                                sx={ButtonStyle.containedButton}
-                                onClick={handleSaveWorkflow}
-                            >
-                                Save
-                            </Button>
-                        </Box>
+                        {
+                            CoreUtils.isComponentVisible(userRole,componentName.SAVE_SURVEY_BUTTON) &&
+                            <Box sx={{ position: 'absolute', top: '10px', left: '-5px' }} >
+                                <Button
+                                    endIcon={<SaveIcon />}
+                                    style={{ position: 'relative', zIndex: '100', }}
+                                    sx={ButtonStyle.containedButton}
+                                    onClick={handleSaveWorkflow}
+                                >
+                                    Save
+                                </Button>
+                            </Box>
+                        }
                     </ReactFlow>
                 </Box>
             </ReactFlowProvider>
