@@ -501,9 +501,9 @@ function CreateSurvey(props: any) {
           >
             {surveyDetail?.is_published === true ? 'Unpublish' : 'Publish'}
           </Button>
-          <IconButton onClick={handleClick} sx={{ width: '40px', marginTop: '10px', marginLeft: '10px' }} >
+          {/* <IconButton onClick={handleClick} sx={{ width: '40px', marginTop: '10px', marginLeft: '10px' }} >
             <MoreVertIcon />
-          </IconButton>
+          </IconButton> */}
           <WorkflowMore
             anchor={anchorEl}
             open={open}
