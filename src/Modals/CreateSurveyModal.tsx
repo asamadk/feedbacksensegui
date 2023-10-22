@@ -60,9 +60,10 @@ function CreateSurveyModal(props: any) {
             snackbarRef?.current?.show(data.message, 'success');
             setSurveyName('');
             setShowScratch(false);
-            props.surveys.push(data.data);
+            // props.surveys.push(data.data);
             props.update();
         } catch (error: any) {
+            console.log("🚀 ~ file: CreateSurveyModal.tsx:66 ~ handleCreateSurvey ~ error:", error)
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             if (error?.response?.data?.message === USER_UNAUTH_TEXT) {

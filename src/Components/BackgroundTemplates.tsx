@@ -6,11 +6,19 @@ import { USER_UNAUTH_TEXT, getBackgrounds } from '../Utils/Constants';
 import axios from 'axios';
 import { getSurveyDetails, saveSurveyDesgin } from '../Utils/Endpoints';
 import { handleLogout } from '../Utils/FeedbackUtils';
+import { useSelector } from 'react-redux';
+
 
 function BackgroundTemplates(props: any) {
 
+  let initialized = false;
+  const surveysState = useSelector((state: any) => state.surveys);
+
   useEffect(() => {
-    getSingleSurvey();
+    if (initialized === false) {
+      getSingleSurvey();
+      initialized = true;
+    }
   }, []);
 
   const [selectedBackground, setSelectedBackground] = React.useState<any>(getBackgrounds()[0]);
@@ -18,27 +26,12 @@ function BackgroundTemplates(props: any) {
   const [loading, setLoading] = React.useState(false);
 
   const getSingleSurvey = async () => {
-    try {
-      setLoading(true);
-      let { data } = await axios.get(getSurveyDetails(props.surveyId), { withCredentials: true });
-      setLoading(false);
-
-      if (data?.statusCode !== 200) {
-        snackbarRef?.current?.show(data?.message, 'error');
+    surveysState?.forEach((srv: any) => {
+      if (srv.id === props.surveyId) {
+        populateSurveyDesign(srv);
+        return;
       }
-
-      if (data != null) {
-        const tempSurvey = data.data;
-        populateSurveyDesign(tempSurvey);
-
-      }
-    } catch (error: any) {
-      setLoading(false);
-      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        handleLogout();
-      }
-    }
+    });
   }
 
   const populateSurveyDesign = (tempSurvey: any) => {
@@ -63,12 +56,12 @@ function BackgroundTemplates(props: any) {
     handleSaveClick(background);
   }
 
-  const handleSaveClick = async (background : any) => {
+  const handleSaveClick = async (background: any) => {
     try {
       const selectedTheme = props.selectedTheme;
       const saveObj = {
         theme: selectedTheme,
-        background : background
+        background: background
       }
       setLoading(true);
       const { data } = await axios.post(saveSurveyDesgin(props.surveyId), saveObj, { withCredentials: true });
@@ -77,6 +70,7 @@ function BackgroundTemplates(props: any) {
         snackbarRef?.current?.show(data.message, 'error');
         return;
       }
+      props.updateThemeReduxState(JSON.stringify(saveObj));
       snackbarRef?.current?.show('Design saved.', 'success');
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');

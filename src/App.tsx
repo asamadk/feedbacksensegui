@@ -28,6 +28,7 @@ import ProcessInvite from './Layout/ProcessInvite';
 import { ignoreAuthPaths } from './Utils/Constants';
 import { setUserRole } from './Redux/Actions/userRoleAction';
 import { useDispatch } from 'react-redux';
+import { setCurrentUsers } from './Redux/Reducers/currentUserReducer';
 
 function App() {
 
@@ -50,6 +51,7 @@ function App() {
       const { data } = await axios.get(url, { withCredentials: true });
 
       const currentUser = data.data;
+      dispatch(setCurrentUsers(currentUser));
       dispatch(setUserRole(currentUser.role));
       if (currentUser.organization_id == null || currentUser.organization_id === '') {
         setUser(currentUser);

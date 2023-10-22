@@ -58,8 +58,13 @@ function IndividualResponse(props: IndividualResponseProps) {
     const [isEmpty, setIsEmpty] = useState(false);
     const userRole: Types.userRoleType = useSelector((state: any) => state.userRole);
 
+    let init = false;
+
     useEffect(() => {
-        fetchSurveyResponseList()
+        if(init === false){
+            fetchSurveyResponseList()
+            init = true;
+        }
     }, []);
 
     const fetchSurveyResponseList = async () => {

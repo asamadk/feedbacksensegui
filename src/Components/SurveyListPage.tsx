@@ -9,16 +9,15 @@ import * as Endpoints from '../Utils/Endpoints';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CustomAlert from './CustomAlert';
-import { useNavigate } from 'react-router';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import { PERM_ISSUE_TEXT, USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
-import Popover from './Popover';
 import { useSelector } from 'react-redux';
 import { userRoleType } from '../Utils/types';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
-import UnAuthorisedComponent from './UnauthorisedComponent';
+import { useDispatch } from 'react-redux';
+import { setFolders } from '../Redux/Reducers/folderReducer';
+import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetailReducer';
 
 
 const surveyPageMainContainer = {
@@ -60,35 +59,65 @@ const folderText = {
 function SurveyListPage() {
 
     const snackbarRef: any = useRef(null);
+    const dispatch = useDispatch();
 
-    const [folderList, setFolderList] = React.useState<any[]>([]);
-    const [openInviteModal, setOpeninviteModal] = React.useState(false);
-    const [openCreateFolderModal, setopenCreateFolderModal] = React.useState(false);
-    const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
+    const [openInviteModal, setOpenInviteModal] = React.useState(false);
+    const [openCreateFolderModal, setOpenCreateFolderModal] = React.useState(false);
     const [selectedFolder, setSelectedFolder] = React.useState<string>('All Surveys');
     const [selectedFolderId, setSelectedFolderId] = React.useState<string>('0');
     const defaultColor = useSelector((state: any) => state.colorReducer);
     const userRole: userRoleType = useSelector((state: any) => state.userRole);
+    const folderState = useSelector((state: any) => state.folders);
+    const subscriptionState = useSelector((state: any) => state.subscriptionDetail);
+    const surveyState = useSelector((state: any) => state.surveys);
     const [loading, setLoading] = React.useState(false);
 
+    let init = false;
+
     useEffect(() => {
-        getFolders();
-        getSubscriptionDetails();
+        if (init === false) {
+            getFolders(false);
+            if (CoreUtils.isComponentVisible(userRole, componentName.SUBSCRIPTION)) {
+                getSubscriptionDetails();
+            }
+            init = true;
+        }
     }, []);
+
+    useEffect(() => {
+        updateActiveSurveyCount();
+    }, [surveyState]);
+
+    const updateActiveSurveyCount = () => {
+        if (subscriptionState == null || subscriptionState.surveyLimitUsed == null) {
+            return;
+        }
+        const tempSubsState = JSON.parse(JSON.stringify(subscriptionState));
+        let count = 0;
+        surveyState.forEach((srv: any) => {
+            if (srv.is_published === 1) {
+                count++;
+            }
+        });
+        tempSubsState.surveyLimitUsed = count;
+        dispatch(setSubscriptionDetailRedux(tempSubsState));
+    }
 
     const getSubscriptionDetails = async () => {
         try {
-            setLoading(true);
-            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(), { withCredentials: true });
-            setLoading(false);
-            if (data.statusCode !== 200) {
-                snackbarRef?.current?.show(data?.message, 'error');
-                return;
-            }
+            if (subscriptionState == null) {
+                setLoading(true);
+                let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(), { withCredentials: true });
+                setLoading(false);
+                if (data.statusCode !== 200) {
+                    snackbarRef?.current?.show(data?.message, 'error');
+                    return;
+                }
 
-            let resData: any[] = data.data;
-            if (resData != null) {
-                setSubscriptionDetail(resData);
+                let resData: any[] = data.data;
+                if (resData != null) {
+                    dispatch(setSubscriptionDetailRedux(resData));
+                }
             }
         } catch (error: any) {
             setLoading(false);
@@ -102,21 +131,24 @@ function SurveyListPage() {
         }
     }
 
-    const getFolders = async () => {
+    const getFolders = async (fetchFromAPI: boolean) => {
         try {
-            setLoading(true);
-            let folderRes = await axios.get(Endpoints.getFolders(), { withCredentials: true });
-            setLoading(false);
-            if (folderRes?.data?.statusCode !== 200) {
-                snackbarRef?.current?.show(folderRes?.data?.message, 'error');
-                return;
-            }
 
-            let resData: any = folderRes.data;
-            if (resData == null) {
-                return;
+            if (fetchFromAPI === true || (folderState == null || folderState.length < 1)) {
+                setLoading(true);
+                let folderRes = await axios.get(Endpoints.getFolders(), { withCredentials: true });
+                setLoading(false);
+                if (folderRes?.data?.statusCode !== 200) {
+                    snackbarRef?.current?.show(folderRes?.data?.message, 'error');
+                    return;
+                }
+
+                let resData: any = folderRes.data;
+                if (resData == null) {
+                    return;
+                }
+                dispatch(setFolders(resData.data));
             }
-            setFolderList(resData.data);
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
@@ -168,15 +200,15 @@ function SurveyListPage() {
         e.target.style.background = defaultColor?.primaryColor;
     }
 
-    const handleOpenInviteModal = () => setOpeninviteModal(true);
-    const handleCloseInviteModal = () => setOpeninviteModal(false);
+    const handleOpenInviteModal = () => setOpenInviteModal(true);
+    const handleCloseInviteModal = () => setOpenInviteModal(false);
 
-    const handleOpenCreateFolderModal = () => setopenCreateFolderModal(true);
+    const handleOpenCreateFolderModal = () => setOpenCreateFolderModal(true);
 
     const handleCloseCreateFolderModal = (type: string) => {
-        setopenCreateFolderModal(false)
+        setOpenCreateFolderModal(false)
         if (type === 'save') {
-            getFolders();
+            getFolders(true);
         }
     }
 
@@ -198,7 +230,8 @@ function SurveyListPage() {
                 return;
             }
             snackbarRef?.current?.show(data?.message, 'success');
-            setFolderList(fld => fld.filter(folder => folder.id !== folderId));
+            // setFolderList(fld => fld.filter(folder => folder.id !== folderId));
+            dispatch(setFolders(folderState.filter((folder: any) => folder.id !== folderId)));
             setSelectedFolder('All Surveys');
             setSelectedFolderId('0');
             document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
@@ -256,10 +289,15 @@ function SurveyListPage() {
                         </div>
 
                         {
-                            folderList?.map(folder => {
+                            // folderList?.map(folder => {
+                            folderState?.map((folder: any) => {
                                 return (
                                     <div key={folder.id} className="folders-data" style={surveyFolderText} onClick={(e) => handleFolderClick(e, folder.name, folder.id)} >
-                                        <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >{folder.name}</Typography>
+                                        <Typography
+                                            title={folder.name}
+                                            style={{ pointerEvents: 'none' }}
+                                            variant='subtitle2'
+                                        >{folder.name?.substring(0,15)}{folder?.name?.length > 15 ? '...' : ''}</Typography>
                                         <IconButton
                                             onClick={() => handleDeleteFolderClick(folder.id)}
                                             style={{ padding: '0px' }}
@@ -278,17 +316,17 @@ function SurveyListPage() {
                             <div style={{ color: '#808080', paddingTop: '10px' }}>
                                 <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Subscription</Typography>
                             </div>
-                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >{subscriptionDetails?.name}</Typography>
+                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >{subscriptionState?.name}</Typography>
 
                             <div style={{ color: '#808080', paddingTop: '10px' }}>
                                 <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Billing cycle</Typography>
                             </div>
-                            <Typography style={{ textAlign: 'start', paddingBottom: '30px' }} variant='subtitle2' >{subscriptionDetails?.billingCycle}</Typography>
+                            <Typography style={{ textAlign: 'start', paddingBottom: '30px' }} variant='subtitle2' >{subscriptionState?.billingCycle}</Typography>
 
                             <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Active survey limit</Typography>
                             <LinearProgressWithLabel
-                                value={subscriptionDetails == null ? 0 : subscriptionDetails?.surveyLimitUsed / subscriptionDetails?.totalSurveyLimit * 100}
-                                text={subscriptionDetails == null ? '0' : subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}
+                                value={subscriptionState == null ? 0 : subscriptionState?.surveyLimitUsed / subscriptionState?.totalSurveyLimit * 100}
+                                text={subscriptionState == null ? '0' : subscriptionState?.surveyLimitUsed + '/' + subscriptionState?.totalSurveyLimit}
                             />
                             <div style={{ marginTop: '40px' }} ></div>
                             <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade plan</Button>

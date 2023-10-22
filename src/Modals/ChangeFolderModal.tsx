@@ -18,38 +18,11 @@ import { useSelector } from 'react-redux';
 function ChangeFolderModal(props: any) {
 
     const snackbarRef: any = useRef(null);
-    const navigate = useNavigate();
-    const [folderList, setFolderList] = React.useState<any[]>([]);
     const [selectedFolder, setSelectedFolder] = React.useState<string>('0');
     const [loading, setLoading] = React.useState(false);
     const defaultColor = useSelector((state: any) => state.colorReducer);
+    const folderState = useSelector((state: any) => state.folders);
 
-    useEffect(() => {
-        getFolders();
-    }, []);
-
-    const getFolders = async () => {
-        try {
-            setLoading(true);
-            let folderRes = await axios.get(Endpoints.getFolders(), { withCredentials: true });
-            setLoading(false);
-            if (folderRes?.data.statusCode !== 200) {
-                snackbarRef?.current?.show(folderRes?.data?.message, 'error');
-                return;
-            }
-            let resData: any = folderRes.data;
-            if (resData == null) {
-                return;
-            }
-            setFolderList(resData.data);
-        } catch (error: any) {
-            setLoading(false);
-            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-                FeedbackUtils.handleLogout();
-            }
-        }
-    }
 
     const handleFolderChange = async () => {
         try {
@@ -65,13 +38,15 @@ function ChangeFolderModal(props: any) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
+            console.log("🚀 ~ file: ChangeFolderModal.tsx:42 ~ handleFolderChange ~ data?.message:", data?.message)
+            snackbarRef?.current?.show(data?.message, 'success');
             let surveyData = data.data;
             props.callback(surveyData);
             props.close();
         } catch (error: any) {
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            if(error?.response?.data?.message === USER_UNAUTH_TEXT){
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
                 FeedbackUtils.handleLogout();
             }
         }
@@ -109,7 +84,7 @@ function ChangeFolderModal(props: any) {
                             size='small'
                         >
                             <MenuItem value={'0'}>Select a folder</MenuItem>
-                            {folderList.map(folder => {
+                            {folderState.map((folder: any) => {
                                 return (<MenuItem key={folder.id} value={folder.id}>{folder.name}</MenuItem>)
                             })}
                         </Select>

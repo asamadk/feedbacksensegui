@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import CloseIcon from '@mui/icons-material/Close';
-import {  USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { createFolder } from '../Utils/Endpoints';
 import axios from 'axios';
 import Notification from '../Utils/Notification';
@@ -45,7 +45,7 @@ function CreateFolder(props: any) {
 
     const handleCreateButtonClick = async () => {
         try {
-            if(folderName == null || folderName.length < 1){
+            if (folderName == null || folderName.length < 1) {
                 snackbarRef?.current?.show('Please give folder a name', 'error');
                 return;
             }

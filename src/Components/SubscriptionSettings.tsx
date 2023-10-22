@@ -43,38 +43,39 @@ function SubscriptionSettings() {
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
     const [loading, setLoading] = React.useState(false);
-    const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
+    // const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
     const defaultColor = useSelector((state: any) => state.colorReducer);
+    const subscriptionState = useSelector((state: any) => state.subscriptionDetail);
 
-    useEffect(() => {
-        getSubscriptionDetails();
-    }, []);
+    // useEffect(() => {
+    //     getSubscriptionDetails();
+    // }, []);
 
-    const getSubscriptionDetails = async () => {
-        try {
-            setLoading(true);
-            let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(), { withCredentials: true });
-            setLoading(false);
-            if (data.statusCode !== 200) {
-                snackbarRef?.current?.show(data?.message, 'error');
-                return;
-            }
+    // const getSubscriptionDetails = async () => {
+    //     try {
+    //         setLoading(true);
+    //         let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(), { withCredentials: true });
+    //         setLoading(false);
+    //         if (data.statusCode !== 200) {
+    //             snackbarRef?.current?.show(data?.message, 'error');
+    //             return;
+    //         }
 
-            let resData: any[] = data.data;
-            if (resData != null) {
-                setSubscriptionDetail(resData);
-            }
-        } catch (error: any) {
-            setLoading(false);
-            if (error?.response?.data?.message === PERM_ISSUE_TEXT) {
-                return;
-            }
-            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-                FeedbackUtils.handleLogout();
-            }
-        }
-    }
+    //         let resData: any[] = data.data;
+    //         if (resData != null) {
+    //             setSubscriptionDetail(resData);
+    //         }
+    //     } catch (error: any) {
+    //         setLoading(false);
+    //         if (error?.response?.data?.message === PERM_ISSUE_TEXT) {
+    //             return;
+    //         }
+    //         snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+    //         if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+    //             FeedbackUtils.handleLogout();
+    //         }
+    //     }
+    // }
 
     const handleUpgradePlanClick = () => {
         // navigate('/upgrade/plan');
@@ -111,7 +112,7 @@ function SubscriptionSettings() {
                 return;
             }
             snackbarRef?.current?.show(data?.message, 'success');
-            getSubscriptionDetails();
+            // getSubscriptionDetails();
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
@@ -130,11 +131,11 @@ function SubscriptionSettings() {
                         <Box sx={subscriptionSubContainer} >
                             <Box sx={{ textAlign: 'start' }} >
                                 <Typography fontSize={14} >Current subscription : </Typography>
-                                <Typography fontSize={24} >{subscriptionDetails?.name}</Typography>
+                                <Typography fontSize={24} >{subscriptionState?.name}</Typography>
                             </Box>
                             <Box>
                                 <Box sx={{ border: '1px #006DFF solid', color: '#006DFF', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
-                                    {subscriptionDetails?.status?.substring(0, 21)}
+                                    {subscriptionState?.status?.substring(0, 21)}
                                 </Box>
                             </Box>
                         </Box>
@@ -150,33 +151,33 @@ function SubscriptionSettings() {
 
                         <Box sx={subscriptionDetailList} style={{ borderTop: '1px #808080 solid' }} >
                             <Typography color={'#808080'} >Subscription Name </Typography>
-                            <Typography color={'#808080'} >{subscriptionDetails?.name}</Typography>
+                            <Typography color={'#808080'} >{subscriptionState?.name}</Typography>
                         </Box>
                         <Box sx={subscriptionDetailList} >
                             <Typography color={'#808080'} >Billing cycle </Typography>
-                            <Typography color={'#808080'} >{subscriptionDetails?.billingCycle}</Typography>
+                            <Typography color={'#808080'} >{subscriptionState?.billingCycle}</Typography>
                         </Box>
                         <Box sx={subscriptionDetailList} >
                             <Typography color={'#808080'} >Next invoice date </Typography>
                             <Typography color={'#808080'} >
-                                {subscriptionDetails?.endDate}
+                                {subscriptionState?.endDate}
                             </Typography>
                         </Box>
                         <Box sx={subscriptionDetailList} >
                             <Typography color={'#808080'} >Response usage reset cycle  </Typography>
-                            <Typography color={'#808080'} >{subscriptionDetails?.billingCycle}</Typography>
+                            <Typography color={'#808080'} >{subscriptionState?.billingCycle}</Typography>
                         </Box>
                         <Box sx={subscriptionDetailList} >
                             <Typography color={'#808080'} >Survey active   </Typography>
-                            <Typography color={'#808080'} >{subscriptionDetails?.surveyLimitUsed + '/' + subscriptionDetails?.totalSurveyLimit}</Typography>
+                            <Typography color={'#808080'} >{subscriptionState?.surveyLimitUsed + '/' + subscriptionState?.totalSurveyLimit}</Typography>
                         </Box>
                         <Box sx={subscriptionDetailList} >
                             <Typography color={'#808080'} >Survey response capacity  </Typography>
-                            <Typography color={'#808080'} >{subscriptionDetails?.responseCapacity}</Typography>
+                            <Typography color={'#808080'} >{subscriptionState?.responseCapacity}</Typography>
                         </Box>
                         <Box sx={subscriptionDetailList} >
                             <Typography color={'#808080'} >Survey response store limit  </Typography>
-                            <Typography color={'#808080'} >{subscriptionDetails?.responseStoreLimit}</Typography>
+                            <Typography color={'#808080'} >{subscriptionState?.responseStoreLimit}</Typography>
                         </Box>
                         {/* <Box width={'fit-content'} >
                             <Typography

@@ -41,6 +41,11 @@ export const getBackgrounds = (): any[] => {
         },
         {
             id: count++,
+            name: 'Dark',
+            value: 'dark-plain'
+        },
+        {
+            id: count++,
             name: 'Clouds',
             value: 'cloud-waves'
         },

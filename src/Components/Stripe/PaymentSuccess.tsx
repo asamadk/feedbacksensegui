@@ -1,7 +1,12 @@
 import { Box, Button, Modal, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux';
+import Logo from '../Logo';
+import { containedButton } from '../../Styles/ButtonStyle';
 
 function PaymentSuccess() {
+
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     let hydrate = false;
 
@@ -12,34 +17,25 @@ function PaymentSuccess() {
     });
 
     return (
-        <Box className="bg-gray-100 h-screen">
-            <Box className="bg-white p-6 md:mx-auto">
-                <svg
-                    viewBox="0 0 24 24"
-                    className="text-green-600 w-16 h-16 mx-auto my-6"
-                >
-                    <path
-                        fill="currentColor"
-                        d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
-                    ></path>
-                </svg>
-                <Box textAlign="center">
-                    <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold' }}>
-                        Payment Done!
+        <Box sx={{backgroundColor : defaultColor.backgroundColor,height : 'calc(100vh - 57px)'}} >
+            <Box paddingTop={'10%'}  >
+                <Box textAlign="center" sx={{backgroundColor : defaultColor.primaryColor,pb : 2,pt : 2}} >
+                    <Box width={'fit-content'} margin={'auto'} >
+                        <Logo/>
+                    </Box>
+                    <Typography color={'white'} variant="h4" sx={{ fontWeight: 'bold' }}>
+                        Payment Complete!
                     </Typography>
-                    <Typography variant="body1" sx={{ mb: 2 }}>
+                    <Typography color={'#808080'} variant="body1" sx={{ mb: 1 }}>
                         Thank you for completing your secure online payment.
                     </Typography>
-                    <Typography variant="body1" sx={{ mb: 2 }}>
-                        Have a great day!
-                    </Typography>
-                    <Box py={10} textAlign="center">
+                    <Box textAlign="center">
                         <Button
+                            sx={{...containedButton,width : 'fit-content'}}
                             variant="contained"
                             color="primary"
-                            size="large"
-                            sx={{ px: 6 }}
-                            href="#"
+                            size="small"
+                            href="/"
                         >
                             GO BACK
                         </Button>

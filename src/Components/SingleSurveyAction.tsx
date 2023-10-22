@@ -6,7 +6,6 @@ import Notification from '../Utils/Notification'
 import CustomAlert from './CustomAlert'
 import FSLoader from './FSLoader'
 import { USER_UNAUTH_TEXT, componentName } from '../Utils/Constants'
-import { useNavigate } from 'react-router'
 import { handleLogout } from '../Utils/FeedbackUtils'
 import { useSelector } from 'react-redux'
 import { userRoleType } from '../Utils/types'
@@ -14,10 +13,10 @@ import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils'
 
 function SingleSurveyAction(props: any) {
 
-    const [loading, setLoading] = React.useState(false);
     const snackbarRef: any = useRef(null);
+
+    const [loading, setLoading] = React.useState(false);
     const userRole: userRoleType = useSelector((state: any) => state.userRole);
-    const navigate = useNavigate();
 
     const handleDisableEnableSurvey = async (e: any) => {
         if (!CoreUtils.isComponentVisible(userRole, componentName.DISABLE_SURVEY)) {
@@ -40,7 +39,8 @@ function SingleSurveyAction(props: any) {
                     return;
                 }
                 snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
-                surveyData.is_published = 0;
+                props.updateActiveSurveyCount('reduce');
+                props.updatePublishStatus(0);
             } catch (error: any) {
                 setLoading(false);
                 snackbarRef?.current?.show(error?.response?.data?.message, 'error');
@@ -58,8 +58,9 @@ function SingleSurveyAction(props: any) {
                     return;
                 }
                 snackbarRef?.current?.show(data.message, data.success === true ? 'success' : 'error');
-                if (data.success === true) {
-                    surveyData.is_published = 1;
+                if(data.success === true){
+                    props.updateActiveSurveyCount('add');
+                    props.updatePublishStatus(1);
                 }
             } catch (error: any) {
                 setLoading(false);
@@ -71,6 +72,7 @@ function SingleSurveyAction(props: any) {
         }
         props.closeAndUpdate();
     }
+
 
     const handleShareSurvey = () => {
         let surveyData = props?.survey;

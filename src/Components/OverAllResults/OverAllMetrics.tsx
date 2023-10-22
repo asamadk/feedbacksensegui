@@ -38,9 +38,13 @@ function OverAllMetrics(props : surveyIdProp) {
     const snackbarRef: any = useRef(null);
     const [loading , setLoading] = React.useState(false);
     const [overAllMetrics, setOverAllMetrics] = React.useState<any>();
+    let init = false;
 
     useEffect(() => {
-        getOverAllMetrics();
+        if(init === false){
+            getOverAllMetrics();
+            init = true;
+        }
     }, []);
 
     const getOverAllMetrics = async() => {

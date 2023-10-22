@@ -16,6 +16,8 @@ import { deleteUserRoleAPI, getUserListAPI } from '../Utils/Endpoints';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import { useDispatch } from 'react-redux';
+import { setUsers } from '../Redux/Reducers/usersReducer';
 
 const singleUserContainer = (bgColor: string) => {
   return {
@@ -28,34 +30,6 @@ const singleUserContainer = (bgColor: string) => {
   }
 }
 
-const usersList = [
-  {
-    name: 'Abdul Samad Kirmani',
-    email: 'samad@feedbacksense.io',
-    role: 'OWNER'
-  },
-  {
-    name: 'Adam Perret',
-    email: 'adam@feedbacksense.io',
-    role: 'ADMIN'
-  },
-  {
-    name: 'Brett Quizo',
-    email: 'brett@feedbacksense.io',
-    role: 'USER'
-  },
-  {
-    name: 'Dino James',
-    email: 'dino@feedbacksense.io',
-    role: 'GUEST'
-  },
-  {
-    name: 'Ankit',
-    email: 'ankit@feedbacksense.io',
-    role: 'GUEST'
-  },
-]
-
 const userRoles = [
   'OWNER',
   'ADMIN',
@@ -66,22 +40,30 @@ const userRoles = [
 function OrgTeamMatesSettings() {
 
   const snackbarRef: any = useRef(null);
+  const dispatch = useDispatch();
+
   const [openInviteModal, setOpenInviteModal] = React.useState(false);
   const [openDetailsModal, setOpenDetailsModal] = React.useState(false);
   const [showGenericModal, setShowGenericModal] = React.useState(false);
   const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
   const [selectedUser, setSelectedUser] = useState<any>({});
   const [loading, setLoading] = React.useState(false);
-  const [userList, setUserList] = useState<any[]>([]);
   const defaultColor = useSelector((state: any) => state.colorReducer);
   const userRole: userRoleType = useSelector((state: any) => state.userRole);
+  const userState = useSelector((state: any) => state.users);
+
+  let initialized = false;
 
   useEffect(() => {
-    getUserList();
+    if (initialized === false) {
+      getUserList();
+      initialized = true;
+    }
   }, []);
 
   const handleOpenInviteModal = () => setOpenInviteModal(true);
   const handleCloseInviteModal = () => setOpenInviteModal(false);
+  
   const handleOpenDetailModal = (user: any) => {
     setOpenDetailsModal(true);
     setSelectedUser(user);
@@ -128,16 +110,18 @@ function OrgTeamMatesSettings() {
 
   const getUserList = async (): Promise<void> => {
     try {
-      setLoading(true);
-      let { data } = await axios.get(getUserListAPI(), { withCredentials: true });
-      setLoading(false);
-      if (data?.statusCode !== 200) {
-        snackbarRef?.current?.show(data?.message, 'error');
-        return;
-      }
+      if (userState == null || userState.length < 1) {
+        setLoading(true);
+        let { data } = await axios.get(getUserListAPI(), { withCredentials: true });
+        setLoading(false);
+        if (data?.statusCode !== 200) {
+          snackbarRef?.current?.show(data?.message, 'error');
+          return;
+        }
 
-      if (data.data != null) {
-        setUserList(data.data);
+        if (data.data != null) {
+          dispatch(setUsers(data.data))
+        }
       }
     } catch (error: any) {
       setLoading(false);
@@ -149,19 +133,25 @@ function OrgTeamMatesSettings() {
   }
 
   const deleteUserRerender = (userId: string) => {
-    const updatedUserList = userList.filter(user => user.id !== userId);
-    setUserList(updatedUserList);
+    const updatedUserList = userState.filter((user: any) => user.id !== userId);
+    dispatch(setUsers(updatedUserList));
   }
 
+  // const handleOwnerChange = (role : userRoleType) => {
+  //   const tempUser = JSON.parse(JSON.stringify(selectedUser));
+  //   tempUser.role = role
+  //   setSelectedUser(tempUser);
+  // }
+
   const updateUser = (newRole: string) => {
-    const tempUser: any[] = JSON.parse(JSON.stringify(userList));
+    const tempUser: any[] = JSON.parse(JSON.stringify(userState));
     tempUser.forEach(usr => {
       if (usr.id === selectedUser.id) {
         usr.role = newRole
         return
       }
     });
-    setUserList(tempUser);
+    dispatch(setUsers(tempUser));
   }
 
   const SingleUserList = (user: any) => {
@@ -209,7 +199,7 @@ function OrgTeamMatesSettings() {
       </Box>
       <Box>
         {
-          userList?.map((user) => {
+          userState?.map((user: any) => {
             return (
               <Box key={user.email} >
                 {SingleUserList(user)}
@@ -219,18 +209,22 @@ function OrgTeamMatesSettings() {
         }
       </Box>
       <InviteMemberModal open={openInviteModal} close={handleCloseInviteModal} />
-      <UserDetailsModal
-        user={selectedUser}
-        open={openDetailsModal}
-        close={handleCloseDetailModal}
-        roles={userRoles}
-        updateUser={updateUser}
-      />
+      {
+        openDetailsModal &&
+        <UserDetailsModal
+          user={selectedUser}
+          open={openDetailsModal}
+          close={handleCloseDetailModal}
+          roles={userRoles}
+          updateUser={updateUser}
+        />
+      }
       <GenericModal
         payload={genericModalObj}
         close={() => setShowGenericModal(false)}
         open={showGenericModal}
         callback={handleSuccessButtonClick}
+        dualConfirmation={true}
       />
       <FSLoader show={loading} />
       <Notification ref={snackbarRef} />

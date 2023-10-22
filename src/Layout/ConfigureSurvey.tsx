@@ -16,6 +16,8 @@ import { handleLogout, validateEmail } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 import { userRoleType } from '../Utils/types';
+import { setSurveyConfigRedux } from '../Redux/Reducers/surveyConfigReducer';
+import { useDispatch } from 'react-redux';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -41,13 +43,17 @@ const CssTextField = styled(TextField)({
 function ConfigureSurvey() {
 
   const { surveyId }: any = useParams();
-
   const snackbarRef: any = useRef(null);
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const defaultColor = useSelector((state: any) => state.colorReducer);
+  let initialized = false;
 
   useEffect(() => {
-    getSurveyConfig();
+    if (initialized === false) {
+      getSurveyConfig();
+      initialized = true;
+    }
   }, []);
 
   const [notifyUser, setNotifyUser] = React.useState(false);
@@ -56,36 +62,28 @@ function ConfigureSurvey() {
   const [showStopSurveyDate, setShowStopSurveyDate] = React.useState(false);
   const [showStopSurveyDateData, setShowStopSurveyDateData] = React.useState<string | null>('');
   const [showStopSurveyNumberData, setShowStopSurveyNumberData] = React.useState<string>('');
-  const userRole: userRoleType = useSelector((state: any) => state.userRole);
   const [loading, setLoading] = React.useState(false);
+
+  const userRole: userRoleType = useSelector((state: any) => state.userRole);
+  const surveyConfigState = useSelector((state: any) => state.surveyConfig);
 
   const getSurveyConfig = async () => {
     try {
-      setLoading(true);
-      const { data } = await axios.get(getSurveyConfigData(surveyId), { withCredentials: true });
-      setLoading(false);
-      if (data.statusCode !== 200) {
-        snackbarRef?.current?.show(data?.message, 'error');
-        return;
-      }
-
-      if (data.data != null) {
-        let tempData = data.data;
-        if (tempData?.response_limit != null && tempData?.response_limit !== 0) {
-          setShowStopSurveyNumber(true);
-          setShowStopSurveyNumberData(tempData?.response_limit?.toString());
+      if(surveyConfigState == null || surveyConfigState?.survey_id !== surveyId){
+        setLoading(true);
+        const { data } = await axios.get(getSurveyConfigData(surveyId), { withCredentials: true });
+        setLoading(false);
+        if (data.statusCode !== 200) {
+          snackbarRef?.current?.show(data?.message, 'error');
+          return;
         }
-
-        if (tempData?.time_limit != null) {
-          setShowStopSurveyDate(true)
-          const tempTimeLimit = dayjs(tempData?.time_limit).format('MM/DD/YYYY');
-          setShowStopSurveyDateData(tempTimeLimit);
+  
+        if (data.data != null) {
+          dispatch(setSurveyConfigRedux(data.data));
+          populateSurveyConfig(data.data);
         }
-
-        if (tempData?.emails != null) {
-          setNotifyUser(true);
-          setEmailList(tempData?.emails);
-        }
+      }else{
+        populateSurveyConfig(surveyConfigState);
       }
     } catch (error: any) {
       setLoading(false);
@@ -93,7 +91,25 @@ function ConfigureSurvey() {
         handleLogout();
       }
     }
+  }
 
+  const populateSurveyConfig = (tempData: any) => {
+    // console.log("🚀 ~ file: ConfigureSurvey.tsx:92 ~ populateSurveyConfig ~ tempData:", tempData)
+    if (tempData?.response_limit != null && tempData?.response_limit !== 0) {
+      setShowStopSurveyNumber(true);
+      setShowStopSurveyNumberData(tempData?.response_limit?.toString());
+    }
+
+    if (tempData?.time_limit != null) {
+      setShowStopSurveyDate(true)
+      const tempTimeLimit = dayjs(tempData?.time_limit).format('MM/DD/YYYY');
+      setShowStopSurveyDateData(tempTimeLimit);
+    }
+
+    if (tempData?.emails != null) {
+      setNotifyUser(true);
+      setEmailList(tempData?.emails);
+    }
   }
 
   const handleSaveClick = async () => {
@@ -127,6 +143,7 @@ function ConfigureSurvey() {
         snackbarRef?.current?.show(data?.message, 'error');
         return;
       }
+      dispatch(setSurveyConfigRedux(data.data));
       snackbarRef?.current?.show('Configuration saved.', 'success');
     } catch (error: any) {
       setLoading(false);

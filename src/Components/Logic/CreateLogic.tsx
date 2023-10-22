@@ -10,6 +10,7 @@ import styled from '@emotion/styled';
 import { dateAnswerOperators, multipleAnswerOperators, singleAnswerOperators, textAnswerOperators } from '../../Utils/Constants';
 import { answerNotNeededSet } from '../../Utils/FeedbackUtils';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import InfoIcon from '@mui/icons-material/Info';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useSelector } from 'react-redux';
 
@@ -398,6 +399,15 @@ function DraggableLogicItem({ logic, index, ...otherProps }: any) {
                                 />
                             )}
                         />
+                        <Typography 
+                            textAlign={'start'} 
+                            width={'70%'} 
+                            marginTop={'5px'} 
+                            fontSize={'12px'} 
+                            color={'#808080'}
+                        >
+                            Tip: After typing your tag, press 'Enter' to register it.
+                        </Typography>
                     </Box>
                 }
                 <Box justifyContent={'space-between'} display={'flex'} >
