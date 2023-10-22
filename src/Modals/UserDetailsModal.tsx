@@ -17,12 +17,12 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
     const defaultColor = useSelector((state: any) => state.colorReducer);
     const snackbarRef: any = useRef(null);
 
-    const [userRole, setUserRole] = useState<'OWNER' | 'ADMIN' | 'USER' | 'GUEST'>();
+    const [userRole, setUserRole] = useState<'OWNER' | 'ADMIN' | 'USER' | 'GUEST'>(user?.role);
     const [loading, setLoading] = React.useState(false);
 
     useEffect(() => {
         setUserRole(user?.role);
-    }, [user]);
+    }, [user?.role]);
 
     const handleOwnerChange = (e: any) => {
         setUserRole(e.target.value)
@@ -58,7 +58,6 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                {/* ,width : '25%' */}
                 <Box sx={{ ...ModalStyles.modalStyle(defaultColor?.secondaryColor) }}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
@@ -71,7 +70,11 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
 
                     <Box sx={{ padding: '20px', borderRadius: '10px', margin: '5px' }} >
                         <Box display={'flex'}>
-                            <Avatar sx={{ bgcolor: '#006DFF', width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
+                            <Avatar
+                                sx={{ bgcolor: '#006DFF', width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }}
+                                alt={user?.name}
+                                src={user?.image}
+                            />
                             <Box textAlign={'start'} >
                                 <Typography variant='h6' color={'white'}>{user?.name}</Typography>
                                 <Typography color={'#808080'} >{user?.email}</Typography>
@@ -87,6 +90,7 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                                     id="demo-simple-select"
                                     size='small'
                                     fullWidth
+                                    sx={{ marginTop: '5px' }}
                                     value={userRole}
                                     onChange={handleOwnerChange}
                                 >

@@ -38,8 +38,13 @@ function DynamicCompOverallRes(props: any) {
   const [overAllComponentData, setOverAllComponentData] = useState<any>({});
   const [idMap,setIdMap] = useState<any>({});
 
+  let init = false;
+
   useEffect(() => {
-    fetchOverAllComponentData();
+    if(init === false){
+      fetchOverAllComponentData();
+      init = true;
+    }
   }, []);
 
   const fetchOverAllComponentData = async () => {

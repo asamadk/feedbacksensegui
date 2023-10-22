@@ -9,6 +9,8 @@ import { useParams } from 'react-router';
 import PoweredBy from '../Components/PoweredBy';
 import '../Styles/CSS/Backgrounds.css'
 import { useSelector } from 'react-redux';
+import { setSurvey } from '../Redux/Reducers/surveyReducer';
+import { useDispatch } from 'react-redux';
 
 const tabsetList = [
     { id: 1, name: 'COLORS' },
@@ -23,9 +25,13 @@ const localNavbar = {
 }
 
 function DesignPreview() {
+    
     const { surveyId } = useParams();
+    const dispatch = useDispatch<any>();
 
     const defaultColor = useSelector((state: any) => state.colorReducer);
+    const surveysState = useSelector((state: any) => state.surveys);
+    
     const [selectedTheme, setSelectedTheme] = React.useState<any>();
     const [selectedBackground, setSelectedBackground] = React.useState<any>();
     const [tabset, setTabset] = React.useState(0);
@@ -51,6 +57,17 @@ function DesignPreview() {
     const rerenderBackgroundTheme = (backgroundData: any) => {
         setSelectedBackground(backgroundData);
     }
+
+    const updateThemeReduxState = (designObj : string) => {
+        const tempSurveys = JSON.parse(JSON.stringify(surveysState));
+        tempSurveys?.forEach((srv: any) => {
+          if (srv.id === surveyId) {
+            srv.survey_design_json = designObj;
+            return;
+          }
+        });
+        dispatch(setSurvey(tempSurveys));
+      }
 
     return (
         <Box sx={{ backgroundColor: defaultColor?.backgroundColor, height: 'calc(100vh - 69px)', overflowY: 'hidden' }} >
@@ -84,6 +101,7 @@ function DesignPreview() {
                             updateBackground={rerenderBackgroundTheme}
                             updateTheme={rerenderSelectedTheme}
                             surveyId={surveyId}
+                            updateThemeReduxState={updateThemeReduxState}
                         />
                     }
                     {
@@ -92,6 +110,7 @@ function DesignPreview() {
                             selectedTheme={selectedTheme}
                             updateTheme={rerenderBackgroundTheme}
                             surveyId={surveyId}
+                            updateThemeReduxState={updateThemeReduxState}
                         />
                     }
                 </Box>

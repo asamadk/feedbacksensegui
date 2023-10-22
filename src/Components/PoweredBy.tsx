@@ -3,11 +3,8 @@ import React from 'react'
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 
 const mainContainerCss = {
-    border : '1px rgb(144 140 141 / 10%) solid', 
     padding : '12px 12px', 
     borderRadius : '6px', 
-    background : '#f1f1f1',
-    boxShadow: '0 0 2px rgba(23,29,26,.15)',
     cursor : 'pointer', 
     display : 'flex',
     position : 'fixed',

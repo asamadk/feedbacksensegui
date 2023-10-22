@@ -20,6 +20,7 @@ import CustomPopover from './Popover';
 import { useDispatch } from 'react-redux';
 import { updateCurrentWorkflow } from '../Redux/Actions/currentWorkflowActions';
 import { useSelector } from 'react-redux';
+import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetailReducer';
 
 const surveyBlockMainContainer = {
     border: '1px #454545 solid',
@@ -48,8 +49,9 @@ function SurveyBlock(props: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [nameAnchorEl, setNameAnchorEl] = React.useState<HTMLElement | null>(null);
     const defaultColor = useSelector((state: any) => state.colorReducer);
-    const openName = Boolean(nameAnchorEl);
+    const subscriptionState = useSelector((state: any) => state.subscriptionDetail);
 
+    const openName = Boolean(nameAnchorEl);
     const open = Boolean(anchorEl);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -117,6 +119,7 @@ function SurveyBlock(props: any) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
+            updateActiveSurveyCount('reduce');
             props.delete(deleteSurveyId);
             props.update();
         } catch (error: any) {
@@ -129,7 +132,9 @@ function SurveyBlock(props: any) {
     }
 
     const handleSuccessChangeFolder = (newSurveyData: any) => {
-        props.survey.folder_id = newSurveyData.folder_id;
+        // props.survey.folder_id = newSurveyData.folder_id;
+        const updatedSurvey = { ...props.survey, folder_id: newSurveyData.folder_id };
+        props.updateSurvey(updatedSurvey.id,updatedSurvey);
         props.rerender();
     }
 
@@ -147,10 +152,31 @@ function SurveyBlock(props: any) {
         props.updateSurveyList();
     }
 
+    const updateSurveyPublishStatus = (status: 0 | 1) => {
+        setSurvey((prevData: any) => ({
+            ...prevData,
+            is_published: status
+        }));
+    };
+
+    const updateActiveSurveyCount = (type: 'add' | 'reduce') => {
+        const tempSubsState = JSON.parse(JSON.stringify(subscriptionState));
+        let count = tempSubsState.surveyLimitUsed || 0;
+
+        if (type === 'add') {
+            count++;
+        } else {
+            count = Math.max(count - 1, 0);
+        }
+
+        tempSubsState.surveyLimitUsed = count;
+        dispatch(setSubscriptionDetailRedux(tempSubsState));
+    }
+
     return (
-        <Box sx={{...surveyBlockMainContainer,backgroundColor : defaultColor?.secondaryColor}} >
-            <Box 
-                sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid', height: '50px',backgroundColor : '#212a2b' }} 
+        <Box sx={{ ...surveyBlockMainContainer, backgroundColor: defaultColor?.secondaryColor }} >
+            <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid', height: '50px', backgroundColor: '#212a2b' }}
             >
                 <Box>
 
@@ -211,6 +237,8 @@ function SurveyBlock(props: any) {
                         closeAndUpdate={handleCloseAndUpdate}
                         updateSurveyList={updateSurveyList}
                         close={handleCloseSingleSurveyAction}
+                        updatePublishStatus={updateSurveyPublishStatus}
+                        updateActiveSurveyCount={updateActiveSurveyCount}
                     />
                 </Box>
             </Box>
@@ -240,10 +268,16 @@ function SurveyBlock(props: any) {
                 close={() => setShowGenericModal(false)}
                 open={showGenericModal}
                 callback={handleSuccessButtonClick}
+                dualConfirmation={true}
             />
             {
                 showChangeFolderModal &&
-                <ChangeFolderModal callback={handleSuccessChangeFolder} surveyId={changeFolderSurveyId} close={() => setShowChangeFolderModal(false)} open={showChangeFolderModal} />
+                <ChangeFolderModal 
+                    callback={handleSuccessChangeFolder} 
+                    surveyId={changeFolderSurveyId} 
+                    close={() => setShowChangeFolderModal(false)} 
+                    open={showChangeFolderModal} 
+                />
             }
             <FSLoader show={loading} />
             <Notification ref={snackbarRef} />

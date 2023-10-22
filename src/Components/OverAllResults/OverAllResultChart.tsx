@@ -42,13 +42,16 @@ type propsType = {
 
 function OverAllResultChart(props: propsType) {
     const snackbarRef: any = useRef(null);
-    const navigate = useNavigate();
     const [loading, setLoading] = React.useState(false);
     const defaultColor = useSelector((state: any) => state.colorReducer);
     const [overAllResultGraph, setOverAllResultGraph] = useState<any[]>([]);
+    let init = false;
 
     useEffect(() => {
-        getOverAllResponseForChart();
+        if(init === false){
+            getOverAllResponseForChart();
+            init = true;
+        }
     }, []);
 
     const getOverAllResponseForChart = async () => {

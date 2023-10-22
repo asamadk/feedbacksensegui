@@ -11,43 +11,38 @@ import { handleLogout } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
 import { userRoleType } from '../Utils/types';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import { useDispatch } from 'react-redux';
+import { setSurvey } from '../Redux/Reducers/surveyReducer';
 
 
 function SurveyThemeSelector(props: any) {
 
   let navigate = useNavigate();
   const snackbarRef: any = useRef(null);
+
   const [loading, setLoading] = React.useState(false);
   const userRole: userRoleType = useSelector((state: any) => state.userRole);
+  const surveysState = useSelector((state: any) => state.surveys);
+
+  let initialized = false;
 
   useEffect(() => {
-    getSingleSurvey();
+    if (initialized === false) {
+      getSingleSurvey();
+      initialized = true;
+    }
+
   }, []);
 
   const [selectedTheme, setSelectedTheme] = React.useState<ColorScheme>(getColorSchemes()[0]);
 
   const getSingleSurvey = async () => {
-    try {
-      setLoading(true);
-      let { data } = await axios.get(Endpoints.getSurveyDetails(props.surveyId), { withCredentials: true });
-      setLoading(false);
-
-      if (data?.statusCode !== 200) {
-        snackbarRef?.current?.show(data?.message, 'error');
+    surveysState?.forEach((srv: any) => {
+      if (srv.id === props.surveyId) {
+        populateSurveyDesign(srv);
+        return;
       }
-
-      if (data != null) {
-        const tempSurvey = data.data;
-        populateSurveyDesign(tempSurvey);
-
-      }
-    } catch (error: any) {
-      setLoading(false);
-      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-        handleLogout();
-      }
-    }
+    });
   }
 
   const populateSurveyDesign = (tempSurvey: any) => {
@@ -90,6 +85,7 @@ function SurveyThemeSelector(props: any) {
         snackbarRef?.current?.show(data.message, 'error');
         return;
       }
+      props.updateThemeReduxState(JSON.stringify(saveObj));
       snackbarRef?.current?.show('Design saved.', 'success');
     } catch (error: any) {
       setLoading(false);

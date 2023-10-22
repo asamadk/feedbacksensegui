@@ -29,6 +29,7 @@ import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
 import WorkflowMore from '../FlowComponents/WorkflowMore';
 import SurveyLogsModal from '../Modals/SurveyLogsModal';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetailReducer';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -54,6 +55,7 @@ const CssTextField = styled(TextField)({
 function CreateSurvey(props: any) {
 
   const snackbarRef: any = useRef(null);
+  const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const childRef = useRef<any>(null);
 
@@ -77,13 +79,18 @@ function CreateSurvey(props: any) {
   const defaultColor = useSelector((state: any) => state.colorReducer);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const userRole: userRoleType = useSelector((state: any) => state.userRole);
+  const subscriptionState = useSelector((state: any) => state.subscriptionDetail);
+
   const [openSurveyLogs, setOpenSurveyLogs] = useState(false);
   const open = Boolean(anchorEl);
 
-  const dispatch = useDispatch<any>();
+  let initialized = false;
 
   useEffect(() => {
-    getSingleSurvey();
+    if (initialized === false) {
+      getSingleSurvey();
+      initialized = true;
+    }
   }, []);
 
   useEffect(() => {
@@ -312,7 +319,7 @@ function CreateSurvey(props: any) {
       makeGlobalWorkflowDirty(false);
     } catch (error: any) {
       setLoading(false)
-      snackbarRef?.current?.show(error?.response?.data?.statusCode, 'error');
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
         FeedbackUtils.handleLogout();
       }

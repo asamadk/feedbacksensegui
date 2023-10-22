@@ -8,10 +8,15 @@ import { handleLogout } from '../Utils/FeedbackUtils';
 import FSLoader from '../Components/FSLoader';
 import { getTemplatesAPI } from '../Utils/Endpoints';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { setTemplatesRedux } from '../Redux/Reducers/templateReducer';
 
 function TemplateLayout() {
 
     const snackbarRef: any = useRef(null);
+    const dispatch = useDispatch();
+
     const [loading, setLoading] = React.useState(false);
     const [categoryData, setCategoryData] = useState<Map<string, Set<string>>>(new Map<string, Set<string>>());
     const [templates, setTemplates] = useState<any[]>([]);
@@ -19,31 +24,36 @@ function TemplateLayout() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedSubCategory, setSelectedSubCategory] = useState('');
     const [templateOptions, setTemplateOptions] = useState<{ label: string, value: string }[]>([]);
+    const templateState = useSelector((state: any) => state.templates);
+
+    let init = false;
 
     useEffect(() => {
-        fetchTemplates();
+        if(init === false){
+            fetchTemplates();
+            init = true;
+        }
     }, []);
 
     const fetchTemplates = async () => {
         try {
-            setLoading(true);
-            const res = await axios.get(getTemplatesAPI(), { withCredentials: true });
-            setLoading(false);
-            if (res?.data?.statusCode !== 200) {
-                snackbarRef?.current?.show(res?.data?.message, 'error');
-                return;
+            if(templateState == null || templateState.length < 1){
+                setLoading(true);
+                const res = await axios.get(getTemplatesAPI(), { withCredentials: true });
+                setLoading(false);
+                if (res?.data?.statusCode !== 200) {
+                    snackbarRef?.current?.show(res?.data?.message, 'error');
+                    return;
+                }
+                let resData: any = res?.data?.data;
+                if (resData == null) {
+                    return;
+                }
+                dispatch(setTemplatesRedux(resData));
+                populateTemplateData(resData);
+            }else{
+                populateTemplateData(templateState);
             }
-            let resData: any = res?.data?.data;
-            if (resData == null) {
-                return;
-            }
-            setTemplates(resData);
-            // setFilteredTemplates(resData);
-            populateUniqueSurveys(resData);
-            setSelectedCategory(ALL_TEMPLATE_KEY);
-            setSelectedSubCategory('');
-            populateTemplatesStructure(resData);
-            populateTemplateOptions(resData);
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
@@ -51,6 +61,15 @@ function TemplateLayout() {
                 handleLogout();
             }
         }
+    }
+
+    const populateTemplateData = (templates: any[]) => {
+        setTemplates(templates);
+        populateUniqueSurveys(templates);
+        setSelectedCategory(ALL_TEMPLATE_KEY);
+        setSelectedSubCategory('');
+        populateTemplatesStructure(templates);
+        populateTemplateOptions(templates);
     }
 
     const populateTemplatesStructure = (templates: any[]) => {
