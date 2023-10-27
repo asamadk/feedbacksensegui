@@ -82,6 +82,10 @@ export const informSupportUserPricingAPI = () => {
     return BASE_URL + `/subscription/support`;
 }
 
+export const initializePaymentAPI = () => {
+    return BASE_URL + `/subscription/initialize/payment`;
+}
+
 export const getAllPlanList = () => {
     return BASE_URL + `/plan/list/all`;
 }
@@ -145,10 +149,6 @@ export const getStripePaymentIntent = () => {
 
 export const startSubScription = () => {
     return `${BASE_URL}/stripe/api/subscribe`
-}
-
-export const cancelSubScription = () => {
-    return `${BASE_URL}/stripe/api/cancel`
 }
 
 export const duplicateSurveyAPI = (surveyId : string) => {
