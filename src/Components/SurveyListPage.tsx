@@ -18,6 +18,7 @@ import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 import { useDispatch } from 'react-redux';
 import { setFolders } from '../Redux/Reducers/folderReducer';
 import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetailReducer';
+import { useNavigate } from 'react-router';
 
 
 const surveyPageMainContainer = {
@@ -59,6 +60,7 @@ const folderText = {
 function SurveyListPage() {
 
     const snackbarRef: any = useRef(null);
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const [openInviteModal, setOpenInviteModal] = React.useState(false);

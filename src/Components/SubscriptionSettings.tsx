@@ -2,7 +2,7 @@ import { Box, Button, Chip, Typography } from '@mui/material'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as Endpoints from '../Utils/Endpoints';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CustomChip from './CustomChip'
 import * as LayoutStyles from '../Styles/LayoutStyles'
 import axios from 'axios'
@@ -15,115 +15,51 @@ import GenericModal from '../Modals/GenericModal';
 import { useSelector } from 'react-redux';
 import UnAuthorisedComponent from './UnauthorisedComponent';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
-
-
-const subscriptionSubContainer = {
-    border: '1px #808080 solid',
-    color: '#f1f1f1',
-    borderRadius: '5px',
-    padding: '20px',
-    width: '80%',
-    display: 'flex',
-    justifyContent: 'space-between'
-}
-
-const subscriptionDetailList = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    borderBottom: '1px #808080 solid',
-    paddingTop: '10px',
-    paddingBottom: '10px'
-}
+import PaymentHistoryModal from '../Modals/PaymentHistoryModal';
 
 function SubscriptionSettings() {
 
     const snackbarRef: any = useRef(null);
+    const navigate = useNavigate();
     const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
     const [loading, setLoading] = React.useState(false);
-    // const [subscriptionDetails, setSubscriptionDetail] = React.useState<any>();
+    const [openHistory, setOpenHistory] = useState(false);
     const defaultColor = useSelector((state: any) => state.colorReducer);
     const subscriptionState = useSelector((state: any) => state.subscriptionDetail);
-
-    // useEffect(() => {
-    //     getSubscriptionDetails();
-    // }, []);
-
-    // const getSubscriptionDetails = async () => {
-    //     try {
-    //         setLoading(true);
-    //         let { data } = await axios.get(Endpoints.getSubscriptionDetailHome(), { withCredentials: true });
-    //         setLoading(false);
-    //         if (data.statusCode !== 200) {
-    //             snackbarRef?.current?.show(data?.message, 'error');
-    //             return;
-    //         }
-
-    //         let resData: any[] = data.data;
-    //         if (resData != null) {
-    //             setSubscriptionDetail(resData);
-    //         }
-    //     } catch (error: any) {
-    //         setLoading(false);
-    //         if (error?.response?.data?.message === PERM_ISSUE_TEXT) {
-    //             return;
-    //         }
-    //         snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-    //         if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-    //             FeedbackUtils.handleLogout();
-    //         }
-    //     }
-    // }
 
     const handleUpgradePlanClick = () => {
         // navigate('/upgrade/plan');
         window.open('https://www.feedbacksense.io/pricing', '__blank')
     }
 
-    const handleCancelSubscription = () => {
-        setShowGenericModal(true);
-        let genDeleteObj: genericModalData = {
-            header: 'Do you really want to cancel your subscription?',
-            warning: 'Warning: There\'s no turning back! I acknowledge that',
-            successButtonText: 'Proceed',
-            cancelButtonText: 'Close',
-            description: 'You will still have access to your subscription till end of the current billing period.',
-            type: 'cancel'
-        }
-        setGenericModalObj(genDeleteObj);
-    }
-
     const handleSuccessButtonClick = () => {
         setShowGenericModal(false);
-        if (genericModalObj?.type === 'cancel') {
-            cancelUserSubscription();
-        }
     }
 
-    const cancelUserSubscription = async () => {
-        try {
-            setLoading(true)
-            let { data } = await axios.post(Endpoints.cancelSubScription(), {}, { withCredentials: true });
-            setLoading(false);
-            if (data.statusCode !== 200) {
-                snackbarRef?.current?.show(data?.message, 'error');
-                return;
-            }
-            snackbarRef?.current?.show(data?.message, 'success');
-            // getSubscriptionDetails();
-        } catch (error: any) {
-            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            setLoading(false);
-            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-                FeedbackUtils.handleLogout();
-            }
-        }
+    const subscriptionSubContainer = {
+        color: '#f1f1f1',
+        borderRadius: '5px',
+        backgroundColor : defaultColor?.primaryColor,
+        padding: '20px',
+        width: '80%',
+        display: 'flex',
+        justifyContent: 'space-between'
+    }
+    
+    const subscriptionDetailList = {
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom : '10px',
+        backgroundColor : defaultColor?.primaryColor,
+        borderRadius : '5px',
+        padding: '10px 20px',
     }
 
     return (
-        <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.primaryColor)} >
+        <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.backgroundColor)} >
             {
                 CoreUtils.isComponentVisible(userRole,componentName.SUBSCRIPTION) ?
                 <>
@@ -144,12 +80,11 @@ function SubscriptionSettings() {
                         </Box>
                     </Box>
 
-                    <Box>
+                    <Box >
                         <Box sx={{ textAlign: 'start', marginTop: '50px', marginBottom: '20px' }} >
                             <Typography color={'#f1f1f1'} fontSize={20} >Subscription Details</Typography>
                         </Box>
-
-                        <Box sx={subscriptionDetailList} style={{ borderTop: '1px #808080 solid' }} >
+                        <Box sx={subscriptionDetailList} >
                             <Typography color={'#808080'} >Subscription Name </Typography>
                             <Typography color={'#808080'} >{subscriptionState?.name}</Typography>
                         </Box>
@@ -160,7 +95,7 @@ function SubscriptionSettings() {
                         <Box sx={subscriptionDetailList} >
                             <Typography color={'#808080'} >Next invoice date </Typography>
                             <Typography color={'#808080'} >
-                                {subscriptionState?.endDate}
+                                {new Date(subscriptionState?.nextInvoice * 1000).toDateString()}
                             </Typography>
                         </Box>
                         <Box sx={subscriptionDetailList} >
@@ -179,11 +114,12 @@ function SubscriptionSettings() {
                             <Typography color={'#808080'} >Survey response store limit  </Typography>
                             <Typography color={'#808080'} >{subscriptionState?.responseStoreLimit}</Typography>
                         </Box>
-                        {/* <Box width={'fit-content'} >
-                            <Typography
-                                sx={{ color: '#808080', fontSize: '13px', textDecoration: 'underline', cursor: 'pointer', marginTop: '20px' }}
-                                onClick={handleCancelSubscription}
-                            >Cancel Subscription</Typography>
+                        {/* <Box textAlign={'start'} marginTop={'10px'}>
+                            <Typography 
+                                onClick={() => setOpenHistory(true)}
+                                sx={{textDecoration : 'underline',cursor : 'pointer'}}
+                                color={'#006dff'}
+                            >View Payment History</Typography>
                         </Box> */}
                     </Box>
                 </> : 
@@ -196,6 +132,10 @@ function SubscriptionSettings() {
                 close={() => setShowGenericModal(false)}
                 open={showGenericModal}
                 callback={handleSuccessButtonClick}
+            />
+            <PaymentHistoryModal
+                open={openHistory}
+                close={() => setOpenHistory(false)}
             />
         </Box>
     )

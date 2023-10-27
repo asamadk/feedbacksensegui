@@ -121,7 +121,7 @@ function LoginSuccess() {
       <Box sx={{ ...subContainerCss, backgroundColor: defaultColor?.secondaryColor }} >
         <Box marginBottom={'10px'} >
           <Typography color='#f1f1f1' fontSize={'22px'} >Share a few details about you</Typography>
-          <Typography color='#808080' fontSize={'14px'} >It will help us to get to know your better</Typography>
+          <Typography color='#808080' fontSize={'14px'} >It will help us to get to know you better</Typography>
         </Box>
         <Box>
           <Box marginTop={'20px'} >

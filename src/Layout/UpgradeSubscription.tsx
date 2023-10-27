@@ -1,11 +1,11 @@
 import CheckIcon from '@mui/icons-material/Check';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Typography, Grid, Button, styled, createTheme, ThemeProvider, Box, IconButton, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { Typography, Grid, Button, styled, createTheme, ThemeProvider, Box, IconButton, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Switch } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
-import { getAllPlanList, informSupportUserPricingAPI, startSubScription } from '../Utils/Endpoints';
+import { getAllPlanList, informSupportUserPricingAPI, initializePaymentAPI, startSubScription } from '../Utils/Endpoints';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import FSLoader from '../Components/FSLoader';
@@ -14,6 +14,8 @@ import { loadStripe } from '@stripe/stripe-js';
 import { genericModalData } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
 import { containedButton } from '../Styles/ButtonStyle';
+import { useSelector } from 'react-redux';
+import PlanDetailsTable from '../Components/PlanDetailsTable';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY as string);
 
@@ -26,38 +28,46 @@ const darkTheme = createTheme({
     }
 });
 
-const CustomBox = styled(Grid)(({ theme }) => ({
-    borderRadius: '10px',
-    backgroundColor: '#29292a',
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    boxShadow: `inset 0 0 0 1px ${theme.palette.grey[900]}05`,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    [theme.breakpoints.up('lg')]: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: theme.spacing(4),
+const lightTheme = createTheme({
+    palette: {
+        mode: 'light',
     },
-}));
+    typography: {
+        fontFamily: 'Apercu Pro, sans-serif'
+    }
+})
 
 export default function UpgradeSubscription() {
 
     const snackbarRef: any = useRef(null);
-    const navigate = useNavigate();
 
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
-
+    const [billing, setBilling] = useState<'month' | 'year'>('year');
     const [selectedPlanCycle, setSelectedPlanCycle] = useState('Yearly');
     const [surveyPlans, setSurveyPlans] = useState<any[]>();
     const [loading, setLoading] = React.useState(false);
 
+    let init = false;
+
     useEffect(() => {
-        populatePlanCycle();
-        getSurveyPlans();
+        // Load the Razorpay script
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (init === false) {
+            populatePlanCycle();
+            getSurveyPlans();
+            init = true;
+        }
     }, []);
 
     const getSurveyPlans = async () => {
@@ -164,9 +174,14 @@ export default function UpgradeSubscription() {
     const handleGetAccessClick = async (planId: string, price: number) => {
         try {
             setLoading(true);
-            const { data } = await axios.post(informSupportUserPricingAPI(), { price: price,planId : planId }, { withCredentials: true })
+            const reqBody = {
+                price: price,
+                planId: planId,
+                billing: billing
+            }
+            const { data } = await axios.post(initializePaymentAPI(), reqBody, { withCredentials: true })
             setLoading(false);
-            snackbarRef?.current?.show(data?.message, 'success');
+            proceedSubscriptionCheckout(data);
         } catch (error: any) {
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
@@ -176,6 +191,44 @@ export default function UpgradeSubscription() {
         }
     }
 
+    const proceedSubscriptionCheckout = (data: any,) => {
+        const reqBody = data.data;
+        const subId: string = reqBody?.subId;
+        if (reqBody == null || subId == null || subId.length < 1) {
+            snackbarRef?.current?.show('Subscription not found, Please contact support', 'error');
+            return;
+        }
+        const options = {
+            key: reqBody.key,
+            subscription_id: subId,
+            name: 'FeedbackSense',
+            description: '',
+            image: '/Feedback Sense Logo-01.png',
+            callback_url: reqBody.callbackURL,
+            prefill: {
+              name: reqBody.name,
+              email: reqBody.email,
+            //   contact: '+919876543210',
+            },
+            theme: {
+              color: '#006dff',
+            },
+          };
+      
+          const win :any = window;
+          const rzp = new win.Razorpay(options);
+          rzp.open();      
+        
+        snackbarRef?.current?.show(data?.message, 'success');
+    }
+
+    const handleChange = (event: any) => {
+        if (event.target.checked === true) {
+            setBilling('year');
+        } else {
+            setBilling('month');
+        }
+    };
 
     return (
         <ThemeProvider theme={darkTheme} >
@@ -190,15 +243,32 @@ export default function UpgradeSubscription() {
                     <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: 'lg', mb: 3 }}>
                         Plan doesn't fits your needs? Contact us to discuss customized solutions.
                     </Typography>
+                    <ThemeProvider theme={lightTheme} >
+                        <Box color={'#808080'} >
+                            <Typography variant="subtitle1" component="span">Monthly</Typography>
+                            &nbsp; <Switch name="checkbox" color="primary" checked={billing === 'year'} onChange={handleChange} /> &nbsp;
+                            <Typography variant="subtitle1" component="span">Yearly</Typography>
+                        </Box>
+                    </ThemeProvider>
                 </Grid>
                 {
                     surveyPlans?.map(plan => {
                         return (
-                            <SinglePlan handleGetAccessClick={handleGetAccessClick} plan={plan} checkout={() => handleCheckoutClick(plan.id, plan.price_cents)} key={plan.id} />
+                            <SinglePlan
+                                handleGetAccessClick={handleGetAccessClick}
+                                plan={plan}
+                                billing={billing}
+                                checkout={() => handleCheckoutClick(plan.id, plan.price_cents)}
+                                key={plan?.id}
+                            />
                         )
                     })
                 }
-                <PlanDetailsTable />
+                <ThemeProvider theme={darkTheme} >
+                    <Box margin={'20px'} width={'100%'}>
+                        <PlanDetailsTable />
+                    </Box>
+                </ThemeProvider>
             </Grid>
             <FSLoader show={loading} />
             <Notification ref={snackbarRef} />
@@ -213,8 +283,27 @@ export default function UpgradeSubscription() {
 }
 
 
-function SinglePlan({ plan, checkout, handleGetAccessClick }: any) {
+function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
 
+    const defaultColor = useSelector((state: any) => state.colorReducer);
+
+    const CustomBox = styled(Grid)(({ theme }) => ({
+        borderRadius: '10px',
+        // backgroundColor: '#29292a',
+        backgroundColor: defaultColor?.primaryColor,
+        padding: theme.spacing(2),
+        textAlign: 'center',
+        boxShadow: `inset 0 0 0 1px ${theme.palette.grey[900]}05`,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        [theme.breakpoints.up('lg')]: {
+            flexDirection: 'column',
+            justifyContent: 'center',
+            padding: theme.spacing(4),
+        },
+    }));
 
     const [planDesc, setPlanDesc] = useState<any>();
 
@@ -223,17 +312,16 @@ function SinglePlan({ plan, checkout, handleGetAccessClick }: any) {
     }, []);
 
     const populateDescription = () => {
-        const planDescStr: string = plan.description;
+        const planDescStr: string = plan?.description;
         setPlanDesc(JSON.parse(planDescStr))
     }
 
     return (
         <Grid item xs={12} sx={{ mx: 'auto', maxWidth: '7xl', px: { xs: 2, lg: 3 }, padding: '20px' }}>
-
             <Grid item xs={12} sx={{ textAlign: 'start', border: '1px #454545 solid', mx: 'auto', mt: { xs: 6, sm: 8 }, maxWidth: '2xl', borderRadius: '6px', display: { xs: 'block', lg: 'flex' }, width: { lg: 'none' } }}>
                 <Grid item xs={12} lg={7} sx={{ p: 2, padding: '40px' }}>
                     <Typography variant="h5" component="h3" sx={{ fontWeight: 'bold', color: 'text.primary', fontSize: '2xl', mb: 3 }}>
-                        FeedbackSense {plan.name}
+                        FeedbackSense {plan?.name}
                     </Typography>
                     <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: 'base', mb: 3 }}>
                         {planDesc?.description}
@@ -291,18 +379,22 @@ function SinglePlan({ plan, checkout, handleGetAccessClick }: any) {
                         </Typography>
                         <Box display={'flex'} >
                             <Typography variant="h2" sx={{ color: 'text.primary', fontSize: '5xl', mt: 4 }}>
-                                ${plan.price_cents}
+                                ₹{billing === 'year' ? plan?.price_cents : plan?.price_cents_monthly}
                             </Typography>
                             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'text.secondary', fontSize: 'sm', lineHeight: '10', letterSpacing: 'wide' }}>
-                                USD / year
+                                INR / month
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'text.secondary' }}>
+                                Billed {billing}ly
                             </Typography>
                         </Box>
                         <Button
                             variant="contained"
                             style={{ width: '50%' }}
                             sx={containedButton}
-                            // onClick={() => checkout(plan.id, plan.price_cents)}
-                            onClick={() => handleGetAccessClick(plan.id, plan.price_cents)}
+                            onClick={() => handleGetAccessClick(plan?.id, plan?.price_cents)}
                         >
                             Get access
                         </Button>
@@ -316,118 +408,3 @@ function SinglePlan({ plan, checkout, handleGetAccessClick }: any) {
     )
 }
 
-
-function PlanDetailsTable() {
-    return (
-        <TableContainer style={{ margin: '35px' }} component={Paper}>
-            <Table aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Feature</TableCell>
-                        <TableCell>Free $0 /year</TableCell>
-                        <TableCell>Starter $25 /year</TableCell>
-                        <TableCell>Growth $49 /year</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    <TableRow>
-                        <TableCell>Active surveys</TableCell>
-                        <TableCell>1</TableCell>
-                        <TableCell>5</TableCell>
-                        <TableCell>10</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Users</TableCell>
-                        <TableCell>1</TableCell>
-                        <TableCell>Unlimited</TableCell>
-                        <TableCell>Unlimited</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Response capacity / survey</TableCell>
-                        <TableCell>50</TableCell>
-                        <TableCell>2000</TableCell>
-                        <TableCell>5000</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Response store limit</TableCell>
-                        <TableCell>50</TableCell>
-                        <TableCell>2000</TableCell>
-                        <TableCell>5000</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Folders</TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Personalized assistance</TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>FeedbackSense  Branding</TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Questions in survey</TableCell>
-                        <TableCell>Unlimited</TableCell>
-                        <TableCell>Unlimited</TableCell>
-                        <TableCell>Unlimited</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Detailed analysis</TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>AI analysis</TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Collection time / survey</TableCell>
-                        <TableCell>Unlimited</TableCell>
-                        <TableCell>Unlimited</TableCell>
-                        <TableCell>Unlimited</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Notifications</TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Email support</TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Exclusive Features</TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                        <TableCell><CheckIcon sx={{ color: '#006DFF' }} /></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Result export</TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell>Coming soon</TableCell>
-                        <TableCell>Coming soon</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Custom logo</TableCell>
-                        <TableCell><RemoveIcon /></TableCell>
-                        <TableCell>Coming soon</TableCell>
-                        <TableCell>Coming soon</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
-        </TableContainer>
-    )
-}
