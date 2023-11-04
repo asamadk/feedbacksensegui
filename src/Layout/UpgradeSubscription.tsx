@@ -41,6 +41,7 @@ export default function UpgradeSubscription() {
 
     const snackbarRef: any = useRef(null);
 
+    const defaultColor = useSelector((state: any) => state.colorReducer);
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
     const [billing, setBilling] = useState<'month' | 'year'>('year');
@@ -51,7 +52,6 @@ export default function UpgradeSubscription() {
     let init = false;
 
     useEffect(() => {
-        // Load the Razorpay script
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
         script.async = true;
@@ -206,19 +206,18 @@ export default function UpgradeSubscription() {
             image: '/Feedback Sense Logo-01.png',
             callback_url: reqBody.callbackURL,
             prefill: {
-              name: reqBody.name,
-              email: reqBody.email,
-            //   contact: '+919876543210',
+                name: reqBody.name,
+                email: reqBody.email,
             },
             theme: {
-              color: '#006dff',
+                color: '#006dff',
             },
-          };
-      
-          const win :any = window;
-          const rzp = new win.Razorpay(options);
-          rzp.open();      
-        
+        };
+
+        const win: any = window;
+        const rzp = new win.Razorpay(options);
+        rzp.open();
+
         snackbarRef?.current?.show(data?.message, 'success');
     }
 
@@ -243,6 +242,12 @@ export default function UpgradeSubscription() {
                     <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: 'lg', mb: 3 }}>
                         Plan doesn't fits your needs? Contact us to discuss customized solutions.
                     </Typography>
+                    <Box sx={{ backgroundColor: defaultColor?.primaryColor, borderRadius: '5px', padding: '10px', width: 'fit-content', margin: 'auto' }} >
+                        <Typography color={'#006dff'} variant="subtitle1" component="p">
+                            If you decide to change your plan again in the future, any remaining balance from your subscription can be
+                            claimed through a support ticket.
+                        </Typography>
+                    </Box>
                     <ThemeProvider theme={lightTheme} >
                         <Box color={'#808080'} >
                             <Typography variant="subtitle1" component="span">Monthly</Typography>
@@ -264,6 +269,11 @@ export default function UpgradeSubscription() {
                         )
                     })
                 }
+                <Box sx={{ backgroundColor: defaultColor?.primaryColor, borderRadius: '5px', padding: '10px', width: 'fit-content', margin: 'auto' }} >
+                    <Typography color={'#006dff'} variant="subtitle1" component="p">
+                        Please Note: If you downgrade your plan while having ongoing surveys, all active surveys will be unpublished.
+                    </Typography>
+                </Box>
                 <ThemeProvider theme={darkTheme} >
                     <Box margin={'20px'} width={'100%'}>
                         <PlanDetailsTable />

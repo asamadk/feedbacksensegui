@@ -17,7 +17,7 @@ function PoweredBy() {
     <Box sx={mainContainerCss} >
         <Typography marginTop={'3px'} fontSize={'12px'} color={'black'} marginRight={'5px'} >Powered by</Typography>
         <Typography fontWeight={900} fontSize={'16px'} color={'#006DFF'} >Feedback</Typography>
-        <InsertLinkIcon sx={{color : '#29292a'}} />
+        {/* <InsertLinkIcon sx={{color : '#29292a'}} /> */}
         <Typography fontWeight={900} fontSize={'16px'} color={'#29292a'} >Sense</Typography>
     </Box>
   )

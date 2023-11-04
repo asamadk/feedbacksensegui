@@ -6,6 +6,7 @@ const initialState = {
   primaryColor : '#212a2b' //Lighter shade
 };
 
+
 function colorReducer(state = initialState, action : any) {
   switch (action.type) {
     case SET_BACKGROUND_COLOR:
