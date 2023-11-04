@@ -82,6 +82,10 @@ export const informSupportUserPricingAPI = () => {
     return BASE_URL + `/subscription/support`;
 }
 
+export const getSubscriptionPaymentHistory = () => {
+    return BASE_URL + `/subscription/history`;
+}
+
 export const initializePaymentAPI = () => {
     return BASE_URL + `/subscription/initialize/payment`;
 }

@@ -11,6 +11,7 @@ import { currentUserReducer } from "./Reducers/currentUserReducer";
 import { subscriptionDetailReducer } from "./Reducers/subscriptionDetailReducer";
 import { surveyConfigReducer } from "./Reducers/surveyConfigReducer";
 import { templateReducer } from "./Reducers/templateReducer";
+import { paymentHistoryReducer } from "./Reducers/paymentHistoryReducer";
 
 const store = configureStore({
 	reducer: {
@@ -25,7 +26,8 @@ const store = configureStore({
 		currentUser : currentUserReducer,
 		subscriptionDetail : subscriptionDetailReducer,
 		surveyConfig : surveyConfigReducer,
-		templates : templateReducer
+		templates : templateReducer,
+		paymentHistory : paymentHistoryReducer
 	},
 	devTools: true,
 });
