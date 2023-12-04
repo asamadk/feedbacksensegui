@@ -5,7 +5,9 @@ import React, { useState } from 'react'
 import IndividualResponse from '../Components/IndividualResponse';
 import { useParams } from 'react-router';
 import OverAllResult from '../Components/OverAllResult';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useSelector } from 'react-redux';
+import OverAllAIAnalysis from '../Components/OverAllAIAnalysis';
 
 const mainContainerCss = {
   height: 'calc(100vh - 69px)',
@@ -50,6 +52,7 @@ function AnalyzeSurvey() {
             icon={<EqualizerIcon />}
           />
           <Tab value={1} sx={{ width: 'fit-content' }} icon={<AssignmentIndIcon />} />
+          {/* <Tab value={2} sx={{ width: 'fit-content' }} icon={<AutoFixHighIcon />} /> */}
         </Tabs>
       </Box>
       <Box width={'94%'} >
@@ -69,6 +72,7 @@ function DynamicTabContainer(props: any) {
     <>
       {props.tab === 0 && <OverAllResult surveyId={props.surveyId} />}
       {props.tab === 1 && <IndividualResponse surveyId={props.surveyId} />}
+      {/* {props.tab === 2 && <OverAllAIAnalysis surveyId={props.surveyId} />} */}
     </>
   )
 }

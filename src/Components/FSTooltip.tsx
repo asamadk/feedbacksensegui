@@ -10,7 +10,7 @@ const FSTooltip = ({ active, payload, label,percent } : any) => {
                 color: 'white'
             }}>
                 <p>{`${label}`}</p>
-                <p>{`Response: ${payload[0].value} ${percent === true ? '%' : ''}`}</p>
+                <p>{`Response: ${payload[0].value}${percent === true ? '%' : ''}`}</p>
             </div>
         );
     }

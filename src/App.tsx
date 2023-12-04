@@ -49,7 +49,6 @@ function App() {
       }
       const url = Endpoint.checkLoginStatus();
       const { data } = await axios.get(url, { withCredentials: true });
-
       const currentUser = data.data;
       dispatch(setCurrentUsers(currentUser));
       dispatch(setUserRole(currentUser.role));

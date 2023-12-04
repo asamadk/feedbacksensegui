@@ -313,3 +313,17 @@ export const modalTabList2 = [
     { id: 3, name: 'ADVANCED' },
 ];
 
+export const validateLogoImageFile = (file: any): string | null => {
+    const maxSize = 1 * 1024 * 1024; // 1 MB
+    const allowedTypes = ['image/jpeg', 'image/png'];
+    if (!file) {
+        return "No file selected.";
+    }
+    if (file.size > maxSize) {
+        return "Image size exceeds 1 MB limit.";
+    }
+    if (!allowedTypes.includes(file.type)) {
+        return "Invalid file type. Please upload a valid image (JPEG, PNG).";
+    }
+    return null;
+}

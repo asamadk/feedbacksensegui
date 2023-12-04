@@ -19,6 +19,7 @@ import { useDispatch } from 'react-redux';
 import { setFolders } from '../Redux/Reducers/folderReducer';
 import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetailReducer';
 import { useNavigate } from 'react-router';
+import { setCustomSettings } from '../Redux/Reducers/customSettingsReducer';
 
 
 const surveyPageMainContainer = {
@@ -79,6 +80,7 @@ function SurveyListPage() {
     useEffect(() => {
         if (init === false) {
             getFolders(false);
+            fetchCustomSettings();
             if (CoreUtils.isComponentVisible(userRole, componentName.SUBSCRIPTION)) {
                 getSubscriptionDetails();
             }
@@ -89,6 +91,22 @@ function SurveyListPage() {
     useEffect(() => {
         updateActiveSurveyCount();
     }, [surveyState]);
+
+    const fetchCustomSettings = async() => {
+        try {
+            setLoading(true);
+            const { data } = await axios.get(Endpoints.getCustomSettingsAPI(),{withCredentials : true});
+            setLoading(false);
+            const tempSettings = data?.data;
+            dispatch(setCustomSettings(tempSettings));
+        } catch (error: any) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            setLoading(false);
+            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+                FeedbackUtils.handleLogout();
+            }
+        }
+    }
 
     const updateActiveSurveyCount = () => {
         if (subscriptionState == null || subscriptionState.surveyLimitUsed == null) {
@@ -299,7 +317,7 @@ function SurveyListPage() {
                                             title={folder.name}
                                             style={{ pointerEvents: 'none' }}
                                             variant='subtitle2'
-                                        >{folder.name?.substring(0,15)}{folder?.name?.length > 15 ? '...' : ''}</Typography>
+                                        >{folder.name?.substring(0, 15)}{folder?.name?.length > 15 ? '...' : ''}</Typography>
                                         <IconButton
                                             onClick={() => handleDeleteFolderClick(folder.id)}
                                             style={{ padding: '0px' }}

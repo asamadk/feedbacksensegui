@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import PoweredBy from '../Components/PoweredBy';
-import { getSurveyUserInformation, validateSurveyDisplay } from '../Utils/FeedbackUtils';
+import { validateSurveyDisplay } from '../Utils/FeedbackUtils';
 import Notification from '../Utils/Notification';
 import ContactDisplay from './ContactDisplay';
 import DateSelectorDisplay from './DateSelectorDisplay';
@@ -10,9 +10,7 @@ import SingleAnswerSelectionDisplay from './SingleAnswerSelectionDisplay'
 import SmileyScaleDisplay from './SmileyScaleDisplay';
 import TextAnswerDisplay from './TextAnswerDisplay'
 import WelcomeDisplay from './WelcomeDisplay'
-import axios from 'axios';
-import { saveSurveyResponseDb } from '../Utils/Endpoints';
-import { LIVE_SURVEY_USER_ID, TEMPLATE_KEY } from '../Utils/Constants';
+import { TEMPLATE_KEY } from '../Utils/Constants';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material';
 
@@ -136,7 +134,7 @@ function DynamicComponentDisplay(props: any) {
                     next={next}
                 />}
 
-                <PoweredBy />
+                <PoweredBy imgData={props.imgData} />
                 <Notification ref={snackbarRef} />
             </ThemeProvider>
         </>

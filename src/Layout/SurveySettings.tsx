@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 
 const tabsetList = [
     { id : 1,name : 'GENERAL' },
-    { id : 2,name : 'WEB SURVEYS' }
+    // { id : 2,name : 'WEB SURVEYS' }
 ]
 
 
@@ -55,7 +55,7 @@ function SurveySettings(props: any) {
 
             {tabset === 0 && <Box><SurveyGeneralSettings/></Box>}
 
-            {tabset === 1 && <Box><SurveySettingsWeb/></Box>}
+            {/* {tabset === 1 && <Box><SurveySettingsWeb/></Box>} */}
 
 
         </Box>

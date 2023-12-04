@@ -3,6 +3,7 @@ import * as Endpoint from '../Utils/Endpoints'
 import Logo from '../Components/Logo';
 import GoogleSignInButton from '../Components/GoogleSignInButton';
 import { useSelector } from 'react-redux';
+import MicrosoftSignInButton from '../Components/MicrosoftSignInButton';
 
 function Login() {
 
@@ -13,6 +14,13 @@ function Login() {
             Endpoint.getRedirectGoogleAuth(),
             '_self'
         );
+    }
+
+    const microsoftAuth = () => {
+        window.open(
+            Endpoint.getRedirectMicrosoftAuth(),
+            '_self'
+        )
     }
 
     const subContainerStyle = {
@@ -48,23 +56,28 @@ function Login() {
                         textAlign={'start'}
                         color={'#081213'}
                     >
-                        We make sense of your feedback
+                        Empower Your Feedback - Intuitively, Intelligently, Affordably
                     </Typography>
                     <Typography
                         color={'#1a1a1a'}
                         textAlign={'start'}
                     >
-                        Our application is designed to cut through the noise, decipher the important messages, and present you with clear, actionable insight
+                        Our application is designed to cut through the noise,
+                        decipher the important messages, and present you with clear,
+                        actionable insight
                     </Typography>
                 </Box>
             </Box>
-            <Box sx={{...subContainerStyle,backgroundColor: defaultColor?.backgroundColor}} >
-                <Typography sx={{ color: '#f1f1f1', fontSize: '25px',marginTop : '30%' }} >
+            <Box sx={{ ...subContainerStyle, backgroundColor: defaultColor?.backgroundColor }} >
+                <Typography sx={{ color: '#f1f1f1', fontSize: '25px', marginTop: '30%' }} >
                     Welcome to
                     <span style={{ color: '#006DFF', marginLeft: '5px' }} >Feedback</span>Sense
                 </Typography>
-                <Box sx={{ width: 'fit-content', margin: 'auto', paddingTop: '20px' }} >
+                <Box sx={{ width: '250px', margin: 'auto', paddingTop: '20px' }} >
                     <GoogleSignInButton onClick={googleAuth} />
+                </Box>
+                <Box sx={{ width: '250px', margin: 'auto', paddingTop: '20px' }} >
+                    <MicrosoftSignInButton onClick={microsoftAuth} />
                 </Box>
             </Box>
         </Box>

@@ -110,7 +110,8 @@ export class CoreUtils {
             compName === componentName.TEAMMATES_INVITE ||
             compName === componentName.MANAGE_USER ||
             compName === componentName.DELETE_SURVEY ||
-            compName === componentName.DELETE_SURVEY_RESPONSE
+            compName === componentName.DELETE_SURVEY_RESPONSE || 
+            compName === componentName.UPLOAD_LOGO
         ) {
             return role === 'ADMIN' || role === 'OWNER';
         }
