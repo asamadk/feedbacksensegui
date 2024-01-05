@@ -4,7 +4,7 @@ import { containedButton } from '../Styles/ButtonStyle';
 import { useNavigate } from 'react-router';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
-function UpgradePlanError({ message,desc }: { message: string,desc : string }) {
+function UpgradePlanError({ message,desc,showButton }: { message: string,desc : string,showButton : boolean }) {
 
     const navigate = useNavigate();
 
@@ -29,11 +29,14 @@ function UpgradePlanError({ message,desc }: { message: string,desc : string }) {
             >
                 {desc}
             </Typography>
-            <Button
-                onClick={handleUpgrade}
-                sx={{...containedButton,width : 'fit-content'}} >
-                Upgrade
-            </Button>
+            {
+                showButton === true &&
+                <Button
+                    onClick={handleUpgrade}
+                    sx={{...containedButton,width : 'fit-content'}} >
+                    Upgrade
+                </Button>
+            }
         </Box>
     )
 }

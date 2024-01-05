@@ -1,18 +1,24 @@
-import { Box, Button, ButtonGroup, Divider, Menu, MenuItem, SpeedDial, Tooltip, Typography } from '@mui/material'
+import { Badge, Box, Button, ButtonGroup, Chip, Divider, IconButton, Menu, MenuItem, Select, SpeedDial, Tooltip, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import OverAllResultChart from './OverAllResults/OverAllResultChart';
 import OverAllMetrics from './OverAllResults/OverAllMetrics';
 import DynamicCompOverallRes from './OverAllResults/DynamicCompOverallRes';
 import EmptyAnalysis from './OverAllResults/EmptyAnalysis';
-import { containedButton } from '../Styles/ButtonStyle';
+import { containedButton, transparentBlueTextButton, transparentButton } from '../Styles/ButtonStyle';
 import { exportSurveyCsvAPI, exportSurveyJsonAPI } from '../Utils/Endpoints';
 import axios from 'axios';
 import FSLoader from './FSLoader';
 import { USER_UNAUTH_TEXT } from '../Utils/Constants';
-import { handleLogout } from '../Utils/FeedbackUtils';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { getDurationLabel, getTwelveMonthAgoDate, handleLogout } from '../Utils/FeedbackUtils';
 import Notification from '../Utils/Notification';
 import { useSelector } from 'react-redux';
 import { EXPORT_FEATURE } from '../Utils/CustomSettingsConst';
+import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
+import DateRangeModal from '../Modals/DateRangeModal';
+import { FilterCondition, durationType } from '../Utils/types';
+import TuneIcon from '@mui/icons-material/Tune';
+import AnalysisFiltersModal from '../Modals/AnalysisFiltersModal';
 
 type IndividualResponseProps = {
     surveyId: string
@@ -37,6 +43,15 @@ function OverAllResult(props: IndividualResponseProps) {
     const [loading, setLoading] = React.useState(false);
     const [isEmpty, setIsEmpty] = useState(false);
     const [showUpgrade, setShowUpgrade] = useState(false);
+    const [openDateModal, setOpenDateModal] = useState(false);
+    const [selectedFilters,setSelectedFilters] = useState(0);
+    const [openFilterModal, setOpenFilterModal] = useState(false);
+    const [filterData, setFilterData] = useState<FilterCondition[]>([]);
+    const [selectedDuration, setSelectedDuration] = useState<durationType>({
+        duration: 'last_12_months',
+        startDate: getTwelveMonthAgoDate(),
+        endDate: new Date().toLocaleDateString('en-US')
+    });
 
     const open = Boolean(anchorEl);
     const snackbarRef: any = useRef(null);
@@ -124,20 +139,37 @@ function OverAllResult(props: IndividualResponseProps) {
         }
     }
 
+    const handleDurationChange = (duration: string, startTime: string, endTime: string) => {
+        const tmpDuration: durationType = {
+            duration: duration,
+            startDate: startTime,
+            endDate: endTime
+        }
+        setSelectedDuration(tmpDuration);
+        setIsEmpty(false);
+    }
+
+    const handleApplyFilter = (tmpFilterData : FilterCondition[]) => {
+        const filterCount = tmpFilterData.length;
+        setSelectedFilters(filterCount);
+        setFilterData(tmpFilterData)
+        console.log("🚀 ~ file: OverAllResult.tsx:156 ~ handleApplyFilter ~ tmpFilterData:", tmpFilterData)
+    }
+
     const ExportHandler = () => {
         return (
             <>
                 <Box >
-                    <Button
+                    <IconButton
                         id="basic-button"
                         aria-controls={open ? 'basic-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                         onClick={handleClick}
-                        sx={{ ...containedButton, width: '100px' }}
+                        sx={{ marginTop: '5px' }}
                     >
-                        Export
-                    </Button>
+                        <MoreVertIcon />
+                    </IconButton>
                     <Menu
                         id="basic-menu"
                         anchorEl={anchorEl}
@@ -156,6 +188,36 @@ function OverAllResult(props: IndividualResponseProps) {
         )
     }
 
+    const FilterHandler = () => {
+
+        return (
+            <>
+                <Box marginTop={'8px'} marginRight={'10px'}>
+                    <Button onClick={() => { setOpenDateModal(true) }} sx={transparentBlueTextButton} >
+                        <b style={{ marginRight: '8px' }} >{getDurationLabel(selectedDuration.duration)}</b>
+                        {' ' + new Date(selectedDuration.startDate).toDateString()} - {new Date(selectedDuration.endDate).toDateString()}
+                        <ExpandCircleDownIcon sx={{ marginLeft: '10px' }} />
+                    </Button>
+                </Box>
+                <Box marginRight={'20px'} >
+                <Tooltip title={selectedFilters > 0 ? `${selectedFilters} filter(s) selected` : ''} >
+                    <Badge anchorOrigin={{vertical: 'bottom',horizontal: 'right',}} badgeContent={selectedFilters} color="error">
+                        <Button
+                            onClick={() => {setOpenFilterModal(true)}}
+                            size='small'
+                            variant='contained'
+                            sx={containedButton}
+                            startIcon={<TuneIcon />}
+                        >
+                            More Filter
+                        </Button>
+                    </Badge>
+                </Tooltip>
+                </Box>
+            </>
+        )
+    }
+
     return (
         <Box height={'calc(100vh - 100px)'} sx={{ overflowY: 'scroll' }} >
             <Box sx={containerStyle} >
@@ -167,21 +229,59 @@ function OverAllResult(props: IndividualResponseProps) {
                     color={'#006DFF'} >
                     {'Overall Result'}
                 </Typography>
-                {ExportHandler()}
+                <Box display={'flex'} >
+                    {FilterHandler()}
+                    {ExportHandler()}
+                </Box>
             </Box>
             {
-                isEmpty === false &&
+                isEmpty === false && filterData.length < 1 &&
                 <OverAllResultChart
+                    dateFilter={selectedDuration}
                     empty={() => setIsEmpty(true)}
                     notEmpty={() => setIsEmpty(false)}
                     surveyId={props.surveyId}
                 />
             }
-            {isEmpty === false && <OverAllMetrics surveyId={props.surveyId} />}
-            {isEmpty === false && <DynamicCompOverallRes surveyId={props.surveyId} />}
+            {
+                isEmpty === false && filterData.length < 1 &&
+                <OverAllMetrics
+                    surveyId={props.surveyId}
+                    dateFilter={selectedDuration}
+                />
+            }
+            {
+                isEmpty === false &&
+                <DynamicCompOverallRes
+                    surveyId={props.surveyId}
+                    dateFilter={selectedDuration}
+                    filterPayload={filterData}
+                />
+            }
             {isEmpty === true && <EmptyAnalysis />}
             <FSLoader show={loading} />
             <Notification ref={snackbarRef} />
+            {
+                openDateModal &&
+                <DateRangeModal
+                    open={openDateModal}
+                    close={() => setOpenDateModal(false)}
+                    duration={selectedDuration.duration}
+                    startDate={selectedDuration.startDate}
+                    endDate={selectedDuration.endDate}
+                    update={handleDurationChange}
+                />
+            }
+            {
+                openFilterModal &&
+                <AnalysisFiltersModal
+                    open={openFilterModal}
+                    close={() => setOpenFilterModal(false)}
+                    update={handleApplyFilter}
+                    data={filterData}
+                    surveyId={props.surveyId}
+                />
+            }
         </Box>
     )
 }

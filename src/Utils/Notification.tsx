@@ -30,29 +30,31 @@ const Notification = forwardRef((props: any, ref) => {
 
     return (
         <ThemeProvider theme={lightTheme} >
-            <Snackbar
-                title={message}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                open={showSnackbar}
-                onClose={() => setShowSnackbar(false)}
-            >
-                <Alert severity={type} sx={{ width: '100%' }} action={
-                    <IconButton
-                        aria-label="close"
-                        color="inherit"
-                        size="small"
-                        onClick={() => {
-                            setShowSnackbar(false);
-                        }}
-                    >
-                        <CloseIcon fontSize="inherit" />
-                    </IconButton>
-                } >
-                    <Typography fontSize={15} >
-                        {message.substring(0, 50)}
-                    </Typography>
-                </Alert>
-            </Snackbar>
+            <Tooltip title={message} >
+                <Snackbar
+                    title={message}
+                    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                    open={showSnackbar}
+                    onClose={() => setShowSnackbar(false)}
+                >
+                    <Alert severity={type} sx={{ width: '100%' }} action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                                setShowSnackbar(false);
+                            }}
+                        >
+                            <CloseIcon fontSize="inherit" />
+                        </IconButton>
+                    } >
+                        <Typography fontSize={15} >
+                            {message.substring(0, 50)}
+                        </Typography>
+                    </Alert>
+                </Snackbar>
+            </Tooltip>
         </ThemeProvider>
     );
 });

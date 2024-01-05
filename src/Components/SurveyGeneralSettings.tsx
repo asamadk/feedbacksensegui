@@ -16,6 +16,7 @@ import { USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
 import axios from 'axios';
 import { deleteLogoAPI, getLogoAPI, uploadLogoAPI } from '../Utils/Endpoints';
 import GenericModal from '../Modals/GenericModal';
+import { REMOVE_FEEDBACK_SENSE_LOGO } from '../Utils/CustomSettingsConst';
 
 
 function SurveyGeneralSettings() {
@@ -68,7 +69,7 @@ function SurveyGeneralSettings() {
     }
 
     const handleVisibility = () => {
-        if(settings?.removeFeedbackLogo === 'true'){
+        if(settings != null && settings[REMOVE_FEEDBACK_SENSE_LOGO] === 'true'){
             getLogo();
         }else{
             setShowUpgrade(true);
@@ -145,6 +146,7 @@ function SurveyGeneralSettings() {
                         <UpgradePlanError
                             message='Upgrade to upload logo'
                             desc='Upload your own logo to make your surveys look like yours.'
+                            showButton={true}
                         />
                     </Box>
                 </Box>

@@ -1,4 +1,4 @@
-import { Avatar, Button, Chip, IconButton, Popover, Typography } from '@mui/material'
+import { Avatar, Button, Chip, IconButton, Popover, Tooltip, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import EditIcon from '@mui/icons-material/Edit';
@@ -179,55 +179,34 @@ function SurveyBlock(props: any) {
                 sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid', height: '50px', backgroundColor: '#212a2b' }}
             >
                 <Box>
-
-                    <Typography
-                        aria-owns={openName ? 'mouse-over-popover' : undefined}
-                        aria-haspopup="true"
-                        onMouseEnter={(e) => setNameAnchorEl(e.currentTarget)}
-                        onMouseLeave={() => setNameAnchorEl(null)}
-                        sx={{ paddingTop: '10px' }}
-                    >
-                        {survey?.name?.substring(0, 25)}
-                        {survey?.name?.length > 30 ? '...' : ''}
-                    </Typography>
-                    <Popover
-                        id="mouse-over-popover"
-                        sx={{
-                            pointerEvents: 'none',
-                        }}
-                        open={openName}
-                        anchorEl={nameAnchorEl}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                        }}
-                        onClose={() => setNameAnchorEl(null)}
-                        disableRestoreFocus
-                    >        <Typography sx={{ p: 1 }}>{survey?.name}</Typography>
-                    </Popover>
+                    <Tooltip title={survey?.name} >
+                        <Typography
+                            aria-owns={openName ? 'mouse-over-popover' : undefined}
+                            aria-haspopup="true"
+                            sx={{ paddingTop: '10px' }}
+                        >
+                            {survey?.name?.substring(0, 25)}
+                            {survey?.name?.length > 30 ? '...' : ''}
+                        </Typography>
+                    </Tooltip>
                 </Box>
                 <Box display={'flex'} >
-                    <IconButton
-                        onClick={handleOpenSurvey}
-                        onMouseEnter={handleShowEditTitle}
-                        onMouseLeave={handleHideEditTitle}
-                        sx={{ color: '#f1f1f1', width: '50px' }}
-                    >
-                        <EditIcon />
-                    </IconButton>
-                    <Box>
-                        <CustomPopover open={showEditTitle} text={'Edit survey'} />
-                    </Box>
-                    <IconButton id="basic-button"
-                        onClick={handleClick}
-                        sx={{ color: '#f1f1f1', width: '50px' }}
-                    >
-                        <MoreHorizIcon />
-                    </IconButton>
+                    <Tooltip title={'Edit'} >
+                        <IconButton
+                            onClick={handleOpenSurvey}
+                            sx={{ color: '#f1f1f1', width: '50px' }}
+                        >
+                            <EditIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title='Settings' >
+                        <IconButton id="basic-button"
+                            onClick={handleClick}
+                            sx={{ color: '#f1f1f1', width: '50px' }}
+                        >
+                            <MoreHorizIcon />
+                        </IconButton>
+                    </Tooltip>
                     <SingleSurveyAction
                         anchor={anchorEl}
                         changeFolder={handleChangeFolderClick}

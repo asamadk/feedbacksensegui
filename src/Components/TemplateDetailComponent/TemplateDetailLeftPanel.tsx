@@ -31,7 +31,6 @@ function TemplateDetailLeftPanel({
   const handleCreateSurveyFromTemplate = async () => {
     try {
       const templateId = template.id;
-      console.log("🚀 ~ file: TemplateDetailLeftPanel.tsx:16 ~ handleCreateSurveyFromTemplate ~ templateId:", templateId)
       setLoading(true);
       const url = createSurveyFromTemplateAPI(templateId);
       const { data } = await axios.post(url, {}, { withCredentials: true });

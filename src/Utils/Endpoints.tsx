@@ -1,4 +1,7 @@
 // export const BASE_URL = 'https://api.feedbacksense.io';
+
+import { durationType } from "./types";
+
 // export const BASE_URL = 'https://stagingapi.feedbacksense.io';
 export const BASE_URL = 'http://localhost:3001';
 
@@ -138,17 +141,20 @@ export const deleteSurveyResponse = (surveyResponseId : string) => {
     return `${BASE_URL}/analysis/response/${surveyResponseId}`
 } 
 
-
-export const getOverallResponse = (surveyId : string) => {
-    return `${BASE_URL}/analysis/response/overall/${surveyId}`
+export const getOverallResponse = (surveyId : string,duration : durationType) => {
+    return `${BASE_URL}/analysis/response/overall/${surveyId}?startDate=${duration?.startDate}&endDate=${duration?.endDate}`;
 }
 
-export const getOverallMetricsResponse = (surveyId : string) => {
-    return `${BASE_URL}/analysis/response/sub-data/${surveyId}`
+export const getOverallMetricsResponse = (surveyId : string,duration : durationType) => {
+    return `${BASE_URL}/analysis/response/sub-data/${surveyId}?startDate=${duration?.startDate}&endDate=${duration?.endDate}`;
 }
 
-export const getOverAllComponentsData = (surveyId : string) => {
-    return `${BASE_URL}/analysis/response/components/${surveyId}`
+export const getOverAllComponentsData = (surveyId : string,duration : durationType) => {
+    return `${BASE_URL}/analysis/response/components/${surveyId}?startDate=${duration?.startDate}&endDate=${duration?.endDate}`;
+}
+
+export const getSurveyFilterDataAPI = (surveyId : string) => {
+    return `${BASE_URL}/analysis/response/filter-data/${surveyId}`;
 }
 
 export const getStripePaymentIntent = () => {

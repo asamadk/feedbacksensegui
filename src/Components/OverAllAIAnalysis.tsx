@@ -60,6 +60,7 @@ function OverAllAIAnalysis(props: propType) {
                             message='Upgrade to Access the AI Analysis'
                             desc='Unlock our most advanced analysis.Upgrade now to gain valuable insights 
                             for your survey.Get more details and unleash your full potential with our ultimate plan.'
+                            showButton={true}
                         />
                     </Box>
                 </Box>

@@ -13,6 +13,7 @@ import { surveyConfigReducer } from "./Reducers/surveyConfigReducer";
 import { templateReducer } from "./Reducers/templateReducer";
 import { paymentHistoryReducer } from "./Reducers/paymentHistoryReducer";
 import { customSettingsReducer } from "./Reducers/customSettingsReducer";
+import { surveyFilterDataReducer } from "./Reducers/surveyFilterReducer";
 
 const store = configureStore({
 	reducer: {
@@ -29,7 +30,8 @@ const store = configureStore({
 		surveyConfig : surveyConfigReducer,
 		templates : templateReducer,
 		paymentHistory : paymentHistoryReducer,
-		settings : customSettingsReducer
+		settings : customSettingsReducer,
+		surveyFilterData : surveyFilterDataReducer
 	},
 	devTools: true,
 });

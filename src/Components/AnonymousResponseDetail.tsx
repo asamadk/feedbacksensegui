@@ -82,8 +82,6 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                     </Box>
                 </Box>
                 <Box sx={answerContainer(defaultColor?.primaryColor)} >
-                    <Typography>Answer</Typography>
-                    <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{`Action performed : ${data?.data?.click}`}</Typography>
                 </Box>
             </>}
@@ -98,8 +96,6 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                     </Box>
                 </Box>
                 <Box sx={answerContainer(defaultColor?.primaryColor)} >
-                    <Typography>Answer</Typography>
-                    <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{`${data?.data?.selectedVal}`}</Typography>
                 </Box>
             </>}
@@ -114,8 +110,6 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                     </Box>
                 </Box>
                 <Box sx={answerContainer(defaultColor?.primaryColor)} >
-                    <Typography>Answer</Typography>
-                    <Divider sx={{ margin: '5px', background: '#454545' }} />
                     {data?.data?.selectedVal?.map((val: string) => {
                         return (<Box>
                             <Typography>{val}</Typography>
@@ -134,8 +128,6 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                     </Box>
                 </Box>
                 <Box sx={answerContainer(defaultColor?.primaryColor)} >
-                    <Typography>Answer</Typography>
-                    <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{`${data?.data?.answer}`}</Typography>
                 </Box>
             </>}
@@ -150,8 +142,6 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                     </Box>
                 </Box>
                 <Box sx={answerContainer(defaultColor?.primaryColor)} >
-                    <Typography>Answer</Typography>
-                    <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{getEmojiFromId(data?.data?.emojiId)}</Typography>
                 </Box>
             </>}
@@ -166,8 +156,6 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                     </Box>
                 </Box>
                 <Box sx={answerContainer(defaultColor?.primaryColor)} >
-                    <Typography>Answer</Typography>
-                    <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{`${data?.data?.value}`}</Typography>
                 </Box>
             </>}
@@ -182,8 +170,6 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                     </Box>
                 </Box>
                 <Box sx={answerContainer(defaultColor?.primaryColor)} >
-                    <Typography>Answer</Typography>
-                    <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{`${data?.data?.value}`}</Typography>
                 </Box>
             </>}
@@ -198,8 +184,6 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                     </Box>
                 </Box>
                 <Box sx={answerContainer(defaultColor?.primaryColor)} >
-                    <Typography>Answer</Typography>
-                    <Divider sx={{ margin: '5px', background: '#454545' }} />
                     {data?.compData?.answerList?.map((val: string) => {
                         return (<Box>
                             <Typography>{`${val} : ${data.data[val]}`}</Typography>
@@ -218,8 +202,6 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                     </Box>
                 </Box>
                 <Box sx={answerContainer(defaultColor?.primaryColor)} >
-                    <Typography>Answer</Typography>
-                    <Divider sx={{ margin: '5px', background: '#454545' }} />
                     <Typography>{new Date(data?.data?.value)?.toLocaleDateString()}</Typography>
                 </Box>
             </>}

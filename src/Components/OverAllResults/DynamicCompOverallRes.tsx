@@ -10,6 +10,7 @@ import axios from 'axios'
 import { USER_UNAUTH_TEXT } from '../../Utils/Constants'
 import { useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
+import { durationType } from '../../Utils/types'
 
 const mainContainer = (bgColor : string) => {
   return {
@@ -31,11 +32,17 @@ const mainTextStyle = {
   paddingLeft: '10px'
 }
 
-function DynamicCompOverallRes(props: any) {
+type mainPropType = {
+  surveyId : string,
+  dateFilter : durationType,
+  filterPayload : any[]
+}
+
+function DynamicCompOverallRes(props: mainPropType) {
 
   const snackbarRef: any = useRef(null);
   const [loading, setLoading] = React.useState(false);
-  const [overAllComponentData, setOverAllComponentData] = useState<any>({});
+  const [overAllComponentData, setOverAllComponentData] = useState<any>(null);
   const [idMap,setIdMap] = useState<any>({});
 
   let init = false;
@@ -45,12 +52,19 @@ function DynamicCompOverallRes(props: any) {
       fetchOverAllComponentData();
       init = true;
     }
-  }, []);
+  }, [props.dateFilter,props.filterPayload]);
+
+  const resetData = () => {
+    setOverAllComponentData(null);
+    setIdMap({});
+  }
 
   const fetchOverAllComponentData = async () => {
+    resetData();
     try {
       setLoading(true);
-      const { data } = await axios.get(getOverAllComponentsData(props.surveyId), { withCredentials: true });
+      const URL = getOverAllComponentsData(props.surveyId,props.dateFilter);
+      const { data } = await axios.post(URL,props.filterPayload, { withCredentials: true });
       setLoading(false);
       if (data.statusCode !== 200) {
         snackbarRef?.current?.show(data?.message, 'error');
@@ -70,7 +84,7 @@ function DynamicCompOverallRes(props: any) {
   return (
     <Box>
       {
-        Object.keys(overAllComponentData).map(key => {
+        overAllComponentData != null && Object.keys(overAllComponentData)?.map(key => {
           return (
             <ComponentOverAllResponse idMap={idMap} id={key} data={overAllComponentData[key]} />
           )

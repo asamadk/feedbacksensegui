@@ -327,3 +327,65 @@ export const validateLogoImageFile = (file: any): string | null => {
     }
     return null;
 }
+
+export const getDurationLabel = (durationValue: string) => {
+    if (durationValue === 'all') {
+        return 'All time'
+    } else if (durationValue === 'today') {
+        return 'Today';
+    } else if (durationValue === 'yesterday') {
+        return 'Yesterday'
+    } else if (durationValue === 'last_7_days') {
+        return 'Last 7 days'
+    } else if (durationValue === 'last_30_days') {
+        return 'Last 30 days'
+    } else if (durationValue === 'last_90_days') {
+        return 'Last 90 days'
+    } else if (durationValue === 'last_12_months') {
+        return 'Last 12 Months'
+    } else if (durationValue === 'custom') {
+        return 'Custom'
+    }
+}
+
+export const getDateWithDuration = (duration: string): { startDate: string, endDate: string } => {
+    const today = new Date();
+    const returnData = {
+        startDate: new Date(0).toLocaleDateString('en-US'),
+        endDate: today.toLocaleDateString('en-US')
+    }
+    if (duration === 'all') {
+        returnData.startDate = new Date(0).toLocaleDateString('en-US');
+    } else if (duration === 'today') {
+        returnData.startDate = new Date().toLocaleDateString('en-US');
+    } else if (duration === 'yesterday') {
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        returnData.startDate = yesterday.toLocaleDateString('en-US');
+        returnData.endDate = yesterday.toLocaleDateString('en-US')
+    } else if (duration === 'last_7_days') {
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(today.getDate() - 7);
+        returnData.startDate = sevenDaysAgo.toLocaleDateString('en-US');
+    } else if (duration === 'last_30_days') {
+        const thirtyDaysAgo = new Date(today);
+        thirtyDaysAgo.setDate(today.getDate() - 30);
+        returnData.startDate = thirtyDaysAgo.toLocaleDateString('en-US');
+    } else if (duration === 'last_90_days') {
+        const ninetyDaysAgo = new Date(today);
+        ninetyDaysAgo.setDate(today.getDate() - 90);
+        returnData.startDate = ninetyDaysAgo.toLocaleDateString('en-US');
+    } else if (duration === 'last_12_months') {
+        const twelveMonthAgo = new Date(today);
+        twelveMonthAgo.setDate(today.getDate() - 365);
+        returnData.startDate = twelveMonthAgo.toLocaleDateString('en-US');
+    }
+    return returnData;
+}
+
+export const getTwelveMonthAgoDate = () => {
+    const today = new Date();
+    const twelveMonthAgo = new Date(today);
+    twelveMonthAgo.setDate(today.getDate() - 365);
+    return twelveMonthAgo.toLocaleDateString('en-US');
+}

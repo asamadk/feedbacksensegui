@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Typography } from '@mui/material';
+import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import InviteMemberModal from '../Modals/InviteMemberModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
@@ -52,7 +52,7 @@ const surveyFolderText = {
 const folderText = {
     display: 'flex',
     justifyContent: 'space-between',
-    color: '#323533',
+    color: '#808080',
     paddingTop: '15px',
     paddingBottom: '15px'
 }
@@ -92,10 +92,10 @@ function SurveyListPage() {
         updateActiveSurveyCount();
     }, [surveyState]);
 
-    const fetchCustomSettings = async() => {
+    const fetchCustomSettings = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(Endpoints.getCustomSettingsAPI(),{withCredentials : true});
+            const { data } = await axios.get(Endpoints.getCustomSettingsAPI(), { withCredentials: true });
             setLoading(false);
             const tempSettings = data?.data;
             dispatch(setCustomSettings(tempSettings));
@@ -237,7 +237,8 @@ function SurveyListPage() {
     }
 
     const unhighlightCreateFolder = (e: any) => {
-        e.target.style.color = defaultColor?.primaryColor;
+        // e.target.style.color = defaultColor?.primaryColor;
+        e.target.style.color = '#808080';
     }
 
     const handleDeleteFolderClick = async (folderId: string) => {
@@ -309,22 +310,23 @@ function SurveyListPage() {
                         </div>
 
                         {
-                            // folderList?.map(folder => {
                             folderState?.map((folder: any) => {
                                 return (
-                                    <div key={folder.id} className="folders-data" style={surveyFolderText} onClick={(e) => handleFolderClick(e, folder.name, folder.id)} >
-                                        <Typography
-                                            title={folder.name}
-                                            style={{ pointerEvents: 'none' }}
-                                            variant='subtitle2'
-                                        >{folder.name?.substring(0, 15)}{folder?.name?.length > 15 ? '...' : ''}</Typography>
-                                        <IconButton
-                                            onClick={() => handleDeleteFolderClick(folder.id)}
-                                            style={{ padding: '0px' }}
-                                            size='small' >
-                                            <DeleteIcon sx={{ color: '#f1f1f1', fontSize: '15px' }} />
-                                        </IconButton>
-                                    </div>
+                                    <Tooltip key={folder.id} title={folder.name} >
+                                        <div key={folder.id} className="folders-data" style={surveyFolderText} onClick={(e) => handleFolderClick(e, folder.name, folder.id)} >
+                                            <Typography
+                                                title={folder.name}
+                                                style={{ pointerEvents: 'none' }}
+                                                variant='subtitle2'
+                                            >{folder.name?.substring(0, 15)}{folder?.name?.length > 15 ? '...' : ''}</Typography>
+                                            <IconButton
+                                                onClick={() => handleDeleteFolderClick(folder.id)}
+                                                style={{ padding: '0px' }}
+                                                size='small' >
+                                                <DeleteIcon sx={{ color: '#f1f1f1', fontSize: '15px' }} />
+                                            </IconButton>
+                                        </div>
+                                    </Tooltip>
                                 )
                             })
                         }

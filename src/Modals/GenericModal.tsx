@@ -4,7 +4,7 @@ import * as Types from '../Utils/types'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { useSelector } from 'react-redux';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -33,7 +33,13 @@ function GenericModal(props: any) {
     let payload: Types.genericModalData = props.payload;
 
     const handleSuccessButtonClick = () => {
+        setValidVal('');
         props.callback();
+    }
+
+    const handleClose = () => {
+        setValidVal('');
+        props.close();
     }
 
     const [validVal, setValidVal] = useState('');
@@ -96,7 +102,7 @@ function GenericModal(props: any) {
                         <Button
                             style={{ width: 'fit-content', marginRight: '15px' }}
                             sx={ButtonStyles.outlinedButton}
-                            onClick={props.close}
+                            onClick={handleClose}
                             variant="contained">
                             {payload?.cancelButtonText}
                         </Button>

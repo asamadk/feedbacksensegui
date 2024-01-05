@@ -38,7 +38,6 @@ function ChangeFolderModal(props: any) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
-            console.log("🚀 ~ file: ChangeFolderModal.tsx:42 ~ handleFolderChange ~ data?.message:", data?.message)
             snackbarRef?.current?.show(data?.message, 'success');
             let surveyData = data.data;
             props.callback(surveyData);

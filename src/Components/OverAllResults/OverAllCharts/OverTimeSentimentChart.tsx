@@ -5,8 +5,6 @@ import FSTooltip from '../../FSTooltip'
 
 function OverTimeSentimentChart(props : any) {
 
-    console.log("🚀 ~ file: OverTimeSentimentChart.tsx:9 ~ OverTimeSentimentChart ~ props?.data:", props?.data)
-
     return (
         <>
             <Box textAlign={'start'} padding={'20px'}>
