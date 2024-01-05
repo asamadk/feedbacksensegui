@@ -20,10 +20,11 @@ function WelcomeChart(props : propsType) {
   return (
     <Box sx={mainContainer} >
       <Typography fontWeight={600} >Actions</Typography>
-      <Divider sx={{ borderTop: '1px #454545 solid', margin: '10px 0px' }} />
-      <Box display={'flex'} justifyContent={'space-between'} >
-        {data?.actions?.map((action : string) => {return(<Typography color={'#808080'} >{action}</Typography>)})}
-        <Typography color={'#808080'} >{data?.clickFrequency} times</Typography>
+      <Box sx={{ background: 'rgba(255, 255, 255, 0.12)', padding: '5px 10px', borderRadius: '5px', marginTop: '10px' }} >
+        <Box display={'flex'} justifyContent={'space-between'} >
+          {data?.actions?.map((action : string) => {return(<Typography color={'#f1f1f1'} >{action}</Typography>)})}
+          <Typography color={'#f1f1f1'} >{data?.clickFrequency} times</Typography>
+        </Box>
       </Box>
     </Box>
   )

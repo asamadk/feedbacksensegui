@@ -1,4 +1,4 @@
-import { Button, Grid, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Button, Grid, IconButton, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
 import { Box, styled } from '@mui/system'
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
@@ -22,6 +22,7 @@ import { setSurvey } from '../Redux/Reducers/surveyReducer';
 import { useDispatch } from 'react-redux';
 import { muiSelectStyle } from '../Styles/InputStyles';
 import { setUsers } from '../Redux/Reducers/usersReducer';
+import AppsIcon from '@mui/icons-material/Apps';
 
 const buttonContainerStyles = {
     marginTop: '10px',
@@ -268,6 +269,16 @@ function SurveysPanel(props: any) {
                         </Typography>
                         <Box sx={buttonContainerStyles} >
                             <Box>
+                                {/* {
+                                    CoreUtils.isComponentVisible(userRole, Constants.componentName.CREATE_SURVEY_BUTTON) &&
+                                    <Tooltip title='Integration Hub' >
+                                        <IconButton sx={{marginBottom : '5px',marginRight : '10px'}} >
+                                            <AppsIcon  
+                                                sx={{fontSize : 35,color : '#006dff'}} 
+                                            />
+                                        </IconButton>
+                                    </Tooltip>
+                                } */}
                                 {
                                     CoreUtils.isComponentVisible(userRole, Constants.componentName.CREATE_SURVEY_BUTTON) &&
                                     <Button
@@ -284,7 +295,7 @@ function SurveysPanel(props: any) {
                                     onClick={() => navigate('/template')}
                                     sx={ButtonStyles.outlinedButton}
                                     startIcon={<PostAddIcon />}
-                                    style={{ width: 'fit-content', marginBottom: '15px', marginRight: '30px', textTransform: 'none' }}
+                                    style={{ width: 'fit-content', marginBottom: '15px', marginRight: '10px', textTransform: 'none' }}
                                 >
                                     Survey Templates
                                 </Button>

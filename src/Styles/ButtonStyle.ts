@@ -81,3 +81,12 @@ export const transparentButton = {
     marginBottom: '10px', 
     color: 'white' 
 }
+
+export const transparentBlueTextButton = { 
+    textTransform: 'none', 
+    width: '100%', 
+    display: 'flex', 
+    justifyContent: 'start', 
+    marginBottom: '10px', 
+    color: '#006dff' 
+}

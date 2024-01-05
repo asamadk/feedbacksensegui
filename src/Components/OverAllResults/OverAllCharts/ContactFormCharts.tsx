@@ -1,5 +1,6 @@
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const mainContainer = {
   marginTop: '20px',
@@ -30,7 +31,9 @@ export default ContactFormCharts;
 
 
 function ContactResultTable({ data }: any) {
+  
   const [page, setPage] = useState(0);
+  const defaultColor = useSelector((state: any) => state.colorReducer);
   const [rowsPerPage, setRowsPerPage] = useState( data?.contactInfoRow?.length > 5 ? 5 : data?.contactInfoRow?.length);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -50,12 +53,12 @@ function ContactResultTable({ data }: any) {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer sx={{backgroundColor : defaultColor?.primaryColor,border :'none'}} >
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
-          <TableRow>
+          <TableRow >
             {data?.contactColumn?.map((column: string) => (
-              <TableCell key={column}>{column}</TableCell>
+              <TableCell sx={{fontWeight : '600'}} key={column}>{column}</TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -89,6 +92,7 @@ function ContactResultTable({ data }: any) {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{background : defaultColor?.primaryColor}}
       />
     </TableContainer>
   );

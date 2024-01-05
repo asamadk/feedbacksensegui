@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import FSLoader from '../../Components/FSLoader';
-import { getLiveSurveyData, getTemplatesDisplayAPI, saveSurveyResponseDb } from '../../Utils/Endpoints';
+import { getLiveSurveyData, getSurveyLogoAPI, getTemplatesDisplayAPI, saveSurveyResponseDb } from '../../Utils/Endpoints';
 import DynamicComponentDisplay from '../DynamicComponentDisplay';
 import { v4 as uuidv4, v4 } from "uuid";
 import { LIVE_SURVEY_USER_ID, TEMPLATE_KEY } from '../../Utils/Constants';
@@ -30,6 +30,7 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
     const [surveyDisplays, setSurveyDisplays] = useState<any[]>([]);
     const [currentSurvey, setCurrentSurvey] = useState<any>();
     const [currentPageData, setCurrentPagedata] = useState<any>();
+    const [imgData, setImgData] = useState<string | null>(null);
     const [displayMssg, setDisplayMssg] = useState({
         message: '',
         type: 'success'
@@ -39,8 +40,25 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
     useEffect(() => {
         if (initialized === false) {
             fetchLiveSurveyNodes();
+            getSurveyLogo();
         }
     }, []);
+
+    const getSurveyLogo = async () => {
+        try {
+            setLoading(true);
+            const { data } = await axios.get(getSurveyLogoAPI(surveyId as string), { withCredentials: true });
+            const tmpData = data?.data;
+            if (tmpData == null || tmpData.length < 1) {
+                setImgData(null);
+            } else {
+                setImgData(tmpData);
+            }
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+        }
+    }
 
     const fetchLiveSurveyNodes = async () => {
         try {
@@ -154,6 +172,7 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
                             next={next}
                             uiId={currentSurvey?.data?.uId}
                             surveyId={surveyId}
+                            imgData={imgData}
                         />
                     </Box>
                 </Box>

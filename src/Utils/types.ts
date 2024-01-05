@@ -66,3 +66,14 @@ export type DefaultEdgeOptions = {
 };
 
 export type userRoleType = 'OWNER' | 'ADMIN' | 'USER' | 'GUEST';
+
+export type durationType = {duration: string, startDate: string, endDate: string};
+
+export type FilterCondition = {
+    id: string;
+    questionId : string,
+    question: string;
+    operator: string;
+    value: string;
+    logicOperator?: 'and' | 'or';
+  };

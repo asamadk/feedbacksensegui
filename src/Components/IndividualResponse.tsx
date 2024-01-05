@@ -61,7 +61,7 @@ function IndividualResponse(props: IndividualResponseProps) {
     let init = false;
 
     useEffect(() => {
-        if(init === false){
+        if (init === false) {
             fetchSurveyResponseList()
             init = true;
         }

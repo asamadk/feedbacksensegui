@@ -6,15 +6,15 @@ import axios from 'axios';
 import FSLoader from '../FSLoader';
 import Notification from '../../Utils/Notification';
 import { USER_UNAUTH_TEXT } from '../../Utils/Constants';
-import { useNavigate } from 'react-router';
 import { handleLogout } from '../../Utils/FeedbackUtils';
 import html2canvas from 'html2canvas';
 import DownloadIcon from '@mui/icons-material/Download';
 import { iconStyle } from '../../Layout/CreateSurvey';
 import FSTooltip from '../FSTooltip';
 import { useSelector } from 'react-redux';
+import { durationType } from '../../Utils/types';
 
-const mainContainer = (bgColor : string) => {
+const mainContainer = (bgColor: string) => {
     return {
         margin: '20px',
         marginTop: '25px',
@@ -37,7 +37,8 @@ const mainTextStyle = {
 type propsType = {
     surveyId: string,
     empty: any,
-    notEmpty: any
+    notEmpty: any,
+    dateFilter: durationType,
 };
 
 function OverAllResultChart(props: propsType) {
@@ -48,16 +49,17 @@ function OverAllResultChart(props: propsType) {
     let init = false;
 
     useEffect(() => {
-        if(init === false){
+        if (init === false) {
             getOverAllResponseForChart();
             init = true;
         }
-    }, []);
+    }, [props.dateFilter]);
 
     const getOverAllResponseForChart = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(getOverallResponse(props.surveyId), { withCredentials: true });
+            const URL = getOverallResponse(props.surveyId, props.dateFilter);
+            const { data } = await axios.get(URL, { withCredentials: true });
             setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
@@ -98,19 +100,20 @@ function OverAllResultChart(props: propsType) {
         <Box sx={mainContainer(defaultColor?.primaryColor)}>
             <Box display={'flex'} justifyContent={'space-between'} >
                 <Typography sx={mainTextStyle}>Response</Typography>
-                <IconButton sx={iconStyle} onClick={handleDownload} size='small' aria-label="add">
+                {/* <IconButton sx={iconStyle} onClick={handleDownload} size='small' aria-label="add">
                     <DownloadIcon sx={{color : '#006DFF'}} />
-                </IconButton>
+                </IconButton> */}
             </Box>
             <Divider sx={{ borderTop: '1px #454545 solid', marginBottom: '20px' }} />
             <Box sx={{ width: '100%', height: 300 }} margin={'auto'} width={'fit-content'}>
                 <ResponsiveContainer>
                     <BarChart data={overAllResultGraph}>
                         <YAxis />
-                        <Tooltip 
-                            cursor={{fill: 'none'}} 
-                            content={<FSTooltip />} 
+                        <Tooltip
+                            cursor={{ fill: 'none' }}
+                            content={<FSTooltip />}
                         />
+                        {/* <CartesianGrid strokeDasharray="0" stroke="#1e1e1e" /> */}
                         <XAxis dataKey="date" />
                         <Bar barSize={40} dataKey="Response" fill="#006DFF" />
                     </BarChart>

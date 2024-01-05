@@ -26,14 +26,13 @@ function SingleAnswerChart(props: propsType) {
             {
                 props?.data?.statsArr?.map((answers: any) => {
                     return (
-                        <Box>
-                            <Divider sx={{ borderTop: '1px #454545 solid', margin: '10px 0px' }} />
+                        <Box sx={{ background: 'rgba(255, 255, 255, 0.12)', padding: '5px 10px', borderRadius: '5px', marginTop: '10px' }} >
                             <Box display={'flex'} justifyContent={'space-between'} >
                                 <Typography
-                                    color={'#808080'}
+                                    color={'#f1f1f1'}
                                     sx={{ flexWrap: 'wrap', overflowX: 'scroll', marginRight: '40px' }}
                                 >{answers?.name}</Typography>
-                                <Typography color={'#808080'} >{answers?.Frequency}%</Typography>
+                                <Typography color={'#f1f1f1'} >{answers?.Frequency}%</Typography>
                             </Box>
                         </Box>
                     )
@@ -49,18 +48,16 @@ export default SingleAnswerChart
 function SingleAnswerBarChart(props: any) {
 
     return (
-        <Box sx={{ width: '100%', height: 300 }} marginTop={3} marginBottom={3} >
-            <ResponsiveContainer>
+        <Box marginTop={3} marginBottom={3} >
+            <ResponsiveContainer height={props?.data?.statsArr.length * 100 || 400} >
                 <ComposedChart
                     layout="vertical"
-                    width={1200}
-                    height={400}
                     data={props?.data?.statsArr}
                     margin={{
                         top: 20,
-                        right: 20,
+                        right: 50,
                         bottom: 20,
-                        left: 20
+                        left: 50
                     }}
                 >
                     <XAxis dataKey="Frequency" type="number" />

@@ -22,10 +22,10 @@ function DateCharts(props: propsType) {
             <Typography fontWeight={600} >Answers</Typography>
             {props?.data?.actions?.map((answer: string) => {
                 return (
-                    <Box>
-                        <Divider sx={{ borderTop: '1px #454545 solid', margin: '10px 0px' }} />
+                    <Box sx={{ background: 'rgba(255, 255, 255, 0.12)', padding: '5px 10px', borderRadius: '5px', marginTop: '10px' }} >
+                        {/* <Divider sx={{ borderTop: '1px #454545 solid', margin: '10px 0px' }} /> */}
                         <Box display={'flex'} justifyContent={'space-between'} >
-                            <Typography color={'#808080'} >{new Date(answer)?.toDateString()}</Typography>
+                            <Typography color={'#f1f1f1'} >{new Date(answer)?.toDateString()}</Typography>
                         </Box>
                     </Box>
                 )

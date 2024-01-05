@@ -44,7 +44,6 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
     useEffect(() => {
         restoreFlow();
-        console.log('USE EFFECT RESTORE FLOW');
     }, [surveyFlow]);
 
 
@@ -383,7 +382,6 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     }, [reactFlowInstance, props.config, props.performSave]);
 
     const deleteNode = (id: string) => {
-        console.log("🚀 ~ file: FeedbackCanvas.tsx:390 ~ isWorkflowPublished:", isWorkflowPublished)
         if (isWorkflowPublished === true) {
             snackbarRef?.current?.show('Cannot delete publish surveys.', 'error');
             return;

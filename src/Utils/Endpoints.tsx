@@ -1,4 +1,7 @@
 // export const BASE_URL = 'https://api.feedbacksense.io';
+
+import { durationType } from "./types";
+
 // export const BASE_URL = 'https://stagingapi.feedbacksense.io';
 export const BASE_URL = 'http://localhost:3001';
 
@@ -114,6 +117,10 @@ export const getRedirectGoogleAuth = () => {
     return BASE_URL + '/auth/oauth2/redirect';
 }
 
+export const getRedirectMicrosoftAuth = () => {
+    return BASE_URL + '/auth/microsoft';
+}
+
 export const checkLoginStatus = () => {
     return BASE_URL + '/auth/login/success';
 }
@@ -134,17 +141,20 @@ export const deleteSurveyResponse = (surveyResponseId : string) => {
     return `${BASE_URL}/analysis/response/${surveyResponseId}`
 } 
 
-
-export const getOverallResponse = (surveyId : string) => {
-    return `${BASE_URL}/analysis/response/overall/${surveyId}`
+export const getOverallResponse = (surveyId : string,duration : durationType) => {
+    return `${BASE_URL}/analysis/response/overall/${surveyId}?startDate=${duration?.startDate}&endDate=${duration?.endDate}`;
 }
 
-export const getOverallMetricsResponse = (surveyId : string) => {
-    return `${BASE_URL}/analysis/response/sub-data/${surveyId}`
+export const getOverallMetricsResponse = (surveyId : string,duration : durationType) => {
+    return `${BASE_URL}/analysis/response/sub-data/${surveyId}?startDate=${duration?.startDate}&endDate=${duration?.endDate}`;
 }
 
-export const getOverAllComponentsData = (surveyId : string) => {
-    return `${BASE_URL}/analysis/response/components/${surveyId}`
+export const getOverAllComponentsData = (surveyId : string,duration : durationType) => {
+    return `${BASE_URL}/analysis/response/components/${surveyId}?startDate=${duration?.startDate}&endDate=${duration?.endDate}`;
+}
+
+export const getSurveyFilterDataAPI = (surveyId : string) => {
+    return `${BASE_URL}/analysis/response/filter-data/${surveyId}`;
 }
 
 export const getStripePaymentIntent = () => {
@@ -189,4 +199,32 @@ export const processInviteAPI = (code : string) => {
 
 export const acceptCleanInviteAPI = (code : string) => {
     return `${BASE_URL}/auth/process/clean/invite?code=${code}`
+}
+
+export const uploadLogoAPI = () => {
+    return `${BASE_URL}/survey/upload`
+}
+
+export const getLogoAPI = () => {
+    return `${BASE_URL}/survey/logo`
+}
+
+export const deleteLogoAPI = () => {
+    return `${BASE_URL}/survey/logo`
+}
+
+export const getCustomSettingsAPI = () => {
+    return `${BASE_URL}/settings/dashboard-settings`
+}
+
+export const getSurveyLogoAPI = (surveyId : string) => {
+    return `${BASE_URL}/live/survey/logo/${surveyId}`
+}
+
+export const exportSurveyCsvAPI = (surveyId : string) => {
+    return `${BASE_URL}/analysis/export/csv/${surveyId}`
+}
+
+export const exportSurveyJsonAPI = (surveyId : string) => {
+    return `${BASE_URL}/analysis/export/json/${surveyId}`
 }

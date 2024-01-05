@@ -53,7 +53,6 @@ function SmileyScaleModal(props: any) {
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
-        // console.log("🚀 ~ file: SmileyScaleModal.tsx:51 ~ populateCompConfig ~ compConfig:", compConfig)
         setQuestion(compConfig?.question || '');
         setLeftText(compConfig?.leftText || '');
         setRightText(compConfig?.rightText || '');

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Divider, Typography } from '@mui/material'
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { getIconColorById } from '../../../Utils/FeedbackUtils'
 import FSTooltip from '../../FSTooltip'
 
