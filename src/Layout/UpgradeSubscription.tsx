@@ -338,7 +338,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                     </Typography>
                     <Grid container spacing={1} alignItems="center" sx={{ mt: 5 }}>
                         <Grid item xs="auto">
-                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#006DFF', fontSize: 'sm' }}>
+                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#006dff', fontSize: 'sm' }}>
                                 What's included
                             </Typography>
                         </Grid>
@@ -347,7 +347,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                         <Grid item xs={12} sm={6}>
                             <Box display={'flex'} marginBottom={'20px'}>
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#006DFF' }} />
+                                    <CheckIcon sx={{ color: '#006dff' }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[0]}
@@ -355,7 +355,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                             </Box>
                             <Box display={'flex'} >
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#006DFF' }} />
+                                    <CheckIcon sx={{ color: '#006dff' }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[1]}
@@ -365,7 +365,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                         <Grid item xs={12} sm={6}>
                             <Box display={'flex'} marginBottom={'20px'}>
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#006DFF' }} />
+                                    <CheckIcon sx={{ color: '#006dff' }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[2]}
@@ -373,7 +373,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                             </Box>
                             <Box display={'flex'} >
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#006DFF' }} />
+                                    <CheckIcon sx={{ color: '#006dff' }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[3]}

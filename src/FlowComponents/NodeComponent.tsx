@@ -85,7 +85,7 @@ function NodeComponent(props: any) {
                         </Box>
                         <Box >
                             <Typography>{props.label}</Typography>
-                            <Typography sx={{ color: '#454545', fontSize: '12px' }} >{props.description?.substring(0, 65) + '...'}</Typography>
+                            <Typography sx={{ color: '#f1f1f1', fontSize: '12px' }} >{props.description?.substring(0, 65) + '...'}</Typography>
                         </Box>
                         <Box>
                             <IconButton onClick={handleOpenMoreClick} sx={{ marginTop: '10px' }} >

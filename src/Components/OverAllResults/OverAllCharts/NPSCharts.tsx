@@ -20,9 +20,7 @@ function NPSCharts(props : propsType) {
   return (
     <Box>
       <Box sx={textContainer} >
-        <Typography fontSize={20} >Question : {props?.data?.question}</Typography>
-        {/* <Typography color={'#808080'} paddingBottom={'10px'}>Question : {props?.data?.question}</Typography> */}
-
+        <Typography fontSize={20} >{props?.data?.question}</Typography>
       </Box>
       <Box sx={{ width: '100%', height: 300 }} display={'flex'} justifyContent={'space-around'} >
         <NPSScore score={props?.data?.nps} />

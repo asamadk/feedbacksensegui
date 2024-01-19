@@ -14,7 +14,7 @@ function Logo() {
     return (
         <Box sx={{cursor : 'pointer'}}>
             <Box sx={mainContainerCss} >
-                <Typography style={{ color: '#006DFF', fontSize: '22px' }} variant='h4'>Feedback</Typography>
+                <Typography style={{ color: '#006dff', fontSize: '22px' }} variant='h4'>Feedback</Typography>
                 <InsertLinkIcon sx={{color : '#ffffff',marginTop : '2px',marginRight : '2px'}} />
                 <Typography style={{ color: '#ffffff', fontSize: '22px' }} variant='h4'>Sense</Typography>
             </Box>

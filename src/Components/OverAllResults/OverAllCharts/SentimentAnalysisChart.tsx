@@ -4,7 +4,6 @@ import FSTooltip from '../../FSTooltip';
 import CustomTooltip from '../../CustomTooltip';
 
 function SentimentAnalysisChart(props : any) {
-console.log("🚀 ~ file: SentimentAnalysisChart.tsx:7 ~ SentimentAnalysisChart ~ props:", props)
 
     const COLORS = [
         '#08b502',
@@ -29,10 +28,7 @@ console.log("🚀 ~ file: SentimentAnalysisChart.tsx:7 ~ SentimentAnalysisChart 
                     <ResponsiveContainer>
                         <PieChart>
                             <Legend />
-                            <Tooltip
-                                cursor={{ fill: 'none' }}
-                                content={<FSTooltip percent={false} />}
-                            />
+                            <Tooltip cursor={{ fill: 'none' }}/>
                             <Pie
                                 data={props?.data}
                                 innerRadius={60}

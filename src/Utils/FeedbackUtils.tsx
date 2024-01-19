@@ -302,6 +302,11 @@ export const validateEmail = (email: string) => {
     );
 };
 
+export const ConfigurePageTabList = [
+    { id: 1, name: 'GENERAL' },
+    { id: 1, name: 'EMBED' },
+]
+
 export const modalTabList = [
     { id: 1, name: 'GENERAL' },
     { id: 2, name: 'LOGIC' },

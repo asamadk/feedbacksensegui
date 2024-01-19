@@ -71,7 +71,7 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                     <Box sx={{ padding: '20px', borderRadius: '10px', margin: '5px' }} >
                         <Box display={'flex'}>
                             <Avatar
-                                sx={{ bgcolor: '#006DFF', width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }}
+                                sx={{ bgcolor: '#006dff', width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }}
                                 alt={user?.name}
                                 src={user?.image}
                             />

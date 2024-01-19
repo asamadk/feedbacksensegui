@@ -13,19 +13,20 @@ import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import { PERM_ISSUE_TEXT, USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
 import { useSelector } from 'react-redux';
-import { userRoleType } from '../Utils/types';
+import { genericModalData, userRoleType } from '../Utils/types';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 import { useDispatch } from 'react-redux';
 import { setFolders } from '../Redux/Reducers/folderReducer';
 import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetailReducer';
 import { useNavigate } from 'react-router';
 import { setCustomSettings } from '../Redux/Reducers/customSettingsReducer';
+import GenericModal from '../Modals/GenericModal';
 
 
 const surveyPageMainContainer = {
     display: 'flex',
     height: '100%',
-    color: '#f1f1f1'
+    color: '#f1f1f1',
 }
 
 const allSurveyFolder = (bgColor: string) => {
@@ -73,6 +74,8 @@ function SurveyListPage() {
     const folderState = useSelector((state: any) => state.folders);
     const subscriptionState = useSelector((state: any) => state.subscriptionDetail);
     const surveyState = useSelector((state: any) => state.surveys);
+    const [showGenericModal, setShowGenericModal] = React.useState(false);
+    const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
     const [loading, setLoading] = React.useState(false);
 
     let init = false;
@@ -233,7 +236,7 @@ function SurveyListPage() {
     }
 
     const highlightCreateFolder = (e: any) => {
-        e.target.style.color = '#006DFF';
+        e.target.style.color = '#006dff';
     }
 
     const unhighlightCreateFolder = (e: any) => {
@@ -241,8 +244,30 @@ function SurveyListPage() {
         e.target.style.color = '#808080';
     }
 
-    const handleDeleteFolderClick = async (folderId: string) => {
+    const handleShowModalOnDelete = (folderId: string) => {
+        setShowGenericModal(true);
+        let genDeleteObj: genericModalData = {
+            header: 'Do you really want to delete this folder?',
+            warning: 'Warning: There\'s no turning back! I acknowledge that',
+            successButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+            description: 'The folder will be removed permanently.',
+            type: 'delete',
+            data : folderId
+        }
+        setGenericModalObj(genDeleteObj);
+    }
+
+    const handleSuccessButtonClick = () => {
+        setShowGenericModal(false);
+        if (genericModalObj?.type === 'delete') {
+            handleDeleteFolderClick();
+        }
+    }
+
+    const handleDeleteFolderClick = async () => {
         try {
+            const folderId: string = genericModalObj?.data;
             setLoading(true);
             const { data } = await axios.delete(Endpoints.deleteFolder(folderId), { withCredentials: true });
             setLoading(false);
@@ -320,7 +345,7 @@ function SurveyListPage() {
                                                 variant='subtitle2'
                                             >{folder.name?.substring(0, 15)}{folder?.name?.length > 15 ? '...' : ''}</Typography>
                                             <IconButton
-                                                onClick={() => handleDeleteFolderClick(folder.id)}
+                                                onClick={() => handleShowModalOnDelete(folder.id)}
                                                 style={{ padding: '0px' }}
                                                 size='small' >
                                                 <DeleteIcon sx={{ color: '#f1f1f1', fontSize: '15px' }} />
@@ -369,6 +394,12 @@ function SurveyListPage() {
             </div>
             <FSLoader show={loading} />
             <Notification ref={snackbarRef} />
+            <GenericModal
+                payload={genericModalObj}
+                close={() => setShowGenericModal(false)}
+                open={showGenericModal}
+                callback={handleSuccessButtonClick}
+            />
         </>
     )
 }

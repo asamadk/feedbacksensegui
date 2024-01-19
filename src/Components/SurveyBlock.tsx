@@ -26,7 +26,7 @@ const surveyBlockMainContainer = {
     border: '1px #454545 solid',
     borderRadius: '5px',
     cursor: 'pointer',
-    height: '200px',
+    height: '197px',
 }
 
 function SurveyBlock(props: any) {
@@ -59,7 +59,7 @@ function SurveyBlock(props: any) {
     };
 
     const handleTextHighlight = (e: any) => {
-        e.target.style.color = '#006DFF';
+        e.target.style.color = '#006dff';
     }
 
     const handleTextUnhighlight = (e: any) => {
@@ -176,7 +176,7 @@ function SurveyBlock(props: any) {
     return (
         <Box sx={{ ...surveyBlockMainContainer, backgroundColor: defaultColor?.secondaryColor }} >
             <Box
-                sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid', height: '50px', backgroundColor: '#212a2b' }}
+                sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid', height: '50px', backgroundColor: defaultColor?.primaryColor }}
             >
                 <Box>
                     <Tooltip title={survey?.name} >
@@ -221,10 +221,10 @@ function SurveyBlock(props: any) {
                     />
                 </Box>
             </Box>
-            <Box onClick={handleOpenSurvey} sx={{ padding: '15px', paddingBottom: '10px' }} >
+            <Box onClick={handleOpenSurvey} sx={{ padding: '15px', paddingBottom: '10px',backgroundColor: defaultColor?.primaryColor }} >
                 <Box sx={{ display: 'flex' }} >
-                    <Avatar sx={{ bgcolor: '#006DFF', width: 24, height: 24, fontSize: 14 }} alt={survey?.username} src={survey?.image} />
-                    <Typography variant='subtitle1' sx={{ fontSize: 14, marginLeft: '5px', color: '#454545' }} >
+                    <Avatar sx={{ bgcolor: '#006dff', width: 24, height: 24, fontSize: 14 }} alt={survey?.username} src={survey?.image} />
+                    <Typography variant='subtitle1' sx={{ fontSize: 14, marginLeft: '5px', color: '#808080' }} >
                         {new Date(survey?.created_at).toDateString()}
                     </Typography>
                 </Box>
@@ -233,7 +233,7 @@ function SurveyBlock(props: any) {
                     <Box sx={{ display: 'flex' }} >
                         <EqualizerIcon />
                         <Typography
-                            sx={{ fontSize: 14, textDecoration: 'underline', cursor: 'pointer', color: '#454545' }}
+                            sx={{ fontSize: 14, textDecoration: 'underline', cursor: 'pointer', color: '#808080' }}
                             onMouseEnter={handleTextHighlight}
                             onMouseLeave={handleTextUnhighlight}
                         >

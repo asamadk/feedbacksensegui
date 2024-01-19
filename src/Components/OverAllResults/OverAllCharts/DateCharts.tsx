@@ -17,7 +17,7 @@ function DateCharts(props: propsType) {
     return (
         <Box sx={mainContainer} >
             <Box marginBottom={'20px'} >
-                <Typography fontSize={20} color={'#f1f1f1'} paddingBottom={'10px'} >Question : {props?.data?.question}</Typography>
+                <Typography fontSize={20} color={'#f1f1f1'} paddingBottom={'10px'} >{props?.data?.question}</Typography>
             </Box>
             <Typography fontWeight={600} >Answers</Typography>
             {props?.data?.actions?.map((answer: string) => {

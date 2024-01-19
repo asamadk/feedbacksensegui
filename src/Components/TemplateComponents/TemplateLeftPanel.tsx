@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 import { transparentButton } from '../../Styles/ButtonStyle';
 import { ALL_TEMPLATE_KEY } from '../../Utils/Constants';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -23,20 +24,20 @@ const Accordion = styled((props: AccordionProps) => (
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
-        color: '#006DFF',
+        color: '#006dff',
     },
     '& .MuiInput-underline:after': {
-        borderBottomColor: '#006DFF',
+        borderBottomColor: '#006dff',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
             borderColor: '#454545',
         },
         '&:hover fieldset': {
-            borderColor: '#006DFF',
+            borderColor: '#006dff',
         },
         '&.Mui-focused fieldset': {
-            borderColor: '#006DFF',
+            borderColor: '#006dff',
         },
     },
     color: 'white'
@@ -47,6 +48,7 @@ function TemplateLeftPanel(
 ) {
 
     const navigate = useNavigate();
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     const [expanded, setExpanded] = React.useState<string | false>(ALL_TEMPLATE_KEY);
     const handleChange = (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -76,15 +78,15 @@ function TemplateLeftPanel(
     }
 
     return (
-        <Box height={'calc(100vh - 62px)'} padding={'0px 20px'} borderRight={'1px #454545 solid'} >
-            <Box textAlign={'start'}>
-                <IconButton sx={{ marginTop: '10px' }} onClick={handleBackButtonClick}  >
+        <Box height={'calc(100vh - 62px)'} padding={'0px 20px'} borderRight={'1px #454545 solid'} sx={{backgroundColor : defaultColor?.primaryColor}}>
+            <Box textAlign={'start'} display={'flex'} justifyContent={'space-between'}>
+                {/* <IconButton sx={{ marginTop: '10px' }} onClick={handleBackButtonClick}  >
                     <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
-                </IconButton>
-            </Box>
-            <Typography sx={{ textAlign: 'start' }} fontSize={24} color={'white'}>
+                </IconButton> */}
+                <Typography sx={{ textAlign: 'start',marginTop: '10px' }} fontSize={24} color={'white'}>
                 Templates Library
             </Typography>
+            </Box>
             <Typography sx={{ textAlign: 'start' }} color={'#808080'} >
                 Explore a diverse collection of over 90 pre-designed templates, at your fingertips.
             </Typography>
@@ -100,7 +102,7 @@ function TemplateLeftPanel(
                     renderInput={(params) => <CssTextField {...params} label="Search Templates" />}
                 />
             </Box>
-            <Box>
+            <Box sx={{overflowY : 'scroll',height : 'calc(100vh - 340px)'}} >
                 {Array.from(data.entries()).map(([key, value]) => (
                     <Box key={key} >
                         {key === ALL_TEMPLATE_KEY ?

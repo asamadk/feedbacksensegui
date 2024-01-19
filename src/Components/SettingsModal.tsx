@@ -32,7 +32,7 @@ export default function SettingsModal(props: any) {
   const defaultColor = useSelector((state: any) => state.colorReducer);
 
   const changeBackground = (e: any) => {
-    e.target.style.color = '#006DFF';
+    e.target.style.color = '#006dff';
     e.target.style.borderRadius = '5px'
   };
 
@@ -77,7 +77,7 @@ export default function SettingsModal(props: any) {
           onMouseLeave={revertBackground}
           style={singleElementStyle}
           id="Survey-Settings"
-          primary="Survey Settings"
+          primary="Branding"
         />
       </ListItem>
       <ListItem>
@@ -98,6 +98,16 @@ export default function SettingsModal(props: any) {
           id="Invite-Teammates"
           primary="Teammates"
           onClick={() => handleSettingsRouting('/org/teammates')}
+        />
+      </ListItem>
+      <ListItem>
+        <ListItemText
+          onMouseOver={changeBackground}
+          onMouseLeave={revertBackground}
+          style={singleElementStyle}
+          id="Invite-Teammates"
+          primary="Help & Support"
+          onClick={() => handleSettingsRouting('/support')}
         />
       </ListItem>
 

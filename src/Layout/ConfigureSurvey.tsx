@@ -1,44 +1,103 @@
 import { Box, Button, FormControlLabel, Switch, TextField, Typography } from '@mui/material'
 import { styled } from '@mui/system';
 import axios from 'axios';
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { containedButton } from '../Styles/ButtonStyle';
 import { settingLayoutStyle, globalSettingSubContainers } from '../Styles/LayoutStyles';
-import { getSurveyConfigData, saveSurveyConfig } from '../Utils/Endpoints';
+import { getSurveyConfigData, saveSurveyConfig, updateEmbedConfigAPI } from '../Utils/Endpoints';
 import Notification from '../Utils/Notification';
 import { useNavigate, useParams } from 'react-router';
 import FSLoader from '../Components/FSLoader';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs, isDayjs } from 'dayjs';
-import { USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
-import { handleLogout, validateEmail } from '../Utils/FeedbackUtils';
+import { EmbedPositions, USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
+import { ConfigurePageTabList, handleLogout, validateEmail } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 import { userRoleType } from '../Utils/types';
 import { setSurveyConfigRedux } from '../Redux/Reducers/surveyConfigReducer';
 import { useDispatch } from 'react-redux';
+import CustomTabSet from '../Components/CustomTabSet';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
-    color: '#006DFF',
+    color: '#006dff',
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#006DFF',
+    borderBottomColor: '#006dff',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderColor: '#454545',
     },
     '&:hover fieldset': {
-      borderColor: '#006DFF',
+      borderColor: '#006dff',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#006DFF',
+      borderColor: '#006dff',
     },
   },
   color: 'white'
 });
+
+const embedPositionStyle = {
+  border: '1px solid #808080',
+  padding: '20px',
+  borderRadius: '5px',
+  marginTop: '5px',
+  width: '20%',
+  height: '200px',
+  cursor: 'pointer',
+  position: 'relative',
+}
+
+const selectedEmbedPositionStyle = {
+  padding: '20px',
+  borderRadius: '5px',
+  marginTop: '5px',
+  width: '20%',
+  height: '200px',
+  cursor: 'pointer',
+  position: 'relative',
+  border: '4px #006dff solid'
+}
+
+const getEmbedButtonPosition = (
+  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | string,
+  background : string,
+  color : string
+) => {
+  const obj: any = {
+    backgroundColor: background,
+    color: color,
+    borderRadius: '5px',
+    padding: '5px',
+    width: 'fit-content',
+    fontSize: '13px',
+    position: 'absolute',
+    transition: 'all 0.5s ease 0s',
+    transform: 'translateY(-50%) rotate(90deg)'
+  }
+  if (position === 'top-left') {
+    obj['transform-origin'] = 'left bottom';
+    obj.left = '0';
+    obj.top = '20%';
+  } else if (position === 'top-right') {
+    obj['transform-origin'] = 'top right';
+    obj.right = '0';
+    obj.top = '60%';
+  } else if (position === 'bottom-left') {
+    obj['transform-origin'] = 'left bottom';
+    obj.left = '0';
+    obj.top = '50%';
+  } else if (position === 'bottom-right') {
+    obj['transform-origin'] = 'top right';
+    obj.right = '0';
+    obj.top = '90%';
+  }
+  return obj;
+}
 
 function ConfigureSurvey() {
 
@@ -62,14 +121,19 @@ function ConfigureSurvey() {
   const [showStopSurveyDate, setShowStopSurveyDate] = React.useState(false);
   const [showStopSurveyDateData, setShowStopSurveyDateData] = React.useState<string | null>('');
   const [showStopSurveyNumberData, setShowStopSurveyNumberData] = React.useState<string>('');
+  const [embedPositionList, setEmbedPositionList] = useState(EmbedPositions);
   const [loading, setLoading] = React.useState(false);
+  const [selectedColor, setSelectedColor] = useState('#006dff');
+  const [selectedTextColor, setSelectedTextColor] = useState('#ffffff');
+  const [value, setValue] = React.useState(0);
+  const [selectedPosition, setSelectedPosition] = useState<'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'>('top-left');
 
   const userRole: userRoleType = useSelector((state: any) => state.userRole);
   const surveyConfigState = useSelector((state: any) => state.surveyConfig);
 
   const getSurveyConfig = async () => {
     try {
-      if(surveyConfigState == null || surveyConfigState?.survey_id !== surveyId){
+      if (surveyConfigState == null || surveyConfigState?.survey_id !== surveyId) {
         setLoading(true);
         const { data } = await axios.get(getSurveyConfigData(surveyId), { withCredentials: true });
         setLoading(false);
@@ -77,12 +141,12 @@ function ConfigureSurvey() {
           snackbarRef?.current?.show(data?.message, 'error');
           return;
         }
-  
+
         if (data.data != null) {
           dispatch(setSurveyConfigRedux(data.data));
           populateSurveyConfig(data.data);
         }
-      }else{
+      } else {
         populateSurveyConfig(surveyConfigState);
       }
     } catch (error: any) {
@@ -94,6 +158,7 @@ function ConfigureSurvey() {
   }
 
   const populateSurveyConfig = (tempData: any) => {
+    console.log("🚀 ~ file: ConfigureSurvey.tsx:150 ~ populateSurveyConfig ~ tempData:", tempData)
     if (tempData?.response_limit != null && tempData?.response_limit !== 0) {
       setShowStopSurveyNumber(true);
       setShowStopSurveyNumberData(tempData?.response_limit?.toString());
@@ -109,6 +174,28 @@ function ConfigureSurvey() {
       setNotifyUser(true);
       setEmailList(tempData?.emails);
     }
+
+    if(tempData?.widget_position != null){
+      setSelectedPosition(tempData.widget_position);
+      const tmp = JSON.parse(JSON.stringify(embedPositionList));
+      tmp.forEach((t: any) => {
+        if (t.name === tempData.widget_position) {
+          t.selected = true;
+        } else {
+          t.selected = false;
+        }
+      });
+      setEmbedPositionList(tmp);
+    }
+
+    if(tempData?.button_color != null){
+      setSelectedColor(tempData.button_color);
+    }
+
+    if(tempData?.button_text_color != null){
+      setSelectedTextColor(tempData.button_text_color);
+    }
+
   }
 
   const handleSaveClick = async () => {
@@ -202,88 +289,202 @@ function ConfigureSurvey() {
     return true;
   }
 
+  const handleTabChange = (newValue: number) => {
+    setValue(newValue);
+  };
+
+  const GeneralTab = () => {
+    return (
+      <>
+        {
+          value === 0 &&
+          <>
+            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Response notification</Typography>
+              <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+                Would you like to receive notifications when someone fills out the survey?
+              </Typography>
+              <Box textAlign={'start'} >
+                <FormControlLabel
+                  sx={{ color: 'whitesmoke' }}
+                  control={<Switch onChange={(e) => setNotifyUser(e.target.checked)} checked={notifyUser} value={notifyUser} color="info" />}
+                  label="Notify me"
+                />
+              </Box>
+              {
+                notifyUser &&
+                <CssTextField
+                  size='small'
+                  sx={{ input: { color: 'white' } }}
+                  id="outlined-basic"
+                  placeholder='Please enter the emails separated by commas.'
+                  variant="outlined"
+                  style={{ width: '100%', }}
+                  value={emailList}
+                  onChange={(e) => setEmailList(e.target.value)}
+                />
+              }
+            </Box>
+
+            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Responses limit</Typography>
+              <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+                Set the maximum number of responses you'd like to collect with this survey.
+              </Typography>
+              {showStopSurveyNumber === true &&
+                <CssTextField
+                  size='small'
+                  type={'number'}
+                  sx={{ input: { color: 'white' } }}
+                  id="outlined-basic"
+                  placeholder='Enter a number'
+                  variant="outlined"
+                  style={{ width: '100%', }}
+                  value={showStopSurveyNumberData}
+                  onChange={(e) => setShowStopSurveyNumberData(e.target.value)}
+                />
+              }
+            </Box>
+
+            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >End date</Typography>
+              <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+                Set a cut-off date on which this survey will close and stop accepting responses.
+              </Typography>
+              <Box textAlign={'start'} >
+                <FormControlLabel
+                  sx={{ color: 'whitesmoke' }}
+                  control={<Switch onChange={(e) => setShowStopSurveyDate(e.target.checked)} checked={showStopSurveyDate} value={showStopSurveyDate} color="info" />}
+                  label="Stop the survey on a specific date."
+                />
+              </Box>
+              {showStopSurveyDate === true &&
+                <LocalizationProvider size={'small'} dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    sx={{ width: '100%' }}
+                    value={dayjs(showStopSurveyDateData)}
+                    onChange={(newVal: any) => setShowStopSurveyDateData(newVal)}
+                  />
+                </LocalizationProvider>
+              }
+            </Box>
+            <Box textAlign={'end'} >
+              <Button onClick={handleSaveClick} sx={containedButton} style={{ width: 'fit-content' }} >Save</Button>
+            </Box>
+          </>
+        }
+      </>
+    )
+  }
+
+  const handlePositionChangeClick = (id: number) => {
+    const tmp = JSON.parse(JSON.stringify(embedPositionList));
+    tmp.forEach((t: any) => {
+      if (t.id === id) {
+        setSelectedPosition(t.name);
+        t.selected = true;
+      } else {
+        t.selected = false;
+      }
+    });
+    setEmbedPositionList(tmp);
+  }
+
+  const handleWidgetButtonColorChange = (e: any) => {
+    const colorVal = e.target.value;
+    setSelectedColor(colorVal);
+  }
+
+  const handleWidgetButtonTextColorChange = (e: any) => {
+    const colorVal = e.target.value;
+    setSelectedTextColor(colorVal);
+  }
+
+  const handleEmbedSettingSave = async () => {
+    try {
+      const URL = updateEmbedConfigAPI();
+      const saveObj = {
+        position : selectedPosition,
+        buttonColor : selectedColor,
+        textColor : selectedTextColor,
+        surveyId : surveyId
+      }
+      setLoading(true);
+      const {data} = await axios.post(URL,saveObj,{withCredentials : true});
+      setLoading(false);
+      dispatch(setSurveyConfigRedux(data.data));
+      snackbarRef?.current?.show(data?.message, 'success');
+    } catch (error: any) {
+      setLoading(false);
+      snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+      if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        handleLogout();
+      }
+    }
+  }
+
+  const EmbedTab = () => {
+    return (
+      <>
+        {
+          value === 1 && <>
+            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Widget Position</Typography>
+              <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+                Select where would you like to display the Feedback button
+              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
+                {embedPositionList.map(embed =>
+                  <Box
+                    onClick={() => handlePositionChangeClick(embed.id)}
+                    className="current"
+                    sx={embed.selected ? selectedEmbedPositionStyle : embedPositionStyle}
+                  >
+                    <Box sx={getEmbedButtonPosition(embed.name,selectedColor,selectedTextColor)} >Feedback</Box>
+                  </Box>
+                )}
+              </Box>
+            </Box>
+            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Button Color</Typography>
+              <Box sx={{ display: 'flex' }} >
+                <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+                  Select the color of Feedback button
+                </Typography>
+                <Box marginTop={'20px'} marginLeft={'10px'}>
+                  <input onChange={handleWidgetButtonColorChange} type='color' value={selectedColor} />
+                </Box>
+              </Box>
+            </Box>
+            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Text Color</Typography>
+              <Box sx={{ display: 'flex' }} >
+                <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+                  Select the color of Feedback button's text
+                </Typography>
+                <Box marginTop={'20px'} marginLeft={'10px'}>
+                  <input onChange={handleWidgetButtonTextColorChange} type='color' value={selectedTextColor} />
+                </Box>
+              </Box>
+            </Box>
+            <Box textAlign={'end'} >
+              <Button onClick={handleEmbedSettingSave} sx={containedButton} style={{ width: 'fit-content' }} >Save</Button>
+            </Box>
+          </>
+        }
+      </>
+    )
+  }
+
   return (
     <Box sx={{ ...settingLayoutStyle, backgroundColor: defaultColor?.backgroundColor }} >
-
-      <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
-        <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Response notification</Typography>
-        <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
-          Would you like to receive notifications when someone fills out the survey?
-        </Typography>
-        <Box textAlign={'start'} >
-          <FormControlLabel
-            sx={{ color: 'whitesmoke' }}
-            control={<Switch onChange={(e) => setNotifyUser(e.target.checked)} checked={notifyUser} value={notifyUser} color="info" />}
-            label="Notify me"
-          />
-        </Box>
-        {
-          notifyUser &&
-          <CssTextField
-            size='small'
-            sx={{ input: { color: 'white' } }}
-            id="outlined-basic"
-            placeholder='Please enter the emails separated by commas.'
-            variant="outlined"
-            style={{ width: '100%', }}
-            value={emailList}
-            onChange={(e) => setEmailList(e.target.value)}
-          />
-        }
-      </Box>
-
-      <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
-        <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Responses limit</Typography>
-        <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
-          Set the maximum number of responses you'd like to collect with this survey.
-        </Typography>
-        {/* <Box textAlign={'start'} >
-          <FormControlLabel
-            sx={{ color: 'whitesmoke' }}
-            control={<Switch onChange={(e) => setShowStopSurveyNumber(e.target.checked)} checked={showStopSurveyNumber} value={showStopSurveyNumber} color="info" />}
-            label="Stop the survey after collecting a specific number of responses"
-          />
-        </Box> */}
-        {showStopSurveyNumber === true &&
-          <CssTextField
-            size='small'
-            type={'number'}
-            sx={{ input: { color: 'white' } }}
-            id="outlined-basic"
-            placeholder='Enter a number'
-            variant="outlined"
-            style={{ width: '100%', }}
-            value={showStopSurveyNumberData}
-            onChange={(e) => setShowStopSurveyNumberData(e.target.value)}
-          />
-        }
-      </Box>
-
-      <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
-        <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >End date</Typography>
-        <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
-          Set a cut-off date on which this survey will close and stop accepting responses.
-        </Typography>
-        <Box textAlign={'start'} >
-          <FormControlLabel
-            sx={{ color: 'whitesmoke' }}
-            control={<Switch onChange={(e) => setShowStopSurveyDate(e.target.checked)} checked={showStopSurveyDate} value={showStopSurveyDate} color="info" />}
-            label="Stop the survey on a specific date."
-          />
-        </Box>
-        {showStopSurveyDate === true &&
-          <LocalizationProvider size={'small'} dateAdapter={AdapterDayjs}>
-            <DatePicker
-              sx={{ width: '100%' }}
-              value={dayjs(showStopSurveyDateData)}
-              onChange={(newVal: any) => setShowStopSurveyDateData(newVal)}
-            />
-          </LocalizationProvider>
-        }
-      </Box>
-      <Box textAlign={'end'} >
-        <Button onClick={handleSaveClick} sx={containedButton} style={{ width: 'fit-content' }} >Save</Button>
-      </Box>
+      <CustomTabSet
+        tabsetList={ConfigurePageTabList}
+        change={(value: number) => handleTabChange(value)}
+        index={value}
+      ></CustomTabSet>
+      {GeneralTab()}
+      {EmbedTab()}
       <Notification ref={snackbarRef} />
       <FSLoader show={loading} />
     </Box>

@@ -23,17 +23,17 @@ function PlanDetailsTable() {
                                 <TableRow sx={{ backgroundColor: index % 2 === 0 ? '#071011' : '#081213' }} key={feature.name} >
                                     <TableCell>{feature.name}</TableCell>
                                     <TableCell>
-                                        {feature.starter === 'yes' && <CheckIcon sx={{ color: '#006DFF' }} />}
+                                        {feature.starter === 'yes' && <CheckIcon sx={{ color: '#006dff' }} />}
                                         {feature.starter === 'no' && <RemoveIcon />}
                                         {feature.starter !== 'yes' && feature.starter !== 'no' && feature.starter}
                                     </TableCell>
                                     <TableCell>
-                                        {feature.plus === 'yes' && <CheckIcon sx={{ color: '#006DFF' }} />}
+                                        {feature.plus === 'yes' && <CheckIcon sx={{ color: '#006dff' }} />}
                                         {feature.plus === 'no' && <RemoveIcon />}
                                         {feature.plus !== 'yes' && feature.plus !== 'no' && feature.plus}
                                     </TableCell>
                                     <TableCell>
-                                        {feature.business === 'yes' && <CheckIcon sx={{ color: '#006DFF' }} />}
+                                        {feature.business === 'yes' && <CheckIcon sx={{ color: '#006dff' }} />}
                                         {feature.business === 'no' && <RemoveIcon />}
                                         {feature.business !== 'yes' && feature.business !== 'no' && feature.business}
                                     </TableCell>

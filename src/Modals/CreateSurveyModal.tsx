@@ -17,20 +17,20 @@ import { useSelector } from 'react-redux';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
-        color: '#006DFF',
+        color: '#006dff',
     },
     '& .MuiInput-underline:after': {
-        borderBottomColor: '#006DFF',
+        borderBottomColor: '#006dff',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
             borderColor: '#454545',
         },
         '&:hover fieldset': {
-            borderColor: '#006DFF',
+            borderColor: '#006dff',
         },
         '&.Mui-focused fieldset': {
-            borderColor: '#006DFF',
+            borderColor: '#006dff',
         },
     },
     color: 'white'
@@ -154,18 +154,23 @@ function CreateSurveyDefaultScreen(props: any) {
 
     return (
         <Box marginTop={'20px'} marginBottom={'20px'} display={'flex'} justifyContent={'space-around'}>
-            <Box>
-                <IconButton onClick={props.create} sx={{ borderRadius: '10px', marginBottom: '10px' }}>
-                    <ReceiptIcon sx={{ fontSize: '150px' }} />
-                </IconButton>
-                <Typography textAlign={'center'} >Start from scratch</Typography>
+            <Box onClick={props.create} sx={selectorBackground} >
+                <ReceiptIcon sx={{ fontSize: '150px', color: '#006dff', marginBottom: '10px' }} />
+                <Typography textAlign={'center'} color={'#006dff'} >Start from scratch</Typography>
             </Box>
-            <Box>
-                <IconButton onClick={() => navigate('/template')} sx={{ borderRadius: '10px', marginBottom: '10px' }}>
-                    <PostAddIcon sx={{ fontSize: '150px' }} />
-                </IconButton>
-                <Typography textAlign={'center'} >Start from template</Typography>
+            <Box onClick={() => navigate('/template')} sx={selectorBackground} >
+                <PostAddIcon sx={{ fontSize: '150px', color: '#006dff', marginBottom: '10px' }} />
+                <Typography textAlign={'center'} color={'#006dff'} >Start from template</Typography>
             </Box>
         </Box>
     )
+}
+
+const selectorBackground = {
+    background: '#212a2b',
+    padding: '10px',
+    borderRadius: '6px',
+    width: '45%',
+    textAlign: 'center',
+    cursor: 'pointer'
 }

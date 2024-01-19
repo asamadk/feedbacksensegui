@@ -18,10 +18,10 @@ const makeIconsUp = {
 
 const tabsetList = [
     { id: 1, name: 'CREATE' },
-    { id: 2, name: 'DESIGN / PREVIEW' },
+    { id: 2, name: 'DESIGN' },
     { id: 3, name: 'CONFIGURE' },
     { id: 4, name: 'SHARE' },
-    { id: 5, name: 'ANALYZE' },
+    { id: 5, name: 'DASHBOARD' },
 ]
 
 function SurveyDetailHeader(props: any) {

@@ -12,20 +12,20 @@ import { containedButton, outlinedButton } from '../Styles/ButtonStyle';
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
-        color: '#006DFF',
+        color: '#006dff',
     },
     '& .MuiInput-underline:after': {
-        borderBottomColor: '#006DFF',
+        borderBottomColor: '#006dff',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
             borderColor: '#454545',
         },
         '&:hover fieldset': {
-            borderColor: '#006DFF',
+            borderColor: '#006dff',
         },
         '&.Mui-focused fieldset': {
-            borderColor: '#006DFF',
+            borderColor: '#006dff',
         },
     },
     color: 'white'

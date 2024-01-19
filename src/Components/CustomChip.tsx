@@ -6,9 +6,9 @@ function CustomChip(props : any) {
         <>
         {
             props.status === 'success' ? 
-        <Box sx={{ border: '1px #006DFF solid', color: '#006DFF', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
+        <Box sx={{ border: '1px #006dff solid', color: '#006dff', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
             Published
-        </Box> : <Box sx={{ border: '1px #454545 solid', color: '#454545', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
+        </Box> : <Box sx={{ border: '1px #808080 solid', color: '#808080', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
             Unpublished
         </Box>
         }

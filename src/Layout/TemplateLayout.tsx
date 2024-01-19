@@ -131,7 +131,7 @@ function TemplateLayout() {
 
     return (
         <Box height={'calc(100vh - 58px)'} display={'flex'} padding={'0px'}>
-            <Box width={'25%'} >
+            <Box width={'20%'} >
                 <TemplateLeftPanel
                     data={categoryData}
                     filter={handleFilterTemplates}
@@ -139,7 +139,7 @@ function TemplateLayout() {
                     templates={templates}
                 />
             </Box>
-            <Box width={'75%'} >
+            <Box width={'80%'} >
                 <TemplateRightPanel
                     header={`${selectedCategory} ${selectedCategory === ALL_TEMPLATE_KEY ? '' : '/'} ${selectedSubCategory}`}
                     templates={filteredTemplates}

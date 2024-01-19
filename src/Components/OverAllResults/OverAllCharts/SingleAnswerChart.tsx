@@ -20,7 +20,7 @@ function SingleAnswerChart(props: propsType) {
 
     return (
         <Box sx={mainContainer} >
-            <Typography fontSize={20} color={'#f1f1f1'} paddingBottom={'10px'} >Question : {props?.data?.question}</Typography>
+            <Typography fontSize={20} color={'#f1f1f1'} paddingBottom={'10px'} >{props?.data?.question}</Typography>
             <SingleAnswerBarChart data={props.data} id={props.id} />
             <Typography fontWeight={600} >Answers</Typography>
             {

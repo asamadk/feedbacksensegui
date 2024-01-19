@@ -22,7 +22,7 @@ function OverTimeSentimentChart(props : any) {
                             />
                             <Legend />
                             <Line type="monotone" dataKey="Positive" stroke="#04FF04" />
-                            <Line type="monotone" dataKey="Neutral" stroke="#006DFF" />
+                            <Line type="monotone" dataKey="Neutral" stroke="#006dff" />
                             <Line type="monotone" dataKey="Negative" stroke="#FF0000" />
                         </LineChart>
                     </ResponsiveContainer>

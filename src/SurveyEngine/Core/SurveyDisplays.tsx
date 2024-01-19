@@ -1,4 +1,4 @@
-import { Box, ThemeProvider, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
@@ -10,6 +10,7 @@ import { LIVE_SURVEY_USER_ID, TEMPLATE_KEY } from '../../Utils/Constants';
 import SurveyEndPage from './SurveyEndPage';
 import { CoreUtils } from '../CoreUtils/CoreUtils';
 import { getSurveyUserInformation } from '../../Utils/FeedbackUtils';
+import { useSearchParams } from 'react-router-dom';
 
 type propType = {
     mode: 'test' | 'live',
@@ -20,6 +21,7 @@ type propType = {
 function SurveyDisplays({ mode, templateId, source }: propType) {
 
     const { effectiveSurveyId } = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     let initialized = false;
 
@@ -31,11 +33,11 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
     const [currentSurvey, setCurrentSurvey] = useState<any>();
     const [currentPageData, setCurrentPagedata] = useState<any>();
     const [imgData, setImgData] = useState<string | null>(null);
+    const [showEnd, setShowEnd] = useState(false);
     const [displayMssg, setDisplayMssg] = useState({
         message: '',
         type: 'success'
     });
-    const [showEnd, setShowEnd] = useState(false);
 
     useEffect(() => {
         if (initialized === false) {
@@ -96,6 +98,9 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
 
     const checkIfSurveyAlreadyTaken = (): boolean => {
         if (mode === 'test') { return false; }
+        const embed : string | null = searchParams.get('embed');
+        if(embed === 'true'){return false;}
+        
         if (localStorage.getItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`) != null) {
             setDisplayMssg({
                 message: 'You have already taken this survey.',

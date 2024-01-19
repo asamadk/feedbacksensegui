@@ -76,7 +76,7 @@ function OverAllAIAnalysis(props: propType) {
                     paddingLeft={'10px'}
                     fontSize={'14px'}
                     fontWeight={'600'}
-                    color={'#006DFF'} >
+                    color={'#006dff'} >
                     AI analysis results
                 </Typography>
             </Box>

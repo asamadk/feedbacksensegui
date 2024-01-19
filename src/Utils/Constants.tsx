@@ -13,17 +13,17 @@ export const ALL_TEMPLATE_KEY = 'All Templates';
 export const TEMPLATE_KEY = 'Templates';
 
 export const componentName = {
-    SUBSCRIPTION : 'SUBSCRIPTION',
-    BILLING_INFO_HOME : 'BILLING_INFO_HOME',
-    TEAMMATES_INVITE : 'TEAMMATES_INVITE',
-    MANAGE_USER : 'MANAGE_USER',
-    DELETE_USER : 'DELETE_USER',
-    CREATE_SURVEY_BUTTON : 'CREATE_SURVEY_BUTTON',
-    SAVE_SURVEY_BUTTON : 'SAVE_SURVEY_BUTTON',
-    DELETE_SURVEY : 'DELETE_SURVEY',
-    DISABLE_SURVEY : 'DISABLE_SURVEY',
-    DELETE_SURVEY_RESPONSE : 'DELETE_SURVEY_RESPONSE',
-    UPLOAD_LOGO : 'UPLOAD_LOGO'
+    SUBSCRIPTION: 'SUBSCRIPTION',
+    BILLING_INFO_HOME: 'BILLING_INFO_HOME',
+    TEAMMATES_INVITE: 'TEAMMATES_INVITE',
+    MANAGE_USER: 'MANAGE_USER',
+    DELETE_USER: 'DELETE_USER',
+    CREATE_SURVEY_BUTTON: 'CREATE_SURVEY_BUTTON',
+    SAVE_SURVEY_BUTTON: 'SAVE_SURVEY_BUTTON',
+    DELETE_SURVEY: 'DELETE_SURVEY',
+    DISABLE_SURVEY: 'DISABLE_SURVEY',
+    DELETE_SURVEY_RESPONSE: 'DELETE_SURVEY_RESPONSE',
+    UPLOAD_LOGO: 'UPLOAD_LOGO'
 }
 
 export const ignoreAuthPaths = [
@@ -35,131 +35,85 @@ export const ignoreAuthPaths = [
 export const getBackgrounds = (): any[] => {
     let count = 0;
     return [
-        {
-            id: count++,
-            name: 'Plain',
-            value: 'plain'
-        },
-        {
-            id: count++,
-            name: 'Dark',
-            value: 'dark-plain'
-        },
-        {
-            id: count++,
-            name: 'Clouds',
-            value: 'cloud-waves'
-        },
-        {
-            id: count++,
-            name: 'Current',
-            value: 'current'
-        },
-        {
-            id: count++,
-            name: 'Rainbow',
-            value: 'rainbow'
-        },
-        {
-            id: count++,
-            name: 'Ocean',
-            value: 'ocean'
-        },
-        {
-            id: count++,
-            name: 'Sea',
-            value: 'sea'
-        },
-        {
-            id: count++,
-            name: 'Sky',
-            value: 'sky'
-        },
-        {
-            id: count++,
-            name: 'Volcano',
-            value: 'volcano'
-        },
-        {
-            id: count++,
-            name: 'Dusk',
-            value: 'dusk'
-        },
-        {
-            id: count++,
-            name: 'Core',
-            value: 'core'
-        },
-        {
-            id: count++,
-            name: 'Candy',
-            value: 'candy'
-        },
-        {
-            id: count++,
-            name: 'Honey Comb',
-            value: 'honeycomb'
-        },
-        {
-            id: count++,
-            name: 'Honey Comb Border',
-            value: 'honeycombBorder'
-        },
-        {
-            id: count++,
-            name: 'Matrix',
-            value: 'matrixPattern'
-        },
-        {
-            id: count++,
-            name: 'Dotted',
-            value: 'dot'
-        },
-        {
-            id: count++,
-            name: 'Wavy',
-            value: 'wavy'
-        },
-        {
-            id: count++,
-            name: 'ZigZag',
-            value: 'ZigZag'
-        },
-        {
-            id: count++,
-            name: 'Circles',
-            value: 'circles'
-        },
-        {
-            id: count++,
-            name: 'Diagonal 1',
-            value: 'diagonal1'
-        },
-        {
-            id: count++,
-            name: 'Diagonal 2',
-            value: 'diagonal2'
-        },
-        {
-            id: count++,
-            name: 'Lines',
-            value: 'lines'
-        },
-        {
-            id: count++,
-            name: 'Vertical Lines',
-            value: 'vertical-lines'
-        },
-        {
-            id: count++,
-            name: 'Waves',
-            value: 'waves'
-        },
-        {
-            id: count++,
-            name: 'Radio waves',
-            value: 'radio-waves'
-        },
+        { id: count++, name: 'Plain', value: 'plain' },
+        { id: count++, name: 'Color0', value: 'color0-plain' },
+        { id: count++, name: 'Color1', value: 'color1-plain' },
+        { id: count++, name: 'Color2', value: 'color2-plain' },
+        { id: count++, name: 'Color3', value: 'color3-plain' },
+        { id: count++, name: 'Color4', value: 'color4-plain' },
+        { id: count++, name: 'Color5', value: 'color5-plain' },
+        { id: count++, name: 'Color6', value: 'color6-plain' },
+        { id: count++, name: 'Color7', value: 'color7-plain' },
+        { id: count++, name: 'Color8', value: 'color8-plain' },
+        { id: count++, name: 'Color9', value: 'color9-plain' },
+        { id: count++, name: 'Color10', value: 'color10-plain' },
+        { id: count++, name: 'Color11', value: 'color11-plain' },
+        { id: count++, name: 'Color12', value: 'color12-plain' },
+        { id: count++, name: 'Color13', value: 'color13-plain' },
+        { id: count++, name: 'Color14', value: 'color14-plain' },
+        { id: count++, name: 'Color15', value: 'color15-plain' },
+        { id: count++, name: 'Color16', value: 'color16-plain' },
+        { id: count++, name: 'Color17', value: 'color17-plain' },
+        { id: count++, name: 'Color18', value: 'color18-plain' },
+        { id: count++, name: 'Color19', value: 'color19-plain' },
+        { id: count++, name: 'Color20', value: 'color20-plain' },
+        { id: count++, name: 'Color21', value: 'color21-plain' },
+        { id: count++, name: 'Color22', value: 'color22-plain' },
+        { id: count++, name: 'Color23', value: 'color23-plain' },
+        { id: count++, name: 'Color24', value: 'color24-plain' },
+        { id: count++, name: 'Color25', value: 'color25-plain' },
+        { id: count++, name: 'Color26', value: 'color26-plain' },
+        { id: count++, name: 'Color27', value: 'color27-plain' },
+        { id: count++, name: 'Color28', value: 'color28-plain' },
+        { id: count++, name: 'Color29', value: 'color29-plain' },
+        { id: count++, name: 'Color30', value: 'color30-plain' },
+        { id: count++, name: 'Color31', value: 'color31-plain' },
+        { id: count++, name: 'Color32', value: 'color32-plain' },
+        { id: count++, name: 'Color33', value: 'color33-plain' },
+        { id: count++, name: 'Color34', value: 'color34-plain' },
+        { id: count++, name: 'Color35', value: 'color35-plain' },
+        { id: count++, name: 'Color36', value: 'color36-plain' },
+        { id: count++, name: 'Color37', value: 'color37-plain' },
+        { id: count++, name: 'Color38', value: 'color38-plain' },
+        { id: count++, name: 'Color39', value: 'color39-plain' },
+        { id: count++, name: 'Color40', value: 'color40-plain' },
+        { id: count++, name: 'Color41', value: 'color41-plain' },
+        { id: count++, name: 'Color42', value: 'color42-plain' },
+        { id: count++, name: 'Color43', value: 'color43-plain' },
+        { id: count++, name: 'Color44', value: 'color44-plain' },
+        { id: count++, name: 'Color45', value: 'color45-plain' },
+        { id: count++, name: 'Color46', value: 'color46-plain' },
+        { id: count++, name: 'Color47', value: 'color47-plain' },
+        { id: count++, name: 'Color48', value: 'color48-plain' },
+        { id: count++, name: 'Color49', value: 'color49-plain' },
+        { id: count++, name: 'Color50', value: 'color50-plain' },
+        { id: count++, name: 'Color51', value: 'color51-plain' },
+        { id: count++, name: 'Color52', value: 'color52-plain' },
+        { id: count++, name: 'Color53', value: 'color53-plain' },
+        { id: count++, name: 'Dark', value: 'dark-plain' },
+        { id: count++, name: 'Clouds', value: 'cloud-waves' },
+        { id: count++, name: 'Current', value: 'current' },
+        { id: count++, name: 'Rainbow', value: 'rainbow' },
+        { id: count++, name: 'Ocean', value: 'ocean' },
+        { id: count++, name: 'Sea', value: 'sea' },
+        { id: count++, name: 'Sky', value: 'sky' },
+        { id: count++, name: 'Volcano', value: 'volcano' },
+        { id: count++, name: 'Dusk', value: 'dusk' },
+        { id: count++, name: 'Core', value: 'core' },
+        { id: count++, name: 'Candy', value: 'candy' },
+        { id: count++, name: 'Honey Comb', value: 'honeycomb' },
+        { id: count++, name: 'Honey Comb Border', value: 'honeycombBorder' },
+        { id: count++, name: 'Matrix', value: 'matrixPattern' },
+        { id: count++, name: 'Dotted', value: 'dot' },
+        { id: count++, name: 'Wavy', value: 'wavy' },
+        { id: count++, name: 'ZigZag', value: 'ZigZag' },
+        { id: count++, name: 'Circles', value: 'circles' },
+        { id: count++, name: 'Diagonal 1', value: 'diagonal1' },
+        { id: count++, name: 'Diagonal 2', value: 'diagonal2' },
+        { id: count++, name: 'Lines', value: 'lines' },
+        { id: count++, name: 'Vertical Lines', value: 'vertical-lines' },
+        { id: count++, name: 'Waves', value: 'waves' },
+        { id: count++, name: 'Radio waves', value: 'radio-waves' },
     ]
 }
 
@@ -179,9 +133,9 @@ export const getColorSchemes = (): any[] => {
             id: count++,
             header: 'Off White',
             text: 'Trending',
-            color: ['#ffffff', '#C9EEFF'],
+            color: ['#ffffff', '#000000'],
             textColor: '#454545',
-            shade: '#b3b3b3'
+            shade: 'hsl(0deg 0% 88.76%)'
         },
         {
             id: count++,
@@ -437,4 +391,27 @@ export const smileyEmojiName = [
     SMILEY_NEUTRAL,
     SMILEY_HAPPY,
     SMILEY_EXTREMELY_HAPPY
+]
+
+export const EmbedPositions = [
+    {
+        id: 1,
+        name: 'top-left',
+        selected: true
+    },
+    {
+        id: 2,
+        name: 'top-right',
+        selected: false
+    },
+    {
+        id: 3,
+        name: 'bottom-left',
+        selected: false
+    },
+    {
+        id: 4,
+        name: 'bottom-right',
+        selected: false
+    },
 ]

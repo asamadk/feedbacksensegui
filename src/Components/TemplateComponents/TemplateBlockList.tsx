@@ -5,7 +5,7 @@ import TemplateBlock from './TemplateBlock'
 function TemplateBlockList({ templates }: { templates: any[] }) {
     return (
         <Grid
-            sx={{ marginTop: '10px' }}
+            sx={{ marginTop: '10px',overflowY : 'scroll',height : 'calc(100vh - 150px)' }}
             container
             spacing={1}
         >

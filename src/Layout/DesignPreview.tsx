@@ -119,6 +119,7 @@ function DesignPreview() {
                         className={selectedBackground?.value}
                         width={devices === 'phone' ? '40%' : '100%'}
                         height={'calc(100vh - 134px)'}
+                        sx={{transition: 'all 0.5s ease 0s'}}
                     >
                         <SelectedThemeTest selectedTheme={selectedTheme} />
                         <PoweredBy />
@@ -146,7 +147,6 @@ function SelectedThemeTest({ selectedTheme }: any) {
         padding: '12px',
         backgroundColor: selectedTheme?.shade,
         color: selectedTheme?.color[0],
-        // paddingBottom: '40px',
         margin: 'auto'
     }
 

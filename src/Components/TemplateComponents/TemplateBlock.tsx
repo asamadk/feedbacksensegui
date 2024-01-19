@@ -28,14 +28,14 @@ function TemplateBlock({ template }: any) {
         <Box
             onMouseEnter={onHoverStart}
             onMouseLeave={onHoverEnd}
-            sx={{ margin: '10px', borderRadius: '10px', border: '1px #454545 solid', backgroundColor: defaultColor?.backgroundColor, cursor: 'pointer'}}
+            sx={{ margin: '10px', borderRadius: '6px', border: '1px #454545 solid', backgroundColor: defaultColor?.backgroundColor, cursor: 'pointer'}}
             onClick={() => handleClickTemplateDetails(template?.id)}
         >
-            <Box sx={{ backgroundColor: '#006dff', borderRadius: '10px 10px 0px 0px' }} padding={'15px'} >
+            <Box sx={{ backgroundColor: '#006dff', borderRadius: '6px 6px 0px 0px' }} padding={'15px'} >
                 <Typography
                     textAlign={'start'}
                     fontSize={14}
-                    color={'white'}
+                    color={'#f1f1f1'}
                 >
                     {`${template?.name?.substring(0, 35)} ${template?.name.length > 35 ? '...' : ''}`}
                 </Typography>
@@ -45,7 +45,7 @@ function TemplateBlock({ template }: any) {
                 <Typography
                     textAlign={'start'}
                     fontSize={14}
-                    color={'white'}
+                    color={'gray'}
                 >
                     {`${template?.description?.substring(0, 80)} ${template?.description?.length > 80 ? '...' : ''}`}
                 </Typography>

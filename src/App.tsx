@@ -29,6 +29,7 @@ import { ignoreAuthPaths } from './Utils/Constants';
 import { setUserRole } from './Redux/Actions/userRoleAction';
 import { useDispatch } from 'react-redux';
 import { setCurrentUsers } from './Redux/Reducers/currentUserReducer';
+import Support from './Layout/Support';
 
 function App() {
 
@@ -158,6 +159,10 @@ function App() {
             <Route
               path='/upgrade/plan'
               element={user ? <UpgradeSubscription /> : <Navigate to={'/login'} />}
+            />
+            <Route
+              path='/support'
+              element={user ? <Support /> : <Navigate to={'/login'} />}
             />
             <Route
               path='/user/create/organization'

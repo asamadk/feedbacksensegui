@@ -158,7 +158,7 @@ function OrgTeamMatesSettings() {
     return (
       <Box sx={singleUserContainer(defaultColor?.primaryColor)} >
         <Box display={'flex'} >
-          <Avatar sx={{ bgcolor: '#006DFF', width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
+          <Avatar sx={{ bgcolor: '#006dff', width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
           <Box textAlign={'start'} >
             <Typography variant='h6' color={'white'}>{user?.name}</Typography>
             <Typography fontSize={'13px'} color={'#808080'} >{user?.email}</Typography>

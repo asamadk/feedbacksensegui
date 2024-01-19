@@ -101,7 +101,7 @@ function OverAllResultChart(props: propsType) {
             <Box display={'flex'} justifyContent={'space-between'} >
                 <Typography sx={mainTextStyle}>Response</Typography>
                 {/* <IconButton sx={iconStyle} onClick={handleDownload} size='small' aria-label="add">
-                    <DownloadIcon sx={{color : '#006DFF'}} />
+                    <DownloadIcon sx={{color : '#006dff'}} />
                 </IconButton> */}
             </Box>
             <Divider sx={{ borderTop: '1px #454545 solid', marginBottom: '20px' }} />
@@ -115,7 +115,7 @@ function OverAllResultChart(props: propsType) {
                         />
                         {/* <CartesianGrid strokeDasharray="0" stroke="#1e1e1e" /> */}
                         <XAxis dataKey="date" />
-                        <Bar barSize={40} dataKey="Response" fill="#006DFF" />
+                        <Bar barSize={40} dataKey="Response" fill="#006dff" />
                     </BarChart>
                 </ResponsiveContainer>
             </Box>

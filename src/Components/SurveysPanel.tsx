@@ -32,20 +32,20 @@ const buttonContainerStyles = {
 
 const CssTextField = styled(TextField)({
     '& label.Mui-focused': {
-        color: '#006DFF',
+        color: '#006dff',
     },
     '& .MuiInput-underline:after': {
-        borderBottomColor: '#006DFF',
+        borderBottomColor: '#006dff',
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
             borderColor: '#454545',
         },
         '&:hover fieldset': {
-            borderColor: '#006DFF',
+            borderColor: '#006dff',
         },
         '&.Mui-focused fieldset': {
-            borderColor: '#006DFF',
+            borderColor: '#006dff',
         },
     },
 });
@@ -67,6 +67,7 @@ function SurveysPanel(props: any) {
     const [forceRerender, setForceRerender] = React.useState(false);
     const userRole: userRoleType = useSelector((state: any) => state.userRole);
     const userState = useSelector((state: any) => state.users);
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     let initialized = false;
 
@@ -264,70 +265,72 @@ function SurveysPanel(props: any) {
                     :
                     <Box sx={{ padding: '15px 20px' }} >
                         <Typography sx={{ textAlign: 'start' }} variant='h5' title={props?.folder}>
-                            {props?.folder?.substring(0,15)}
-                            {props?.folder?.length > 15 ? '...' : ''}
+                            {props?.folder?.substring(0, 100)}
+                            {props?.folder?.length > 100 ? '...' : ''}
                         </Typography>
-                        <Box sx={buttonContainerStyles} >
-                            <Box>
-                                {/* {
-                                    CoreUtils.isComponentVisible(userRole, Constants.componentName.CREATE_SURVEY_BUTTON) &&
-                                    <Tooltip title='Integration Hub' >
-                                        <IconButton sx={{marginBottom : '5px',marginRight : '10px'}} >
-                                            <AppsIcon  
-                                                sx={{fontSize : 35,color : '#006dff'}} 
-                                            />
-                                        </IconButton>
-                                    </Tooltip>
-                                } */}
-                                {
-                                    CoreUtils.isComponentVisible(userRole, Constants.componentName.CREATE_SURVEY_BUTTON) &&
+                        <Box >
+                            <Box sx={buttonContainerStyles} >
+                                <Box>
+                                    {/* {
+                                        CoreUtils.isComponentVisible(userRole, Constants.componentName.CREATE_SURVEY_BUTTON) &&
+                                        <Tooltip title='Integration Hub' >
+                                            <IconButton sx={{marginBottom : '5px',marginRight : '10px'}} >
+                                                <AppsIcon  
+                                                    sx={{fontSize : 35,color : '#006dff'}} 
+                                                />
+                                            </IconButton>
+                                        </Tooltip>
+                                    } */}
+                                    {
+                                        CoreUtils.isComponentVisible(userRole, Constants.componentName.CREATE_SURVEY_BUTTON) &&
+                                        <Button
+                                            sx={ButtonStyles.containedButton}
+                                            style={{ width: 'fit-content', marginBottom: '15px', marginRight: '10px', textTransform: 'none' }}
+                                            startIcon={<AddIcon />}
+                                            variant='contained'
+                                            onClick={handleCreateNewSurvey}
+                                        >
+                                            Create new survey
+                                        </Button>
+                                    }
                                     <Button
-                                        sx={ButtonStyles.containedButton}
+                                        onClick={() => navigate('/template')}
+                                        sx={ButtonStyles.outlinedButton}
+                                        startIcon={<PostAddIcon />}
                                         style={{ width: 'fit-content', marginBottom: '15px', marginRight: '10px', textTransform: 'none' }}
-                                        startIcon={<AddIcon />}
-                                        variant='contained'
-                                        onClick={handleCreateNewSurvey}
                                     >
-                                        Create new survey
+                                        Survey Templates
                                     </Button>
-                                }
-                                <Button
-                                    onClick={() => navigate('/template')}
-                                    sx={ButtonStyles.outlinedButton}
-                                    startIcon={<PostAddIcon />}
-                                    style={{ width: 'fit-content', marginBottom: '15px', marginRight: '10px', textTransform: 'none' }}
-                                >
-                                    Survey Templates
-                                </Button>
-                            </Box>
-                            <Box marginTop={'9px'} >
-                                <Select
-                                    onChange={handleUserChange}
-                                    sx={{ ...muiSelectStyle, width: '150px' }}
-                                    value={selectedUser}
-                                    size='small'
-                                >
-                                    <MenuItem value={'0'}>All Users</MenuItem>
-                                    {userState.map((user: any) => {
-                                        return (
-                                            <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>
-                                        );
-                                    })}
-                                </Select>
-                                <CssTextField
-                                    onChange={handleSearch}
-                                    value={searchText}
-                                    size='small'
-                                    sx={{ input: { color: 'white' } }}
-                                    placeholder='Search surveys and folders..'
-                                    style={{ width: '250px', marginLeft: '10px' }}
-                                    InputProps={{
-                                        endAdornment: <SearchIcon sx={{ color: '#f1f1f1', paddingLeft: '5px' }} />
-                                    }}
-                                />
+                                </Box>
+                                <Box marginTop={'9px'} >
+                                    <Select
+                                        onChange={handleUserChange}
+                                        sx={{ ...muiSelectStyle, width: '150px' }}
+                                        value={selectedUser}
+                                        size='small'
+                                    >
+                                        <MenuItem value={'0'}>All Users</MenuItem>
+                                        {userState.map((user: any) => {
+                                            return (
+                                                <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>
+                                            );
+                                        })}
+                                    </Select>
+                                    <CssTextField
+                                        onChange={handleSearch}
+                                        value={searchText}
+                                        size='small'
+                                        sx={{ input: { color: 'white' } }}
+                                        placeholder='Search surveys and folders..'
+                                        style={{ width: '250px', marginLeft: '10px' }}
+                                        InputProps={{
+                                            endAdornment: <SearchIcon sx={{ color: '#f1f1f1', paddingLeft: '5px' }} />
+                                        }}
+                                    />
+                                </Box>
                             </Box>
                         </Box>
-                        <div style={{ border: '0.5px #454545 solid', marginTop: '10px' }} />
+                        {/* <div style={{ border: '0.5px #454545 solid', marginTop: '10px' }} /> */}
                         <Grid style={{ marginTop: '20px', overflowY: 'scroll', height: 'calc(100vh - 230px)' }} container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                             {surveys.map((survey: any) => (
                                 <Grid item xs={2} sm={4} md={4} key={survey.id}>
@@ -356,7 +359,7 @@ export default SurveysPanel
 const containedButtonStyle = {
     marginTop: '10px',
     color: '#f1f1f1',
-    backgroundColor: '#006DFF',
+    backgroundColor: '#006dff',
     "&.MuiButtonBase-root:hover": {
         bgcolor: "#004cb3"
     }

@@ -71,7 +71,7 @@ function Login() {
             <Box sx={{ ...subContainerStyle, backgroundColor: defaultColor?.backgroundColor }} >
                 <Typography sx={{ color: '#f1f1f1', fontSize: '25px', marginTop: '30%' }} >
                     Welcome to
-                    <span style={{ color: '#006DFF', marginLeft: '5px' }} >Feedback</span>Sense
+                    <span style={{ color: '#006dff', marginLeft: '5px' }} >Feedback</span>Sense
                 </Typography>
                 <Box sx={{ width: '250px', margin: 'auto', paddingTop: '20px' }} >
                     <GoogleSignInButton onClick={googleAuth} />
