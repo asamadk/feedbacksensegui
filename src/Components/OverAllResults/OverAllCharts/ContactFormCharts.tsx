@@ -1,10 +1,11 @@
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { colorPalette } from '../../../Utils/Constants';
 
 const mainContainer = {
   marginTop: '20px',
-  color: '#f1f1f1',
+  color: colorPalette.darkBackground,
   textAlign: 'start',
   padding: '20px'
 };
@@ -19,8 +20,8 @@ function ContactFormCharts(props: PropsType) {
     <Box sx={mainContainer}>
       <ContactResultTable data={props.data} />
       <Box marginTop={'20px'}>
-        <Typography color={'#808080'}>
-          Total: <span style={{ color: '#f1f1f1' }}>{props?.data?.contactInfoRow?.length} response</span>
+        <Typography color={colorPalette.darkBackground}>
+          Total: <span style={{ color: colorPalette.fsGray }}>{props?.data?.contactInfoRow?.length} response</span>
         </Typography>
       </Box>
     </Box>
@@ -53,7 +54,7 @@ function ContactResultTable({ data }: any) {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-    <TableContainer sx={{backgroundColor : defaultColor?.primaryColor,border :'none'}} >
+    <TableContainer sx={{backgroundColor : colorPalette.textSecondary,border :'none'}} >
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow >
@@ -92,7 +93,7 @@ function ContactResultTable({ data }: any) {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{background : defaultColor?.primaryColor}}
+        sx={{background : colorPalette.textSecondary}}
       />
     </TableContainer>
   );

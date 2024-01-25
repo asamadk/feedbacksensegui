@@ -12,27 +12,10 @@ import { CopyBlock, dracula } from 'react-code-blocks';
 import { nord } from 'react-code-blocks';
 import CustomTabSet from '../Components/CustomTabSet';
 import { ConfigurePageTabList } from '../Utils/FeedbackUtils';
+import { textFieldStyle } from '../Styles/InputStyles';
+import { colorPalette } from '../Utils/Constants';
 
-const CssTextField = styled(TextField)({
-  '& label.Mui-focused': {
-    color: '#006dff',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: '#006dff',
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#454545',
-    },
-    '&:hover fieldset': {
-      borderColor: '#006dff',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#006dff',
-    },
-  },
-  color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 function ShareSurvey() {
 
@@ -96,13 +79,13 @@ function ShareSurvey() {
   }
 
   return (
-    <Box sx={{ overflowY: 'scroll', padding: '50px 30px' }} >
-      <Box sx={{ border: '1px #454545 solid', borderRadius: '5px', backgroundColor: defaultColor?.primaryColor }} >
-        <Box sx={{ textAlign: 'start', padding: '15px', borderBottom: '1px #454545 solid' }} >
-          <Typography sx={{ color: '#f1f1f1', fontSize: '20px' }} >Survey Link</Typography>
+    <Box sx={{ overflowY: 'scroll', padding: '50px 30px',background : colorPalette.textSecondary }} >
+      <Box sx={{ borderRadius: '5px', backgroundColor: colorPalette.background,boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
+        <Box sx={{ textAlign: 'start', padding: '15px' }} >
+          <Typography sx={{ color: colorPalette.darkBackground, fontSize: '20px' }} >Survey Link</Typography>
         </Box>
         <Box sx={{ padding: '20px', textAlign: 'start' }} >
-          <Typography sx={{ color: '#808080', fontSize: '16', marginBottom: '10px' }} >Share this link with anyone you want and start getting responses to your survey.</Typography>
+          <Typography sx={{ color: colorPalette.fsGray, fontSize: '16', marginBottom: '10px' }} >Share this link with anyone you want and start getting responses to your survey.</Typography>
           <Box sx={{ display: 'flex' }} >
             <Button
               startIcon={<ContentCopyIcon />}
@@ -115,7 +98,7 @@ function ShareSurvey() {
             </Button>
             <CssTextField
               size='small'
-              sx={{ input: { color: 'white' } }}
+              sx={{ input: { color: colorPalette.darkBackground } }}
               id="outlined-basic"
               value={getShareSurveyLink(window.location.host, surveyId)}
               variant="outlined"
@@ -125,12 +108,12 @@ function ShareSurvey() {
         </Box>
       </Box>
 
-      <Box sx={{ border: '1px #454545 solid', borderRadius: '5px', backgroundColor: defaultColor?.primaryColor, marginTop: '20px' }} >
-        <Box sx={{ textAlign: 'start', padding: '15px', borderBottom: '1px #454545 solid' }} >
-          <Typography sx={{ color: '#f1f1f1', fontSize: '20px' }} >Embed</Typography>
+      <Box sx={{ borderRadius: '5px', backgroundColor: colorPalette.background, marginTop: '20px',boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
+        <Box sx={{ textAlign: 'start', padding: '15px'}} >
+          <Typography sx={{ color: colorPalette.darkBackground, fontSize: '20px' }} >Embed</Typography>
         </Box>
         <Box sx={{ padding: '20px', textAlign: 'center' }} >
-          <Typography sx={{ color: '#808080', fontSize: '16', marginBottom: '10px', textAlign: 'start' }} >
+          <Typography sx={{ color: colorPalette.fsGray, fontSize: '16', marginBottom: '10px', textAlign: 'start' }} >
             Copy & Paste the code before the body tag.
           </Typography>
         </Box>
@@ -139,7 +122,7 @@ function ShareSurvey() {
             <CopyBlock
               text={integrationCode}
               language={'html'}
-              theme={nord}
+              theme={'light'}
               codeBlock
               wrapLines
             />
@@ -148,9 +131,9 @@ function ShareSurvey() {
       </Box>
 
       {/* qr code */}
-      <Box sx={{ border: '1px #454545 solid', borderRadius: '5px', backgroundColor: defaultColor?.primaryColor, marginTop: '20px' }} >
-        <Box sx={{ textAlign: 'start', padding: '15px', borderBottom: '1px #454545 solid' }} >
-          <Typography sx={{ color: '#f1f1f1', fontSize: '20px' }} >QR Code</Typography>
+      <Box sx={{ borderRadius: '5px', backgroundColor: colorPalette.background, marginTop: '20px',boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
+        <Box sx={{ textAlign: 'start', padding: '15px'}} >
+          <Typography sx={{ color: colorPalette.darkBackground, fontSize: '20px' }} >QR Code</Typography>
         </Box>
         <Box sx={{ padding: '20px', textAlign: 'center' }} >
           <Typography sx={{ color: '#808080', fontSize: '16', marginBottom: '10px' }} >

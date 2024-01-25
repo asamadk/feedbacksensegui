@@ -10,6 +10,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { getDateWithDuration } from '../Utils/FeedbackUtils';
 import CustomTooltip from '../Components/CustomTooltip';
+import { colorPalette } from '../Utils/Constants';
 
 function DateRangeModal(props: any) {
 
@@ -81,8 +82,8 @@ function DateRangeModal(props: any) {
                                 <Button onClick={() => handleChangeDuration(duration.value)} sx={transparentButton} >
                                     {
                                         selectedDuration === duration.value ?
-                                            <Typography color={'#006dff'} >{duration.label}</Typography> :
-                                            <Typography>{duration.label}</Typography>
+                                            <Typography color={colorPalette.secondary} >{duration.label}</Typography> :
+                                            <Typography color={colorPalette.darkBackground} >{duration.label}</Typography>
                                     }
                                 </Button>)}
                         </Box>

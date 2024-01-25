@@ -2,18 +2,23 @@ import { Box, Divider, Typography } from '@mui/material'
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
+import { colorPalette } from '../../Utils/Constants';
+
+const subContainer = { 
+    color : colorPalette.darkBackground,
+    borderRadius: '6px 6px 0px 0px',
+    minHeight  : '50px'
+}
+
+const mainContainer = { 
+    margin: '10px', 
+    borderRadius: '6px', 
+    backgroundColor: colorPalette.background, 
+    cursor: 'pointer',
+    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
+}
 
 function TemplateBlock({ template }: any) {
-
-    const defaultColor = useSelector((state: any) => state.colorReducer);
-
-    const onHoverStart = (event: any) => {
-        event.currentTarget.style.border = '1px #808080 solid';
-    }
-
-    const onHoverEnd = (event: any) => {
-        event.currentTarget.style.border = '1px #454545 solid';
-    }
 
     const navigate = useNavigate();
 
@@ -26,22 +31,20 @@ function TemplateBlock({ template }: any) {
 
     return (
         <Box
-            onMouseEnter={onHoverStart}
-            onMouseLeave={onHoverEnd}
-            sx={{ margin: '10px', borderRadius: '6px', border: '1px #454545 solid', backgroundColor: defaultColor?.backgroundColor, cursor: 'pointer'}}
+            sx={mainContainer}
             onClick={() => handleClickTemplateDetails(template?.id)}
         >
-            <Box sx={{ backgroundColor: '#006dff', borderRadius: '6px 6px 0px 0px' }} padding={'15px'} >
+            <Box sx={subContainer} padding={'15px'} >
                 <Typography
                     textAlign={'start'}
                     fontSize={14}
-                    color={'#f1f1f1'}
+                    fontWeight={600}
                 >
-                    {`${template?.name?.substring(0, 35)} ${template?.name.length > 35 ? '...' : ''}`}
+                    {/* {`${template?.name?.substring(0, 35)} ${template?.name.length > 35 ? '...' : ''}`} */}
+                    {`${template?.name}`}
                 </Typography>
             </Box>
-            <Divider sx={{ color: '#454545' }} />
-            <Box height={'50px'} marginBottom={'50px'} padding={'15px'} >
+            <Box padding={'15px'} >
                 <Typography
                     textAlign={'start'}
                     fontSize={14}
@@ -50,10 +53,9 @@ function TemplateBlock({ template }: any) {
                     {`${template?.description?.substring(0, 80)} ${template?.description?.length > 80 ? '...' : ''}`}
                 </Typography>
             </Box>
-            <Divider sx={{ color: '#454545' }} />
-            <Box padding={'15px'} display={'flex'} justifyContent={'space-between'} color={'#808080'}>
+            <Box padding={'15px'} display={'flex'} justifyContent={'space-between'} color={colorPalette.primary}>
                 <Typography fontSize={'14px'} >{template?.questionCount} questions</Typography>
-                <Box display={'flex'} >
+                <Box display={'flex'}>
                     <AccessTimeIcon sx={{ marginRight: '5px' }} />
                     <Typography fontSize={'14px'} >{`< ${template?.timeTaken} minute`}</Typography>
                 </Box>

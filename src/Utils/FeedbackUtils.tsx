@@ -1,6 +1,7 @@
 import { logout } from "./Endpoints";
 import { logicType } from "./types";
 import { DEFAULT_KEY } from "../SurveyEngine/CoreUtils/CoreConstants";
+import { colorPalette } from "./Constants";
 
 
 export const getComponentConfigFromNode = (node: any) => {
@@ -240,27 +241,27 @@ export const getEmojiFromId = (emojiId: string) => {
 
 export const getIconColorById = (id: number): string => {
     if (id === 1) {
-        return '#00B3EC';
+        return '#527853';
     } else if (id === 2) {
         return '#F6AE2D';
     } else if (id === 3) {
-        return '#9E4784';
+        return '#0802A3';
     } else if (id === 4) {
-        return '#F26419';
+        return '#7B2869';
     } else if (id === 5) {
-        return '#539165';
+        return '#0A81AB';
     } else if (id === 6) {
-        return '#EA8FEA';
+        return '#FFB84C';
     } else if (id === 7) {
-        return '#E9967A';
+        return '#FAD800';
     } else if (id === 8) {
-        return '#E4DCCF';
+        return '#43658B';
     } else if (id === 11) {
-        return '#0F6292';
+        return '#6E2142';
     } else if (id === 13) {
-        return '#9E4784';
+        return '#5F4444';
     }
-    return '#f1f1f1';
+    return colorPalette.darkBackground;
 }
 
 export const getComponentNameById = (id: number): string => {

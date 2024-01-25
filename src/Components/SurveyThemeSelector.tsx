@@ -2,7 +2,7 @@ import { Box, Button, Typography } from '@mui/material'
 import axios from 'axios';
 import React, { useEffect, useRef } from 'react'
 import * as Endpoints from '../Utils/Endpoints';
-import { USER_UNAUTH_TEXT, componentName, getColorSchemes } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette, componentName, getColorSchemes } from '../Utils/Constants';
 import Notification from '../Utils/Notification';
 import FSLoader from './FSLoader';
 import { ColorScheme } from '../Types/GenericTypes';
@@ -100,7 +100,7 @@ function SurveyThemeSelector(props: any) {
   return (
     <Box sx={{ padding: '20px', overflowY: 'scroll', height: 'calc(100vh - 200px)' }}>
       <Box sx={{ textAlign: 'start' }}  >
-        <Typography sx={{ color: '#f1f1f1', fontSize: '20px', marginBottom: '10px' }} >All themes</Typography>
+        <Typography sx={{ color: colorPalette.darkBackground, fontSize: '20px', marginBottom: '10px' }} >All themes</Typography>
         <Box display={'flex'} sx={{ flexWrap: 'wrap' }}>
           {getColorSchemes().map((colorScheme: ColorScheme) => {
             return (
@@ -128,8 +128,7 @@ export default SurveyThemeSelector
 const themeStyleCss = {
   cursor: 'pointer',
   height: '90px',
-  border: '1px #454545 solid',
-  borderRadius: '5px',
+  borderRadius: '6px',
   display: 'flex',
   marginBottom: '10px',
   marginRight: '5px'
@@ -138,8 +137,8 @@ const themeStyleCss = {
 const selectedThemeStyleCss = {
   cursor: 'pointer',
   height: '85px',
-  border: '4px #ffffff solid',
-  borderRadius: '5px',
+  border: `2px black solid`,
+  borderRadius: '6px',
   display: 'flex',
   marginBottom: '10px',
   marginRight: '5px',
@@ -149,7 +148,7 @@ function ThemeComponent(props: any) {
 
   return (
     <Box sx={props.selected ? selectedThemeStyleCss : themeStyleCss} >
-      <Box sx={{ width: '100%', borderRight: '1px #454545 solid', backgroundColor: props.color1 }} ></Box>
+      <Box sx={{ width: '100%',  backgroundColor: props.color1,borderRadius : '5px' }} ></Box>
     </Box>
   );
 }

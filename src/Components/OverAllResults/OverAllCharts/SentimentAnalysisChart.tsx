@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material'
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer,Tooltip } from 'recharts'
 import FSTooltip from '../../FSTooltip';
 import CustomTooltip from '../../CustomTooltip';
+import { colorPalette } from '../../../Utils/Constants';
 
 function SentimentAnalysisChart(props : any) {
 
@@ -15,7 +16,7 @@ function SentimentAnalysisChart(props : any) {
         <>
             <Box width={'100%'} textAlign={'start'} padding={'20px'}>
                 <Box display={'flex'} >
-                    <Typography color={'#f1f1f1'} variant='h6' sx={{textDecoration : 'underline'}} >Sentiment Analysis</Typography>
+                    <Typography color={colorPalette.darkBackground} variant='h6' sx={{textDecoration : 'underline'}} >Sentiment Analysis</Typography>
                     <Box marginTop={'8px'} marginLeft={'2px'}>
                         <CustomTooltip
                             text='Unlock Emotional Insights with Sentiment Analysis: 

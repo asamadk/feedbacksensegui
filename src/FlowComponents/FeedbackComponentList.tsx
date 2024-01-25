@@ -6,26 +6,28 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { STATUS } from 'react-joyride';
 import { CallBackProps } from 'react-joyride';
 import { Step } from 'react-joyride';
-import { componentList } from '../Utils/Constants';
+import { colorPalette, componentList } from '../Utils/Constants';
 import { useSelector } from 'react-redux';
 
 const getCommonContainerStyle = () => {
     return {
-        border: '1px #454545 solid',
         margin: '10px',
         borderRadius: '5px',
         textAlign: 'start',
         padding: '10px',
-        height: '60px',
+        height: '100px',
         display: 'flex',
         overflowY: 'hidden',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
+        border : `1px ${colorPalette.textSecondary} solid`
     }
 }
 
 const commonLogoStyle = {
-    marginTop: '20px',
-    marginRight: '10px'
+    // marginTop: '20px',
+    marginRight: '10px',
+    height : 'fit-content'
 }
 
 
@@ -117,16 +119,8 @@ function FeedbackComponentList() {
         event.dataTransfer.effectAllowed = 'move';
     };
 
-    const onHoverStart = (event: any) => {
-        event.currentTarget.style.border = '1px #f1f1f1 solid';
-    }
-
-    const onHoverEnd = (event: any) => {
-        event.currentTarget.style.border = '1px #454545 solid';
-    }
-
     return (
-        <Box height={'calc(100vh - 128px)'} sx={{ backgroundColor: defaultColor?.backgroundColor }}>
+        <Box sx={{ backgroundColor: colorPalette.textSecondary,paddingTop : '10px',paddingBottom : '10px' }}>
             <Joyride
                 callback={handleJoyrideCallback}
                 continuous
@@ -141,10 +135,10 @@ function FeedbackComponentList() {
                         zIndex: 10000,
                     },
                     buttonNext: {
-                        backgroundColor: '#006dff'
+                        backgroundColor: colorPalette.primary
                     },
                     buttonBack: {
-                        color: '#006dff'
+                        color: colorPalette.primary
                     }
                 }}
             />
@@ -155,26 +149,24 @@ function FeedbackComponentList() {
                             key={component.id}
                             className={component.header.split(' ')[0]}
                         >
-                            {   component.isAvailable === true &&
+                            {component.isAvailable === true &&
                                 <Box
-                                    onMouseEnter={onHoverStart}
-                                    onMouseLeave={onHoverEnd}
                                     onDragStart={(e) => onDragStart(e, component)}
                                     key={component.id}
                                     draggable={true}
-                                    sx={{...getCommonContainerStyle(),backgroundColor: defaultColor?.primaryColor}}
+                                    sx={{ ...getCommonContainerStyle(), backgroundColor: colorPalette.background }}
                                 >
                                     <Box sx={commonLogoStyle} >
                                         <DynamicComponentIcon id={component.id} />
                                     </Box>
-                                    <Box>
+                                    <Box >
                                         <Typography color={component.bgColor} fontSize={15} >{component.header}</Typography>
-                                        <Typography color={'#808080'} fontSize={12} >
-                                            {component.description.substring(0, 68)}
-                                            {component.description.length > 68 ? '...' : ''}
+                                        <Typography marginTop={'20px'} color={colorPalette.textPrimary} fontSize={12} >
+                                            {component.description.substring(0, 120)}
+                                            {component.description.length > 120 ? '...' : ''}
                                         </Typography>
                                     </Box>
-                                    <Box marginTop={'20px'} color={component.bgColor}>
+                                    <Box color={component.bgColor}>
                                         <DragIndicatorIcon />
                                     </Box>
                                 </Box>

@@ -9,6 +9,7 @@ import GenericModal from '../Modals/GenericModal';
 import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
 import { useDispatch } from 'react-redux';
 import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
+import { colorPalette } from '../Utils/Constants';
 
 const makeIconsUp = {
     position: 'relative',
@@ -17,7 +18,7 @@ const makeIconsUp = {
 }
 
 const tabsetList = [
-    { id: 1, name: 'CREATE' },
+    { id: 1, name: 'WORKFLOW' },
     { id: 2, name: 'DESIGN' },
     { id: 3, name: 'CONFIGURE' },
     { id: 4, name: 'SHARE' },
@@ -104,7 +105,7 @@ function SurveyDetailHeader(props: any) {
     }
 
     return (
-        <Box sx={{ display: 'flex' }} >
+        <Box sx={{ display: 'flex',marginTop : '5px' }} >
             <Box sx={{ display: 'flex', justifyContent: 'center' }} >
                 <CustomTabSet tabsetList={tabsetList} change={(value: number) => changetabset(value)} index={props.tabset} />
             </Box>
@@ -113,7 +114,7 @@ function SurveyDetailHeader(props: any) {
                     onClick={handleRouteToHome}
                     sx={makeIconsUp}
                 >
-                    <CloseIcon sx={{ color: '#f1f1f1' }} />
+                    <CloseIcon sx={{ color: colorPalette.darkBackground }} />
                 </IconButton>
             </Box>
             <GenericModal

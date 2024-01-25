@@ -10,7 +10,7 @@ import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import GenericModal from '../Modals/GenericModal';
 import EmptyAnalysis from './OverAllResults/EmptyAnalysis';
-import { USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette, componentName } from '../Utils/Constants';
 import { useNavigate } from 'react-router';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
@@ -24,7 +24,8 @@ const responseStyle = (bgColor: string) => {
         cursor: 'pointer',
         borderRadius: '6px',
         transition: '0.3s',
-        backgroundColor: bgColor
+        backgroundColor: bgColor,
+        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
     }
 }
 
@@ -35,10 +36,17 @@ const selectedResponseStyle = (bgColor: string) => {
         textAlign: 'start',
         cursor: 'pointer',
         borderRadius: '6px',
-        border: '1px #454545 solid',
         transition: '0.3s',
-        backgroundColor: bgColor
+        backgroundColor: bgColor,
+        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
     }
+}
+
+const columnStyle = {
+    overflowY: 'scroll',
+    background : colorPalette.background,
+    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
+    borderRadius : '6px'
 }
 
 type IndividualResponseProps = {
@@ -179,23 +187,23 @@ function IndividualResponse(props: IndividualResponseProps) {
 
             {
                 isEmpty === false &&
-                <Box sx={{ scrollbarWidth: '0.5px' }} >
-                    <Box sx={{ textAlign: 'start', paddingTop: '4px', paddingLeft: '10px', borderBottom: '1px #454545 solid', height: '48px' }} >
+                <Box sx={{ scrollbarWidth: '0.5px',background : colorPalette.textSecondary }} >
+                    <Box sx={{ textAlign: 'start', paddingTop: '4px', paddingLeft: '10px',height: '48px' }} >
                         <Typography
                             paddingTop={'10px'}
                             paddingLeft={'10px'}
                             fontSize={'14px'}
                             fontWeight={'600'}
-                            color={'#006dff'} >
+                            color={colorPalette.darkBackground} >
                             {'Individual Responses'}
                         </Typography>
                     </Box>
                     <Box display={'flex'} height={'calc(100vh - 120px)'} >
-                        <Box sx={{ overflowY: 'scroll' }} borderRight={'1px #454545 solid'} width={'27%'} >
-                            <Box sx={{ borderBottom: '1px #454545 solid', height: '48px' }} >
-                                <Box marginLeft={'10px'} marginRight={'10px'} color={'#f1f1f1'} display={'flex'} justifyContent={'space-between'} padding={'12px'} >
+                        <Box sx={{...columnStyle,margin : '0px 10px'}} width={'25%'} >
+                            <Box sx={{ height: '48px' }} >
+                                <Box marginLeft={'10px'} marginRight={'10px'} color={colorPalette.darkBackground} display={'flex'} justifyContent={'space-between'} padding={'12px'} >
                                     <Typography border={'none'} fontWeight={'600'} fontSize={'14px'} >Response</Typography>
-                                    <Typography border={'none'} color={'#808080'} >{surveyResponseList?.length}</Typography>
+                                    <Typography border={'none'} color={colorPalette.fsGray} >{surveyResponseList?.length}</Typography>
                                 </Box>
                             </Box>
                             {surveyResponseList.map((res: any) => {
@@ -204,20 +212,29 @@ function IndividualResponse(props: IndividualResponseProps) {
                                         key={res.id}
                                         id={res.id}
                                         onClick={() => handleResponseListClick(res.id)}
-                                        sx={res?.selected === true ? selectedResponseStyle(defaultColor?.primaryColor) : responseStyle(defaultColor?.secondaryColor)}
+                                        sx={res?.selected === true ? selectedResponseStyle(colorPalette.darkBackground) : responseStyle(colorPalette?.textSecondary)}
                                     >
-                                        <Typography fontSize={'14px'} fontWeight={'600'} color={'#f1f1f1'} >{'Anonymous Response'}</Typography>
-                                        <Typography sx={{ fontSize: '13px' }} color={'#808080'} >{res?.id}</Typography>
-                                        <Typography sx={{ fontSize: '13px' }} color={'#808080'} >
+                                        <Typography fontSize={'14px'} fontWeight={'600'} color={colorPalette.secondary} >{'Anonymous Response'}</Typography>
+                                        <Typography 
+                                            sx={{ fontSize: '13px' }} 
+                                            color={res?.selected === true ? colorPalette.textSecondary : colorPalette.textPrimary} 
+                                        >{res?.id}</Typography>
+                                        <Typography 
+                                            sx={{ fontSize: '13px' }} 
+                                            color={res?.selected === true ? colorPalette.textSecondary : colorPalette.textPrimary } 
+                                        >
                                             {new Date(res?.created_at)?.toLocaleString()}
                                         </Typography>
                                     </Box>
                                 )
                             })}
                         </Box>
-                        <Box sx={{ overflowY: 'scroll' }} borderRight={'1px #454545 solid'} width={'53%'} >
-                            <Box sx={{ borderBottom: '1px #454545 solid', height: '48px' }} >
-                                <Box marginLeft={'10px'} marginRight={'10px'} color={'#f1f1f1'} display={'flex'} justifyContent={'space-between'} padding={'12px'} >
+                        <Box 
+                            sx={columnStyle} 
+                            width={'53%'} 
+                        >
+                            <Box sx={{ height: '48px' }} >
+                                <Box marginLeft={'10px'} marginRight={'10px'} color={colorPalette.darkBackground} display={'flex'} justifyContent={'space-between'} padding={'12px'} >
                                     <Typography fontWeight={'600'} fontSize={'14px'} >Anonymous response</Typography>
                                     <Box sx={{ position: 'relative', top: '-8px', left: '20px' }} >
                                         {
@@ -225,7 +242,7 @@ function IndividualResponse(props: IndividualResponseProps) {
                                             <>
                                                 <Button onClick={handleShareResponseClick} style={{ width: 'fit-content', margin: '0', padding: '0' }} sx={outlinedButton} >Share</Button>
                                                 <IconButton onClick={handleDeleteResponseClick} >
-                                                    <DeleteIcon sx={{ color: '#808080' }} />
+                                                    <DeleteIcon sx={{ color: colorPalette.primary }} />
                                                 </IconButton>
                                             </>
                                         }
@@ -237,9 +254,9 @@ function IndividualResponse(props: IndividualResponseProps) {
                             </Box>
 
                         </Box>
-                        <Box padding={'10px'} marginTop={'5px'} color={'#f1f1f1'} textAlign={'start'} borderRight={'1px #454545 solid'} width={'25%'} >
+                        <Box  sx={{...columnStyle,width : '25%',margin : '0px 10px'}} padding={'10px'} color={colorPalette.darkBackground} textAlign={'start'}>
                             <Typography fontWeight={'600'} fontSize={'14px'} >Response details</Typography>
-                            <Box color={'#808080'} marginTop={'12px'}>
+                            <Box color={colorPalette.fsGray} marginTop={'12px'}>
                                 <Typography>{selectedResponse?.userDetails}</Typography>
                             </Box>
                         </Box>

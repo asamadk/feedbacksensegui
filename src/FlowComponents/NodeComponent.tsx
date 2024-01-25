@@ -10,9 +10,9 @@ import ComponentSelectorModal from '../FlowModals/ComponentSelectorModal';
 import NodeError from '../Components/NodeError';
 import { validateFlowComponent } from '../Utils/FeedbackUtils';
 import { validateComponentLogic } from '../Utils/FeedbackUtils';
+import { colorPalette } from '../Utils/Constants';
 
 const commonLogoStyle = {
-    marginTop: '20px',
     marginRight: '10px'
 }
 
@@ -85,17 +85,22 @@ function NodeComponent(props: any) {
                         </Box>
                         <Box >
                             <Typography>{props.label}</Typography>
-                            <Typography sx={{ color: '#f1f1f1', fontSize: '12px' }} >{props.description?.substring(0, 65) + '...'}</Typography>
+                            <Typography 
+                                sx={{ color: colorPalette.textPrimary, fontSize: '12px',marginTop : '15px' }} 
+                            >
+                                {props.description?.substring(0, 120)}
+                                {props.description?.length > 120 ? '...' : ''}
+                            </Typography>
                         </Box>
                         <Box>
-                            <IconButton onClick={handleOpenMoreClick} sx={{ marginTop: '10px' }} >
+                            <IconButton onClick={handleOpenMoreClick} sx={{ marginTop: '30px' }} >
                                 <MoreVertIcon sx={{ color: getIconColorById(props.compId) }} />
                             </IconButton>
                         </Box>
                     </Box> :
                     <Box justifyContent={'space-between'} display={'flex'} overflow={'hidden'} >
                         <Box sx={{ width: '50px', height: '50px' }} ></Box>
-                        <IconButton sx={{ width: '50px', height: '50px', marginTop: '5px' }} onClick={handleShowComponentSelectorModal} >
+                        <IconButton sx={{ width: '50px', height: '50px', marginTop: '20px' }} onClick={handleShowComponentSelectorModal} >
                             <AddCircleOutlineIcon sx={{ width: '50px', height: '50px' }} />
                         </IconButton>
                         <IconButton onClick={handleOpenMoreClick} sx={{ marginTop: '10px', width: '45px' }} >

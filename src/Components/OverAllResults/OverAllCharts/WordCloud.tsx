@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material'
 import React from 'react'
 import ReactWordcloud from 'react-wordcloud';
 import CustomTooltip from '../../CustomTooltip';
+import { colorPalette } from '../../../Utils/Constants';
 
 function WordCloud(props : any) {
 
@@ -17,7 +18,7 @@ function WordCloud(props : any) {
         <>
             <Box textAlign={'start'} padding={'20px'}>
                 <Box display={'flex'} >
-                    <Typography sx={{textDecoration : 'underline'}} color={'#f1f1f1'} variant='h6' marginBottom={'20px'} >Word Cloud</Typography>
+                    <Typography sx={{textDecoration : 'underline'}} color={colorPalette.darkBackground} variant='h6' marginBottom={'20px'} >Word Cloud</Typography>
                     <Box marginTop={'8px'} marginLeft={'2px'}>
                         <CustomTooltip
                             text='Visualize Key Concepts with Word Cloud: 

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { settingLayoutStyle, settingsHeaderTextStyle } from '../Styles/LayoutStyles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router';
+import { colorPalette } from '../Utils/Constants';
 
 function Support() {
 
@@ -18,12 +19,12 @@ function Support() {
         <Box sx={{ ...settingLayoutStyle, backgroundColor: defaultColor?.backgroundColor }} >
             <Box display={'flex'} sx={{ textAlign: 'start' }} >
                 <IconButton onClick={handleBackButtonClick} >
-                    <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
+                    <ArrowBackIcon sx={{ color: colorPalette.textPrimary }} />
                 </IconButton>
                 <Typography
                     variant='h4'
                     style={{ paddingTop: '5px' }}
-                    sx={settingsHeaderTextStyle}
+                    sx={{...settingsHeaderTextStyle,color : colorPalette.textPrimary}}
                 >
                     Help & Support
                 </Typography>

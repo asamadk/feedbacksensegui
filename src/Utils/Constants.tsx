@@ -1,5 +1,15 @@
 import { CONDITION_ANSWER_CONTAINS, CONDITION_ANY_VALUE, CONDITION_HAS_ANY_VALUE, CONDITION_INCLUDES_ALL, CONDITION_IS, CONDITION_IS_EXACTLY, CONDITION_IS_NOT, CONDITION_QUESTION_IS_ANSWERED, CONDITION_QUESTION_IS_NOT_ANSWERED, SMILEY_EXTREMELY_HAPPY, SMILEY_EXTREMELY_UNSATISFIED, SMILEY_HAPPY, SMILEY_NEUTRAL, SMILEY_UNSATISFIED } from "../SurveyEngine/CoreUtils/CoreConstants";
 
+export const colorPalette = {
+    darkBackground : '#0B2417',
+    primary : '#427761',
+    secondary : '#63AB77',
+    textPrimary : '#222222',
+    textSecondary : '#f6f7f9',
+    fsGray : '#AFAFAF',
+    background : '#ffffff'
+}
+
 export const EMAIL_LINK_SURVEY_TYPE = 'email/link';
 export const APP_WEB_SURVEY_TYPE = 'app/web';
 
@@ -29,7 +39,8 @@ export const componentName = {
 export const ignoreAuthPaths = [
     '/invite',
     '/failure',
-    '/payment/success'
+    '/payment/success',
+    '/sign-up'
 ]
 
 export const getBackgrounds = (): any[] => {
@@ -263,7 +274,7 @@ export const getColorSchemes = (): any[] => {
 export const componentList = [
     {
         id: 1,
-        bgColor: '#00B3EC',
+        bgColor: '#527853',
         header: 'Welcome message',
         description: 'Take a moment to introduce the purpose of your survey or say hi to your audience.',
         isAvailable: true
@@ -277,42 +288,42 @@ export const componentList = [
     // },
     {
         id: 3,
-        bgColor: '#9E4784',
+        bgColor: '#0802A3',
         header: 'Single answer selection',
         description: 'Get people to select only one option. Good for getting definite answers.',
         isAvailable: true
     },
     {
         id: 4,
-        bgColor: '#F26419',
+        bgColor: '#7B2869',
         header: 'Multiple answer selection',
         description: 'Let people choose multiple answers from a list. Use it when more than one answer applies.',
         isAvailable: true
     },
     {
         id: 5,
-        bgColor: '#539165',
+        bgColor: '#0A81AB',
         header: 'Text answer',
         description: 'Provide a text box so people can share written, open-ended feedback.',
         isAvailable: true
     },
     {
         id: 6,
-        bgColor: '#EA8FEA',
+        bgColor: '#FFB84C',
         header: 'Smiley scale',
         description: 'Ask people to rate something on a visual smiley scale. .',
         isAvailable: true
     },
     {
         id: 7,
-        bgColor: '#E9967A',
+        bgColor: '#FAD800',
         header: 'Rating scale',
         description: 'Ask people to rate something. Great for measuring satisfaction. ',
         isAvailable: true
     },
     {
         id: 8,
-        bgColor: '#E4DCCF',
+        bgColor: '#43658B',
         header: 'NPS',
         description: 'Measure brand loyalty on a scale from 0 to 10 and get a predictor of repurchases & referrals.',
         isAvailable: true
@@ -331,7 +342,7 @@ export const componentList = [
     // },
     {
         id: 11,
-        bgColor: '#0F6292',
+        bgColor: '#6E2142',
         header: 'Contact form',
         description: 'Collect contact information such as name, email, then create contacts in your CRM if .',
         isAvailable: true
@@ -345,7 +356,7 @@ export const componentList = [
     // },
     {
         id: 13,
-        bgColor: '#9E4784',
+        bgColor: '#5F4444',
         header: 'Date',
         description: 'Let people enter a specific date. This component is useful in areas where people need to select date/time',
         isAvailable: true

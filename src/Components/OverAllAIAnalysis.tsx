@@ -7,6 +7,7 @@ import OverTimeSentimentChart from './OverAllResults/OverAllCharts/OverTimeSenti
 import { useSelector } from 'react-redux';
 import UpgradePlanError from './UpgradePlanError';
 import WordCloud from './OverAllResults/OverAllCharts/WordCloud';
+import { colorPalette } from '../Utils/Constants';
 
 type propType = {
     surveyId: string
@@ -76,7 +77,7 @@ function OverAllAIAnalysis(props: propType) {
                     paddingLeft={'10px'}
                     fontSize={'14px'}
                     fontWeight={'600'}
-                    color={'#006dff'} >
+                    color={colorPalette.secondary} >
                     AI analysis results
                 </Typography>
             </Box>

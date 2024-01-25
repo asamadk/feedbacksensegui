@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import DynamicComponentIcon from '../FlowComponents/DynamicComponentIcon'
 import { getEmojiFromId, getIconColorById } from '../Utils/FeedbackUtils'
 import { useSelector } from 'react-redux'
+import { colorPalette } from '../Utils/Constants'
 
 type propsType = {
     data: any
@@ -55,20 +56,19 @@ const answerContainer = (bgColor : string) => {
         cursor: 'pointer',
         borderRadius: '6px',
         backgroundColor: bgColor,
-        color: '#ffffff'
+        // color: colorPalette.darkBackground,
+        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
     }
 }
 
 const questionStyle = {
     marginLeft: '20px',
-    color: '#ffffff',
+    color: colorPalette.darkBackground,
     fontWeight : '900'
 }
 
 function DynamicComponentSingleResponse({ id, data }: any) {
     
-    const defaultColor = useSelector((state: any) => state.colorReducer);
-
     return (
         <Box >
             {id === 1 && <>
@@ -81,7 +81,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.welcomeText}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(defaultColor?.primaryColor)} >
+                <Box sx={answerContainer(colorPalette.background)} >
                     <Typography>{`Action performed : ${data?.data?.click}`}</Typography>
                 </Box>
             </>}
@@ -95,7 +95,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(defaultColor?.primaryColor)} >
+                <Box sx={answerContainer(colorPalette.background)} >
                     <Typography>{`${data?.data?.selectedVal}`}</Typography>
                 </Box>
             </>}
@@ -109,7 +109,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(defaultColor?.primaryColor)} >
+                <Box sx={answerContainer(colorPalette.background)} >
                     {data?.data?.selectedVal?.map((val: string) => {
                         return (<Box>
                             <Typography>{val}</Typography>
@@ -127,7 +127,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(defaultColor?.primaryColor)} >
+                <Box sx={answerContainer(colorPalette.background)} >
                     <Typography>{`${data?.data?.answer}`}</Typography>
                 </Box>
             </>}
@@ -141,7 +141,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(defaultColor?.primaryColor)} >
+                <Box sx={answerContainer(colorPalette.background)} >
                     <Typography>{getEmojiFromId(data?.data?.emojiId)}</Typography>
                 </Box>
             </>}
@@ -155,7 +155,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(defaultColor?.primaryColor)} >
+                <Box sx={answerContainer(colorPalette.background)} >
                     <Typography>{`${data?.data?.value}`}</Typography>
                 </Box>
             </>}
@@ -169,7 +169,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(defaultColor?.primaryColor)} >
+                <Box sx={answerContainer(colorPalette.background)} >
                     <Typography>{`${data?.data?.value}`}</Typography>
                 </Box>
             </>}
@@ -183,7 +183,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(defaultColor?.primaryColor)} >
+                <Box sx={answerContainer(colorPalette.background)} >
                     {data?.compData?.answerList?.map((val: string) => {
                         return (<Box>
                             <Typography>{`${val} : ${data.data[val]}`}</Typography>
@@ -201,7 +201,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(defaultColor?.primaryColor)} >
+                <Box sx={answerContainer(colorPalette.background)} >
                     <Typography>{new Date(data?.data?.value)?.toLocaleDateString()}</Typography>
                 </Box>
             </>}

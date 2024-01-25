@@ -2,7 +2,7 @@ import { Box, Button, FormControlLabel, Typography } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import Notification from '../Utils/Notification';
 import FSLoader from './FSLoader';
-import { USER_UNAUTH_TEXT, getBackgrounds } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette, getBackgrounds } from '../Utils/Constants';
 import axios from 'axios';
 import { getSurveyDetails, saveSurveyDesgin } from '../Utils/Endpoints';
 import { handleLogout } from '../Utils/FeedbackUtils';
@@ -83,7 +83,7 @@ function BackgroundTemplates(props: any) {
   return (
     <Box sx={{ padding: '20px', overflowY: 'scroll', height: 'calc(100vh - 200px)' }}>
       <Box sx={{ textAlign: 'start' }}  >
-        <Typography sx={{ color: '#f1f1f1', fontSize: '20px', marginBottom: '10px' }} >All backgrounds</Typography>
+        <Typography sx={{ color: colorPalette.darkBackground, fontSize: '20px', marginBottom: '10px' }} >All backgrounds</Typography>
         <Box display={'flex'} sx={{ flexWrap: 'wrap' }}>
           {getBackgrounds().map((background) => {
             return (
@@ -108,8 +108,8 @@ export default BackgroundTemplates
 const backComponentStyle = {
   cursor: 'pointer',
   height: '90px',
-  border: '1px #454545 solid',
-  borderRadius: '5px',
+  // border: '1px #454545 solid',
+  borderRadius: '6px',
   display: 'flex',
   marginBottom: '10px',
   marginRight: '5px'
@@ -118,8 +118,8 @@ const backComponentStyle = {
 const selectedBackComponentStyle = {
   cursor: 'pointer',
   height: '85px',
-  border: '4px #ffffff solid',
-  borderRadius: '5px',
+  border: `2px ${colorPalette.darkBackground} solid`,
+  borderRadius: '6px',
   display: 'flex',
   marginBottom: '10px',
   marginRight: '5px'
@@ -130,7 +130,7 @@ function BackgroundComponent({ background, selected }: any) {
     <Box sx={selected ? selectedBackComponentStyle : backComponentStyle} >
       <Box
         className={background?.value}
-        sx={{ borderRight: '1px #454545 solid', backgroundColor: background?.value || '#ffffff', width: '100%' }}
+        sx={{ backgroundColor: background?.value || '#ffffff', width: '100%',borderRadius : '6px' }}
       ></Box>
     </Box>
   );

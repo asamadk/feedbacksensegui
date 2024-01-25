@@ -1,9 +1,10 @@
 import { Box, Divider, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
+import { colorPalette } from '../../../Utils/Constants'
 
 const mainContainer = {
   marginTop : '20px',
-  color : '#f1f1f1',
+  color : colorPalette.darkBackground,
   textAlign : 'start',
   padding : '20px'
 }
@@ -22,8 +23,8 @@ function WelcomeChart(props : propsType) {
       <Typography fontWeight={600} >Actions</Typography>
       <Box sx={{ background: 'rgba(255, 255, 255, 0.12)', padding: '5px 10px', borderRadius: '5px', marginTop: '10px' }} >
         <Box display={'flex'} justifyContent={'space-between'} >
-          {data?.actions?.map((action : string) => {return(<Typography color={'#f1f1f1'} >{action}</Typography>)})}
-          <Typography color={'#f1f1f1'} >{data?.clickFrequency} times</Typography>
+          {data?.actions?.map((action : string) => {return(<Typography color={colorPalette.fsGray} >{action}</Typography>)})}
+          <Typography color={colorPalette.fsGray} >{data?.clickFrequency} times</Typography>
         </Box>
       </Box>
     </Box>

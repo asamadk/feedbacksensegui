@@ -5,7 +5,7 @@ import * as LayoutStyles from '../Styles/LayoutStyles'
 import { useNavigate } from 'react-router';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
-import { componentName } from '../Utils/Constants';
+import { colorPalette, componentName } from '../Utils/Constants';
 import { genericModalData, userRoleType } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
 import { useSelector } from 'react-redux';
@@ -40,26 +40,28 @@ function SubscriptionSettings() {
     }
 
     const subscriptionSubContainer = {
-        color: '#f1f1f1',
+        color: colorPalette.darkBackground,
         borderRadius: '5px',
-        backgroundColor: defaultColor?.primaryColor,
+        backgroundColor: colorPalette.textSecondary,
         padding: '20px',
         width: '80%',
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
     }
 
     const subscriptionDetailList = {
         display: 'flex',
         justifyContent: 'space-between',
         marginBottom: '10px',
-        backgroundColor: defaultColor?.primaryColor,
+        backgroundColor: colorPalette.textSecondary,
         borderRadius: '5px',
         padding: '10px 20px',
+        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
     }
 
     return (
-        <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.backgroundColor)} >
+        <Box sx={LayoutStyles.globalSettingSubContainers(colorPalette.background)} >
             {
                 CoreUtils.isComponentVisible(userRole, componentName.SUBSCRIPTION) ?
                     <>
@@ -70,7 +72,7 @@ function SubscriptionSettings() {
                                     <Typography fontSize={24} >{subscriptionState?.name}</Typography>
                                 </Box>
                                 <Box>
-                                    <Box sx={{ border: '1px #006dff solid', color: '#006dff', padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
+                                    <Box sx={{ border: `1px ${colorPalette.primary} solid`, color: colorPalette.primary, padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
                                         {subscriptionState?.status?.substring(0, 21)}
                                     </Box>
                                 </Box>
@@ -91,48 +93,48 @@ function SubscriptionSettings() {
 
                         <Box >
                             <Box sx={{ textAlign: 'start', marginTop: '50px', marginBottom: '20px' }} >
-                                <Typography color={'#f1f1f1'} fontSize={20} >Subscription Details</Typography>
+                                <Typography color={colorPalette.darkBackground} fontSize={20} >Subscription Details</Typography>
                             </Box>
                             <Box sx={subscriptionDetailList} >
-                                <Typography color={'#808080'} >Subscription Name </Typography>
-                                <Typography color={'#808080'} >{subscriptionState?.name}</Typography>
+                                <Typography color={colorPalette.textPrimary} >Subscription Name </Typography>
+                                <Typography color={colorPalette.textPrimary} >{subscriptionState?.name}</Typography>
                             </Box>
                             <Box sx={subscriptionDetailList} >
-                                <Typography color={'#808080'} >Billing cycle </Typography>
-                                <Typography color={'#808080'} >{subscriptionState?.billingCycle}</Typography>
+                                <Typography color={colorPalette.textPrimary} >Billing cycle </Typography>
+                                <Typography color={colorPalette.textPrimary} >{subscriptionState?.billingCycle}</Typography>
                             </Box>
                             <Box sx={subscriptionDetailList} >
-                                <Typography color={'#808080'} >Next invoice date </Typography>
-                                <Typography color={'#808080'} >
+                                <Typography color={colorPalette.textPrimary} >Next invoice date </Typography>
+                                <Typography color={colorPalette.textPrimary} >
                                     {new Date(subscriptionState?.nextInvoice * 1000).toDateString()}
                                 </Typography>
                             </Box>
                             <Box sx={subscriptionDetailList} >
-                                <Typography color={'#808080'} >Response usage reset cycle  </Typography>
-                                <Typography color={'#808080'} >{subscriptionState?.billingCycle}</Typography>
+                                <Typography color={colorPalette.textPrimary} >Response usage reset cycle  </Typography>
+                                <Typography color={colorPalette.textPrimary} >{subscriptionState?.billingCycle}</Typography>
                             </Box>
                             <Box sx={subscriptionDetailList} >
-                                <Typography color={'#808080'} >Survey active   </Typography>
-                                <Typography color={'#808080'} >{subscriptionState?.surveyLimitUsed + '/' + subscriptionState?.totalSurveyLimit}</Typography>
+                                <Typography color={colorPalette.textPrimary} >Survey active   </Typography>
+                                <Typography color={colorPalette.textPrimary} >{subscriptionState?.surveyLimitUsed + '/' + subscriptionState?.totalSurveyLimit}</Typography>
                             </Box>
                             <Box sx={subscriptionDetailList} >
-                                <Typography color={'#808080'} >Survey response capacity  </Typography>
-                                <Typography color={'#808080'} >{subscriptionState?.responseCapacity}</Typography>
+                                <Typography color={colorPalette.textPrimary} >Survey response capacity  </Typography>
+                                <Typography color={colorPalette.textPrimary} >{subscriptionState?.responseCapacity}</Typography>
                             </Box>
                             <Box sx={subscriptionDetailList} >
-                                <Typography color={'#808080'} >Survey response store limit  </Typography>
-                                <Typography color={'#808080'} >{subscriptionState?.responseStoreLimit}</Typography>
+                                <Typography color={colorPalette.textPrimary} >Survey response store limit  </Typography>
+                                <Typography color={colorPalette.textPrimary} >{subscriptionState?.responseStoreLimit}</Typography>
                             </Box>
                             <Box textAlign={'start'} marginTop={'10px'}>
                                 <Typography
                                     onClick={handleCancelSubscription}
                                     sx={{ textDecoration: 'underline', cursor: 'pointer' }}
-                                    color={'#808080'}
+                                    color={colorPalette.primary}
                                 >Cancel Subscription</Typography>
                             </Box>
                         </Box>
                     </> :
-                    <UnAuthorisedComponent color='#808080' />
+                    <UnAuthorisedComponent color={colorPalette.textPrimary} />
             }
             <Notification ref={snackbarRef} />
             <FSLoader show={loading} />

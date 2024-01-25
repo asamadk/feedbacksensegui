@@ -5,7 +5,7 @@ import MicrosoftSignInButton from '../Components/MicrosoftSignInButton';
 import { colorPalette } from '../Utils/Constants';
 import { useNavigate } from 'react-router';
 
-function Login() {
+function SignUpLayout() {
 
     const navigate = useNavigate();
 
@@ -30,8 +30,8 @@ function Login() {
         height: 'calc(100vh - 158px)',
     }
 
-    const handleSignUp = () => {
-        navigate('/sign-up');
+    const handleLogin = () => {
+        navigate('/login');
     }
 
     return (
@@ -44,13 +44,14 @@ function Login() {
                     height={'calc(100vh - 99px)'}
                     overflow={'hidden'}
                     padding={'20px 40px'}
-                    sx={{ backgroundColor: colorPalette.darkBackground}}
+                    sx={{ backgroundColor: colorPalette.darkBackground }}
                 >
                     <Typography
                         variant='h2'
                         fontWeight={600}
                         textAlign={'start'}
                         color={'#f1f1f1'}
+                    // color={colorPalette.secondary}
                     >
                         Welcome, Start your journey with us
                     </Typography>
@@ -84,16 +85,18 @@ function Login() {
                 <Typography
                     color={colorPalette.secondary}
                     marginTop={'20px'}
+                    textAlign={'center'}
                 >
-                    Do not have an account ?
+                    Already have an account ?
                     <span
                         style={{ textDecoration: 'underline', cursor: 'pointer' }}
-                        onClick={handleSignUp}
-                    > Sign Up</span>
+                        onClick={handleLogin}
+                    > Login</span>
                 </Typography>
             </Box>
         </Box>
     )
+
 }
 
-export default Login
+export default SignUpLayout

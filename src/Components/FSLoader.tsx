@@ -1,5 +1,6 @@
 import { Backdrop, CircularProgress } from '@mui/material'
 import React from 'react'
+import { colorPalette } from '../Utils/Constants'
 
 function FSLoader(props: any) {
   return (
@@ -12,7 +13,7 @@ function FSLoader(props: any) {
           <CircularProgress
             size={34}
             sx={{
-              color: '#006dff',
+              color: colorPalette.primary,
               position: 'absolute',
               top: '50%',
               left: '50%',

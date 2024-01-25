@@ -9,10 +9,11 @@ import TopicsDisplay from './TagList'
 import { useSelector } from 'react-redux'
 import { AI_TEXT_ANALYSIS } from '../../../Utils/CustomSettingsConst'
 import UpgradePlanError from '../../UpgradePlanError'
+import { colorPalette } from '../../../Utils/Constants'
 
 const mainContainer = {
     marginTop: '20px',
-    color: '#f1f1f1',
+    color: colorPalette.darkBackground,
     textAlign: 'start',
     padding: '20px'
 }
@@ -59,16 +60,16 @@ function TextAnswerChart(props: propsType) {
         <>
             <Box sx={mainContainer} >
                 <Box marginBottom={'20px'} >
-                    <Typography fontSize={20} color={'#f1f1f1'} paddingBottom={'10px'} >{props?.data?.question}</Typography>
+                    <Typography fontSize={20} paddingBottom={'10px'} >{props?.data?.question}</Typography>
                 </Box>
 
                 <Typography fontWeight={600} >Answers</Typography>
                 {
                     paginatedAnswers?.map((answers: string) => {
                         return (
-                            <Box sx={{ background: 'rgba(255, 255, 255, 0.12)', padding: '5px 10px', borderRadius: '5px', marginTop: '10px' }} >
+                            <Box sx={{ background: colorPalette.textSecondary, padding: '5px 10px', borderRadius: '5px', marginTop: '10px',boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
                                 <Box display={'flex'} justifyContent={'space-between'} >
-                                    <Typography color={'#f1f1f1'} >{answers}</Typography>
+                                    <Typography >{answers}</Typography>
                                 </Box>
                             </Box>
                         )
@@ -85,7 +86,7 @@ function TextAnswerChart(props: propsType) {
                 </Stack>
                 <Box marginTop={'10px'} >
                     <Typography color={'#808080'} >
-                        Total : <span style={{ color: '#f1f1f1' }}>{data?.statsArr?.length} response</span>
+                        Total : <span style={{ color: colorPalette.fsGray }}>{data?.statsArr?.length} response</span>
                     </Typography>
                 </Box>
             </Box>

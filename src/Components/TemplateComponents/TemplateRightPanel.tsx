@@ -5,6 +5,7 @@ import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router';
 import TemplateBlockList from './TemplateBlockList';
 import { useSelector } from 'react-redux';
+import { colorPalette } from '../../Utils/Constants';
 
 function TemplateRightPanel({
     header, templates
@@ -16,11 +17,8 @@ function TemplateRightPanel({
         navigate('/');
     }
 
-    const defaultColor = useSelector((state: any) => state.colorReducer);
-
-
     return (
-        <Box sx={{ backgroundColor: defaultColor?.backgroundColor }}  >
+        <Box>
             <TemplateRightSubHeader header={header} close={handleClose} />
             <TemplateBlockList templates={templates} />
         </Box>
@@ -30,18 +28,12 @@ function TemplateRightPanel({
 export default TemplateRightPanel
 
 function TemplateRightSubHeader(props: any) {
-    const defaultColor = useSelector((state: any) => state.colorReducer);
     return (
         <Box
-            sx={{ backgroundColor: defaultColor?.backgroundColor }}
             display={'flex'}
             padding={'12px'}
         >
-            <IconButton onClick={props.close} sx={{ color: '#f1f1f1',backgroundColor :defaultColor?.primaryColor }} >
-                {/* <CloseIcon /> */}
-                <ArrowBackIcon/>
-            </IconButton>
-            <Typography marginLeft={'10px'} fontSize={'24px'} textAlign={'start'} color={'white'} >
+            <Typography marginLeft={'10px'} fontSize={'24px'} textAlign={'start'} color={colorPalette.darkBackground} >
                 {props.header}
             </Typography>
         </Box>

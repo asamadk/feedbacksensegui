@@ -11,7 +11,7 @@ import FSLoader from '../Components/FSLoader';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs, isDayjs } from 'dayjs';
-import { EmbedPositions, USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
+import { EmbedPositions, USER_UNAUTH_TEXT, colorPalette, componentName } from '../Utils/Constants';
 import { ConfigurePageTabList, handleLogout, validateEmail } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
@@ -19,27 +19,9 @@ import { userRoleType } from '../Utils/types';
 import { setSurveyConfigRedux } from '../Redux/Reducers/surveyConfigReducer';
 import { useDispatch } from 'react-redux';
 import CustomTabSet from '../Components/CustomTabSet';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-const CssTextField = styled(TextField)({
-  '& label.Mui-focused': {
-    color: '#006dff',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: '#006dff',
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#454545',
-    },
-    '&:hover fieldset': {
-      borderColor: '#006dff',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#006dff',
-    },
-  },
-  color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 const embedPositionStyle = {
   border: '1px solid #808080',
@@ -60,7 +42,7 @@ const selectedEmbedPositionStyle = {
   height: '200px',
   cursor: 'pointer',
   position: 'relative',
-  border: '4px #006dff solid'
+  border: `4px ${colorPalette.secondary}  solid`
 }
 
 const getEmbedButtonPosition = (
@@ -123,7 +105,7 @@ function ConfigureSurvey() {
   const [showStopSurveyNumberData, setShowStopSurveyNumberData] = React.useState<string>('');
   const [embedPositionList, setEmbedPositionList] = useState(EmbedPositions);
   const [loading, setLoading] = React.useState(false);
-  const [selectedColor, setSelectedColor] = useState('#006dff');
+  const [selectedColor, setSelectedColor] = useState('#63AB77');
   const [selectedTextColor, setSelectedTextColor] = useState('#ffffff');
   const [value, setValue] = React.useState(0);
   const [selectedPosition, setSelectedPosition] = useState<'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'>('top-left');
@@ -299,14 +281,16 @@ function ConfigureSurvey() {
         {
           value === 0 &&
           <>
-            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
-              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Response notification</Typography>
-              <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+            <Box sx={globalSettingSubContainers(colorPalette.background)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={colorPalette.darkBackground} >
+                Response notification
+              </Typography>
+              <Typography marginTop={'20px'} textAlign={'start'} color={colorPalette.fsGray} >
                 Would you like to receive notifications when someone fills out the survey?
               </Typography>
               <Box textAlign={'start'} >
                 <FormControlLabel
-                  sx={{ color: 'whitesmoke' }}
+                  sx={{ color: colorPalette.fsGray }}
                   control={<Switch onChange={(e) => setNotifyUser(e.target.checked)} checked={notifyUser} value={notifyUser} color="info" />}
                   label="Notify me"
                 />
@@ -315,7 +299,7 @@ function ConfigureSurvey() {
                 notifyUser &&
                 <CssTextField
                   size='small'
-                  sx={{ input: { color: 'white' } }}
+                  sx={{ input: { color: colorPalette.darkBackground } }}
                   id="outlined-basic"
                   placeholder='Please enter the emails separated by commas.'
                   variant="outlined"
@@ -326,16 +310,16 @@ function ConfigureSurvey() {
               }
             </Box>
 
-            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
-              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Responses limit</Typography>
-              <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+            <Box sx={globalSettingSubContainers(colorPalette.background)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={colorPalette.darkBackground} >Responses limit</Typography>
+              <Typography marginTop={'20px'} textAlign={'start'} color={colorPalette.fsGray} >
                 Set the maximum number of responses you'd like to collect with this survey.
               </Typography>
               {showStopSurveyNumber === true &&
                 <CssTextField
                   size='small'
                   type={'number'}
-                  sx={{ input: { color: 'white' } }}
+                  sx={{ input: { color: colorPalette.darkBackground } }}
                   id="outlined-basic"
                   placeholder='Enter a number'
                   variant="outlined"
@@ -346,14 +330,14 @@ function ConfigureSurvey() {
               }
             </Box>
 
-            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
-              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >End date</Typography>
-              <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+            <Box sx={globalSettingSubContainers(colorPalette.background)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={colorPalette.darkBackground} >End date</Typography>
+              <Typography marginTop={'20px'} textAlign={'start'} color={colorPalette.fsGray} >
                 Set a cut-off date on which this survey will close and stop accepting responses.
               </Typography>
               <Box textAlign={'start'} >
                 <FormControlLabel
-                  sx={{ color: 'whitesmoke' }}
+                  sx={{ color: colorPalette.fsGray }}
                   control={<Switch onChange={(e) => setShowStopSurveyDate(e.target.checked)} checked={showStopSurveyDate} value={showStopSurveyDate} color="info" />}
                   label="Stop the survey on a specific date."
                 />
@@ -428,9 +412,9 @@ function ConfigureSurvey() {
       <>
         {
           value === 1 && <>
-            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
-              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Widget Position</Typography>
-              <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+            <Box sx={globalSettingSubContainers(colorPalette.background)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={colorPalette.darkBackground} >Widget Position</Typography>
+              <Typography marginTop={'20px'} textAlign={'start'} color={colorPalette.fsGray} >
                 Select where would you like to display the Feedback button
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
@@ -445,10 +429,10 @@ function ConfigureSurvey() {
                 )}
               </Box>
             </Box>
-            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
-              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Button Color</Typography>
+            <Box sx={globalSettingSubContainers(colorPalette.background)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={colorPalette.darkBackground} >Button Color</Typography>
               <Box sx={{ display: 'flex' }} >
-                <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+                <Typography marginTop={'20px'} textAlign={'start'} color={colorPalette.fsGray} >
                   Select the color of Feedback button
                 </Typography>
                 <Box marginTop={'20px'} marginLeft={'10px'}>
@@ -456,10 +440,10 @@ function ConfigureSurvey() {
                 </Box>
               </Box>
             </Box>
-            <Box sx={globalSettingSubContainers(defaultColor?.primaryColor)} >
-              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={'#f1f1f1'} >Text Color</Typography>
+            <Box sx={globalSettingSubContainers(colorPalette.background)} >
+              <Typography fontSize={'18px'} width={200} textAlign={'start'} color={colorPalette.darkBackground} >Text Color</Typography>
               <Box sx={{ display: 'flex' }} >
-                <Typography marginTop={'20px'} textAlign={'start'} color={'#808080'} >
+                <Typography marginTop={'20px'} textAlign={'start'} color={colorPalette.fsGray} >
                   Select the color of Feedback button's text
                 </Typography>
                 <Box marginTop={'20px'} marginLeft={'10px'}>
@@ -477,7 +461,7 @@ function ConfigureSurvey() {
   }
 
   return (
-    <Box sx={{ ...settingLayoutStyle, backgroundColor: defaultColor?.backgroundColor }} >
+    <Box sx={{ ...settingLayoutStyle, backgroundColor: colorPalette.textSecondary }} >
       <CustomTabSet
         tabsetList={ConfigurePageTabList}
         change={(value: number) => handleTabChange(value)}

@@ -4,6 +4,7 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recha
 import { getIconColorById } from '../../../Utils/FeedbackUtils'
 import GaugeChart from 'react-gauge-chart';
 import FSTooltip from '../../FSTooltip';
+import { colorPalette } from '../../../Utils/Constants';
 
 type propsType = {
   id: number,
@@ -11,7 +12,7 @@ type propsType = {
 }
 
 const textContainer = {
-  color : '#f1f1f1',
+  color : colorPalette.darkBackground,
   textAlign : 'start',
   margin : '20px',
 }

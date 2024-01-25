@@ -23,13 +23,13 @@ import TemplateDetailLayout from './Layout/TemplateDetailLayout';
 import PreviewSurveyLayout from './Layout/PreviewSurveyLayout';
 import { useSelector } from 'react-redux';
 import HttpFailureComponent from './Components/HttpFailure/HttpFailureComponent';
-import { handleLogout } from './Utils/FeedbackUtils';
 import ProcessInvite from './Layout/ProcessInvite';
 import { ignoreAuthPaths } from './Utils/Constants';
 import { setUserRole } from './Redux/Actions/userRoleAction';
 import { useDispatch } from 'react-redux';
 import { setCurrentUsers } from './Redux/Reducers/currentUserReducer';
 import Support from './Layout/Support';
+import SignUpLayout from './Layout/SignUpLayout';
 
 function App() {
 
@@ -96,7 +96,7 @@ function App() {
 
   return (
     <>
-      <ThemeProvider theme={darkTheme} >
+      <ThemeProvider theme={lightTheme} >
         {liveSurvey === false && <div style={{ backgroundColor: defaultColor?.backgroundColor }} className="App">
           <Header loggedIn={user != null} />
           <Routes>
@@ -183,20 +183,26 @@ function App() {
           </div>
         </ThemeProvider>
       }
-      <Routes>
-        <Route
-          path='/payment/success'
-          element={<PaymentSuccess />}
-        />
-        <Route
-          path='/failure'
-          element={<HttpFailureComponent />}
-        />
-        <Route
-          path='/invite'
-          element={<ProcessInvite />}
-        />
-      </Routes>
+      <ThemeProvider theme={lightTheme} >
+        <Routes>
+          <Route
+            path='/payment/success'
+            element={<PaymentSuccess />}
+          />
+          <Route
+            path='/failure'
+            element={<HttpFailureComponent />}
+          />
+          <Route
+            path='/invite'
+            element={<ProcessInvite />}
+          />
+          <Route
+            path='/sign-up'
+            element={<SignUpLayout />}
+          />
+        </Routes>
+      </ThemeProvider>
     </>
   );
 }

@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { logicType } from '../../Utils/types';
 import { modalLogicStyle } from '../../Styles/ModalStyle';
 import { Autocomplete, Box, Chip, Divider, IconButton, MenuItem, Select, TextField, Typography } from '@mui/material';
-import { muiSelectStyle } from '../../Styles/InputStyles';
+import { muiSelectStyle, textFieldStyle } from '../../Styles/InputStyles';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { v4 as uuidv4 } from "uuid";
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import styled from '@emotion/styled';
-import { dateAnswerOperators, multipleAnswerOperators, singleAnswerOperators, textAnswerOperators } from '../../Utils/Constants';
+import { colorPalette, dateAnswerOperators, multipleAnswerOperators, singleAnswerOperators, textAnswerOperators } from '../../Utils/Constants';
 import { answerNotNeededSet } from '../../Utils/FeedbackUtils';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import InfoIcon from '@mui/icons-material/Info';
@@ -18,18 +18,19 @@ import { useSelector } from 'react-redux';
 const logicSelectContainer = {
     padding: '20px',
     marginTop: '20px',
-    border: '0.5px dashed #454545',
     borderRadius: '6px',
+    backgroundColor: colorPalette.background,
+    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
 }
 
 const logicListContainer = (bgColor : string) => {
     return {
         padding: '10px',
         marginTop: '20px',
-        border: '0.5px solid #454545',
         borderRadius: '6px',
         backgroundColor: bgColor,
-        cursor: 'pointer'
+        cursor: 'pointer',
+        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
     }
 }
 
@@ -40,30 +41,12 @@ const logicIconsContainer = (bgColor : string) => {
         backgroundColor : bgColor,
         padding: '5px',
         marginBottom: '10px',
-        borderRadius: '10px'
+        borderRadius: '10px',
+        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
     }
 }
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#006dff',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: '#006dff',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#454545',
-        },
-        '&:hover fieldset': {
-            borderColor: '#006dff',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#006dff',
-        },
-    },
-    color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 type propType = {
     type: number,
@@ -275,7 +258,7 @@ function CreateLogic(props: propType, ref: any) {
                     <Box sx={logicSelectContainer}>
                         <Typography
                             onClick={handleAddNewLogic}
-                            sx={{ cursor: 'pointer', textAlign: 'center' }} color={'#006dff'}
+                            sx={{ cursor: 'pointer', textAlign: 'center' }} color={colorPalette.primary}
                         >+ Add new logic</Typography>
                     </Box>
                 </Box>
@@ -309,17 +292,17 @@ function DraggableLogicItem({ logic, index, ...otherProps }: any) {
 
     return (
         <Box ref={combinedRef} key={logic.id} >
-            <Box sx={logicListContainer(defaultColor?.secondaryColor)} >
-                <Box sx={logicIconsContainer(defaultColor?.primaryColor)} >
+            <Box sx={logicListContainer(colorPalette.background)} >
+                <Box sx={logicIconsContainer(colorPalette.textSecondary)} >
                     <Box textAlign={'end'} >
                         <IconButton sx={{cursor : 'grab'}} >
-                            <DragIndicatorIcon sx={{ color: '#ffffff' }} />
+                            <DragIndicatorIcon sx={{ color: colorPalette.darkBackground }} />
                         </IconButton>
                     </Box>
                     <Box textAlign={'end'} >
                         <IconButton
                             onClick={() => otherProps.handleRemoveLogic(logic.id)}
-                        ><RemoveCircleIcon sx={{ color: '#ffffff' }} />
+                        ><RemoveCircleIcon sx={{ color: colorPalette.darkBackground }} />
                         </IconButton>
                     </Box>
                 </Box>
@@ -413,7 +396,7 @@ function DraggableLogicItem({ logic, index, ...otherProps }: any) {
                 <Box justifyContent={'space-between'} display={'flex'} >
                     <Typography marginTop={'7px'} marginRight={'10px'} >Go to</Typography>
                     <CssTextField
-                        sx={{ input: { color: 'white' } }}
+                        // sx={{ input: { color: 'white' } }}
                         id="outlined-basic"
                         placeholder='Path Name'
                         variant="outlined"

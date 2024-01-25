@@ -5,27 +5,10 @@ import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import { useSelector } from 'react-redux';
 import { useEffect, useMemo, useState } from 'react';
+import { colorPalette } from '../Utils/Constants';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#006dff',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: '#006dff',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#454545',
-        },
-        '&:hover fieldset': {
-            borderColor: '#006dff',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#006dff',
-        },
-    },
-    color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 function GenericModal(props: any) {
 
@@ -66,19 +49,19 @@ function GenericModal(props: any) {
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             {payload?.header}
                         </Typography>
-                        <IconButton onClick={props.close} sx={{ color: '#f1f1f1' }} >
+                        <IconButton onClick={props.close} sx={{ color: colorPalette.textPrimary }} >
                             <CloseIcon />
                         </IconButton>
                     </Box>
 
                     <Box sx={{ marginTop: '20px', marginBottom: '20px' }} >
                         {payload?.warning != null && <Typography
-                            sx={{ fontSize: '16px', color: '#454545' }} >
+                            sx={{ fontSize: '16px', color: colorPalette.fsGray }} >
                             {payload?.warning}
                         </Typography>}
 
-                        <Typography>{payload?.description.split('|')[0]}</Typography>
-                        <Typography>{payload?.description.split('|')[1]}</Typography>
+                        <Typography color={colorPalette.fsGray} >{payload?.description.split('|')[0]}</Typography>
+                        <Typography color={colorPalette.fsGray} >{payload?.description.split('|')[1]}</Typography>
 
                     </Box>
 
@@ -86,7 +69,7 @@ function GenericModal(props: any) {
                         {
                             props.dualConfirmation === true &&
                             <CssTextField
-                                sx={{ input: { color: 'white' }, marginTop: '10px' }}
+                                sx={{ input: { color: colorPalette.textPrimary }, marginTop: '10px' }}
                                 id="outlined-basic"
                                 placeholder='Type "continue" to proceed'
                                 variant="outlined"

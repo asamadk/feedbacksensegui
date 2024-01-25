@@ -1,6 +1,7 @@
 import { Tab, Tabs } from '@mui/material';
 import { styled } from '@mui/system';
 import React, { useEffect } from 'react'
+import { colorPalette } from '../Utils/Constants';
 
 interface StyledTabProps {
     label: string;
@@ -12,39 +13,40 @@ interface StyledTabsProps {
     onChange: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
-const StyledTabs = styled((props: StyledTabsProps) => (
-    <Tabs
-        {...props}
-        TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
-    />
-))({
-    '& .MuiTabs-indicator': {
-        display: 'flex',
-        justifyContent: 'center',
-        backgroundColor: 'transparent',
-    },
-    '& .MuiTabs-indicatorSpan': {
-        maxWidth: 40,
-        width: '100%',
-        backgroundColor: '#006dff',
-    },
-});
-
-const StyledTab = styled((props: StyledTabProps) => (
-    <Tab disableRipple {...props} />
-))(({ theme }) => ({
-    textTransform: 'none',
-    marginRight: theme.spacing(1),
-    color: 'rgba(255, 255, 255, 0.7)',
-    '&.Mui-selected': {
-        color: '#fff',
-    },
-    '&.Mui-focusVisible': {
-        backgroundColor: 'rgba(100, 95, 228, 0.32)',
-    },
-}));
-
 function CustomTabSet(props: any) {
+
+    const StyledTabs = styled((localProps: StyledTabsProps) => (
+        <Tabs
+            orientation={props?.orientation === 'vertical' ? 'vertical' : 'horizontal'}
+            {...localProps}
+            TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+        />
+    ))({
+        '& .MuiTabs-indicator': {
+            display: 'flex',
+            justifyContent: 'center',
+            backgroundColor: 'transparent',
+        },
+        '& .MuiTabs-indicatorSpan': {
+            maxWidth: 40,
+            width: '100%',
+            backgroundColor: colorPalette.secondary,
+        }
+    });
+
+    const StyledTab = styled((props: StyledTabProps) => (
+        <Tab disableRipple {...props} />
+    ))(({ theme }) => ({
+        textTransform: 'none',
+        marginRight: theme.spacing(1),
+        color: colorPalette.darkBackground,
+        '&.Mui-selected': {
+            color: colorPalette.primary,
+        },
+        '&.Mui-focusVisible': {
+            backgroundColor: colorPalette.secondary,
+        },
+    }));
 
     const [tabSetList, setTabsetList] = React.useState<any[]>(props.tabsetList)
     const [value, setValue] = React.useState(parseInt(props.index));

@@ -11,7 +11,7 @@ import axios from 'axios';
 import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 
@@ -69,7 +69,7 @@ function ChangeFolderModal(props: any) {
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Move to folder
                         </Typography>
-                        <IconButton sx={{ color: '#f1f1f1' }} >
+                        <IconButton sx={{ color: colorPalette.darkBackground }} >
                             <CloseIcon onClick={props.close} />
                         </IconButton>
                     </Box>

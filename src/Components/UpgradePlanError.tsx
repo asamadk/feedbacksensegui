@@ -3,6 +3,7 @@ import React from 'react'
 import { containedButton } from '../Styles/ButtonStyle';
 import { useNavigate } from 'react-router';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import { colorPalette } from '../Utils/Constants';
 
 function UpgradePlanError({ message,desc,showButton }: { message: string,desc : string,showButton : boolean }) {
 
@@ -15,27 +16,28 @@ function UpgradePlanError({ message,desc,showButton }: { message: string,desc : 
     return (
         <Box>
             <AutoAwesomeIcon 
-                sx={{ color: '#006dff',fontSize : 50 }} 
+                sx={{ color: colorPalette.secondary,fontSize : 50 }} 
             />
             <Typography 
-                color={'white'} 
+                color={colorPalette.darkBackground} 
                 variant='h5'
                 fontWeight={500}
             >
                     {message}
             </Typography>
             <Typography
-                color={'#808080'}
+                color={colorPalette.fsGray}
             >
                 {desc}
             </Typography>
             {
-                showButton === true &&
+                showButton === true ?
                 <Button
                     onClick={handleUpgrade}
                     sx={{...containedButton,width : 'fit-content'}} >
                     Upgrade
-                </Button>
+                </Button> : 
+                <Box sx={{marginTop : '20px'}} ></Box>
             }
         </Box>
     )

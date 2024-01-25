@@ -10,7 +10,7 @@ import SingleAnswerSelectionDisplay from './SingleAnswerSelectionDisplay'
 import SmileyScaleDisplay from './SmileyScaleDisplay';
 import TextAnswerDisplay from './TextAnswerDisplay'
 import WelcomeDisplay from './WelcomeDisplay'
-import { TEMPLATE_KEY } from '../Utils/Constants';
+import { TEMPLATE_KEY, colorPalette } from '../Utils/Constants';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material';
 
@@ -30,7 +30,7 @@ function DynamicComponentDisplay(props: any) {
                 id: 1,
                 header: 'Default',
                 text: 'Default',
-                color: ['#f1f1f1', '#006dff'],
+                color: ['#f1f1f1', colorPalette.primary],
                 textColor: '#808089'
             };
             setSurveyColors(theme);

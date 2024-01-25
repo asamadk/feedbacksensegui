@@ -7,7 +7,7 @@ import { getOverAllComponentsData } from '../../Utils/Endpoints'
 import FSLoader from '../FSLoader'
 import Notification from '../../Utils/Notification'
 import axios from 'axios'
-import { USER_UNAUTH_TEXT } from '../../Utils/Constants'
+import { USER_UNAUTH_TEXT, colorPalette } from '../../Utils/Constants'
 import { useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
 import { durationType } from '../../Utils/types'
@@ -16,14 +16,14 @@ const mainContainer = (bgColor : string) => {
   return {
     margin: '20px',
     marginTop: '25px',
-    border: '1px #454545 solid',
     borderRadius: '6px',
-    backgroundColor: bgColor
+    backgroundColor: bgColor,
+    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
   }
 }
 
 const mainTextStyle = {
-  color: '#f1f1f1',
+  color: colorPalette.darkBackground,
   textAlign: 'start',
   fontSize: '16px',
   fontWeight: '500',
@@ -100,6 +100,7 @@ export default DynamicCompOverallRes
 
 const subContainerStyle = {
   display: 'flex',
+  marginBottom: '20px'
 }
 
 type propsType = {
@@ -110,17 +111,14 @@ type propsType = {
 
 function ComponentOverAllResponse(props: propsType) {
 
-  const defaultColor = useSelector((state: any) => state.colorReducer);
-
   return (
-    <Box sx={mainContainer(defaultColor?.primaryColor)} >
+    <Box sx={mainContainer(colorPalette.background)} >
       <Box sx={subContainerStyle} >
         <Box sx={{ marginTop: '10px', marginLeft: '10px' }} >
           <DynamicComponentIcon id={props.idMap[props?.id]} />
         </Box>
         <Typography sx={mainTextStyle}>{getComponentNameById(props.idMap[props?.id])}</Typography>
       </Box>
-      <Divider sx={{ borderTop: '1px #454545 solid', marginBottom: '20px' }} />
       <DynamicOverallCharts id={props.idMap[props?.id]} data={props.data} />
     </Box>
   )

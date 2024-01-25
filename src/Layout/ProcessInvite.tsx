@@ -9,27 +9,10 @@ import axios from 'axios';
 import { acceptCleanInviteAPI, processInviteAPI } from '../Utils/Endpoints';
 import { modalButtonContainerStyle } from '../Styles/ModalStyle';
 import { containedButton, outlinedButton } from '../Styles/ButtonStyle';
+import { textFieldStyle } from '../Styles/InputStyles';
+import { colorPalette } from '../Utils/Constants';
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#006dff',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: '#006dff',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#454545',
-        },
-        '&:hover fieldset': {
-            borderColor: '#006dff',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#006dff',
-        },
-    },
-    color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 function ProcessInvite() {
 
@@ -139,7 +122,7 @@ function SuccessDisplay({ defaultColor, next, reject, message }: any) {
                 marginBottom={'20px'}
             >{message}</Typography>
             <Typography
-                color={'#006dff'}
+                color={colorPalette.primary}
             >
                 Click the button below to join
             </Typography>
@@ -182,23 +165,23 @@ function ConfirmationDisplay({ defaultColor, next, reject }: any) {
         <Box sx={{ ...LayoutStyles.globalSettingSubContainers(defaultColor?.primaryColor), marginTop: 0, textAlign: 'start' }} >
             <Typography
                 variant='h4'
-                color={'white'}
+                color={colorPalette.darkBackground}
                 marginBottom={'20px'}
             >You are about to join a team</Typography>
             <Typography
                 variant='h6'
-                color={'white'}
+                color={colorPalette.darkBackground}
                 marginBottom={'10px'}
             >
                 Removing resources
             </Typography>
             <Typography
-                color={'#006dff'}
+                color={colorPalette.primary}
             >
                 By joining a new team, you will loose all of your current data
             </Typography>
             <CssTextField
-                sx={{ input: { color: 'white' }, marginTop: '10px' }}
+                sx={{ marginTop: '10px' }}
                 id="outlined-basic"
                 placeholder='Type "continue" to proceed'
                 variant="outlined"

@@ -1,3 +1,5 @@
+import { colorPalette } from "../Utils/Constants";
+
 export const modalStyle = (bgColor: string) => {
     return {
         position: 'absolute' as 'absolute',
@@ -6,9 +8,8 @@ export const modalStyle = (bgColor: string) => {
         transform: 'translate(-50%, -50%)',
         width: '50%',
         bgcolor: bgColor,
-        border: '2px solid #454545',
         boxShadow: 30,
-        color: '#f1f1f1',
+        color: colorPalette.textPrimary,
         borderRadius: '5px',
         p: 4,
     }
@@ -18,9 +19,8 @@ export const modalStyleComponents = (bgColor: string) => {
     return {
         height: '100%',
         bgcolor: bgColor,
-        border: '2px solid #454545',
         boxShadow: 24,
-        color: '#f1f1f1',
+        color: colorPalette.textPrimary,
         borderRadius: '5px',
         p: 4,
         display: 'flex'
@@ -50,7 +50,8 @@ export const modalBodyContainerStyle = {
     marginBottom: '10px',
     // maxHeight : '600px',
     maxHeight: 'calc(100vh - 220px)',
-    overflowY: 'scroll'
+    overflowY: 'scroll',
+    color : colorPalette.darkBackground
 }
 
 export const modalLogicStyle = {

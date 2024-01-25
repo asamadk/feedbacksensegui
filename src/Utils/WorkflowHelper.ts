@@ -1,25 +1,26 @@
 import { DefaultEdgeOptions, MarkerType, Position } from "reactflow";
+import { colorPalette } from "./Constants";
 
 export const defaultEdgeOptions: DefaultEdgeOptions = {
 	type: "straight",
-	labelStyle: { color: "#006dff", fill: "#006dff", fontWeight: 800, fontSize: 12 },
+	labelStyle: { color: colorPalette.background, fill: colorPalette.background, fontWeight: 800, fontSize: 12 },
 	labelShowBg: true,
 	labelBgStyle: {
-		fill: "#f1f1f1",
-		background: "#ffcc00",
+		fill: colorPalette.primary,
+		background: colorPalette.primary,
 	},
 	labelBgPadding: [10, 10],
 	labelBgBorderRadius: 15,
 	style: {
 		strokeWidth: 1,
-		stroke: "#f1f1f1",
+		stroke: colorPalette.darkBackground,
 	},
 	animated: false,
 	markerEnd: {
 		type: MarkerType.ArrowClosed,
 		width: 25,
 		height: 25,
-		color: "#f1f1f1",
+		color: colorPalette.darkBackground,
 	},
 };
 

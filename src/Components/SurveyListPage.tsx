@@ -1,17 +1,20 @@
-import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material';
+import { Box, Button, IconButton, TextField, Tooltip, Typography, styled } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import InviteMemberModal from '../Modals/InviteMemberModal';
-import LinearProgressWithLabel from './LinearProgressWithLabel';
+import AppsIcon from '@mui/icons-material/Apps';
+import Groups2Icon from '@mui/icons-material/Groups2';
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import CreateFolder from '../Modals/CreateFolder';
 import SurveysPanel from './SurveysPanel';
+import SearchIcon from '@mui/icons-material/Search';
 import * as Endpoints from '../Utils/Endpoints';
 import * as FeedbackUtils from '../Utils/FeedbackUtils'
 import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
-import { PERM_ISSUE_TEXT, USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { PERM_ISSUE_TEXT, USER_UNAUTH_TEXT, colorPalette, componentName } from '../Utils/Constants';
 import { useSelector } from 'react-redux';
 import { genericModalData, userRoleType } from '../Utils/types';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
@@ -21,6 +24,7 @@ import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetail
 import { useNavigate } from 'react-router';
 import { setCustomSettings } from '../Redux/Reducers/customSettingsReducer';
 import GenericModal from '../Modals/GenericModal';
+import { textFieldStyle } from '../Styles/InputStyles';
 
 
 const surveyPageMainContainer = {
@@ -29,15 +33,25 @@ const surveyPageMainContainer = {
     color: '#f1f1f1',
 }
 
+const leftSectionStyle: any = {
+    display: 'flex',
+    width: '18%',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: '10px 0px',
+    boxShadow: '10px 0px rgba(0, 0, 0, 0.08)'
+}
+
 const allSurveyFolder = (bgColor: string) => {
     return {
         display: 'flex',
         justifyContent: 'space-between',
         padding: '10px',
         paddingBottom: '10px',
-        borderRadius: '5px',
+        // borderRadius: '5px',
         cursor: 'pointer',
-        backgroundColor: bgColor
+        backgroundColor: bgColor,
+        color: colorPalette.textPrimary
     }
 }
 
@@ -46,17 +60,18 @@ const surveyFolderText = {
     justifyContent: 'space-between',
     padding: '10px',
     paddingBottom: '10px',
-    borderRadius: '5px',
     cursor: 'pointer',
+    color: colorPalette.textPrimary
 }
 
 const folderText = {
     display: 'flex',
     justifyContent: 'space-between',
-    color: '#808080',
-    paddingTop: '15px',
-    paddingBottom: '15px'
+    color: colorPalette.textPrimary,
+    padding: '15px'
 }
+
+const CssTextField = styled(TextField)(textFieldStyle);
 
 
 function SurveyListPage() {
@@ -77,6 +92,7 @@ function SurveyListPage() {
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
     const [loading, setLoading] = React.useState(false);
+    const [searchText, setSearchText] = useState('');
 
     let init = false;
 
@@ -192,11 +208,10 @@ function SurveyListPage() {
         setSelectedFolderId('0');
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = defaultColor?.backgroundColor;
+            element.style.background = colorPalette.background;
         });
 
         e.target.style.background = defaultColor?.primaryColor;
-
     }
 
     const handleFolderClick = (e: any, folderName: string, folderId: string) => {
@@ -214,7 +229,7 @@ function SurveyListPage() {
         setSelectedFolderId(folderId);
 
         document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
-            element.style.background = defaultColor?.backgroundColor;
+            element.style.background = colorPalette.background;
         })
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
@@ -236,12 +251,12 @@ function SurveyListPage() {
     }
 
     const highlightCreateFolder = (e: any) => {
-        e.target.style.color = '#006dff';
+        e.target.style.color = colorPalette.primary;
     }
 
     const unhighlightCreateFolder = (e: any) => {
         // e.target.style.color = defaultColor?.primaryColor;
-        e.target.style.color = '#808080';
+        e.target.style.color = colorPalette.textPrimary;
     }
 
     const handleShowModalOnDelete = (folderId: string) => {
@@ -253,7 +268,7 @@ function SurveyListPage() {
             cancelButtonText: 'Cancel',
             description: 'The folder will be removed permanently.',
             type: 'delete',
-            data : folderId
+            data: folderId
         }
         setGenericModalObj(genDeleteObj);
     }
@@ -314,26 +329,46 @@ function SurveyListPage() {
         })
     }
 
+    const handleSearch = (event: any) => {
+        let tempSearchText: string = event.target.value;
+        setSearchText(tempSearchText);
+        // filterSurveys(selectedUser, tempSearchText, selectedSurveyType);
+    }
+
     return (
         <>
             <div style={surveyPageMainContainer} >
-                <div style={{ display: 'flex', width: '15%', flexDirection: 'column', borderRight: '1px #454545 solid', justifyContent: 'space-between', padding: '10px 30px' }} >
+                <div style={leftSectionStyle} >
                     <div style={{ width: '100%', overflowY: 'scroll', paddingBottom: '20px' }} >
-                        <div style={allSurveyFolder(defaultColor?.primaryColor)} className="all-folders-data" onClick={handleAllFolderClick} >
-                            <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >All Surveys</Typography>
-                        </div>
+                        {/* <CssTextField
+                            onChange={handleSearch}
+                            value={searchText}
+                            size='small'
+                            sx={{ input: { color: colorPalette.primary } }}
+                            placeholder='Search surveys and folders..'
+                            style={{ marginLeft: '10px', marginRight: '10px' }}
+                            InputProps={{
+                                endAdornment: <SearchIcon sx={{ color: colorPalette.textPrimary, paddingLeft: '5px' }} />
+                            }}
+                        /> */}
                         <div style={folderText}>
-                            <Typography variant='subtitle2' >FOLDERS</Typography>
+                            <Box sx={{ display: 'flex' }} >
+                                <ArrowDropDownIcon />
+                                <Typography variant='subtitle2' fontWeight={'600'} >My Workspace</Typography>
+                            </Box>
                             <Typography
                                 onMouseEnter={highlightCreateFolder}
                                 onMouseLeave={unhighlightCreateFolder}
                                 onClick={handleOpenCreateFolderModal}
-                                style={{ textDecoration: 'underline', cursor: 'pointer' }}
-                                variant='subtitle2' >
-                                create new
+                                style={{ cursor: 'pointer' }}
+                                fontSize={'18px'}
+                            >
+                                +
                             </Typography>
                         </div>
-
+                        <div style={allSurveyFolder(defaultColor?.primaryColor)} className="all-folders-data" onClick={handleAllFolderClick} >
+                            <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >All Surveys</Typography>
+                        </div>
                         {
                             folderState?.map((folder: any) => {
                                 return (
@@ -348,7 +383,7 @@ function SurveyListPage() {
                                                 onClick={() => handleShowModalOnDelete(folder.id)}
                                                 style={{ padding: '0px' }}
                                                 size='small' >
-                                                <DeleteIcon sx={{ color: '#f1f1f1', fontSize: '15px' }} />
+                                                <DeleteIcon sx={{ color: colorPalette.textPrimary, fontSize: '15px' }} />
                                             </IconButton>
                                         </div>
                                     </Tooltip>
@@ -359,25 +394,32 @@ function SurveyListPage() {
                     </div>
                     {
                         CoreUtils.isComponentVisible(userRole, componentName.BILLING_INFO_HOME) &&
-                        <div style={{ borderTop: '1px #454545 solid' }} >
-                            <div style={{ color: '#808080', paddingTop: '10px' }}>
-                                <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Subscription</Typography>
-                            </div>
-                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >{subscriptionState?.name}</Typography>
-
-                            <div style={{ color: '#808080', paddingTop: '10px' }}>
-                                <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Billing cycle</Typography>
-                            </div>
-                            <Typography style={{ textAlign: 'start', paddingBottom: '30px' }} variant='subtitle2' >{subscriptionState?.billingCycle}</Typography>
-
-                            <Typography style={{ textAlign: 'start' }} variant='subtitle2' >Active survey limit</Typography>
-                            <LinearProgressWithLabel
-                                value={subscriptionState == null ? 0 : subscriptionState?.surveyLimitUsed / subscriptionState?.totalSurveyLimit * 100}
-                                text={subscriptionState == null ? '0' : subscriptionState?.surveyLimitUsed + '/' + subscriptionState?.totalSurveyLimit}
-                            />
-                            <div style={{ marginTop: '40px' }} ></div>
-                            <Button sx={ButtonStyles.containedButton} onClick={handleUpgradePlanClick} variant="contained">Upgrade plan</Button>
-                            <Button sx={ButtonStyles.outlinedButton} onClick={handleOpenInviteModal} variant="outlined">Invite teammates</Button>
+                        <div>
+                            {/* <Box sx={{ padding: '10px 20px' }} >
+                                <Typography style={{ textAlign: 'start', color: colorPalette.textPrimary }} variant='subtitle2' >Active survey limit</Typography>
+                                <LinearProgressWithLabel
+                                    value={subscriptionState == null ? 0 : subscriptionState?.surveyLimitUsed / subscriptionState?.totalSurveyLimit * 100}
+                                    text={subscriptionState == null ? '0' : subscriptionState?.surveyLimitUsed + '/' + subscriptionState?.totalSurveyLimit}
+                                />
+                            </Box> */}
+                            <Box padding={'10px 20px'} >
+                                <Button
+                                    sx={ButtonStyles.outlinedButton}
+                                    onClick={handleUpgradePlanClick}
+                                    variant="contained"
+                                    startIcon={<AppsIcon />}
+                                >
+                                    Apps & Integrations
+                                </Button>
+                                <Button
+                                    startIcon={<Groups2Icon />}
+                                    sx={ButtonStyles.containedButton}
+                                    onClick={handleOpenInviteModal}
+                                    variant="outlined"
+                                >
+                                    Invite teammates
+                                </Button>
+                            </Box>
                         </div>
                     }
                 </div>

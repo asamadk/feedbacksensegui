@@ -6,8 +6,9 @@ import IndividualResponse from '../Components/IndividualResponse';
 import { useParams } from 'react-router';
 import OverAllResult from '../Components/OverAllResult';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import { useSelector } from 'react-redux';
 import OverAllAIAnalysis from '../Components/OverAllAIAnalysis';
+import { colorPalette } from '../Utils/Constants';
+import CustomTabSet from '../Components/CustomTabSet';
 
 const mainContainerCss = {
   height: 'calc(100vh - 69px)',
@@ -18,37 +19,25 @@ function AnalyzeSurvey() {
 
   const { surveyId } = useParams();
 
-  const defaultColor = useSelector((state: any) => state.colorReducer);
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const handleSelectedTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleSelectedTabChange = (event : any,newValue: number) => {
     setSelectedTab(newValue);
   };
 
-  const [showOverAllPopover, setShowOverAllPopover] = useState(false);
-
-  const handleOpenShowAll = () => {
-    setShowOverAllPopover(true);
-  }
-
-  const handleCloseShowAll = () => {
-    setShowOverAllPopover(false);
-  }
 
   return (
-    <Box sx={{...mainContainerCss,backgroundColor : defaultColor?.backgroundColor}} >
+    <Box sx={{ ...mainContainerCss, backgroundColor: colorPalette.textSecondary }} >
       <Box width={'6%'} >
         <Tabs
           orientation="vertical"
           value={selectedTab}
           onChange={handleSelectedTabChange}
-          sx={{ borderRight: '1px #454545 solid', height: 'calc(100vh - 69px)' }}
+          sx={{ borderRight: `0.5px ${colorPalette.fsGray} solid`, height: 'calc(100vh - 69px)' }}
         >
           <Tab
             value={0}
             sx={{ width: 'fit-content' }}
-            onMouseEnter={handleOpenShowAll}
-            onMouseLeave={handleCloseShowAll}
             icon={<EqualizerIcon />}
           />
           <Tab value={1} sx={{ width: 'fit-content' }} icon={<AssignmentIndIcon />} />

@@ -10,7 +10,7 @@ function MainBody() {
     return (
         <Box style={{
             backgroundColor: defaultColor?.backgroundColor,
-            height : 'calc(100vh - 58px)'
+            height : 'calc(100vh - 70px)'
         }} >
             <SurveyListPage />
         </Box>

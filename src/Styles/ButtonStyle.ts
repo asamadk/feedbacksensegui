@@ -1,11 +1,13 @@
-export const backgroundColorMode = '#081213'
+import { colorPalette } from "../Utils/Constants"
+
+export const backgroundColorMode = '#ffffff'
 
 export const containedButton = {
     "&.MuiButtonBase-root:hover": {
-        bgcolor: "#004cb3"
+        bgcolor: colorPalette.secondary
     },
     // backgroundColor: '#D81159',
-    backgroundColor: '#006dff',
+    backgroundColor: colorPalette.primary,
     width: '100%',
     marginTop: '10px',
     color: '#ffffff',
@@ -16,7 +18,7 @@ export const containedButton = {
 export const textButton = {
     width: '100%',
     marginTop: '10px',
-    color: '#006dff',
+    color: colorPalette.primary,
     fontWeight: 500,
     textTransform: 'none',
 }
@@ -24,11 +26,11 @@ export const textButton = {
 export const outlinedButton = {
     "&.MuiButtonBase-root:hover": {
         bgcolor: backgroundColorMode,
-        border: '1px #004cb3 solid',
+        border: `1px ${colorPalette.secondary} solid`,
     },
     backgroundColor: backgroundColorMode,
-    color: '#006dff',
-    border: '1px #006dff solid',
+    color: colorPalette.primary,
+    border: `1px ${colorPalette.primary} solid`,
     width: '100%',
     marginTop: '10px',
     textTransform: 'none'
@@ -38,11 +40,11 @@ export const getOutlinedButtonBG = (bgColor : string) => {
     return {
         "&.MuiButtonBase-root:hover": {
             bgcolor: bgColor,
-            border: '1px #004cb3 solid',
+            border: `1px ${colorPalette.secondary} solid`,
         },
         backgroundColor: bgColor,
-        color: '#006dff',
-        border: '1px #006dff solid',
+        color: colorPalette.primary,
+        border: `1px ${colorPalette.primary} solid`,
         width: '100%',
         marginTop: '10px',
         textTransform: 'none'
@@ -52,8 +54,8 @@ export const getOutlinedButtonBG = (bgColor : string) => {
 export const outlinedButtonNoBorder = {
     "&.MuiButtonBase-root:hover": {
         bgcolor: "transparent",
-        color: '#006dff',
-        border: '1px #006dff solid'
+        color: colorPalette.primary,
+        border: `1px ${colorPalette.primary} solid`
     },
     backgroundColor: backgroundColorMode,
     color: '#ffffff',
@@ -64,12 +66,11 @@ export const outlinedButtonNoBorder = {
 export const simpleOutlinedButton = {
     "&.MuiButtonBase-root:hover": {
         bgcolor: "#121212",
-        border: '1px #006dff solid',
+        border: `1px ${colorPalette.primary} solid`,
     },
     backgroundColor: backgroundColorMode,
-    // color : '#D81159',
-    color: '#006dff',
-    border: '1px #006dff solid',
+    color: colorPalette.primary,
+    border: `1px ${colorPalette.primary} solid`,
     textTransform: 'none',
     width: '100%'
 }
@@ -77,7 +78,7 @@ export const simpleOutlinedButton = {
 export const outlinedBlackButton = {
     "&.MuiButtonBase-root:hover": {
         bgcolor: "#121212",
-        border: '1px #006dff solid',
+        border: `1px ${colorPalette.primary} solid`,
     },
     backgroundColor: backgroundColorMode,
     color: backgroundColorMode,
@@ -94,7 +95,7 @@ export const transparentButton = {
     display: 'flex',
     justifyContent: 'start',
     marginBottom: '10px',
-    color: 'white'
+    color: colorPalette.primary
 }
 
 export const transparentBlueTextButton = {
@@ -103,5 +104,5 @@ export const transparentBlueTextButton = {
     display: 'flex',
     justifyContent: 'start',
     marginBottom: '10px',
-    color: '#006dff'
+    color: colorPalette.primary
 }

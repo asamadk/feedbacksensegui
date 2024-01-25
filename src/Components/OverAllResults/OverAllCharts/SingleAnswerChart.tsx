@@ -3,10 +3,11 @@ import React, { useEffect } from 'react'
 import { Bar, Cell, ComposedChart, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { getIconColorById } from '../../../Utils/FeedbackUtils'
 import FSTooltip from '../../FSTooltip'
+import { colorPalette } from '../../../Utils/Constants'
 
 const mainContainer = {
     marginTop: '20px',
-    color: '#f1f1f1',
+    color: colorPalette.darkBackground,
     textAlign: 'start',
     padding: '20px'
 }
@@ -20,19 +21,19 @@ function SingleAnswerChart(props: propsType) {
 
     return (
         <Box sx={mainContainer} >
-            <Typography fontSize={20} color={'#f1f1f1'} paddingBottom={'10px'} >{props?.data?.question}</Typography>
+            <Typography fontSize={20} color={colorPalette.darkBackground} paddingBottom={'10px'} >{props?.data?.question}</Typography>
             <SingleAnswerBarChart data={props.data} id={props.id} />
             <Typography fontWeight={600} >Answers</Typography>
             {
                 props?.data?.statsArr?.map((answers: any) => {
                     return (
-                        <Box sx={{ background: 'rgba(255, 255, 255, 0.12)', padding: '5px 10px', borderRadius: '5px', marginTop: '10px' }} >
+                        <Box sx={{ background: colorPalette.textSecondary,boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px', padding: '5px 10px', borderRadius: '5px', marginTop: '10px' }} >
                             <Box display={'flex'} justifyContent={'space-between'} >
                                 <Typography
-                                    color={'#f1f1f1'}
+                                    color={colorPalette.darkBackground}
                                     sx={{ flexWrap: 'wrap', overflowX: 'scroll', marginRight: '40px' }}
                                 >{answers?.name}</Typography>
-                                <Typography color={'#f1f1f1'} >{answers?.Frequency}%</Typography>
+                                <Typography color={colorPalette.textSecondary} >{answers?.Frequency}%</Typography>
                             </Box>
                         </Box>
                     )

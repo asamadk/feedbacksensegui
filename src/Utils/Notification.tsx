@@ -21,7 +21,7 @@ const Notification = forwardRef((props: any, ref) => {
 
     const lightTheme = createTheme({
         palette: {
-            mode: 'light',
+            mode: 'dark',
         },
         typography: {
             fontFamily: 'Apercu Pro, sans-serif'

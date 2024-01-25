@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from 'react';
 import UpgradePlanError from './UpgradePlanError';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 import { genericModalData, userRoleType } from '../Utils/types';
-import { USER_UNAUTH_TEXT, componentName } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette, componentName } from '../Utils/Constants';
 import axios from 'axios';
 import { deleteLogoAPI, getLogoAPI, uploadLogoAPI } from '../Utils/Endpoints';
 import GenericModal from '../Modals/GenericModal';
@@ -159,7 +159,7 @@ function SurveyGeneralSettings() {
             !showUpgrade && CoreUtils.isComponentVisible(userRole, componentName.UPLOAD_LOGO) && <>
                 <Box sx={{ display: 'flex' }} >
                     <Box>
-                        <Typography color={'#f1f1f1'} sx={{ marginBottom: '10px' }} >Company Logo</Typography>
+                        <Typography color={colorPalette.darkBackground} sx={{ marginBottom: '10px' }} >Company Logo</Typography>
                         <Button
                             component="label"
                             variant="contained"
@@ -174,7 +174,7 @@ function SurveyGeneralSettings() {
                         <Box marginLeft={'30px'} >
                             <Box sx={{ position: 'relative', cursor: 'pointer' }} >
                                 <Box sx={{ position: 'absolute', right: -5, top: -5 }} >
-                                    <CancelIcon onClick={handleRemoveModal} sx={{ color: '#006dff' }} />
+                                    <CancelIcon onClick={handleRemoveModal} sx={{ color: colorPalette.primary }} />
                                 </Box>
                             </Box>
                             <img style={{ height: '100px', borderRadius: '6px' }} src={imageData} alt="Uploaded Preview" />
@@ -192,7 +192,7 @@ function SurveyGeneralSettings() {
     }
 
     return (
-        <Box style={{ display: 'flex' }} sx={LayoutStyles.globalSettingSubContainers(defaultColor?.primaryColor)} >
+        <Box style={{ display: 'flex' }} sx={LayoutStyles.globalSettingSubContainers(colorPalette.background)} >
             {showUpgradeScreen()}
             {showUploadLogoScreen()}
             <FSLoader show={loading} />

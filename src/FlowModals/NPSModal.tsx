@@ -11,28 +11,10 @@ import { logicType, userRoleType } from '../Utils/types';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 import { useSelector } from 'react-redux';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
-import { componentName } from '../Utils/Constants';
+import { colorPalette, componentName } from '../Utils/Constants';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-const CssTextField = styled(TextField)({
-  '& label.Mui-focused': {
-    color: '#006dff',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: '#006dff',
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#454545',
-    },
-    '&:hover fieldset': {
-      borderColor: '#006dff',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#006dff',
-    },
-  },
-  color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 function NPSModal(props: any) {
 
@@ -95,13 +77,13 @@ function NPSModal(props: any) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={ModalStyles.modalStyleComponents(defaultColor?.secondaryColor)}>
+        <Box sx={ModalStyles.modalStyleComponents(colorPalette.textSecondary)}>
           <Box width={'40%'} marginRight={10} >
             <Box sx={ModalStyles.modalHeaderStyle} >
               <Typography id="modal-modal-title" variant="h5" component="h2">
                 {props.header}
               </Typography>
-              <IconButton sx={{ color: '#f1f1f1' }} >
+              <IconButton sx={{ color: colorPalette.darkBackground }} >
                 <CloseIcon onClick={props.close} />
               </IconButton>
             </Box>
@@ -122,7 +104,7 @@ function NPSModal(props: any) {
 
                 <Box sx={ModalStyles.modalBodyContainerStyle} >
                   <CssTextField
-                    sx={{ input: { color: 'white' }, maxHeight: '50vh' }}
+                    sx={{ maxHeight: '50vh' }}
                     id="outlined-basic"
                     placeholder='Enter your question here'
                     variant="outlined"
@@ -137,7 +119,6 @@ function NPSModal(props: any) {
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '20px' }} >
                   <CssTextField
-                    sx={{ input: { color: 'white' } }}
                     id="outlined-basic"
                     placeholder='Text on the very left'
                     variant="outlined"
@@ -146,7 +127,6 @@ function NPSModal(props: any) {
                     onChange={(e) => setLeftText(e.target.value)}
                   />
                   <CssTextField
-                    sx={{ input: { color: 'white' } }}
                     id="outlined-basic"
                     placeholder='Text on the very right'
                     variant="outlined"
@@ -169,7 +149,7 @@ function NPSModal(props: any) {
               <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
             </Box>
           </Box>
-          <Box className={background?.value} sx={{ backgroundColor: '#ffffff', width: '55%' }} >
+          <Box className={background?.value} sx={{ backgroundColor: background?.value, width: '55%' }} >
             <DynamicComponentDisplay
               data={{
                 question: question,

@@ -7,33 +7,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { colorPalette, USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import axios from 'axios';
 import { inviteUserAPI } from '../Utils/Endpoints';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#006dff',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: '#006dff',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#454545',
-        },
-        '&:hover fieldset': {
-            borderColor: '#006dff',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#006dff',
-        },
-    },
-    color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
-const textFieldStyle = {
+const textFieldStyleCSS = {
     paddingTop: '30px'
 }
 
@@ -96,18 +78,18 @@ function InviteMemberModal(props: any) {
             >
                 <Box sx={ModalStyles.modalStyle(defaultColor?.secondaryColor)}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
-                        <Typography id="modal-modal-title" variant="h5" component="h2">
+                        <Typography id="modal-modal-title" variant="h5" component="h2" >
                             Invite your team members !
                         </Typography>
-                        <IconButton sx={{ color: '#f1f1f1' }} >
+                        <IconButton sx={{ color: colorPalette.darkBackground }} >
                             <CloseIcon onClick={handleClose} />
                         </IconButton>
                     </Box>
 
-                    <Box sx={textFieldStyle} >
+                    <Box sx={textFieldStyleCSS} >
                         <InputLabel htmlFor="component-simple" sx={{ mb: '5px' }} >E-mail(s)</InputLabel>
                         <CssTextField
-                            sx={{ input: { color: 'white' } }}
+                            sx={{ input: { color: colorPalette.darkBackground } }}
                             size='small'
                             id="outlined-basic"
                             placeholder='e.g sam@example.io'
