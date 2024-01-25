@@ -2,7 +2,7 @@ import { Box, Button, FormControlLabel, Typography } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import Notification from '../Utils/Notification';
 import FSLoader from './FSLoader';
-import { USER_UNAUTH_TEXT, getBackgrounds } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette, getBackgrounds } from '../Utils/Constants';
 import axios from 'axios';
 import { getSurveyDetails, saveSurveyDesgin } from '../Utils/Endpoints';
 import { handleLogout } from '../Utils/FeedbackUtils';
@@ -82,23 +82,20 @@ function BackgroundTemplates(props: any) {
 
   return (
     <Box sx={{ padding: '20px', overflowY: 'scroll', height: 'calc(100vh - 200px)' }}>
-      <Box sx={{ textAlign: 'start', marginBottom: '40px' }} >
-        <Box display={'flex'} justifyContent={'space-between'}>
-          <Typography sx={{ color: '#f1f1f1', fontSize: '20px', marginBottom: '10px' }} >Selected background</Typography>
-        </Box>
-        <BackgroundComponent background={selectedBackground} />
-      </Box>
       <Box sx={{ textAlign: 'start' }}  >
-        <Typography sx={{ color: '#f1f1f1', fontSize: '20px', marginBottom: '10px' }} >All backgrounds</Typography>
-        {getBackgrounds().map((background) => {
-          return (
-            <Box key={background.id} onClick={() => handleBackgroundClick(background)}>
-              <BackgroundComponent
-                background={background}
-              />
-            </Box>
-          )
-        })}
+        <Typography sx={{ color: colorPalette.darkBackground, fontSize: '20px', marginBottom: '10px' }} >All backgrounds</Typography>
+        <Box display={'flex'} sx={{ flexWrap: 'wrap' }}>
+          {getBackgrounds().map((background) => {
+            return (
+              <Box sx={{ width: '25%' }} key={background.id} onClick={() => handleBackgroundClick(background)}>
+                <BackgroundComponent
+                  background={background}
+                  selected={selectedBackground.id === background.id}
+                />
+              </Box>
+            )
+          })}
+        </Box>
       </Box>
       <Notification ref={snackbarRef} />
       <FSLoader show={loading} />
@@ -108,13 +105,33 @@ function BackgroundTemplates(props: any) {
 
 export default BackgroundTemplates
 
-function BackgroundComponent({ background }: any) {
+const backComponentStyle = {
+  cursor: 'pointer',
+  height: '90px',
+  // border: '1px #454545 solid',
+  borderRadius: '6px',
+  display: 'flex',
+  marginBottom: '10px',
+  marginRight: '5px'
+};
+
+const selectedBackComponentStyle = {
+  cursor: 'pointer',
+  height: '85px',
+  border: `2px ${colorPalette.darkBackground} solid`,
+  borderRadius: '6px',
+  display: 'flex',
+  marginBottom: '10px',
+  marginRight: '5px'
+};
+
+function BackgroundComponent({ background, selected }: any) {
   return (
-    <Box sx={{ cursor: 'pointer', height: '90px', border: '1px #454545 solid', borderRadius: '5px', display: 'flex', marginBottom: '10px' }} >
-      <Box className={background?.value} sx={{ width: '25%', borderRight: '1px #454545 solid', backgroundColor: '#ffffff' }} ></Box>
-      <Box sx={{ width: '75%', margin: 'auto', paddingLeft: '20px' }} >
-        <Typography sx={{ color: '#f1f1f1' }} >{background?.name}</Typography>
-      </Box>
+    <Box sx={selected ? selectedBackComponentStyle : backComponentStyle} >
+      <Box
+        className={background?.value}
+        sx={{ backgroundColor: background?.value || '#ffffff', width: '100%',borderRadius : '6px' }}
+      ></Box>
     </Box>
   );
 }

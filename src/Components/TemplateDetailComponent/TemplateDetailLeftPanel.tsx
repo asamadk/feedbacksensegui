@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react'
 import { containedButton, outlinedButton } from '../../Styles/ButtonStyle';
 import Notification from '../../Utils/Notification';
 import FSLoader from '../FSLoader';
-import { USER_UNAUTH_TEXT } from '../../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette } from '../../Utils/Constants';
 import { handleLogout } from '../../Utils/FeedbackUtils';
 import axios from 'axios';
 import { createSurveyFromTemplateAPI } from '../../Utils/Endpoints';
@@ -66,18 +66,17 @@ function TemplateDetailLeftPanel({
       flexDirection={'column'}
       justifyContent={'space-between'}
       padding={'0px 20px'}
-      borderRight={'1px #454545 solid'}
     >
       <Box>
         <Box textAlign={'start'}>
           <IconButton sx={{ marginTop: '10px' }} onClick={handleBackButtonClick}  >
-            <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
+            <ArrowBackIcon sx={{ color: colorPalette.darkBackground }} />
           </IconButton>
         </Box>
-        <Typography sx={{ textAlign: 'start' }} fontSize={24} color={'white'}>
+        <Typography sx={{ textAlign: 'start' }} fontSize={24} color={colorPalette.darkBackground}>
           {template?.name}
         </Typography>
-        <Typography sx={{ textAlign: 'start' }} color={'#808080'} >
+        <Typography sx={{ textAlign: 'start' }} color={colorPalette.fsGray} >
           {template?.description}
         </Typography>
       </Box>

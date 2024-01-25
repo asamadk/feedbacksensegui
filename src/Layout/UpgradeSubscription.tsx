@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { getAllPlanList, informSupportUserPricingAPI, initializePaymentAPI, startSubScription } from '../Utils/Endpoints';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
@@ -41,7 +41,6 @@ export default function UpgradeSubscription() {
 
     const snackbarRef: any = useRef(null);
 
-    const defaultColor = useSelector((state: any) => state.colorReducer);
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
     const [billing, setBilling] = useState<'month' | 'year'>('year');
@@ -210,7 +209,7 @@ export default function UpgradeSubscription() {
                 email: reqBody.email,
             },
             theme: {
-                color: '#006dff',
+                color: colorPalette.primary,
             },
         };
 
@@ -230,10 +229,10 @@ export default function UpgradeSubscription() {
     };
 
     return (
-        <ThemeProvider theme={darkTheme} >
-            <Grid container sx={{ overflow: 'scroll', py: { xs: 2, sm: 3 }, padding: '20px', height: 'calc(100vh - 55px)', }}>
+        <ThemeProvider theme={lightTheme} >
+            <Grid container sx={{ overflow: 'scroll', backgroundColor : colorPalette.textSecondary, py: { xs: 2, sm: 3 }, padding: '20px', height: 'calc(100vh - 55px)', }}>
                 <IconButton onClick={handleBackButtonClick} >
-                    <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
+                    <ArrowBackIcon sx={{ color: colorPalette.darkBackground }} />
                 </IconButton>
                 <Grid item xs={12} sx={{ mx: 'auto', maxWidth: '2xl', textAlign: { xs: 'center' } }}>
                     <Typography variant="h4" component="h2" sx={{ fontWeight: 'bold', mb: 3, color: 'text.primary', fontSize: { xs: '3xl', sm: '4xl' } }}>
@@ -242,16 +241,16 @@ export default function UpgradeSubscription() {
                     <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: 'lg', mb: 3 }}>
                         Plan doesn't fits your needs? Contact us to discuss customized solutions.
                     </Typography>
-                    <Box sx={{ backgroundColor: defaultColor?.primaryColor, borderRadius: '5px', padding: '10px', width: 'fit-content', margin: 'auto' }} >
-                        <Typography color={'#006dff'} variant="subtitle1" component="p">
+                    <Box sx={{ backgroundColor: colorPalette.darkBackground, borderRadius: '5px', padding: '10px', width: 'fit-content', margin: 'auto' }} >
+                        <Typography color={colorPalette.secondary} variant="subtitle1" component="p">
                             If you decide to change your plan again in the future, any remaining balance from your subscription can be
                             claimed through a support ticket.
                         </Typography>
                     </Box>
                     <ThemeProvider theme={lightTheme} >
-                        <Box color={'#808080'} >
+                        <Box color={colorPalette.textPrimary} >
                             <Typography variant="subtitle1" component="span">Monthly</Typography>
-                            &nbsp; <Switch name="checkbox" color="primary" checked={billing === 'year'} onChange={handleChange} /> &nbsp;
+                            &nbsp; <Switch name="checkbox" color="success" checked={billing === 'year'} onChange={handleChange} /> &nbsp;
                             <Typography variant="subtitle1" component="span">Yearly</Typography>
                         </Box>
                     </ThemeProvider>
@@ -269,12 +268,12 @@ export default function UpgradeSubscription() {
                         )
                     })
                 }
-                <Box sx={{ backgroundColor: defaultColor?.primaryColor, borderRadius: '5px', padding: '10px', width: 'fit-content', margin: 'auto' }} >
-                    <Typography color={'#006dff'} variant="subtitle1" component="p">
+                <Box sx={{ backgroundColor: colorPalette.darkBackground, borderRadius: '5px', padding: '10px', width: 'fit-content', margin: 'auto' }} >
+                    <Typography color={colorPalette.secondary} variant="subtitle1" component="p">
                         Please Note: If you downgrade your plan while having ongoing surveys, all active surveys will be unpublished.
                     </Typography>
                 </Box>
-                <ThemeProvider theme={darkTheme} >
+                <ThemeProvider theme={lightTheme} >
                     <Box margin={'20px'} width={'100%'}>
                         <PlanDetailsTable />
                     </Box>
@@ -295,15 +294,12 @@ export default function UpgradeSubscription() {
 
 function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
 
-    const defaultColor = useSelector((state: any) => state.colorReducer);
-
     const CustomBox = styled(Grid)(({ theme }) => ({
         borderRadius: '10px',
-        // backgroundColor: '#29292a',
-        backgroundColor: defaultColor?.primaryColor,
+        backgroundColor: colorPalette.textSecondary,
         padding: theme.spacing(2),
         textAlign: 'center',
-        boxShadow: `inset 0 0 0 1px ${theme.palette.grey[900]}05`,
+        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -328,7 +324,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
 
     return (
         <Grid item xs={12} sx={{ mx: 'auto', maxWidth: '7xl', px: { xs: 2, lg: 3 }, padding: '20px' }}>
-            <Grid item xs={12} sx={{ textAlign: 'start', border: '1px #454545 solid', mx: 'auto', mt: { xs: 6, sm: 8 }, maxWidth: '2xl', borderRadius: '6px', display: { xs: 'block', lg: 'flex' }, width: { lg: 'none' } }}>
+            <Grid item xs={12} sx={{ backgroundColor : colorPalette.background, textAlign: 'start',boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px', mx: 'auto', mt: { xs: 6, sm: 8 }, maxWidth: '2xl', borderRadius: '6px', display: { xs: 'block', lg: 'flex' }, width: { lg: 'none' } }}>
                 <Grid item xs={12} lg={7} sx={{ p: 2, padding: '40px' }}>
                     <Typography variant="h5" component="h3" sx={{ fontWeight: 'bold', color: 'text.primary', fontSize: '2xl', mb: 3 }}>
                         FeedbackSense {plan?.name}
@@ -338,7 +334,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                     </Typography>
                     <Grid container spacing={1} alignItems="center" sx={{ mt: 5 }}>
                         <Grid item xs="auto">
-                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#006DFF', fontSize: 'sm' }}>
+                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: colorPalette.primary, fontSize: 'sm' }}>
                                 What's included
                             </Typography>
                         </Grid>
@@ -347,7 +343,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                         <Grid item xs={12} sm={6}>
                             <Box display={'flex'} marginBottom={'20px'}>
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#006DFF' }} />
+                                    <CheckIcon sx={{ color: colorPalette.primary }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[0]}
@@ -355,7 +351,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                             </Box>
                             <Box display={'flex'} >
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#006DFF' }} />
+                                    <CheckIcon sx={{ color: colorPalette.primary }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[1]}
@@ -365,7 +361,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                         <Grid item xs={12} sm={6}>
                             <Box display={'flex'} marginBottom={'20px'}>
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#006DFF' }} />
+                                    <CheckIcon sx={{ color: colorPalette.primary }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[2]}
@@ -373,7 +369,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                             </Box>
                             <Box display={'flex'} >
                                 <Box sx={{ marginRight: '20px' }} >
-                                    <CheckIcon sx={{ color: '#006DFF' }} />
+                                    <CheckIcon sx={{ color: colorPalette.primary }} />
                                 </Box>
                                 <Typography variant="inherit" component="span" sx={{ fontSize: 'sm', color: 'text.secondary' }}>
                                     {planDesc?.features[3]}

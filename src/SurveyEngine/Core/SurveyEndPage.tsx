@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from '@mui/material'
 import * as ButtonStyles from '../../Styles/ButtonStyle';
 import { useSelector } from 'react-redux';
+import { colorPalette } from '../../Utils/Constants';
 
 const bodyStyle: {} = {
     height: '100vh',
@@ -16,17 +17,18 @@ const subContainerStyle = {
 
 function SurveyEndPage() {
 
-    const defaultColor = useSelector((state: any) => state.colorReducer);
-
     return (
-        <Box sx={{...bodyStyle,backgroundColor : defaultColor?.backgroundColor}} >
+        <Box sx={{...bodyStyle,backgroundColor : colorPalette.darkBackground}} >
             <Box sx={subContainerStyle} >
                 <Box display={'flex'} >
-                    <Typography style={{ color: '#f1f1f1', fontSize: '30px' }} variant='h4' >Feedback</Typography>
-                    <Typography style={{ color: '#006DFF', fontSize: '30px' }} variant='h4' >Sense</Typography>
+                    <img style={{ width: '50px' }} src='/fs_logo_small.png' alt='Logo' />
+                    <Box display={'flex'} marginTop={'5px'}>
+                        <Typography style={{ color: colorPalette.secondary, fontSize: '30px' }} variant='h4' >feedback</Typography>
+                        <Typography style={{ color: colorPalette.secondary, fontSize: '30px' }} variant='h4' >sense</Typography>
+                    </Box>
                 </Box>
                 <Box marginTop={'10px'} >
-                    <Typography style={{ color: '#f1f1f1', fontSize: '24px' }}>
+                    <Typography style={{ color: colorPalette.secondary, fontSize: '24px' }}>
                         Thank you for filling out this survey🎉
                     </Typography>
                 </Box>

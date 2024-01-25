@@ -9,6 +9,7 @@ import OrgGeneralSettings from '../Components/OrgGeneralSettings'
 import OrgTeamMatesSettings from '../Components/OrgTeamMatesSettings'
 import SubscriptionSettings from '../Components/SubscriptionSettings'
 import { useSelector } from 'react-redux';
+import { colorPalette } from '../Utils/Constants';
 
 const tabsetList = [
     { id : 1,name : 'GENERAL' },
@@ -44,14 +45,15 @@ function OrgSettings(props : any) {
     }
 
     return (
-        <Box sx={{...LayoutStyles.settingLayoutStyle,backgroundColor : defaultColor?.backgroundColor}} >
+        <Box sx={{...LayoutStyles.settingLayoutStyle,backgroundColor : colorPalette.textSecondary}} >
             <Box display={'flex'} sx={{ textAlign: 'start' }} >
                 <IconButton onClick={handleBackButtonClick} >
-                    <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
+                    <ArrowBackIcon sx={{ color: colorPalette.darkBackground }} />
                 </IconButton>
                 <Typography 
                     variant='h4' 
                     style={{paddingTop : '5px'}} 
+                    fontWeight={600}
                     sx={LayoutStyles.settingsHeaderTextStyle} 
                 >
                     Organizational Settings

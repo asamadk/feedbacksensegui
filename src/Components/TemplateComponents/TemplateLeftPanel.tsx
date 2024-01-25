@@ -4,8 +4,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import styled from '@emotion/styled';
 import { transparentButton } from '../../Styles/ButtonStyle';
-import { ALL_TEMPLATE_KEY } from '../../Utils/Constants';
+import { ALL_TEMPLATE_KEY, colorPalette } from '../../Utils/Constants';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
+import { textFieldStyle } from '../../Styles/InputStyles';
 
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -21,32 +23,14 @@ const Accordion = styled((props: AccordionProps) => (
     borderRadius: '5px'
 }));
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#006DFF',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: '#006DFF',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#454545',
-        },
-        '&:hover fieldset': {
-            borderColor: '#006DFF',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#006DFF',
-        },
-    },
-    color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 function TemplateLeftPanel(
     { data, filter, templateOptions, templates }: { data: Map<string, Set<string>>, filter: any, templateOptions: any, templates: any[] }
 ) {
 
     const navigate = useNavigate();
+    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     const [expanded, setExpanded] = React.useState<string | false>(ALL_TEMPLATE_KEY);
     const handleChange = (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -76,16 +60,13 @@ function TemplateLeftPanel(
     }
 
     return (
-        <Box height={'calc(100vh - 62px)'} padding={'0px 20px'} borderRight={'1px #454545 solid'} >
-            <Box textAlign={'start'}>
-                <IconButton sx={{ marginTop: '10px' }} onClick={handleBackButtonClick}  >
-                    <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
-                </IconButton>
-            </Box>
-            <Typography sx={{ textAlign: 'start' }} fontSize={24} color={'white'}>
+        <Box height={'calc(100vh - 62px)'} padding={'0px 20px'} sx={{backgroundColor : colorPalette.background}}>
+            <Box textAlign={'start'} display={'flex'} justifyContent={'space-between'}>
+                <Typography sx={{ textAlign: 'start',marginTop: '10px' }} fontSize={24} color={colorPalette.darkBackground}>
                 Templates Library
             </Typography>
-            <Typography sx={{ textAlign: 'start' }} color={'#808080'} >
+            </Box>
+            <Typography sx={{ textAlign: 'start' }} color={colorPalette.textPrimary} >
                 Explore a diverse collection of over 90 pre-designed templates, at your fingertips.
             </Typography>
             <Box sx={{ marginTop: '20px', marginBottom: '50px', }}>
@@ -100,13 +81,13 @@ function TemplateLeftPanel(
                     renderInput={(params) => <CssTextField {...params} label="Search Templates" />}
                 />
             </Box>
-            <Box>
+            <Box sx={{overflowY : 'scroll',height : 'calc(100vh - 340px)'}} >
                 {Array.from(data.entries()).map(([key, value]) => (
                     <Box key={key} >
                         {key === ALL_TEMPLATE_KEY ?
                             <Button
                                 onClick={() => { filter(ALL_TEMPLATE_KEY, ''); setExpanded(false) }}
-                                sx={{ width: '100%', display: 'flex', justifyContent: 'start', marginBottom: '10px', color: 'white' }}
+                                sx={{ width: '100%', display: 'flex', justifyContent: 'start', marginBottom: '10px', color: colorPalette.darkBackground }}
                             >
                                 All Templates
                             </Button> :
@@ -132,10 +113,10 @@ export default TemplateLeftPanel
 
 function AccordionBlock(props: any) {
     return (
-        <Box borderRadius={'5px'} border={props.selected === true ? '1px #808080 solid' : ''} marginBottom={'10px'} >
+        <Box borderRadius={'5px'} border={props.selected === true ? `1px ${colorPalette.fsGray} solid` : ''} marginBottom={'10px'} >
             <Accordion expanded={props.expanded === props.header} onChange={props.handleChange(props.header)}>
                 <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-                    <Typography>{props.header}</Typography>
+                    <Typography color={colorPalette.darkBackground} >{props.header}</Typography>
                 </AccordionSummary>
                 {
                     props.subCategories != null && props.subCategories.length > 0 &&

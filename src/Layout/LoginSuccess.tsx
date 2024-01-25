@@ -8,47 +8,29 @@ import { createOrgForuser } from '../Utils/Endpoints';
 import { useNavigate } from 'react-router';
 import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-const CssTextField = styled(TextField)({
-  '& label.Mui-focused': {
-    color: '#006DFF',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: '#006DFF',
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#454545',
-    },
-    '&:hover fieldset': {
-      borderColor: '#006DFF',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#006DFF',
-    },
-  },
-  color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 const StyledDropdown = styled(Autocomplete)({
   '& label.Mui-focused': {
-    color: '#006DFF',
+    color: colorPalette.primary,
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: '#006DFF',
+    borderBottomColor: colorPalette.primary,
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
       borderColor: '#454545',
     },
     '&:hover fieldset': {
-      borderColor: '#006DFF',
+      borderColor: colorPalette.primary,
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#006DFF',
+      borderColor: colorPalette.primary,
     },
   },
   color: 'white'

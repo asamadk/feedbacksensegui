@@ -9,29 +9,11 @@ import DynamicComponentDisplay from '../SurveyEngine/DynamicComponentDisplay';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 import { useSelector } from 'react-redux';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
-import { componentName } from '../Utils/Constants';
+import { colorPalette, componentName } from '../Utils/Constants';
 import { userRoleType } from '../Utils/types';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#006DFF',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: '#006DFF',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#454545',
-        },
-        '&:hover fieldset': {
-            borderColor: '#006DFF',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#006DFF',
-        },
-    },
-    color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 function WelcomModal(props: any) {
 
@@ -73,13 +55,13 @@ function WelcomModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyleComponents(defaultColor?.secondaryColor)}>
+                <Box sx={ModalStyles.modalStyleComponents(colorPalette.textSecondary)}>
                     <Box width={'40%'} marginRight={10} >
                         <Box sx={ModalStyles.modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">
                                 {props.header}
                             </Typography>
-                            <IconButton sx={{ color: '#f1f1f1' }} >
+                            <IconButton sx={{ color: colorPalette.darkBackground }} >
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
@@ -90,7 +72,7 @@ function WelcomModal(props: any) {
                         />
                         <Box sx={ModalStyles.modalBodyContainerStyle} >
                             <CssTextField
-                                sx={{ input: { color: 'white' }, maxHeight: '50vh' }}
+                                sx={{ input: { color: colorPalette.darkBackground }, maxHeight: '50vh' }}
                                 id="outlined-basic"
                                 placeholder='Enter your message here.'
                                 variant="outlined"
@@ -104,7 +86,7 @@ function WelcomModal(props: any) {
                         <Box sx={ModalStyles.modalBodyContainerStyle} >
                             <Box sx={{ marginTop: '10px', marginBottom: '10px' }} />
                             <CssTextField
-                                sx={{ input: { color: 'white' } }}
+                                sx={{ input: { color: colorPalette.darkBackground } }}
                                 id="outlined-basic"
                                 placeholder='Button label.'
                                 variant="outlined"
@@ -119,7 +101,7 @@ function WelcomModal(props: any) {
                             </Box>
                         </Box>
                     </Box>
-                    <Box className={background?.value} sx={{ backgroundColor: '#ffffff', width: '55%' }} >
+                    <Box className={background?.value} sx={{ backgroundColor: background?.value || '#ffffff', width: '55%' }} >
                         <DynamicComponentDisplay
                             data={{ welcomeText: welcomeText, buttonText: buttonText }}
                             compId={props.compId}

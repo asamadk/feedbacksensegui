@@ -16,6 +16,7 @@
 body {
   /* font-family: 'Cairo', sans-serif; */
   font-family: 'Apercu Pro', sans-serif;
+  color: #222222;
 } 
 
 @media (prefers-reduced-motion: no-preference) {
@@ -32,7 +33,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #222222;
 }
 
 .App-link {

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import { handleLogout } from '../../Utils/FeedbackUtils';
 import { outlinedButton } from '../../Styles/ButtonStyle';
+import { colorPalette } from '../../Utils/Constants';
 
 function HttpFailureComponent() {
 
@@ -19,7 +20,7 @@ function HttpFailureComponent() {
       height={'calc(100vh - 57px)'} 
     >
       <Box paddingTop={'10%'} >
-        <Typography variant='h1' fontWeight={800} color={'#006dff'} >{code}</Typography>
+        <Typography variant='h1' fontWeight={800} color={colorPalette.primary} >{code}</Typography>
         <Typography variant='h6' color={'#808080'} >{message}</Typography>
         <Button
               onClick={handleLogout}

@@ -2,7 +2,7 @@ import { Box, Button, Typography } from '@mui/material'
 import axios from 'axios';
 import React, { useEffect, useRef } from 'react'
 import * as Endpoints from '../Utils/Endpoints';
-import { USER_UNAUTH_TEXT, componentName, getColorSchemes } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette, componentName, getColorSchemes } from '../Utils/Constants';
 import Notification from '../Utils/Notification';
 import FSLoader from './FSLoader';
 import { ColorScheme } from '../Types/GenericTypes';
@@ -99,31 +99,23 @@ function SurveyThemeSelector(props: any) {
 
   return (
     <Box sx={{ padding: '20px', overflowY: 'scroll', height: 'calc(100vh - 200px)' }}>
-      <Box sx={{ textAlign: 'start', marginBottom: '40px' }} >
-        <Box display={'flex'} justifyContent={'space-between'}>
-          <Typography sx={{ color: '#f1f1f1', fontSize: '20px', marginBottom: '10px' }} >Selected theme</Typography>
-        </Box>
-        <ThemeComponent
-          color1={selectedTheme?.color[0]}
-          color2={selectedTheme?.color[1]}
-          textHeading={selectedTheme?.header}
-          textSecond={selectedTheme?.text}
-        />
-      </Box>
       <Box sx={{ textAlign: 'start' }}  >
-        <Typography sx={{ color: '#f1f1f1', fontSize: '20px', marginBottom: '10px' }} >All themes</Typography>
-        {getColorSchemes().map((colorScheme: ColorScheme) => {
-          return (
-            <Box key={colorScheme.id} onClick={() => handleThemeClick(colorScheme)} >
-              <ThemeComponent
-                color1={colorScheme.color[0]}
-                color2={colorScheme.color[1]}
-                textHeading={colorScheme.header}
-                textSecond={colorScheme.text}
-              />
-            </Box>
-          )
-        })}
+        <Typography sx={{ color: colorPalette.darkBackground, fontSize: '20px', marginBottom: '10px' }} >All themes</Typography>
+        <Box display={'flex'} sx={{ flexWrap: 'wrap' }}>
+          {getColorSchemes().map((colorScheme: ColorScheme) => {
+            return (
+              <Box sx={{ width: '25%' }} key={colorScheme.id} onClick={() => handleThemeClick(colorScheme)} >
+                <ThemeComponent
+                  selected={colorScheme.id === selectedTheme.id}
+                  color1={colorScheme.color[0]}
+                  color2={colorScheme.color[1]}
+                  textHeading={colorScheme.header}
+                  textSecond={colorScheme.text}
+                />
+              </Box>
+            )
+          })}
+        </Box>
       </Box>
       <Notification ref={snackbarRef} />
       <FSLoader show={loading} />
@@ -133,15 +125,30 @@ function SurveyThemeSelector(props: any) {
 
 export default SurveyThemeSelector
 
+const themeStyleCss = {
+  cursor: 'pointer',
+  height: '90px',
+  borderRadius: '6px',
+  display: 'flex',
+  marginBottom: '10px',
+  marginRight: '5px'
+}
+
+const selectedThemeStyleCss = {
+  cursor: 'pointer',
+  height: '85px',
+  border: `2px black solid`,
+  borderRadius: '6px',
+  display: 'flex',
+  marginBottom: '10px',
+  marginRight: '5px',
+}
+
 function ThemeComponent(props: any) {
 
   return (
-    <Box sx={{ cursor: 'pointer', height: '90px', border: '1px #454545 solid', borderRadius: '5px', display: 'flex', marginBottom: '10px' }} >
-      <Box sx={{ width: '25%', borderRight: '1px #454545 solid', backgroundColor: props.color1 }} ></Box>
-      <Box sx={{ width: '75%', margin: 'auto', paddingLeft: '20px' }} >
-        <Typography sx={{ color: '#f1f1f1' }} >{props.textHeading}</Typography>
-        <Typography sx={{ color: '#454545' }} >{props.textSecond}</Typography>
-      </Box>
+    <Box sx={props.selected ? selectedThemeStyleCss : themeStyleCss} >
+      <Box sx={{ width: '100%',  backgroundColor: props.color1,borderRadius : '5px' }} ></Box>
     </Box>
   );
 }

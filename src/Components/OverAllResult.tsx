@@ -8,7 +8,7 @@ import { containedButton, transparentBlueTextButton, transparentButton } from '.
 import { exportSurveyCsvAPI, exportSurveyJsonAPI } from '../Utils/Endpoints';
 import axios from 'axios';
 import FSLoader from './FSLoader';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { getDurationLabel, getTwelveMonthAgoDate, handleLogout } from '../Utils/FeedbackUtils';
 import Notification from '../Utils/Notification';
@@ -27,7 +27,6 @@ type IndividualResponseProps = {
 const containerStyle = {
     paddingTop: '5px',
     paddingLeft: '10px',
-    borderBottom: '1px #454545 solid',
     height: '48px',
     display: 'flex',
     justifyContent: 'space-between',
@@ -219,14 +218,14 @@ function OverAllResult(props: IndividualResponseProps) {
     }
 
     return (
-        <Box height={'calc(100vh - 100px)'} sx={{ overflowY: 'scroll' }} >
+        <Box height={'calc(100vh - 100px)'} sx={{ overflowY: 'scroll',background : colorPalette.textSecondary }} >
             <Box sx={containerStyle} >
                 <Typography
                     paddingTop={'15px'}
                     paddingLeft={'10px'}
                     fontSize={'14px'}
                     fontWeight={'600'}
-                    color={'#006DFF'} >
+                    color={colorPalette.darkBackground} >
                     {'Overall Result'}
                 </Typography>
                 <Box display={'flex'} >

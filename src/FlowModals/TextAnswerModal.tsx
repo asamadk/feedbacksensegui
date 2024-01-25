@@ -11,29 +11,11 @@ import { logicType, userRoleType } from '../Utils/types';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 import { useSelector } from 'react-redux';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
-import { componentName } from '../Utils/Constants';
+import { colorPalette, componentName } from '../Utils/Constants';
+import { textFieldStyle } from '../Styles/InputStyles';
 
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#006DFF',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: '#006DFF',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#454545',
-        },
-        '&:hover fieldset': {
-            borderColor: '#006DFF',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#006DFF',
-        },
-    },
-    color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 function TextAnswerModal(props: any) {
 
@@ -121,7 +103,7 @@ function TextAnswerModal(props: any) {
                             <Typography id="modal-modal-title" variant="h5" component="h2">
                                 {props.header}
                             </Typography>
-                            <IconButton sx={{ color: '#f1f1f1' }} >
+                            <IconButton sx={{ color: colorPalette.darkBackground }} >
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
@@ -165,7 +147,7 @@ function TextAnswerModal(props: any) {
                             <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
                         </Box>
                     </Box>
-                    <Box className={background?.value} sx={{ backgroundColor: '#ffffff', width: '55%', overflowY: 'scroll' }} >
+                    <Box className={background?.value} sx={{ backgroundColor: background?.value, width: '55%', overflowY: 'scroll' }} >
                         <DynamicComponentDisplay
                             data={{ question: question }}
                             compId={props.compId}

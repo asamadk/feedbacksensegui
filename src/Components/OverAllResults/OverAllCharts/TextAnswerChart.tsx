@@ -1,4 +1,4 @@
-import { Box, Chip, Divider, Typography } from '@mui/material'
+import { Box, Chip, Divider, Pagination, Stack, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import SentimentAnalysisChart from './SentimentAnalysisChart'
 import WordCloud from './WordCloud'
@@ -9,10 +9,11 @@ import TopicsDisplay from './TagList'
 import { useSelector } from 'react-redux'
 import { AI_TEXT_ANALYSIS } from '../../../Utils/CustomSettingsConst'
 import UpgradePlanError from '../../UpgradePlanError'
+import { colorPalette } from '../../../Utils/Constants'
 
 const mainContainer = {
     marginTop: '20px',
-    color: '#f1f1f1',
+    color: colorPalette.darkBackground,
     textAlign: 'start',
     padding: '20px'
 }
@@ -25,8 +26,13 @@ type propsType = {
 function TextAnswerChart(props: propsType) {
 
     const settings = useSelector((state: any) => state.settings);
+
     const [data, setData] = useState(props.data);
     const [showAiAnalysis, setShowAiAnalysis] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [answersPerPage] = useState(7); // Number of answers per page
+    const [paginatedAnswers, setPaginatedAnswers] = useState([]);
+
     let init = false;
 
     useEffect(() => {
@@ -35,6 +41,12 @@ function TextAnswerChart(props: propsType) {
             init = true;
         }
     }, []);
+
+    useEffect(() => {
+        const indexOfLastAnswer = currentPage * answersPerPage;
+        const indexOfFirstAnswer = indexOfLastAnswer - answersPerPage;
+        setPaginatedAnswers(data?.statsArr?.slice(indexOfFirstAnswer, indexOfLastAnswer));
+    }, [currentPage, data?.statsArr, answersPerPage]);
 
     const handleVisibility = () => {
         if (settings != null && settings[AI_TEXT_ANALYSIS] === 'true') {
@@ -48,24 +60,33 @@ function TextAnswerChart(props: propsType) {
         <>
             <Box sx={mainContainer} >
                 <Box marginBottom={'20px'} >
-                    <Typography fontSize={20} color={'#f1f1f1'} paddingBottom={'10px'} >{props?.data?.question}</Typography>
+                    <Typography fontSize={20} paddingBottom={'10px'} >{props?.data?.question}</Typography>
                 </Box>
 
                 <Typography fontWeight={600} >Answers</Typography>
                 {
-                    data?.statsArr?.map((answers: string) => {
+                    paginatedAnswers?.map((answers: string) => {
                         return (
-                            <Box sx={{ background: 'rgba(255, 255, 255, 0.12)', padding: '5px 10px', borderRadius: '5px', marginTop: '10px' }} >
+                            <Box sx={{ background: colorPalette.textSecondary, padding: '5px 10px', borderRadius: '5px', marginTop: '10px',boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
                                 <Box display={'flex'} justifyContent={'space-between'} >
-                                    <Typography color={'#f1f1f1'} >{answers}</Typography>
+                                    <Typography >{answers}</Typography>
                                 </Box>
                             </Box>
                         )
                     })
                 }
+                <Stack direction={'row-reverse'} spacing={2} marginTop={'20px'} >
+                    <Pagination
+                        count={Math.ceil((data?.statsArr.length || 0) / answersPerPage)}
+                        variant="outlined"
+                        shape="rounded"
+                        page={currentPage}
+                        onChange={(event, page) => setCurrentPage(page)}
+                    />
+                </Stack>
                 <Box marginTop={'10px'} >
                     <Typography color={'#808080'} >
-                        Total : <span style={{ color: '#f1f1f1' }}>{data?.statsArr?.length} response</span>
+                        Total : <span style={{ color: colorPalette.fsGray }}>{data?.statsArr?.length} response</span>
                     </Typography>
                 </Box>
             </Box>
@@ -74,41 +95,41 @@ function TextAnswerChart(props: propsType) {
                 <Box>
                     {
                         data?.statsArr?.length > 15 ?
-                        <Box>
-                            <Box display={'flex'} width={'100%'} >
-                                <Box width={'50%'} >
-                                    <SentimentAnalysisChart data={data?.sentimentData} />
-                                </Box>
-                                {/* <Box width={'50%'} >
+                            <Box>
+                                <Box display={'flex'} width={'100%'} >
+                                    <Box width={'50%'} >
+                                        <SentimentAnalysisChart data={data?.sentimentData} />
+                                    </Box>
+                                    {/* <Box width={'50%'} >
                                     <TopicsDisplay topics={data?.topicModel} />
                                 </Box> */}
-                                <Box width={'50%'} >
-                                    <WordCloud data={data?.wordCloud} />
-                                </Box>
-                            </Box>
-                            <Box>
-                                {
-                                    data?.overTimeSentiment?.length >= 3 ?
-                                    <Box width={'100%'} >
-                                        <OverTimeSentimentChart data={data?.overTimeSentiment} />
-                                    </Box> : 
-                                    <Box marginBottom={'20px'} >
-                                        <UpgradePlanError
-                                            message='Not enough responses'
-                                            desc='Collect responses for more than a week to unlock Sentiment Overtime Analysis'
-                                            showButton={false}
-                                        />
+                                    <Box width={'50%'} >
+                                        <WordCloud data={data?.wordCloud} />
                                     </Box>
-                                }
+                                </Box>
+                                <Box>
+                                    {
+                                        data?.overTimeSentiment?.length >= 3 ?
+                                            <Box width={'100%'} >
+                                                <OverTimeSentimentChart data={data?.overTimeSentiment} />
+                                            </Box> :
+                                            <Box marginBottom={'20px'} >
+                                                <UpgradePlanError
+                                                    message='Not enough responses'
+                                                    desc='Collect responses for more than a week to unlock Sentiment Overtime Analysis'
+                                                    showButton={false}
+                                                />
+                                            </Box>
+                                    }
+                                </Box>
+                            </Box> :
+                            <Box marginBottom={'20px'} >
+                                <UpgradePlanError
+                                    message='Not enough responses'
+                                    desc='Collect more than 15 response to unlock AI Analysis'
+                                    showButton={false}
+                                />
                             </Box>
-                        </Box> : 
-                        <Box marginBottom={'20px'} >
-                            <UpgradePlanError
-                                message='Not enough responses'
-                                desc='Collect more than 15 response to unlock AI Analysis'
-                                showButton={false}
-                            />
-                        </Box>
                     }
                 </Box>
             }

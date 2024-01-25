@@ -2,9 +2,9 @@ import { Box, Typography } from '@mui/material'
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer,Tooltip } from 'recharts'
 import FSTooltip from '../../FSTooltip';
 import CustomTooltip from '../../CustomTooltip';
+import { colorPalette } from '../../../Utils/Constants';
 
 function SentimentAnalysisChart(props : any) {
-console.log("🚀 ~ file: SentimentAnalysisChart.tsx:7 ~ SentimentAnalysisChart ~ props:", props)
 
     const COLORS = [
         '#08b502',
@@ -16,7 +16,7 @@ console.log("🚀 ~ file: SentimentAnalysisChart.tsx:7 ~ SentimentAnalysisChart 
         <>
             <Box width={'100%'} textAlign={'start'} padding={'20px'}>
                 <Box display={'flex'} >
-                    <Typography color={'#f1f1f1'} variant='h6' sx={{textDecoration : 'underline'}} >Sentiment Analysis</Typography>
+                    <Typography color={colorPalette.darkBackground} variant='h6' sx={{textDecoration : 'underline'}} >Sentiment Analysis</Typography>
                     <Box marginTop={'8px'} marginLeft={'2px'}>
                         <CustomTooltip
                             text='Unlock Emotional Insights with Sentiment Analysis: 
@@ -29,10 +29,7 @@ console.log("🚀 ~ file: SentimentAnalysisChart.tsx:7 ~ SentimentAnalysisChart 
                     <ResponsiveContainer>
                         <PieChart>
                             <Legend />
-                            <Tooltip
-                                cursor={{ fill: 'none' }}
-                                content={<FSTooltip percent={false} />}
-                            />
+                            <Tooltip cursor={{ fill: 'none' }}/>
                             <Pie
                                 data={props?.data}
                                 innerRadius={60}

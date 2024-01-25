@@ -10,6 +10,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { getDateWithDuration } from '../Utils/FeedbackUtils';
 import CustomTooltip from '../Components/CustomTooltip';
+import { colorPalette } from '../Utils/Constants';
 
 function DateRangeModal(props: any) {
 
@@ -43,11 +44,21 @@ function DateRangeModal(props: any) {
     }
 
     const handleApply = () => {
+        console.log("🚀 ~ file: DateRangeModal.tsx:49 ~ handleApply ~ startDate:", startDate)
+        console.log("🚀 ~ file: DateRangeModal.tsx:50 ~ handleApply ~ endDate:", endDate)
         props?.update(selectedDuration, startDate, endDate);
         handleClose();
     }
 
-    const handleDateChange = () => {
+    const handleStartDateChange = (newValue : any) => {
+        const formattedDate = dayjs(newValue).format('MM/DD/YYYY');
+        setStartDate(formattedDate);
+        setSelectedDuration('custom');
+    }
+
+    const handleEndDateChange = (newValue : any) => {
+        const formattedDate = dayjs(newValue).format('MM/DD/YYYY');
+        setEndDate(formattedDate);
         setSelectedDuration('custom');
     }
 
@@ -71,8 +82,8 @@ function DateRangeModal(props: any) {
                                 <Button onClick={() => handleChangeDuration(duration.value)} sx={transparentButton} >
                                     {
                                         selectedDuration === duration.value ?
-                                            <Typography color={'#006dff'} >{duration.label}</Typography> :
-                                            <Typography>{duration.label}</Typography>
+                                            <Typography color={colorPalette.secondary} >{duration.label}</Typography> :
+                                            <Typography color={colorPalette.darkBackground} >{duration.label}</Typography>
                                     }
                                 </Button>)}
                         </Box>
@@ -86,7 +97,7 @@ function DateRangeModal(props: any) {
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <Box>
                                     <DatePicker
-                                        onChange={handleDateChange}
+                                        onChange={handleStartDateChange}
                                         sx={{ width: '100%' }}
                                         label="Start date"
                                         value={dayjs(startDate)}
@@ -95,7 +106,7 @@ function DateRangeModal(props: any) {
                                 <Box margin={'10px'} ></Box>
                                 <Box>
                                     <DatePicker
-                                        onChange={handleDateChange}
+                                        onChange={handleEndDateChange}
                                         sx={{ width: '100%' }}
                                         label="End date"
                                         value={dayjs(endDate)}

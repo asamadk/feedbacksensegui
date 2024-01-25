@@ -10,29 +10,11 @@ import CustomTabSet from '../Components/CustomTabSet';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 import { useSelector } from 'react-redux';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
-import { componentName } from '../Utils/Constants';
+import { colorPalette, componentName } from '../Utils/Constants';
 import { userRoleType } from '../Utils/types';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#006DFF',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: '#006DFF',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#454545',
-        },
-        '&:hover fieldset': {
-            borderColor: '#006DFF',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#006DFF',
-        },
-    },
-    color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 function ContactFormModal(props: any) {
 
@@ -116,14 +98,14 @@ function ContactFormModal(props: any) {
                             <Typography id="modal-modal-title" variant="h5" component="h2">
                                 {props.header}
                             </Typography>
-                            <IconButton sx={{ color: '#f1f1f1' }} >
+                            <IconButton sx={{ color: colorPalette.darkBackground }} >
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
                         <ModalSnippets text={'To make changes, please unpublish the workflow'} published={props.isPublished} />
-                        <ModalSnippets 
-                            text={'Guest cannot edit the surveys'} 
-                            published={!CoreUtils.isComponentVisible(userRole,componentName.SAVE_SURVEY_BUTTON)} 
+                        <ModalSnippets
+                            text={'Guest cannot edit the surveys'}
+                            published={!CoreUtils.isComponentVisible(userRole, componentName.SAVE_SURVEY_BUTTON)}
                         />
                         <Box>
                             <Box sx={ModalStyles.modalBodyContainerStyle} >
@@ -131,7 +113,7 @@ function ContactFormModal(props: any) {
                                     <CssTextField
                                         value={questionText}
                                         onChange={(e) => setQuestionText(e.target.value)}
-                                        sx={{ input: { color: 'white' }, maxHeight: '50vh' }}
+                                        sx={{ maxHeight: '50vh' }}
                                         id="outlined-basic"
                                         placeholder='Enter your question here'
                                         variant="outlined"
@@ -142,7 +124,7 @@ function ContactFormModal(props: any) {
                                 </Box>
                             </Box>
                             <Box marginTop={'20px'} >
-                                <Typography sx={{ color: '#f1f1f1' }} >Answer choices</Typography>
+                                <Typography sx={{ color: colorPalette.darkBackground }} >Answer choices</Typography>
                                 {
                                     answerChoiceList.map((answer, index) => {
                                         return (
@@ -150,7 +132,7 @@ function ContactFormModal(props: any) {
                                                 <CssTextField
                                                     onChange={(e) => handleAnswerChange(e, index)}
                                                     value={answer}
-                                                    sx={{ input: { color: 'white' }, marginTop: '10px' }}
+                                                    sx={{ marginTop: '10px' }}
                                                     id="outlined-basic"
                                                     placeholder='Field label'
                                                     variant="outlined"
@@ -158,14 +140,14 @@ function ContactFormModal(props: any) {
                                                     style={{ width: '100%' }}
                                                 />
                                                 <IconButton onClick={() => handleTextFieldRemove(index)} >
-                                                    <RemoveCircleIcon sx={{ color: '#f1f1f1' }} />
+                                                    <RemoveCircleIcon sx={{ color: colorPalette.darkBackground }} />
                                                 </IconButton>
                                             </Box>
                                         )
                                     })
                                 }
                                 <Typography
-                                    sx={{ color: '#006dff', fontSize: '13px', cursor: 'pointer', marginTop: '20px' }}
+                                    sx={{ color: colorPalette.primary, fontSize: '13px', cursor: 'pointer', marginTop: '20px' }}
                                     onClick={handleAddAnswerChoice}
                                 >
                                     Add an answer choice +
@@ -177,7 +159,7 @@ function ContactFormModal(props: any) {
                             <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
                         </Box>
                     </Box>
-                    <Box className={background?.value} sx={{ backgroundColor: '#ffffff', width: '55%' }} >
+                    <Box className={background?.value} sx={{ backgroundColor: background?.value, width: '55%' }} >
                         <DynamicComponentDisplay
                             theme={props.theme}
                             data={{

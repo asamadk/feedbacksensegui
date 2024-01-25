@@ -7,6 +7,7 @@ import SurveyGeneralSettings from '../Components/SurveyGeneralSettings';
 import SurveySettingsWeb from '../Components/SurveySettingsWeb';
 import * as LayoutStyles from '../Styles/LayoutStyles'
 import { useSelector } from 'react-redux';
+import { colorPalette } from '../Utils/Constants';
 
 const tabsetList = [
     { id : 1,name : 'GENERAL' },
@@ -34,15 +35,16 @@ function SurveySettings(props: any) {
     }
 
     return (
-        <Box sx={{...LayoutStyles.settingLayoutStyle,backgroundColor : defaultColor?.backgroundColor}} >
+        <Box sx={{...LayoutStyles.settingLayoutStyle,backgroundColor : colorPalette.textSecondary}} >
             
             <Box display={'flex'} sx={{ textAlign: 'start' }} >
                 <IconButton onClick={handleBackButtonClick} >
-                    <ArrowBackIcon sx={{ color: '#f1f1f1' }} />
+                    <ArrowBackIcon sx={{ color: colorPalette.darkBackground }} />
                 </IconButton>
                 <Typography 
                     style={{paddingTop : '5px'}}
                     variant='h4' 
+                    fontWeight={600}
                     sx={LayoutStyles.settingsHeaderTextStyle} 
                 >
                     Survey Settings

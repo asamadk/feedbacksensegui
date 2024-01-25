@@ -5,7 +5,7 @@ import { getOverallResponse } from '../../Utils/Endpoints';
 import axios from 'axios';
 import FSLoader from '../FSLoader';
 import Notification from '../../Utils/Notification';
-import { USER_UNAUTH_TEXT } from '../../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette } from '../../Utils/Constants';
 import { handleLogout } from '../../Utils/FeedbackUtils';
 import html2canvas from 'html2canvas';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -18,14 +18,14 @@ const mainContainer = (bgColor: string) => {
     return {
         margin: '20px',
         marginTop: '25px',
-        border: '1px #454545 solid',
         borderRadius: '6px',
-        backgroundColor: bgColor
+        backgroundColor: bgColor,
+        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
     }
 };
 
 const mainTextStyle = {
-    color: '#f1f1f1',
+    color: colorPalette.darkBackground,
     textAlign: 'start',
     fontSize: '20px',
     fontWeight: '500',
@@ -97,15 +97,11 @@ function OverAllResultChart(props: propsType) {
     };
 
     return (
-        <Box sx={mainContainer(defaultColor?.primaryColor)}>
+        <Box sx={mainContainer(colorPalette.background)}>
             <Box display={'flex'} justifyContent={'space-between'} >
                 <Typography sx={mainTextStyle}>Response</Typography>
-                {/* <IconButton sx={iconStyle} onClick={handleDownload} size='small' aria-label="add">
-                    <DownloadIcon sx={{color : '#006DFF'}} />
-                </IconButton> */}
             </Box>
-            <Divider sx={{ borderTop: '1px #454545 solid', marginBottom: '20px' }} />
-            <Box sx={{ width: '100%', height: 300 }} margin={'auto'} width={'fit-content'}>
+            <Box sx={{ width: '100%', height: 300, marginTop: '20px' }} margin={'auto'} width={'fit-content'}>
                 <ResponsiveContainer>
                     <BarChart data={overAllResultGraph}>
                         <YAxis />
@@ -115,7 +111,7 @@ function OverAllResultChart(props: propsType) {
                         />
                         {/* <CartesianGrid strokeDasharray="0" stroke="#1e1e1e" /> */}
                         <XAxis dataKey="date" />
-                        <Bar barSize={40} dataKey="Response" fill="#006DFF" />
+                        <Bar barSize={40} dataKey="Response" fill={colorPalette.primary} />
                     </BarChart>
                 </ResponsiveContainer>
             </Box>

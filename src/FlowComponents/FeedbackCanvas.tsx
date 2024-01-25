@@ -12,7 +12,7 @@ import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
 import { useSelector } from 'react-redux';
 import { defaultEdgeOptions, getConnectionMap, getEdgeKey, getEdgePathMap, getEdgesFromJson, getEdgesLabelMap } from '../Utils/WorkflowHelper';
 import { logicType, userRoleType } from '../Utils/types';
-import { componentList, componentName } from '../Utils/Constants';
+import { colorPalette, componentList, componentName } from '../Utils/Constants';
 import CustomConnectionLine from './CustomConnectionLine';
 import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
@@ -75,11 +75,14 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     const getComponentStyle = (color: string): React.CSSProperties => {
         return {
             color: color,
-            border: `1px ${color} solid`,
+            // border: `0.5px ${colorPalette.fsGray} solid`,
             width: '300px',
-            height: '82px',
-            borderRadius: '5px',
-            padding: '10px'
+            height: '120px',
+            borderRadius: '3px',
+            padding: '10px',
+            // boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
+            boxShadow: '0px 0px 20px 3px rgba(0,0,0,0.20)',
+            background : colorPalette.background
         }
     }
 
@@ -103,7 +106,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                     description: comp.description,
                     onEdit: props.onEdit
                 },
-                style: { ...getComponentStyle(comp.bgColor), backgroundColor: defaultColor?.backgroundColor },
+                style: { ...getComponentStyle(comp.bgColor) },
             };
             return newNodes;
         });
@@ -125,7 +128,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                 description: componentData.description,
                 onEdit: props.onEdit
             },
-            style: { ...getComponentStyle(componentData.bgColor), backgroundColor: defaultColor?.backgroundColor },
+            style: { ...getComponentStyle(componentData.bgColor)},
             position: position,
         }
 
@@ -471,7 +474,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     return (
         <>
             <ReactFlowProvider>
-                <Box sx={{ backgroundColor: defaultColor?.backgroundColor }} height={'calc(100vh - 128px)'} ref={reactFlowWrapper} >
+                <Box sx={{ backgroundColor: colorPalette.background }} height={'calc(100vh - 128px)'} ref={reactFlowWrapper} >
                     <ReactFlow
                         onConnect={onConnect}
                         onInit={setReactFlowInstance}
@@ -501,11 +504,11 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                         panOnScroll
                         selectionOnDrag
                     >
-                        <MiniMap
+                        {/* <MiniMap
                             nodeColor={defaultColor?.backgroundColor}
                             color={defaultColor?.backgroundColor}
                             style={{ backgroundColor: '#454545' }}
-                        />
+                        /> */}
                         <Background />
                         <Controls />
                         {

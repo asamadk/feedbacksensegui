@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import TemplateLeftPanel from '../Components/TemplateComponents/TemplateLeftPanel';
 import TemplateRightPanel from '../Components/TemplateComponents/TemplateRightPanel';
 import Notification from '../Utils/Notification';
-import { ALL_TEMPLATE_KEY, USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { ALL_TEMPLATE_KEY, USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import FSLoader from '../Components/FSLoader';
 import { getTemplatesAPI } from '../Utils/Endpoints';
@@ -131,7 +131,7 @@ function TemplateLayout() {
 
     return (
         <Box height={'calc(100vh - 58px)'} display={'flex'} padding={'0px'}>
-            <Box width={'25%'} >
+            <Box width={'20%'} >
                 <TemplateLeftPanel
                     data={categoryData}
                     filter={handleFilterTemplates}
@@ -139,7 +139,7 @@ function TemplateLayout() {
                     templates={templates}
                 />
             </Box>
-            <Box width={'75%'} >
+            <Box width={'80%'} sx={{background : colorPalette.textSecondary}} >
                 <TemplateRightPanel
                     header={`${selectedCategory} ${selectedCategory === ALL_TEMPLATE_KEY ? '' : '/'} ${selectedSubCategory}`}
                     templates={filteredTemplates}

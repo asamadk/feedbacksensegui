@@ -1,9 +1,11 @@
 import { Box, IconButton, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router';
 import TemplateBlockList from './TemplateBlockList';
 import { useSelector } from 'react-redux';
+import { colorPalette } from '../../Utils/Constants';
 
 function TemplateRightPanel({
     header, templates
@@ -15,11 +17,8 @@ function TemplateRightPanel({
         navigate('/');
     }
 
-    const defaultColor = useSelector((state: any) => state.colorReducer);
-
-
     return (
-        <Box sx={{ backgroundColor: defaultColor?.backgroundColor, overflowY: 'scroll' }} height={'calc(100vh - 62px)'} >
+        <Box>
             <TemplateRightSubHeader header={header} close={handleClose} />
             <TemplateBlockList templates={templates} />
         </Box>
@@ -29,21 +28,14 @@ function TemplateRightPanel({
 export default TemplateRightPanel
 
 function TemplateRightSubHeader(props: any) {
-    const defaultColor = useSelector((state: any) => state.colorReducer);
     return (
         <Box
-            sx={{ backgroundColor: defaultColor?.backgroundColor }}
             display={'flex'}
-            justifyContent={'space-between'}
             padding={'12px'}
-            borderBottom={'1px #454545 solid'}
         >
-            <Typography fontSize={'24px'} textAlign={'start'} color={'white'} >
+            <Typography marginLeft={'10px'} fontSize={'24px'} textAlign={'start'} color={colorPalette.darkBackground} >
                 {props.header}
             </Typography>
-            <IconButton onClick={props.close} sx={{ color: '#f1f1f1' }} >
-                <CloseIcon />
-            </IconButton>
         </Box>
     )
 }

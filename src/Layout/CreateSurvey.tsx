@@ -16,7 +16,7 @@ import axios from 'axios';
 import Notification from '../Utils/Notification';
 import FSLoader from '../Components/FSLoader';
 import { enableSurvey } from '../Utils/Endpoints';
-import { componentName, USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { colorPalette, componentName, USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { genericModalData, surveyFlowType, userRoleType } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
 import DoneIcon from '@mui/icons-material/Done';
@@ -29,28 +29,11 @@ import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
 import WorkflowMore from '../FlowComponents/WorkflowMore';
 import SurveyLogsModal from '../Modals/SurveyLogsModal';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import SaveIcon from '@mui/icons-material/Save';
 import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetailReducer';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-const CssTextField = styled(TextField)({
-  '& label.Mui-focused': {
-    color: '#006DFF',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: '#006DFF',
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#454545',
-    },
-    '&:hover fieldset': {
-      borderColor: '#006DFF',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#006DFF',
-    },
-  },
-  color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 function CreateSurvey(props: any) {
 
@@ -445,6 +428,10 @@ function CreateSurvey(props: any) {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleSaveWorkflow = () => {
+
+  }
+
 
   return (
     <Box sx={{ backgroundColor: defaultColor?.backgroundColor, height: 'calc(100vh - 69px)' }} >
@@ -453,18 +440,18 @@ function CreateSurvey(props: any) {
           {showSurveyName &&
             <Typography
               style={{ position: 'relative', top: '15px', paddingLeft: '20px', cursor: 'pointer', fontSize: '17px' }}
-              color={'#f1f1f1'} >
+              color={colorPalette.darkBackground} >
               {surveyDetail?.name?.substring(0, 45)}
               {surveyDetail?.name?.length > 45 ? '...' : ''}
             </Typography>
           }
           {showSurveyName &&
             <IconButton onClick={handleEditNameClick} size='small' sx={iconStyle} >
-              <ModeEditOutlineOutlinedIcon sx={{ color: '#f1f1f1' }} />
+              <ModeEditOutlineOutlinedIcon sx={{ color: colorPalette.fsGray }} />
             </IconButton>}
           {showSurveyName === false &&
             <CssTextField
-              sx={{ input: { color: 'white' } }}
+              sx={{ input: { color: colorPalette.darkBackground } }}
               id="outlined-basic"
               value={surveyDetail?.name}
               variant="outlined"
@@ -476,13 +463,13 @@ function CreateSurvey(props: any) {
           {
             showSurveyName === false &&
             <IconButton onClick={handleSaveNameClick} size='small' sx={iconStyle} >
-              <SaveAltIcon sx={{ color: '#f1f1f1' }} />
+              <SaveAltIcon sx={{ color: colorPalette.fsGray }} />
             </IconButton>
           }
           {
             showSurveyName === false &&
             <IconButton onClick={() => handleCloseEditName(true)} size='small' sx={iconStyle} >
-              <CloseIcon sx={{ color: '#f1f1f1' }} />
+              <CloseIcon sx={{ color: colorPalette.fsGray }} />
             </IconButton>
           }
         </Box>
@@ -534,7 +521,7 @@ function CreateSurvey(props: any) {
         </Box>
         {
           isWorkflowPublished === false &&
-          <Box sx={{ borderLeft: '1px #454545 solid', overflowY: 'scroll', height: 'calc(100vh - 130px)' }} width={'23%'} >
+          <Box sx={{ overflowY: 'scroll', height: 'calc(100vh - 130px)' }} width={'23%'} >
             <FeedbackComponentList />
           </Box>
         }

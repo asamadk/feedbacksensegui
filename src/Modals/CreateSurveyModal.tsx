@@ -8,33 +8,15 @@ import { Button, IconButton, Modal, TextField, Typography, styled } from '@mui/m
 import { Box } from '@mui/system'
 import axios from 'axios';
 import Notification from '../Utils/Notification';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#006DFF',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: '#006DFF',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#454545',
-        },
-        '&:hover fieldset': {
-            borderColor: '#006DFF',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#006DFF',
-        },
-    },
-    color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 function CreateSurveyModal(props: any) {
 
@@ -96,7 +78,7 @@ function CreateSurveyModal(props: any) {
                         <Typography fontFamily={'Apercu Pro'} id="modal-modal-title" variant="h5" component="h2">
                             Create a new survey
                         </Typography>
-                        <IconButton sx={{ color: '#f1f1f1' }} >
+                        <IconButton sx={{ color: colorPalette.darkBackground }} >
                             <CloseIcon onClick={handleClose} />
                         </IconButton>
                     </Box>
@@ -107,7 +89,6 @@ function CreateSurveyModal(props: any) {
                                 <Box sx={{ marginTop: '20px', marginBottom: '20px' }}>
                                     <CssTextField
                                         size='small'
-                                        sx={{ input: { color: 'white' } }}
                                         id="outlined-basic"
                                         placeholder='Survey name'
                                         value={surveyName}
@@ -154,18 +135,24 @@ function CreateSurveyDefaultScreen(props: any) {
 
     return (
         <Box marginTop={'20px'} marginBottom={'20px'} display={'flex'} justifyContent={'space-around'}>
-            <Box>
-                <IconButton onClick={props.create} sx={{ borderRadius: '10px', marginBottom: '10px' }}>
-                    <ReceiptIcon sx={{ fontSize: '150px' }} />
-                </IconButton>
-                <Typography textAlign={'center'} >Start from scratch</Typography>
+            <Box onClick={props.create} sx={selectorBackground} >
+                <ReceiptIcon sx={{ fontSize: '150px', color: colorPalette.primary, marginBottom: '10px' }} />
+                <Typography textAlign={'center'} color={colorPalette.primary} >Start from scratch</Typography>
             </Box>
-            <Box>
-                <IconButton onClick={() => navigate('/template')} sx={{ borderRadius: '10px', marginBottom: '10px' }}>
-                    <PostAddIcon sx={{ fontSize: '150px' }} />
-                </IconButton>
-                <Typography textAlign={'center'} >Start from template</Typography>
+            <Box onClick={() => navigate('/template')} sx={selectorBackground} >
+                <PostAddIcon sx={{ fontSize: '150px', color: colorPalette.primary, marginBottom: '10px' }} />
+                <Typography textAlign={'center'} color={colorPalette.primary} >Start from template</Typography>
             </Box>
         </Box>
     )
+}
+
+const selectorBackground = {
+    background: colorPalette.background,
+    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
+    padding: '10px',
+    borderRadius: '6px',
+    width: '45%',
+    textAlign: 'center',
+    cursor: 'pointer'
 }

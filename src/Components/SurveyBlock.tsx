@@ -14,7 +14,7 @@ import axios from 'axios';
 import { deleteSurvey } from '../Utils/Endpoints';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import CustomPopover from './Popover';
 import { useDispatch } from 'react-redux';
@@ -23,10 +23,10 @@ import { useSelector } from 'react-redux';
 import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetailReducer';
 
 const surveyBlockMainContainer = {
-    border: '1px #454545 solid',
     borderRadius: '5px',
     cursor: 'pointer',
-    height: '200px',
+    height: '197px',
+    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
 }
 
 function SurveyBlock(props: any) {
@@ -59,11 +59,11 @@ function SurveyBlock(props: any) {
     };
 
     const handleTextHighlight = (e: any) => {
-        e.target.style.color = '#006DFF';
+        e.target.style.color = colorPalette.secondary;
     }
 
     const handleTextUnhighlight = (e: any) => {
-        e.target.style.color = '#454545';
+        e.target.style.color = colorPalette.fsGray;
     }
 
     const handleShowEditTitle = () => setShowEditTitle(true);
@@ -134,7 +134,7 @@ function SurveyBlock(props: any) {
     const handleSuccessChangeFolder = (newSurveyData: any) => {
         // props.survey.folder_id = newSurveyData.folder_id;
         const updatedSurvey = { ...props.survey, folder_id: newSurveyData.folder_id };
-        props.updateSurvey(updatedSurvey.id,updatedSurvey);
+        props.updateSurvey(updatedSurvey.id, updatedSurvey);
         props.rerender();
     }
 
@@ -174,16 +174,16 @@ function SurveyBlock(props: any) {
     }
 
     return (
-        <Box sx={{ ...surveyBlockMainContainer, backgroundColor: defaultColor?.secondaryColor }} >
+        <Box sx={{ ...surveyBlockMainContainer, backgroundColor: '#ffffff' }} >
             <Box
-                sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', borderBottom: '0.5px #454545 solid', height: '50px', backgroundColor: '#212a2b' }}
+                sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', height: '50px' }}
             >
                 <Box>
                     <Tooltip title={survey?.name} >
                         <Typography
                             aria-owns={openName ? 'mouse-over-popover' : undefined}
                             aria-haspopup="true"
-                            sx={{ paddingTop: '10px' }}
+                            sx={{ paddingTop: '10px', color: colorPalette.textPrimary }}
                         >
                             {survey?.name?.substring(0, 25)}
                             {survey?.name?.length > 30 ? '...' : ''}
@@ -194,7 +194,7 @@ function SurveyBlock(props: any) {
                     <Tooltip title={'Edit'} >
                         <IconButton
                             onClick={handleOpenSurvey}
-                            sx={{ color: '#f1f1f1', width: '50px' }}
+                            sx={{ color: colorPalette.textPrimary, width: '50px' }}
                         >
                             <EditIcon />
                         </IconButton>
@@ -202,7 +202,7 @@ function SurveyBlock(props: any) {
                     <Tooltip title='Settings' >
                         <IconButton id="basic-button"
                             onClick={handleClick}
-                            sx={{ color: '#f1f1f1', width: '50px' }}
+                            sx={{ color: colorPalette.textPrimary, width: '50px' }}
                         >
                             <MoreHorizIcon />
                         </IconButton>
@@ -222,18 +222,18 @@ function SurveyBlock(props: any) {
                 </Box>
             </Box>
             <Box onClick={handleOpenSurvey} sx={{ padding: '15px', paddingBottom: '10px' }} >
-                <Box sx={{ display: 'flex' }} >
-                    <Avatar sx={{ bgcolor: '#006DFF', width: 24, height: 24, fontSize: 14 }} alt={survey?.username} src={survey?.image} />
-                    <Typography variant='subtitle1' sx={{ fontSize: 14, marginLeft: '5px', color: '#454545' }} >
+                <Box sx={{ display: 'flex',marginTop: '40px',marginBottom : '10px' }} >
+                    <Avatar sx={{ bgcolor: colorPalette.primary, width: 24, height: 24, fontSize: 14 }} alt={survey?.username} src={survey?.image} />
+                    <Typography variant='subtitle1' sx={{ fontSize: 14, marginLeft: '5px', color: colorPalette.textPrimary }} >
                         {new Date(survey?.created_at).toDateString()}
                     </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', marginTop: '50px', justifyContent: 'space-between' }} >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
                     <CustomChip status={survey?.is_published === 1 ? 'success' : 'failed'} />
                     <Box sx={{ display: 'flex' }} >
-                        <EqualizerIcon />
+                        <EqualizerIcon sx={{color : colorPalette.fsGray}} />
                         <Typography
-                            sx={{ fontSize: 14, textDecoration: 'underline', cursor: 'pointer', color: '#454545' }}
+                            sx={{ fontSize: 14, textDecoration: 'underline', cursor: 'pointer', color: colorPalette.fsGray }}
                             onMouseEnter={handleTextHighlight}
                             onMouseLeave={handleTextUnhighlight}
                         >
@@ -251,11 +251,11 @@ function SurveyBlock(props: any) {
             />
             {
                 showChangeFolderModal &&
-                <ChangeFolderModal 
-                    callback={handleSuccessChangeFolder} 
-                    surveyId={changeFolderSurveyId} 
-                    close={() => setShowChangeFolderModal(false)} 
-                    open={showChangeFolderModal} 
+                <ChangeFolderModal
+                    callback={handleSuccessChangeFolder}
+                    surveyId={changeFolderSurveyId}
+                    close={() => setShowChangeFolderModal(false)}
+                    open={showChangeFolderModal}
                 />
             }
             <FSLoader show={loading} />

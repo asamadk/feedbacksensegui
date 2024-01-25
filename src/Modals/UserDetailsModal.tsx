@@ -9,7 +9,7 @@ import { LoadingButton } from '@mui/lab';
 import Notification from '../Utils/Notification';
 import axios from 'axios';
 import { updateUserRoleAPI } from '../Utils/Endpoints';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
 
 function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
@@ -63,7 +63,7 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             User Details
                         </Typography>
-                        <IconButton sx={{ color: '#f1f1f1' }} >
+                        <IconButton sx={{ color: colorPalette.darkBackground }} >
                             <CloseIcon onClick={close} />
                         </IconButton>
                     </Box>
@@ -71,12 +71,12 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                     <Box sx={{ padding: '20px', borderRadius: '10px', margin: '5px' }} >
                         <Box display={'flex'}>
                             <Avatar
-                                sx={{ bgcolor: '#006DFF', width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }}
+                                sx={{ bgcolor: colorPalette.primary, width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }}
                                 alt={user?.name}
                                 src={user?.image}
                             />
                             <Box textAlign={'start'} >
-                                <Typography variant='h6' color={'white'}>{user?.name}</Typography>
+                                <Typography variant='h6' color={colorPalette.darkBackground}>{user?.name}</Typography>
                                 <Typography color={'#808080'} >{user?.email}</Typography>
                                 <Typography color={'#808080'} >{user?.role}</Typography>
                                 <Typography color={'#808080'} >{new Date(user?.created_at).toString()}</Typography>

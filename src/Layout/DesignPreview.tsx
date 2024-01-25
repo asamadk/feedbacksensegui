@@ -11,6 +11,7 @@ import '../Styles/CSS/Backgrounds.css'
 import { useSelector } from 'react-redux';
 import { setSurvey } from '../Redux/Reducers/surveyReducer';
 import { useDispatch } from 'react-redux';
+import { colorPalette } from '../Utils/Constants';
 
 const tabsetList = [
     { id: 1, name: 'COLORS' },
@@ -18,7 +19,7 @@ const tabsetList = [
 ]
 
 const localNavbar = {
-    borderBottom: '1px #454545 solid',
+    background : colorPalette.textSecondary,
     paddingBottom: '10px',
     textAlign: 'end',
     paddingRight: '10px', display: 'flex', justifyContent: 'space-between'
@@ -83,16 +84,16 @@ function DesignPreview() {
                         aria-label="device"
                         sx={{ marginTop: '5px' }}
                     >
-                        <ToggleButton color='info' value="laptop" aria-label="laptop">
-                            <LaptopIcon sx={{ color: '#f1f1f1' }} />
+                        <ToggleButton color='success' value="laptop" aria-label="laptop">
+                            <LaptopIcon sx={{ color: colorPalette.secondary }} />
                         </ToggleButton>
-                        <ToggleButton color='info' value="phone" aria-label="phone">
-                            <PhoneAndroidIcon sx={{ color: '#f1f1f1' }} />
+                        <ToggleButton color='success' value="phone" aria-label="phone">
+                            <PhoneAndroidIcon sx={{ color: colorPalette.secondary }} />
                         </ToggleButton>
                     </ToggleButtonGroup>
                 </Box>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center' }} >
+            <Box sx={{ display: 'flex', justifyContent: 'center',background : colorPalette.textSecondary,boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
                 <Box width={'35%'} >
                     {
                         tabset === 0 &&
@@ -114,14 +115,14 @@ function DesignPreview() {
                         />
                     }
                 </Box>
-                <Box width={'65%'} >
+                <Box width={'65%'} borderRadius={'6px'}>
                     <Box
                         className={selectedBackground?.value}
-                        width={devices === 'phone' ? '40%' : '100%'}
-                        height={'calc(100vh - 134px)'}
+                        width={devices === 'phone' ? '40%' : '97%'}
+                        height={'calc(100vh - 197px)'}
+                        sx={{transition: 'all 0.5s ease 0s',borderRadius : '6px'}}
                     >
                         <SelectedThemeTest selectedTheme={selectedTheme} />
-                        <PoweredBy />
                     </Box>
                 </Box>
             </Box>
@@ -146,7 +147,6 @@ function SelectedThemeTest({ selectedTheme }: any) {
         padding: '12px',
         backgroundColor: selectedTheme?.shade,
         color: selectedTheme?.color[0],
-        // paddingBottom: '40px',
         margin: 'auto'
     }
 

@@ -3,36 +3,18 @@ import React, { useRef, useState } from 'react'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import CloseIcon from '@mui/icons-material/Close';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { colorPalette, USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { createFolder } from '../Utils/Endpoints';
 import axios from 'axios';
 import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#006DFF',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: '#006DFF',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#454545',
-        },
-        '&:hover fieldset': {
-            borderColor: '#006DFF',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#006DFF',
-        },
-    },
-    color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
-const textFieldStyle = {
+const textFieldStyleCSS = {
     paddingTop: '30px'
 }
 
@@ -88,15 +70,15 @@ function CreateFolder(props: any) {
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Create folder
                         </Typography>
-                        <IconButton sx={{ color: '#f1f1f1' }} >
+                        <IconButton sx={{ color: colorPalette.darkBackground }} >
                             <CloseIcon onClick={handleClose} />
                         </IconButton>
                     </Box>
-                    <Box sx={textFieldStyle} >
-                        <InputLabel style={{ color: '#f1f1f1', paddingBottom: '3px' }} htmlFor="component-simple">Name your folder</InputLabel>
+                    <Box sx={textFieldStyleCSS} >
+                        <InputLabel style={{ color: colorPalette.darkBackground, paddingBottom: '3px' }} htmlFor="component-simple">Name your folder</InputLabel>
                         <CssTextField
                             size='small'
-                            sx={{ input: { color: 'white' } }}
+                            sx={{ input: { color: colorPalette.darkBackground } }}
                             id="outlined-basic"
                             placeholder='Folder name'
                             value={folderName}

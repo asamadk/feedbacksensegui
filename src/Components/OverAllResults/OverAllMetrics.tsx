@@ -8,19 +8,20 @@ import Notification from '../../Utils/Notification';
 import axios from 'axios';
 import { durationType } from '../../Utils/types';
 import { getOverallMetricsResponse } from '../../Utils/Endpoints';
-import { USER_UNAUTH_TEXT } from '../../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette } from '../../Utils/Constants';
 import { handleLogout } from '../../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
 
 const subContainerStyle = (bgColor: string) => {
     return {
-        border: '1px #454545 solid',
+        // border: '1px #454545 solid',
         padding: '10px',
         width: '33%',
         borderRadius: '6px',
         margin: '20px',
         marginTop: '25px',
-        backgroundColor: bgColor
+        backgroundColor: bgColor,
+        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
     }
 }
 
@@ -74,34 +75,34 @@ function OverAllMetrics(props: propType) {
             {
                 overAllMetrics != null &&
                 <Box sx={mainContainer}>
-                    <Box sx={subContainerStyle(defaultColor?.primaryColor)} >
+                    <Box sx={subContainerStyle(colorPalette.background)} >
                         <Box display={'flex'}  >
-                            <Box sx={{ backgroundColor: '#454545', borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
-                                <TextSnippetIcon sx={{ color: '#f1f1f1' }} />
+                            <Box sx={{ backgroundColor: colorPalette.primary, borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
+                                <TextSnippetIcon sx={{ color: colorPalette.background }} />
                             </Box>
-                            <Box sx={{ color: '#f1f1f1', textAlign: 'start', paddingLeft: '20px' }} >
+                            <Box sx={{ color: colorPalette.darkBackground, textAlign: 'start', paddingLeft: '20px' }} >
                                 <Typography fontSize={16} >Last Response</Typography>
                                 <Typography fontSize={24} >{overAllMetrics?.lastResponse}</Typography>
                             </Box>
                         </Box>
                     </Box>
-                    <Box sx={subContainerStyle(defaultColor?.primaryColor)} >
+                    <Box sx={subContainerStyle(colorPalette.background)} >
                         <Box display={'flex'}  >
-                            <Box sx={{ backgroundColor: '#454545', borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
-                                <BarChartIcon sx={{ color: '#f1f1f1' }} />
+                            <Box sx={{ backgroundColor: colorPalette.primary, borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
+                                <BarChartIcon sx={{ color: colorPalette.background }} />
                             </Box>
-                            <Box sx={{ color: '#f1f1f1', textAlign: 'start', paddingLeft: '20px' }} >
+                            <Box sx={{ color: colorPalette.darkBackground, textAlign: 'start', paddingLeft: '20px' }} >
                                 <Typography fontSize={16} >Completion Rate</Typography>
                                 <Typography fontSize={24} >{overAllMetrics?.completionRate}</Typography>
                             </Box>
                         </Box>
                     </Box>
-                    <Box sx={subContainerStyle(defaultColor?.primaryColor)} >
+                    <Box sx={subContainerStyle(colorPalette.background)} >
                         <Box display={'flex'}  >
-                            <Box sx={{ backgroundColor: '#454545', borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
-                                <RemoveRedEyeIcon sx={{ color: '#f1f1f1' }} />
+                            <Box sx={{ backgroundColor: colorPalette.primary, borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
+                                <RemoveRedEyeIcon sx={{ color: colorPalette.background }} />
                             </Box>
-                            <Box sx={{ color: '#f1f1f1', textAlign: 'start', paddingLeft: '20px' }} >
+                            <Box sx={{ color: colorPalette.darkBackground, textAlign: 'start', paddingLeft: '20px' }} >
                                 <Typography fontSize={16} >Total Views</Typography>
                                 <Typography fontSize={24} >{overAllMetrics?.totalViews}</Typography>
                                 {/* <Typography fontSize={24} >{10000}</Typography> */}

@@ -228,3 +228,7 @@ export const exportSurveyCsvAPI = (surveyId : string) => {
 export const exportSurveyJsonAPI = (surveyId : string) => {
     return `${BASE_URL}/analysis/export/json/${surveyId}`
 }
+
+export const updateEmbedConfigAPI = () => {
+    return `${BASE_URL}/survey/config/embed`
+}

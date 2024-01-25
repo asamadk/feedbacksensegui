@@ -13,28 +13,10 @@ import { logicType, userRoleType } from '../Utils/types';
 import ModalSnippets from '../SurveyEngine/CommonSnippets/ModalSnippets';
 import { useSelector } from 'react-redux';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
-import { componentName } from '../Utils/Constants';
+import { colorPalette, componentName } from '../Utils/Constants';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-        color: '#006DFF',
-    },
-    '& .MuiInput-underline:after': {
-        borderBottomColor: '#006DFF',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#454545',
-        },
-        '&:hover fieldset': {
-            borderColor: '#006DFF',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#006DFF',
-        },
-    },
-    color: 'white'
-});
+const CssTextField = styled(TextField)(textFieldStyle);
 
 function SingleAnswerSelectionModal(props: any) {
 
@@ -124,13 +106,13 @@ function SingleAnswerSelectionModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyleComponents(defaultColor?.secondaryColor)}>
+                <Box sx={ModalStyles.modalStyleComponents(colorPalette.textSecondary)}>
                     <Box width={'40%'} marginRight={10} >
                         <Box sx={ModalStyles.modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">
                                 {props.header}
                             </Typography>
-                            <IconButton sx={{ color: '#f1f1f1' }} >
+                            <IconButton sx={{ color: colorPalette.darkBackground }} >
                                 <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
@@ -147,11 +129,11 @@ function SingleAnswerSelectionModal(props: any) {
                         {
                             value === 0 &&
                             <Box sx={ModalStyles.modalBodyContainerStyle} >
-                                <Typography sx={{ color: '#f1f1f1' }} >Question</Typography>
+                                <Typography >Question</Typography>
                                 <CssTextField
                                     value={questionText}
                                     onChange={(e) => setQuestionText(e.target.value)}
-                                    sx={{ input: { color: 'white' }, marginTop: '10px' }}
+                                    sx={{ input: { color: colorPalette.darkBackground }, marginTop: '10px' }}
                                     id="outlined-basic"
                                     placeholder='Enter your question here'
                                     variant="outlined"
@@ -161,7 +143,7 @@ function SingleAnswerSelectionModal(props: any) {
                                 />
 
                                 <Box marginTop={'20px'} >
-                                    <Typography sx={{ color: '#f1f1f1' }} >Answer choices</Typography>
+                                    <Typography sx={{ color: colorPalette.darkBackground }} >Answer choices</Typography>
                                     {
                                         answerChoiceList?.map((answer, index) => {
                                             return (
@@ -169,7 +151,7 @@ function SingleAnswerSelectionModal(props: any) {
                                                     <CssTextField
                                                         onChange={(e) => handleAnswerChange(e, index)}
                                                         value={answer}
-                                                        sx={{ input: { color: 'white' }, marginTop: '10px' }}
+                                                        sx={{ input: { color: colorPalette.darkBackground }, marginTop: '10px' }}
                                                         id="outlined-basic"
                                                         placeholder='Enter your answer here'
                                                         variant="outlined"
@@ -177,14 +159,14 @@ function SingleAnswerSelectionModal(props: any) {
                                                         style={{ width: '100%' }}
                                                     />
                                                     <IconButton onClick={() => handleTextFieldRemove(index)} >
-                                                        <RemoveCircleIcon sx={{ color: '#f1f1f1' }} />
+                                                        <RemoveCircleIcon sx={{ color: colorPalette.darkBackground }} />
                                                     </IconButton>
                                                 </Box>
                                             )
                                         })
                                     }
                                     <Typography
-                                        sx={{ color: '#006dff', fontSize: '13px', cursor: 'pointer', marginTop: '20px' }}
+                                        sx={{ color: colorPalette.primary, fontSize: '13px', cursor: 'pointer', marginTop: '20px' }}
                                         onClick={handleAddAnswerChoice}
                                     >
                                         Add an answer choice +
@@ -204,8 +186,7 @@ function SingleAnswerSelectionModal(props: any) {
                             <Button style={{ width: 'fit-content' }} sx={ButtonStyles.containedButton} variant="contained" onClick={handleSave} >Save</Button>
                         </Box>
                     </Box>
-                    {/* <Box sx={{ backgroundColor: colors?.primaryColor, width: '55%' }} > */}
-                    <Box className={background?.value} sx={{ backgroundColor: '#ffffff', width: '55%' }} >
+                    <Box className={background?.value} sx={{ backgroundColor: background?.value, width: '55%' }} >
                         <DynamicComponentDisplay
                             data={{
                                 question: questionText,

@@ -1,18 +1,29 @@
 import React from 'react'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
-import SettingsIcon from '@mui/icons-material/Settings';
-import Popover from '../Components/Popover';
-import NotificationModal from '../Components/NotificationModal';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import SettingsModal from '../Components/SettingsModal';
 import { useNavigate } from 'react-router';
-import { Box } from '@mui/material';
+import { Avatar, Box, Button } from '@mui/material';
+import { colorPalette } from '../Utils/Constants';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { outlinedButtonNoBorder, transparentButton } from '../Styles/ButtonStyle';
 
 const iconStyle: {} = {
-    color: '#f1f1f1',
+    color: colorPalette.primary,
     fontSize: 30,
     cursor: 'pointer',
-    paddingLeft: '10px'
+    paddingRight: '10px',
+    paddingTop: '8px'
+}
+
+const avatarStyle = { 
+    bgcolor: colorPalette.primary, 
+    width: 30, 
+    height: 30, 
+    fontSize: 20, 
+    color: colorPalette.textSecondary, 
+    cursor: 'pointer' ,
+    marginTop : '8px'
 }
 
 function MainHeaderIcons() {
@@ -20,13 +31,11 @@ function MainHeaderIcons() {
     const navigate = useNavigate();
 
     const [showNotificationModal, setShowNotificationModal] = React.useState<Boolean>();
-    const [showSettingsModal, setShowSettingsModal] = React.useState<Boolean>();
-    const [showSettingsTitle, setShowSettingsTitle] = React.useState<Boolean>(false);
-    const [showNotificationTitle, setShowNotificationTitle] = React.useState<Boolean>(false);
-    const [showProfileTitle, setShowProfileTitle] = React.useState<Boolean>(false);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
 
-    const handleSettingsClose = () => {
-        setShowSettingsModal(false);
+    const handleSettingsClose = (event: any) => {
+        setAnchorEl(null);
     }
 
     const handleNotificationBellClick = () => {
@@ -34,58 +43,42 @@ function MainHeaderIcons() {
         setShowNotificationModal(!showNotificationModal);
     }
 
-    const handleUserProfileClick = () => {
-        navigate('/org/general');
-    }
-
-    const handleSettingsBellClick = () => {
-        handleHideSettingsTitle();
-        closeAllModals();
-        setShowSettingsModal(!showSettingsModal);
+    const handleSettingsBellClick = (event : any) => {
+        // closeAllModals();
+        setAnchorEl(event.currentTarget);
     }
 
     const closeAllModals = () => {
-        setShowSettingsModal(false);
         setShowNotificationModal(false);
     }
 
-    const handleShowSettingsTitle = () => setShowSettingsTitle(true);
-    const handleHideSettingsTitle = () => setShowSettingsTitle(false);
-
-    const handleShowNotificationTitle = () => setShowNotificationTitle(true);
-    const handleHideNotificationTitle = () => setShowNotificationTitle(false);
-
-
-    const handleShowProfileTitle = () => setShowProfileTitle(true);
-    const handleHideProfileTitle = () => setShowProfileTitle(false);
     return (
-        <Box>
-            <AccountCircleIcon
-                onMouseEnter={handleShowProfileTitle}
-                onMouseLeave={handleHideProfileTitle}
-                style={iconStyle}
-                onClick={handleUserProfileClick}
-            />
-            <Popover open={showProfileTitle} text={'Profile'} />
+        <Box sx={{ display: 'flex' }} >
+            <Button
+                startIcon={<CalendarMonthIcon />}
+                sx={{ ...transparentButton, marginTop: '5px', marginRight: '10px' }}
+                onClick={() => window.open('https://calendly.com/feedbacksense/demo', '__blank')}
+            >
+                Get in touch
+            </Button>
 
-            <CircleNotificationsIcon
-                onMouseEnter={handleShowNotificationTitle}
-                onMouseLeave={handleHideNotificationTitle}
+            <NotificationsNoneOutlinedIcon
                 onClick={handleNotificationBellClick}
                 style={iconStyle}
             />
-            <Popover open={showNotificationTitle} text={'Notifications'} />
-
-            <SettingsIcon
-                onMouseEnter={handleShowSettingsTitle}
-                onMouseLeave={handleHideSettingsTitle}
-                onClick={handleSettingsBellClick}
-                style={iconStyle}
-            />
-            <Popover open={showSettingsTitle} text={'Settings'} />
-
-            {showNotificationModal && <NotificationModal />}
-            {showSettingsModal && <SettingsModal close={handleSettingsClose} />}
+            <Box>
+                <Avatar
+                    onClick={handleSettingsBellClick}
+                    sx={avatarStyle}
+                    alt={'S'}
+                    src='/'
+                />
+                <SettingsModal
+                    close={handleSettingsClose}
+                    anchor={anchorEl}
+                    open={open}
+                />
+            </Box>
         </Box>
     )
 }

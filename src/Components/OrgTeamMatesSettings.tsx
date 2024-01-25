@@ -11,7 +11,7 @@ import { genericModalData, userRoleType } from '../Utils/types';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { handleLogout } from '../Utils/FeedbackUtils';
-import { USER_UNAUTH_TEXT, componentList, componentName } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette, componentList, componentName } from '../Utils/Constants';
 import { deleteUserRoleAPI, getUserListAPI } from '../Utils/Endpoints';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
@@ -26,7 +26,8 @@ const singleUserContainer = (bgColor: string) => {
     marginTop: '15px',
     padding: '10px',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
   }
 }
 
@@ -156,11 +157,11 @@ function OrgTeamMatesSettings() {
 
   const SingleUserList = (user: any) => {
     return (
-      <Box sx={singleUserContainer(defaultColor?.primaryColor)} >
+      <Box sx={singleUserContainer(colorPalette.textSecondary)} >
         <Box display={'flex'} >
-          <Avatar sx={{ bgcolor: '#006DFF', width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
+          <Avatar sx={{ bgcolor: colorPalette.secondary, width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
           <Box textAlign={'start'} >
-            <Typography variant='h6' color={'white'}>{user?.name}</Typography>
+            <Typography variant='h6' color={colorPalette.textPrimary}>{user?.name}</Typography>
             <Typography fontSize={'13px'} color={'#808080'} >{user?.email}</Typography>
           </Box>
         </Box>
@@ -184,9 +185,9 @@ function OrgTeamMatesSettings() {
   }
 
   return (
-    <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.secondaryColor)} >
+    <Box sx={LayoutStyles.globalSettingSubContainers('#ffffff')} >
       <Box sx={{ display: 'flex', marginBottom: '50px', justifyContent: 'space-between' }} >
-        <Typography variant='h5' color={'white'} marginTop={'10px'} >Users</Typography>
+        <Typography variant='h5' color={colorPalette.darkBackground} marginTop={'10px'} >Users</Typography>
         {
           CoreUtils.isComponentVisible(userRole, componentName.TEAMMATES_INVITE) &&
           <Button

@@ -10,13 +10,15 @@ import { genericModalData } from '../Utils/types';
 import { useDispatch } from 'react-redux';
 import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
 import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
+import { colorPalette } from '../Utils/Constants';
+import MainHeaderTab from '../HeaderComponents/MainHeaderTab';
 
 function Header(props: any) {
 
     let navigate = useNavigate();
     let location = useLocation();
     const dispatch = useDispatch<any>();
-        
+
     const defaultColor = useSelector((state: any) => state.colorReducer);
     const [showSurveyDetailHeader, setShowSurveyDetailHeader] = React.useState<Boolean>(false);
     const [inOrgSelectionMode, setInOrgSelectionMode] = React.useState<Boolean>(false);
@@ -27,8 +29,8 @@ function Header(props: any) {
 
     const bodyStyle: {} = {
         backgroundColor: defaultColor,
-        padding: '10px 20px',
-        borderBottom: '1px #454545 solid'
+        padding: '5px 20px',
+        borderBottom: `0.5px ${colorPalette.fsGray} solid`,
     }
 
     React.useEffect(() => {
@@ -77,14 +79,22 @@ function Header(props: any) {
     }
 
     return (
-        <Box sx={{...bodyStyle,backgroundColor : defaultColor}} >
+        <Box sx={{ ...bodyStyle, background: colorPalette.textSecondary }} >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 {inOrgSelectionMode === false && showSurveyDetailHeader === false &&
                     <Box sx={{ marginLeft: '10px' }} onClick={handleRouteToHome} >
                         <Logo />
                     </Box>
                 }
-                {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === false && <div><MainHeaderIcons /></div>}
+                {
+                    props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === false &&
+                    <Box><MainHeaderTab /></Box>
+                }
+
+{
+                    props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === false &&
+                    <Box><MainHeaderIcons /></Box>
+                }
 
                 {inOrgSelectionMode === false && showSurveyDetailHeader === true &&
                     <Box sx={{ marginTop: '8px' }} onClick={handleRouteToHome} >

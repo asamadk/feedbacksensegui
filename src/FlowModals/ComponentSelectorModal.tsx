@@ -3,14 +3,14 @@ import React from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import { modalButtonContainerStyle, modalHeaderStyle, modalStyle } from '../Styles/ModalStyle'
 import { containedButton, outlinedButton } from '../Styles/ButtonStyle';
-import { componentList } from '../Utils/Constants';
+import { colorPalette, componentList } from '../Utils/Constants';
 import DynamicComponentIcon from '../FlowComponents/DynamicComponentIcon';
 import { useSelector } from 'react-redux';
 
 function ComponentSelectorModal(props: any) {
 
     const defaultColor = useSelector((state: any) => state.colorReducer);
-    
+
     const handleComponentClick = (componentId: number) => {
         props.onSelection(componentId);
     }
@@ -29,7 +29,7 @@ function ComponentSelectorModal(props: any) {
                             <Typography id="modal-modal-title" variant="h5" component="h2">
                                 Component Selector
                             </Typography>
-                            <IconButton onClick={props.close} sx={{ color: '#f1f1f1' }} >
+                            <IconButton onClick={props.close} sx={{ color: colorPalette.darkBackground }} >
                                 <CloseIcon />
                             </IconButton>
                         </Box>
@@ -44,7 +44,7 @@ function ComponentSelectorModal(props: any) {
                                                 component.isAvailable === true &&
                                                 <Box
                                                     onClick={() => handleComponentClick(component.id)}
-                                                    sx={{ cursor: 'pointer' }}
+                                                    sx={{ cursor: 'pointer', background: colorPalette.background, boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }}
                                                     display={'inline-grid'}
                                                     height={'100px'}
                                                     width={'100px'}
@@ -52,7 +52,6 @@ function ComponentSelectorModal(props: any) {
                                                     borderRadius={'10px'}
                                                     marginBottom={'20px'}
                                                     marginRight={'20px'}
-                                                    border={`1px ${component.bgColor} solid`}
                                                 >
                                                     <DynamicComponentIcon id={component.id} />
                                                     <Typography>{component.header}</Typography>

@@ -6,39 +6,13 @@ import ListSubheader from "@mui/material/ListSubheader";
 import { useNavigate } from "react-router";
 import { handleLogout } from "../Utils/FeedbackUtils";
 import { useSelector } from "react-redux";
-
-
-const settingsMainStyle = (bgColor : string) => {
-  return {
-    width: "100%",
-    maxWidth: 204,
-    backgroundColor: bgColor,
-    color: "#f1f1f1",
-    position: "absolute",
-    border: "1px #454545 solid",
-    right: "10px",
-    borderRadius: "5px",
-    zIndex: 10
-  }
-};
-
-const singleElementStyle = {
-  cursor: "pointer",
-};
+import { Box, Menu, MenuItem, Typography } from "@mui/material";
+import { colorPalette } from "../Utils/Constants";
 
 export default function SettingsModal(props: any) {
 
   const navigation = useNavigate();
-  const defaultColor = useSelector((state: any) => state.colorReducer);
-
-  const changeBackground = (e: any) => {
-    e.target.style.color = '#006DFF';
-    e.target.style.borderRadius = '5px'
-  };
-
-  const revertBackground = (e: any) => {
-    e.target.style.color = '#f1f1f1';
-  };
+  const currentUserState = useSelector((state: any) => state.currentUser);
 
   const handleSettingsRouting = (path: string) => {
     props.close();
@@ -46,88 +20,75 @@ export default function SettingsModal(props: any) {
   }
 
   return (
-    <List
-      sx={settingsMainStyle(defaultColor?.primaryColor)}
-      subheader={
-        <ListSubheader
-          style={{
-            backgroundColor: defaultColor?.primaryColor,
-            color: "#808080",
-            textAlign: "start",
-          }}
-        >
+    <>
+      <Menu
+        id="basic-menu"
+        anchorEl={props.anchor}
+        open={props.open}
+        onClose={props.close}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+          <Box sx={{borderBottom : `1px ${colorPalette.fsGray} solid`,padding : '10px'}} >
+            <Typography><b>{currentUserState?.name}</b></Typography>
+            <Typography color={colorPalette.textPrimary}>{currentUserState?.email}</Typography>
+          </Box>
+        <MenuItem onClick={() => handleSettingsRouting('/org/general')} >
           Settings
-        </ListSubheader>
-      }
-    >
-      <ListItem>
-        <ListItemText
-          onClick={() => handleSettingsRouting('/org/general')}
-          onMouseOver={changeBackground}
-          onMouseLeave={revertBackground}
-          style={singleElementStyle}
-          id="Organization-Settings"
-          primary="Organization Settings"
-        />
-      </ListItem>
-      <ListItem>
-        <ListItemText
-          onClick={() => handleSettingsRouting('/survey/global/settings/general')}
-          onMouseOver={changeBackground}
-          onMouseLeave={revertBackground}
-          style={singleElementStyle}
-          id="Survey-Settings"
-          primary="Survey Settings"
-        />
-      </ListItem>
-      <ListItem>
-        <ListItemText
-          onMouseOver={changeBackground}
-          onMouseLeave={revertBackground}
-          style={singleElementStyle}
-          id="Subscription"
-          primary="Subscription"
-          onClick={() => handleSettingsRouting('/org/subscription')}
-        />
-      </ListItem>
-      <ListItem>
-        <ListItemText
-          onMouseOver={changeBackground}
-          onMouseLeave={revertBackground}
-          style={singleElementStyle}
-          id="Invite-Teammates"
-          primary="Teammates"
-          onClick={() => handleSettingsRouting('/org/teammates')}
-        />
-      </ListItem>
-
-      {/* <ListItem>
-        <ListItemText
-          style={{ color: "#323533", fontSize: "14" }}
-          id="profile"
-          primary="Profile"
-        />
-      </ListItem> */}
-      {/* <ListItem>
-        <ListItemText
-          onMouseOver={changeBackground}
-          onMouseLeave={revertBackground}
-          style={singleElementStyle}
-          id="Profile-&-Password"
-          primary="Profile & Password"
-          onClick={() => handleSettingsRouting('/org/general')}
-        />
-      </ListItem> */}
-      <ListItem>
-        <ListItemText
-          onMouseOver={changeBackground}
-          onMouseLeave={revertBackground}
-          style={singleElementStyle}
-          id="Logout"
-          onClick={handleLogout}
-          primary="Logout"
-        />
-      </ListItem>
-    </List>
+        </MenuItem >
+        <MenuItem  onClick={() => handleSettingsRouting('/survey/global/settings/general')} >
+          Branding
+        </MenuItem>
+        <MenuItem onClick={() => handleSettingsRouting('/org/teammates')} >
+          Teammates
+        </MenuItem>
+        <MenuItem  onClick={() => handleSettingsRouting('/org/subscription')} >
+          Billing
+        </MenuItem>
+        <MenuItem onClick={() => handleSettingsRouting('/support')} >
+          Support
+        </MenuItem>
+        <MenuItem onClick={handleLogout} >
+          Logout
+        </MenuItem>
+      </Menu>
+    </>
+    // <List
+    //   sx={settingsMainStyle(defaultColor?.primaryColor)}
+    //   subheader={
+    //     <ListSubheader
+    //       style={{
+    //         backgroundColor: defaultColor?.primaryColor,
+    //         color: "#808080",
+    //         textAlign: "start",
+    //       }}
+    //     >
+    //       Settings
+    //     </ListSubheader>
+    //   }
+    // >
+    //   <ListItem>
+    //     <ListItemText
+    //       onClick={() => handleSettingsRouting('/org/general')}
+    //       onMouseOver={changeBackground}
+    //       onMouseLeave={revertBackground}
+    //       style={singleElementStyle}
+    //       id="Organization-Settings"
+    //       primary="Organization Settings"
+    //     />
+    //   </ListItem>
+    //   <ListItem>
+    //     <ListItemText
+    //       onClick={() => handleSettingsRouting('/survey/global/settings/general')}
+    //       onMouseOver={changeBackground}
+    //       onMouseLeave={revertBackground}
+    //       style={singleElementStyle}
+    //       id="Survey-Settings"
+    //       primary="Branding"
+    //     />
+    //   </ListItem>
+  
+    // </List>
   );
 }

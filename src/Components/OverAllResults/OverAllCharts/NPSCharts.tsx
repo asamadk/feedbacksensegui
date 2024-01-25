@@ -4,6 +4,7 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recha
 import { getIconColorById } from '../../../Utils/FeedbackUtils'
 import GaugeChart from 'react-gauge-chart';
 import FSTooltip from '../../FSTooltip';
+import { colorPalette } from '../../../Utils/Constants';
 
 type propsType = {
   id: number,
@@ -11,7 +12,7 @@ type propsType = {
 }
 
 const textContainer = {
-  color : '#f1f1f1',
+  color : colorPalette.darkBackground,
   textAlign : 'start',
   margin : '20px',
 }
@@ -20,9 +21,7 @@ function NPSCharts(props : propsType) {
   return (
     <Box>
       <Box sx={textContainer} >
-        <Typography fontSize={20} >Question : {props?.data?.question}</Typography>
-        {/* <Typography color={'#808080'} paddingBottom={'10px'}>Question : {props?.data?.question}</Typography> */}
-
+        <Typography fontSize={20} >{props?.data?.question}</Typography>
       </Box>
       <Box sx={{ width: '100%', height: 300 }} display={'flex'} justifyContent={'space-around'} >
         <NPSScore score={props?.data?.nps} />
