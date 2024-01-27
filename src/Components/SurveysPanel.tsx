@@ -239,9 +239,9 @@ function SurveysPanel(props: any) {
                         <Box sx={{ width: 'fit-content', margin: 'auto' }} >
                             <Logo />
                         </Box>
-                        <Typography style={{ color: '#f1f1f1' }} variant='h4'>Create your first survey to get started!</Typography>
-                        <Typography style={{ color: '#808080' }} variant='subtitle2'>Click the button below to add your first survey.</Typography>
-                        <Button sx={containedButtonStyle} onClick={handleCreateNewSurvey} variant="contained">Get Started</Button>
+                        <Typography style={{ color: Constants.colorPalette.darkBackground }} variant='h4'>Create your first survey to get started!</Typography>
+                        <Typography style={{ color: Constants.colorPalette.primary }} variant='subtitle2'>Click the button below to add your first survey.</Typography>
+                        <Button sx={containedButtonStyle} onClick={handleCreateNewSurvey} >Get Started</Button>
                     </div>
                     :
                     <Box sx={{ padding: '15px 20px',backgroundColor : Constants.colorPalette.textSecondary, overflowY: 'scroll', height: 'calc(100vh - 100px)' }} >
@@ -275,11 +275,11 @@ function SurveysPanel(props: any) {
                                         onChange={handleSearch}
                                         value={searchText}
                                         size='small'
-                                        sx={{ input: { color: Constants.colorPalette.primary } }}
+                                        sx={{ input: { color: Constants.colorPalette.darkBackground } }}
                                         placeholder='Search surveys and folders..'
                                         style={searchBoxStyle}
                                         InputProps={{
-                                            endAdornment: <SearchIcon sx={{ color: Constants.colorPalette.textPrimary, paddingLeft: '5px' }} />
+                                            endAdornment: <SearchIcon sx={{ color: Constants.colorPalette.darkBackground, paddingLeft: '5px' }} />
                                         }}
                                     />
                                     {

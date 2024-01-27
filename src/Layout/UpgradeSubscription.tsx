@@ -250,7 +250,7 @@ export default function UpgradeSubscription() {
                     <ThemeProvider theme={lightTheme} >
                         <Box color={colorPalette.textPrimary} >
                             <Typography variant="subtitle1" component="span">Monthly</Typography>
-                            &nbsp; <Switch name="checkbox" color="success" checked={billing === 'year'} onChange={handleChange} /> &nbsp;
+                            &nbsp; <Switch name="checkbox" color="secondary" checked={billing === 'year'} onChange={handleChange} /> &nbsp;
                             <Typography variant="subtitle1" component="span">Yearly</Typography>
                         </Box>
                     </ThemeProvider>
@@ -379,7 +379,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                     </Grid>
                 </Grid>
                 <Grid item xs={12} lg={5} sx={{ p: 2 }}>
-                    <CustomBox>
+                    <CustomBox sx={{backgroundColor : colorPalette.secondary}} >
                         <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'text.secondary', fontSize: 'base' }}>
                             {planDesc?.features[4]}
                         </Typography>

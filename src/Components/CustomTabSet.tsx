@@ -30,7 +30,7 @@ function CustomTabSet(props: any) {
         '& .MuiTabs-indicatorSpan': {
             maxWidth: 40,
             width: '100%',
-            backgroundColor: colorPalette.secondary,
+            backgroundColor: colorPalette.primary,
         }
     });
 
@@ -44,7 +44,7 @@ function CustomTabSet(props: any) {
             color: colorPalette.primary,
         },
         '&.Mui-focusVisible': {
-            backgroundColor: colorPalette.secondary,
+            backgroundColor: colorPalette.primary,
         },
     }));
 

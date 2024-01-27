@@ -157,12 +157,12 @@ function OrgTeamMatesSettings() {
 
   const SingleUserList = (user: any) => {
     return (
-      <Box sx={singleUserContainer(colorPalette.textSecondary)} >
+      <Box sx={singleUserContainer(colorPalette.secondary)} >
         <Box display={'flex'} >
-          <Avatar sx={{ bgcolor: colorPalette.secondary, width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
+          <Avatar sx={{ bgcolor: colorPalette.darkBackground, width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
           <Box textAlign={'start'} >
             <Typography variant='h6' color={colorPalette.textPrimary}>{user?.name}</Typography>
-            <Typography fontSize={'13px'} color={'#808080'} >{user?.email}</Typography>
+            <Typography fontSize={'13px'} color={colorPalette.textPrimary} >{user?.email}</Typography>
           </Box>
         </Box>
         <Box marginTop={'5px'} >

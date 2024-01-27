@@ -77,9 +77,9 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                             />
                             <Box textAlign={'start'} >
                                 <Typography variant='h6' color={colorPalette.darkBackground}>{user?.name}</Typography>
-                                <Typography color={'#808080'} >{user?.email}</Typography>
-                                <Typography color={'#808080'} >{user?.role}</Typography>
-                                <Typography color={'#808080'} >{new Date(user?.created_at).toString()}</Typography>
+                                <Typography color={colorPalette.darkBackground} >{user?.email}</Typography>
+                                <Typography color={colorPalette.darkBackground} >{user?.role}</Typography>
+                                <Typography color={colorPalette.darkBackground} >{new Date(user?.created_at).toString()}</Typography>
                             </Box>
                         </Box>
                         <Box marginLeft={'35px'} marginTop={'20px'} >

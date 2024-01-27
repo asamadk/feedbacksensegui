@@ -1,13 +1,13 @@
-import { CONDITION_ANSWER_CONTAINS, CONDITION_ANY_VALUE, CONDITION_HAS_ANY_VALUE, CONDITION_INCLUDES_ALL, CONDITION_IS, CONDITION_IS_EXACTLY, CONDITION_IS_NOT, CONDITION_QUESTION_IS_ANSWERED, CONDITION_QUESTION_IS_NOT_ANSWERED, SMILEY_EXTREMELY_HAPPY, SMILEY_EXTREMELY_UNSATISFIED, SMILEY_HAPPY, SMILEY_NEUTRAL, SMILEY_UNSATISFIED } from "../SurveyEngine/CoreUtils/CoreConstants";
+import { CONDITION_ANSWER_CONTAINS, CONDITION_ANY_VALUE, CONDITION_HAS_ANY_VALUE, CONDITION_IS, CONDITION_IS_EXACTLY, CONDITION_IS_NOT, SMILEY_EXTREMELY_HAPPY, SMILEY_EXTREMELY_UNSATISFIED, SMILEY_HAPPY, SMILEY_NEUTRAL, SMILEY_UNSATISFIED } from "../SurveyEngine/CoreUtils/CoreConstants";
 
 export const colorPalette = {
-    darkBackground : '#0B2417',
-    primary : '#427761',
-    secondary : '#63AB77',
-    textPrimary : '#222222',
-    textSecondary : '#f6f7f9',
-    fsGray : '#AFAFAF',
-    background : '#ffffff'
+    darkBackground: '#3D0A74',
+    primary: '#8039DF',
+    secondary: '#F5EDFF',
+    textPrimary: '#3D0A74',
+    textSecondary: '#f6f7f9',
+    fsGray: '#AFAFAF',
+    background: '#ffffff'
 }
 
 export const EMAIL_LINK_SURVEY_TYPE = 'email/link';
@@ -344,7 +344,7 @@ export const componentList = [
         id: 11,
         bgColor: '#6E2142',
         header: 'Contact form',
-        description: 'Collect contact information such as name, email, then create contacts in your CRM if .',
+        description: 'Collect contact information such as name, email, then create contacts in your CRM if you want.',
         isAvailable: true
     },
     // {

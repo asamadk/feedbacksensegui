@@ -48,7 +48,6 @@ const allSurveyFolder = (bgColor: string) => {
         justifyContent: 'space-between',
         padding: '10px',
         paddingBottom: '10px',
-        // borderRadius: '5px',
         cursor: 'pointer',
         backgroundColor: bgColor,
         color: colorPalette.textPrimary
@@ -211,7 +210,7 @@ function SurveyListPage() {
             element.style.background = colorPalette.background;
         });
 
-        e.target.style.background = defaultColor?.primaryColor;
+        e.target.style.background = colorPalette.secondary;
     }
 
     const handleFolderClick = (e: any, folderName: string, folderId: string) => {
@@ -233,9 +232,9 @@ function SurveyListPage() {
         })
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = defaultColor?.backgroundColor;
+            element.style.background = colorPalette.background;
         });
-        e.target.style.background = defaultColor?.primaryColor;
+        e.target.style.background = colorPalette.secondary;
     }
 
     const handleOpenInviteModal = () => setOpenInviteModal(true);
@@ -340,17 +339,6 @@ function SurveyListPage() {
             <div style={surveyPageMainContainer} >
                 <div style={leftSectionStyle} >
                     <div style={{ width: '100%', overflowY: 'scroll', paddingBottom: '20px' }} >
-                        {/* <CssTextField
-                            onChange={handleSearch}
-                            value={searchText}
-                            size='small'
-                            sx={{ input: { color: colorPalette.primary } }}
-                            placeholder='Search surveys and folders..'
-                            style={{ marginLeft: '10px', marginRight: '10px' }}
-                            InputProps={{
-                                endAdornment: <SearchIcon sx={{ color: colorPalette.textPrimary, paddingLeft: '5px' }} />
-                            }}
-                        /> */}
                         <div style={folderText}>
                             <Box sx={{ display: 'flex' }} >
                                 <ArrowDropDownIcon />
@@ -366,7 +354,7 @@ function SurveyListPage() {
                                 +
                             </Typography>
                         </div>
-                        <div style={allSurveyFolder(defaultColor?.primaryColor)} className="all-folders-data" onClick={handleAllFolderClick} >
+                        <div style={allSurveyFolder(colorPalette.secondary)} className="all-folders-data" onClick={handleAllFolderClick} >
                             <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >All Surveys</Typography>
                         </div>
                         {

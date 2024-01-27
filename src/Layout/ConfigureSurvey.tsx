@@ -42,7 +42,7 @@ const selectedEmbedPositionStyle = {
   height: '200px',
   cursor: 'pointer',
   position: 'relative',
-  border: `4px ${colorPalette.secondary}  solid`
+  border: `4px ${colorPalette.primary}  solid`
 }
 
 const getEmbedButtonPosition = (

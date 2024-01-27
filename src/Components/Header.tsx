@@ -79,7 +79,7 @@ function Header(props: any) {
     }
 
     return (
-        <Box sx={{ ...bodyStyle, background: colorPalette.textSecondary }} >
+        <Box sx={{ ...bodyStyle, background: colorPalette.secondary }} >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 {inOrgSelectionMode === false && showSurveyDetailHeader === false &&
                     <Box sx={{ marginLeft: '10px' }} onClick={handleRouteToHome} >

@@ -32,7 +32,8 @@ export const workflowLiveWarning = {
     borderRadius: '4px',
     padding: '10px',
     marginBottom: '5px',
-    marginTop: '5px'
+    marginTop: '5px',
+    color : colorPalette.secondary
 }
 
 export const modalHeaderStyle = {
