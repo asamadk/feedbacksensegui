@@ -82,7 +82,7 @@ function DateRangeModal(props: any) {
                                 <Button onClick={() => handleChangeDuration(duration.value)} sx={transparentButton} >
                                     {
                                         selectedDuration === duration.value ?
-                                            <Typography color={colorPalette.secondary} >{duration.label}</Typography> :
+                                            <Typography color={colorPalette.primary} >{duration.label}</Typography> :
                                             <Typography color={colorPalette.darkBackground} >{duration.label}</Typography>
                                     }
                                 </Button>)}

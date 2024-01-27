@@ -84,11 +84,11 @@ function DesignPreview() {
                         aria-label="device"
                         sx={{ marginTop: '5px' }}
                     >
-                        <ToggleButton color='success' value="laptop" aria-label="laptop">
-                            <LaptopIcon sx={{ color: colorPalette.secondary }} />
+                        <ToggleButton color='secondary' value="laptop" aria-label="laptop">
+                            <LaptopIcon sx={{ color: colorPalette.primary }} />
                         </ToggleButton>
-                        <ToggleButton color='success' value="phone" aria-label="phone">
-                            <PhoneAndroidIcon sx={{ color: colorPalette.secondary }} />
+                        <ToggleButton color='secondary' value="phone" aria-label="phone">
+                            <PhoneAndroidIcon sx={{ color: colorPalette.primary }} />
                         </ToggleButton>
                     </ToggleButtonGroup>
                 </Box>

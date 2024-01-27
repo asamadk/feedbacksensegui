@@ -16,7 +16,7 @@ function UpgradePlanError({ message,desc,showButton }: { message: string,desc : 
     return (
         <Box>
             <AutoAwesomeIcon 
-                sx={{ color: colorPalette.secondary,fontSize : 50 }} 
+                sx={{ color: colorPalette.primary,fontSize : 50 }} 
             />
             <Typography 
                 color={colorPalette.darkBackground} 

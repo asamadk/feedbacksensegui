@@ -7,6 +7,7 @@ const tabSetList = [
     { id: 0, name: 'Workspaces' },
     { id: 1, name: 'Templates' },
     { id: 2, name: 'Integrations' },
+    { id: 3, name: 'Dashboard' },
 ];
 
 function MainHeaderTab() {

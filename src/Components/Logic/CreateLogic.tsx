@@ -293,7 +293,7 @@ function DraggableLogicItem({ logic, index, ...otherProps }: any) {
     return (
         <Box ref={combinedRef} key={logic.id} >
             <Box sx={logicListContainer(colorPalette.background)} >
-                <Box sx={logicIconsContainer(colorPalette.textSecondary)} >
+                <Box sx={logicIconsContainer(colorPalette.secondary)} >
                     <Box textAlign={'end'} >
                         <IconButton sx={{cursor : 'grab'}} >
                             <DragIndicatorIcon sx={{ color: colorPalette.darkBackground }} />

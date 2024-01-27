@@ -214,16 +214,16 @@ function IndividualResponse(props: IndividualResponseProps) {
                                         onClick={() => handleResponseListClick(res.id)}
                                         sx={res?.selected === true ? selectedResponseStyle(colorPalette.darkBackground) : responseStyle(colorPalette?.textSecondary)}
                                     >
-                                        <Typography fontSize={'14px'} fontWeight={'600'} color={colorPalette.secondary} >{'Anonymous Response'}</Typography>
+                                        <Typography fontSize={'14px'} fontWeight={'600'} color={res?.selected === true ? colorPalette.secondary :colorPalette.primary} >{'Anonymous Response'}</Typography>
                                         <Typography 
                                             sx={{ fontSize: '13px' }} 
                                             color={res?.selected === true ? colorPalette.textSecondary : colorPalette.textPrimary} 
                                         >{res?.id}</Typography>
                                         <Typography 
                                             sx={{ fontSize: '13px' }} 
-                                            color={res?.selected === true ? colorPalette.textSecondary : colorPalette.textPrimary } 
+                                            color={res?.selected === true ? colorPalette.secondary : colorPalette.primary } 
                                         >
-                                            {new Date(res?.created_at)?.toLocaleString()}
+                                            {new Date(res?.created_at)?.toDateString()}
                                         </Typography>
                                     </Box>
                                 )

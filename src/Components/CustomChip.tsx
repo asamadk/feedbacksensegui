@@ -7,7 +7,7 @@ function CustomChip(props : any) {
         <>
         {
             props.status === 'success' ? 
-        <Box sx={{ border: `1px ${colorPalette.primary} solid`, color: colorPalette.secondary, padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
+        <Box sx={{ border: `1px ${colorPalette.primary} solid`, color: colorPalette.primary, padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
             Published
         </Box> : <Box sx={{ border: `0.5px ${colorPalette.textPrimary} solid`, color: colorPalette.fsGray, padding: '5px 15px', fontSize: 12, borderRadius: 2 }} >
             Unpublished
