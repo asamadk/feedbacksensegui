@@ -111,7 +111,7 @@ function SurveyDetailHeader(props: any) {
             </Box>
             <Box sx={{ display: 'flex' }} >
                 <IconButton
-                    onClick={handleRouteToHome}
+                    onClick={props.handleRouteToHome}
                     sx={makeIconsUp}
                 >
                     <CloseIcon sx={{ color: colorPalette.darkBackground }} />

@@ -81,7 +81,7 @@ function Login() {
                     <Divider style={{background : colorPalette.primary}} />
                 </Box>
                 <Typography
-                    color={colorPalette.primary}
+                    color={colorPalette.secondary}
                     marginTop={'20px'}
                 >
                     Do not have an account ?

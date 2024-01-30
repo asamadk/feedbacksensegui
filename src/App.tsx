@@ -30,6 +30,8 @@ import { useDispatch } from 'react-redux';
 import { setCurrentUsers } from './Redux/Reducers/currentUserReducer';
 import Support from './Layout/Support';
 import SignUpLayout from './Layout/SignUpLayout';
+import IntegrationLayout from './Layout/IntegrationLayout';
+import DashboardsLayout from './Layout/DashboardsLayout';
 
 function App() {
 
@@ -61,7 +63,7 @@ function App() {
       setUser(currentUser);
       navigate('/');
     } catch (err: any) {
-      if(err?.response?.data?.statusCode === 404){
+      if (err?.response?.data?.statusCode === 404) {
         navigate(`/failure?message=${err.response?.data?.message}&code=${err?.response?.data?.statusCode}`);
       }
       console.error('Error in auth', err);
@@ -71,7 +73,7 @@ function App() {
   useEffect(() => {
     if (dataFetchedRef.current === true) return;
     let currentPath: string = window.location.pathname;
-    if(ignoreAuthPaths.includes(currentPath)){return;}
+    if (ignoreAuthPaths.includes(currentPath)) { return; }
     getUser();
     dataFetchedRef.current = true;
   }, []);
@@ -167,6 +169,14 @@ function App() {
             <Route
               path='/user/create/organization'
               element={<LoginSuccess />}
+            />
+            <Route
+              path='/integration'
+              element={user ? <IntegrationLayout /> : <Navigate to={'/login'} />}
+            />
+            <Route
+              path='/dashboard'
+              element={user ? <DashboardsLayout /> : <Navigate to={'/login'} />}
             />
           </Routes>
         </div>}

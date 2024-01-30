@@ -1,5 +1,5 @@
-import React from 'react'
-import { Box, Typography } from '@mui/material'
+import React, { useState } from 'react'
+import { Box } from '@mui/material'
 import { useLocation, useNavigate } from 'react-router';
 import MainHeaderIcons from '../HeaderComponents/MainHeaderIcons';
 import SurveyDetailHeader from '../HeaderComponents/SurveyDetailHeader';
@@ -26,6 +26,8 @@ function Header(props: any) {
     const workflowDirty = useSelector((state: any) => state.workflowDirty);
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
+    const [backHome,setBackHome] = useState(false);
+    const [iconJoyrideOver,setIconJoyrideOver] = useState<any>(false);
 
     const bodyStyle: {} = {
         backgroundColor: defaultColor,
@@ -66,8 +68,10 @@ function Header(props: any) {
                 return;
             }
             navigate('/');
+            setBackHome(true);
         }
     }
+    
 
     const handleSuccessButtonClick = () => {
         navigate('/');
@@ -76,6 +80,11 @@ function Header(props: any) {
         tempWorkflowDirty[currentWorkflowId] = false;
         dispatch(updateWorkflowDirty(tempWorkflowDirty));
         dispatch(updateWorkflowCheck(tempWorkflowDirty));
+    }
+
+    const handleIconJoyrideOver = () => {
+        setIconJoyrideOver(null);
+        setIconJoyrideOver(true);
     }
 
     return (
@@ -88,12 +97,11 @@ function Header(props: any) {
                 }
                 {
                     props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === false &&
-                    <Box><MainHeaderTab /></Box>
+                    <Box><MainHeaderTab joyrideStart={iconJoyrideOver} /></Box>
                 }
-
-{
+                {
                     props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === false &&
-                    <Box><MainHeaderIcons /></Box>
+                    <Box><MainHeaderIcons joyRideOver={handleIconJoyrideOver} backToHome={backHome} /></Box>
                 }
 
                 {inOrgSelectionMode === false && showSurveyDetailHeader === true &&
@@ -101,7 +109,15 @@ function Header(props: any) {
                         <Logo />
                     </Box>
                 }
-                {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === true && <div><SurveyDetailHeader surveyId={currentWorkflowId} tabset={0} /></div>}
+                {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === true &&
+                    <div>
+                        <SurveyDetailHeader
+                            surveyId={currentWorkflowId}
+                            tabset={0}
+                            handleRouteToHome={handleRouteToHome}
+                        />
+                    </div>
+                }
 
             </div>
             <GenericModal

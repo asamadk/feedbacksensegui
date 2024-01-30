@@ -14,9 +14,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { PERM_ISSUE_TEXT, USER_UNAUTH_TEXT, colorPalette, componentName } from '../Utils/Constants';
+import { PERM_ISSUE_TEXT, USER_UNAUTH_TEXT, colorPalette, componentName, joyrideConstants } from '../Utils/Constants';
 import { useSelector } from 'react-redux';
-import { genericModalData, userRoleType } from '../Utils/types';
+import { genericModalData, joyrideState, userRoleType } from '../Utils/types';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 import { useDispatch } from 'react-redux';
 import { setFolders } from '../Redux/Reducers/folderReducer';
@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router';
 import { setCustomSettings } from '../Redux/Reducers/customSettingsReducer';
 import GenericModal from '../Modals/GenericModal';
 import { textFieldStyle } from '../Styles/InputStyles';
+import ReactJoyride, { ACTIONS, CallBackProps, STATUS } from 'react-joyride';
 
 
 const surveyPageMainContainer = {
@@ -81,6 +82,7 @@ function SurveyListPage() {
 
     const [openInviteModal, setOpenInviteModal] = React.useState(false);
     const [openCreateFolderModal, setOpenCreateFolderModal] = React.useState(false);
+    const [folderManualClose,setFolderManualClose] = React.useState(false);
     const [selectedFolder, setSelectedFolder] = React.useState<string>('All Surveys');
     const [selectedFolderId, setSelectedFolderId] = React.useState<string>('0');
     const defaultColor = useSelector((state: any) => state.colorReducer);
@@ -91,7 +93,53 @@ function SurveyListPage() {
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
     const [loading, setLoading] = React.useState(false);
-    const [searchText, setSearchText] = useState('');
+
+    const [{ run, steps, stepIndex }, setState] = useState<joyrideState>({
+        run: false,
+        stepIndex: 0,
+        steps: [
+            {
+                content:
+                    <>
+                        <h2>Welcome to Feedback Sense,</h2>
+                        <p>Take a quick look around FeedbackSense with our short tutorial </p>
+                    </>,
+                locale: { skip: <strong aria-label="skip">SKIP</strong> },
+                placement: 'center',
+                target: 'body',
+            },
+            {
+                content: <h2>
+                    You can invite your teammates directly from here</h2>,
+                target: '.invite-teammates',
+                disableBeacon: true,
+                disableOverlayClose: true,
+                placement: 'top',
+                styles: {
+                    options: {
+                        zIndex: 10000,
+                    },
+                },
+            },
+            {
+                content: <h2>
+                    You can create, organize, and collaborate over your surveys here.
+                    Let's create your first workspace. Click on “+” to create your workspace</h2>,
+                target: '.create-workspace',
+                disableBeacon: true,
+                disableOverlayClose: true,
+                hideCloseButton: true,
+                hideFooter: true,
+                placement: 'bottom',
+                spotlightClicks: true,
+                styles: {
+                    options: {
+                        zIndex: 10000,
+                    },
+                },
+            },
+        ],
+    });
 
     let init = false;
 
@@ -240,10 +288,18 @@ function SurveyListPage() {
     const handleOpenInviteModal = () => setOpenInviteModal(true);
     const handleCloseInviteModal = () => setOpenInviteModal(false);
 
-    const handleOpenCreateFolderModal = () => setOpenCreateFolderModal(true);
+    const handleOpenCreateFolderModal = () => {
+        setOpenCreateFolderModal(true);
+        setState({
+            run: false,
+            steps: steps,
+            stepIndex: 3,
+        });
+    }
 
     const handleCloseCreateFolderModal = (type: string) => {
-        setOpenCreateFolderModal(false)
+        setOpenCreateFolderModal(false);
+        setFolderManualClose(true);
         if (type === 'save') {
             getFolders(true);
         }
@@ -254,7 +310,6 @@ function SurveyListPage() {
     }
 
     const unhighlightCreateFolder = (e: any) => {
-        // e.target.style.color = defaultColor?.primaryColor;
         e.target.style.color = colorPalette.textPrimary;
     }
 
@@ -312,7 +367,6 @@ function SurveyListPage() {
 
     const handleUpgradePlanClick = () => {
         navigate('/upgrade/plan');
-        // window.open('https://www.feedbacksense.io/pricing', '__blank');
     }
 
     const handleRerenderSurveyCreate = () => {
@@ -328,14 +382,58 @@ function SurveyListPage() {
         })
     }
 
-    const handleSearch = (event: any) => {
-        let tempSearchText: string = event.target.value;
-        setSearchText(tempSearchText);
-        // filterSurveys(selectedUser, tempSearchText, selectedSurveyType);
+    const handleJoyrideCallback = (data: CallBackProps) => {
+        const { status, type, index, action } = data;
+        const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
+
+        if (finishedStatuses.includes(status)) {
+            setState({ run: false, steps: steps, stepIndex: 0, });
+        }
+    };
+
+    useEffect(() => {
+        handleJoyrideVisibility();
+    }, []);
+
+    const handleJoyrideVisibility = () => {
+        const hasSeenJoyride = localStorage.getItem(joyrideConstants.JOYRIDE_1);
+        if (!hasSeenJoyride) {
+            setState({
+                run: true,
+                steps: steps,
+                stepIndex: 0,
+            });
+            setTimeout(() => {
+                localStorage.setItem(joyrideConstants.JOYRIDE_1, 'true');
+            },1000);
+        }
+        //TODO JOYRIDE remove this
+        // localStorage.removeItem('surveyPanelJoyride');
     }
 
     return (
         <>
+            <ReactJoyride
+                callback={handleJoyrideCallback}
+                continuous
+                hideCloseButton
+                run={run}
+                scrollToFirstStep
+                showProgress
+                showSkipButton
+                steps={steps}
+                styles={{
+                    options: {
+                        zIndex: 10000,
+                    },
+                    buttonNext: {
+                        backgroundColor: colorPalette.primary
+                    },
+                    buttonBack: {
+                        color: colorPalette.primary
+                    }
+                }}
+            />
             <div style={surveyPageMainContainer} >
                 <div style={leftSectionStyle} >
                     <div style={{ width: '100%', overflowY: 'scroll', paddingBottom: '20px' }} >
@@ -345,6 +443,7 @@ function SurveyListPage() {
                                 <Typography variant='subtitle2' fontWeight={'600'} >My Workspace</Typography>
                             </Box>
                             <Typography
+                                className='create-workspace'
                                 onMouseEnter={highlightCreateFolder}
                                 onMouseLeave={unhighlightCreateFolder}
                                 onClick={handleOpenCreateFolderModal}
@@ -390,7 +489,7 @@ function SurveyListPage() {
                                     text={subscriptionState == null ? '0' : subscriptionState?.surveyLimitUsed + '/' + subscriptionState?.totalSurveyLimit}
                                 />
                             </Box> */}
-                            <Box padding={'10px 20px'} >
+                            <Box className="create-folder-modal" padding={'10px 20px'} >
                                 <Button
                                     sx={ButtonStyles.outlinedButton}
                                     onClick={handleUpgradePlanClick}
@@ -400,6 +499,7 @@ function SurveyListPage() {
                                     Apps & Integrations
                                 </Button>
                                 <Button
+                                    className='invite-teammates'
                                     startIcon={<Groups2Icon />}
                                     sx={ButtonStyles.containedButton}
                                     onClick={handleOpenInviteModal}
@@ -416,6 +516,7 @@ function SurveyListPage() {
                         folder={selectedFolder}
                         folderId={selectedFolderId}
                         update={handleUpdateComponent}
+                        folderModalClose={folderManualClose}
                         runOnSurveyCreate={handleRerenderSurveyCreate}
                     />
                 </div>

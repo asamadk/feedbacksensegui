@@ -199,7 +199,7 @@ function SurveyBlock(props: any) {
                             <EditIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title='Settings' >
+                    <Tooltip title='More' >
                         <IconButton id="basic-button"
                             onClick={handleClick}
                             sx={{ color: colorPalette.textPrimary, width: '50px' }}

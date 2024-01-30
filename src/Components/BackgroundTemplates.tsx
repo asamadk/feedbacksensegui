@@ -27,7 +27,7 @@ function BackgroundTemplates(props: any) {
 
   const getSingleSurvey = async () => {
     surveysState?.forEach((srv: any) => {
-      if (srv.id === props.surveyId) {
+      if (srv?.id === props.surveyId) {
         populateSurveyDesign(srv);
         return;
       }
@@ -47,7 +47,7 @@ function BackgroundTemplates(props: any) {
   }
 
   const handleBackgroundClick = (background: any) => {
-    if (background.id === selectedBackground.id) {
+    if (background?.id === selectedBackground?.id) {
       return;
     }
     setSelectedBackground(background);
@@ -87,10 +87,10 @@ function BackgroundTemplates(props: any) {
         <Box display={'flex'} sx={{ flexWrap: 'wrap' }}>
           {getBackgrounds().map((background) => {
             return (
-              <Box sx={{ width: '25%' }} key={background.id} onClick={() => handleBackgroundClick(background)}>
+              <Box sx={{ width: '25%' }} key={background?.id} onClick={() => handleBackgroundClick(background)}>
                 <BackgroundComponent
                   background={background}
-                  selected={selectedBackground.id === background.id}
+                  selected={selectedBackground?.id === background?.id}
                 />
               </Box>
             )
