@@ -9,7 +9,7 @@ import { SET_BACKGROUND_COLOR } from "../Actions/backgroundModeAction";
 const initialState = {
   backgroundColor: '#ffffff', // Default to black
   secondaryColor : '#f2f2f2', //Darker shade
-  primaryColor : '#A4E3B5' //Lighter shade
+  primaryColor : '#F5EDFF' //Lighter shade
 };
 
 

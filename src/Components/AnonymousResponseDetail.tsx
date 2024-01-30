@@ -81,7 +81,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.welcomeText}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(colorPalette.background)} >
+                <Box sx={answerContainer(colorPalette.secondary)} >
                     <Typography>{`Action performed : ${data?.data?.click}`}</Typography>
                 </Box>
             </>}
@@ -95,7 +95,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(colorPalette.background)} >
+                <Box sx={answerContainer(colorPalette.secondary)} >
                     <Typography>{`${data?.data?.selectedVal}`}</Typography>
                 </Box>
             </>}
@@ -109,7 +109,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(colorPalette.background)} >
+                <Box sx={answerContainer(colorPalette.secondary)} >
                     {data?.data?.selectedVal?.map((val: string) => {
                         return (<Box>
                             <Typography>{val}</Typography>
@@ -127,7 +127,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(colorPalette.background)} >
+                <Box sx={answerContainer(colorPalette.secondary)} >
                     <Typography>{`${data?.data?.answer}`}</Typography>
                 </Box>
             </>}
@@ -141,7 +141,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(colorPalette.background)} >
+                <Box sx={answerContainer(colorPalette.secondary)} >
                     <Typography>{getEmojiFromId(data?.data?.emojiId)}</Typography>
                 </Box>
             </>}
@@ -155,7 +155,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(colorPalette.background)} >
+                <Box sx={answerContainer(colorPalette.secondary)} >
                     <Typography>{`${data?.data?.value}`}</Typography>
                 </Box>
             </>}
@@ -169,7 +169,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(colorPalette.background)} >
+                <Box sx={answerContainer(colorPalette.secondary)} >
                     <Typography>{`${data?.data?.value}`}</Typography>
                 </Box>
             </>}
@@ -183,7 +183,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(colorPalette.background)} >
+                <Box sx={answerContainer(colorPalette.secondary)} >
                     {data?.compData?.answerList?.map((val: string) => {
                         return (<Box>
                             <Typography>{`${val} : ${data.data[val]}`}</Typography>
@@ -201,7 +201,7 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                         <Typography>{data?.compData?.question}</Typography>
                     </Box>
                 </Box>
-                <Box sx={answerContainer(colorPalette.background)} >
+                <Box sx={answerContainer(colorPalette.secondary)} >
                     <Typography>{new Date(data?.data?.value)?.toLocaleDateString()}</Typography>
                 </Box>
             </>}

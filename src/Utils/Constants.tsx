@@ -426,3 +426,13 @@ export const EmbedPositions = [
         selected: false
     },
 ]
+
+export const joyrideConstants = {
+    JOYRIDE_1 : 'joyride-1',
+    JOYRIDE_2 : 'joyride-2',
+    JOYRIDE_3 : 'joyride-3',
+    JOYRIDE_4 : 'joyride-4',
+    JOYRIDE_5 : 'joyride-5',
+    JOYRIDE_6 : 'joyride-6',
+    JOYRIDE_7 : 'joyride-7',
+}

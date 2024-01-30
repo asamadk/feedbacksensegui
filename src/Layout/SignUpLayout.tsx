@@ -25,9 +25,8 @@ function SignUpLayout() {
 
     const subContainerStyle = {
         width: '50%',
-        margin: 'auto',
         padding: '50px 0px',
-        height: 'calc(100vh - 158px)',
+        height: 'calc(100vh - 149px)',
     }
 
     const handleLogin = () => {
@@ -35,13 +34,13 @@ function SignUpLayout() {
     }
 
     return (
-        <Box sx={{ height: 'calc(100vh - 58px)', display: 'flex' }} >
+        <Box sx={{ height: 'calc(100vh - 45px)', display: 'flex' }} >
             <Box width={'50%'}>
                 <Box
                     display={'flex'}
                     flexDirection={'column'}
                     justifyContent={'center'}
-                    height={'calc(100vh - 99px)'}
+                    height={'calc(100vh - 89px)'}
                     overflow={'hidden'}
                     padding={'20px 40px'}
                     sx={{ backgroundColor: colorPalette.darkBackground }}
@@ -58,7 +57,7 @@ function SignUpLayout() {
                     <Typography
                         variant='h4'
                         textAlign={'start'}
-                        color={colorPalette.secondary}
+                        color={colorPalette.primary}
                     >
                         Empower Your Feedback - Intuitively, Intelligently, Affordably
                     </Typography>
@@ -80,7 +79,7 @@ function SignUpLayout() {
                     <MicrosoftSignInButton onClick={microsoftAuth} />
                 </Box>
                 <Box width={'250px'} margin={'auto'} marginTop={'20px'}>
-                    <Divider style={{background : colorPalette.secondary}} />
+                    <Divider style={{background : colorPalette.primary}} />
                 </Box>
                 <Typography
                     color={colorPalette.secondary}

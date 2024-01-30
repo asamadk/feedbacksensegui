@@ -1,9 +1,9 @@
 import { Box, Button, IconButton, InputLabel, Modal, styled, TextField, Typography } from '@mui/material'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import * as ModalStyles from '../Styles/ModalStyle'
 import CloseIcon from '@mui/icons-material/Close';
-import { colorPalette, USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { colorPalette, joyrideConstants, USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { createFolder } from '../Utils/Endpoints';
 import axios from 'axios';
 import Notification from '../Utils/Notification';
@@ -11,6 +11,8 @@ import { LoadingButton } from '@mui/lab';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
 import { textFieldStyle } from '../Styles/InputStyles';
+import { joyrideState } from '../Utils/types';
+import ReactJoyride, { ACTIONS, CallBackProps, STATUS } from 'react-joyride';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -24,6 +26,56 @@ function CreateFolder(props: any) {
     const [folderName, setFolderName] = useState<string>('');
     const [loading, setLoading] = React.useState(false);
     const defaultColor = useSelector((state: any) => state.colorReducer);
+
+    const [{ run, steps, stepIndex }, setState] = useState<joyrideState>({
+        run: false,
+        stepIndex: 0,
+        steps: [
+            {
+                content: <h2>
+                    Give your workspace a name and click "Create".
+                </h2>,
+                target: '.create-folder-input',
+                disableBeacon: true,
+                disableOverlayClose: true,
+                hideCloseButton: true,
+                hideFooter: true,
+                placement: 'bottom',
+                spotlightClicks: true,
+                styles: {
+                    options: {
+                        zIndex: 10000,
+                    },
+                },
+            },
+        ],
+    });
+
+    useEffect(() => {
+        handleJoyrideVisibility();
+    }, [props?.open]);
+
+    const handleJoyrideVisibility = () => {
+        if(props.open === false ){
+            setState({
+                run: false,
+                steps: steps,
+                stepIndex: 0,
+            });
+            return;
+        }
+        const hasSeenJoyride = localStorage.getItem(joyrideConstants.JOYRIDE_2);
+        if (!hasSeenJoyride) {
+            setState({
+                run: true,
+                steps: steps,
+                stepIndex: 0,
+            });
+            localStorage.setItem(joyrideConstants.JOYRIDE_2, 'true');
+        }
+        //TODO JOYRIDE remove this
+        // localStorage.removeItem('createFolderModal');
+    }
 
     const handleCreateButtonClick = async () => {
         try {
@@ -57,15 +109,46 @@ function CreateFolder(props: any) {
         props.close();
     }
 
+    const handleJoyrideCallback = (data: CallBackProps) => {
+        const { status, type, index, action } = data;
+        // const nextStepIndex = index + (action === ACTIONS.PREV ? -1 : 1);
+        const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
+
+        if (finishedStatuses.includes(status)) {
+            setState({ run: false, steps: steps, stepIndex: 0, });
+        }
+    };
+
     return (
         <>
+            <ReactJoyride
+                callback={handleJoyrideCallback}
+                continuous
+                hideCloseButton
+                run={run}
+                scrollToFirstStep
+                showProgress
+                showSkipButton
+                steps={steps}
+                styles={{
+                    options: {
+                        zIndex: 10000,
+                    },
+                    buttonNext: {
+                        backgroundColor: colorPalette.primary
+                    },
+                    buttonBack: {
+                        color: colorPalette.primary
+                    }
+                }}
+            />
             <Modal
                 open={props.open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyle(defaultColor?.secondaryColor)}>
+                <Box className='create-folder-input' sx={ModalStyles.modalStyle(defaultColor?.secondaryColor)}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Create folder
@@ -74,8 +157,13 @@ function CreateFolder(props: any) {
                             <CloseIcon onClick={handleClose} />
                         </IconButton>
                     </Box>
-                    <Box sx={textFieldStyleCSS} >
-                        <InputLabel style={{ color: colorPalette.darkBackground, paddingBottom: '3px' }} htmlFor="component-simple">Name your folder</InputLabel>
+                    <Box className="create-folder-modal" sx={textFieldStyleCSS} >
+                        <InputLabel 
+                            style={{ color: colorPalette.darkBackground, paddingBottom: '3px' }} 
+                            htmlFor="component-simple"
+                        >
+                            Name your folder
+                        </InputLabel>
                         <CssTextField
                             size='small'
                             sx={{ input: { color: colorPalette.darkBackground } }}

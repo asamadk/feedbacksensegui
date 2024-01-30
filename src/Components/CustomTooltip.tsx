@@ -10,7 +10,7 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
         color: colorPalette.secondary,
     },
     [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: colorPalette.secondary,
+        backgroundColor: colorPalette.darkBackground,
         fontSize: theme.typography.pxToRem(13),
     },
 }));
@@ -20,7 +20,7 @@ function CustomTooltip({ text }: { text: string }) {
     return (
         <>
             <BootstrapTooltip placement='top' title={text}>
-                <HelpIcon sx={{ color: colorPalette.secondary, cursor: 'pointer', fontSize: '15px' }} />
+                <HelpIcon sx={{ color: colorPalette.primary, cursor: 'pointer', fontSize: '15px' }} />
             </BootstrapTooltip>
         </>
     )

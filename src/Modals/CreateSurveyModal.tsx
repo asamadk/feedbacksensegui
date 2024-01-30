@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import * as ModalStyles from '../Styles/ModalStyle'
 import * as ButtonStyles from '../Styles/ButtonStyle'
@@ -8,23 +8,102 @@ import { Button, IconButton, Modal, TextField, Typography, styled } from '@mui/m
 import { Box } from '@mui/system'
 import axios from 'axios';
 import Notification from '../Utils/Notification';
-import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette, joyrideConstants } from '../Utils/Constants';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { textFieldStyle } from '../Styles/InputStyles';
+import ReactJoyride, { CallBackProps, STATUS } from 'react-joyride';
+import { joyrideState } from '../Utils/types';
+import { useDispatch } from 'react-redux';
+import { updateCurrentWorkflow } from '../Redux/Actions/currentWorkflowActions';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
 function CreateSurveyModal(props: any) {
 
     const snackbarRef: any = useRef(null);
+    let navigation = useNavigate();
+
     const [showScratch, setShowScratch] = useState(false);
     const [loading, setLoading] = React.useState(false);
     const [surveyName, setSurveyName] = useState<string>('');
+    const dispatch = useDispatch<any>();
     const defaultColor = useSelector((state: any) => state.colorReducer);
+
+    const [{ run, steps, stepIndex }, setState] = useState<joyrideState>({
+        run: false,
+        stepIndex: 0,
+        steps: [
+            {
+                content: <h2>
+                    Click on “Start from scratch” to create a new survey from scratch.
+                </h2>,
+                target: '.create-survey-scratch',
+                disableBeacon: true,
+                disableOverlayClose: true,
+                hideCloseButton: true,
+                hideFooter: true,
+                placement: 'bottom',
+                spotlightClicks: true,
+                styles: {
+                    options: {
+                        zIndex: 10000,
+                    },
+                },
+            },
+            {
+                content: <h2>
+                    Give a name to your survey and click on "Create"
+                </h2>,
+                target: '.create-survey-scratch-2',
+                disableBeacon: true,
+                disableOverlayClose: true,
+                hideCloseButton: true,
+                hideFooter: true,
+                placement: 'bottom',
+                spotlightClicks: true,
+                styles: {
+                    options: {
+                        zIndex: 10000,
+                    },
+                },
+            },
+        ],
+    });
+
+    useEffect(() => {
+        handleJoyrideVisibility();
+    }, [props?.open]);
+
+    const handleJoyrideVisibility = () => {
+        if(props.open === false ){
+            setState({
+                run: false,
+                steps: steps,
+                stepIndex: 0,
+            });
+            return;
+        }
+        const hasSeenJoyride = localStorage.getItem(joyrideConstants.JOYRIDE_4);
+        if (!hasSeenJoyride) {
+            setState({
+                run: true,
+                steps: steps,
+                stepIndex: 0,
+            });
+            localStorage.setItem(joyrideConstants.JOYRIDE_4, 'true');
+        }
+        //TODO JOYRIDE remove this
+        // localStorage.removeItem('create-survey-joyride');
+    }
+
+    const handleOpenSurvey = (surveyId : string) => {
+        dispatch(updateCurrentWorkflow(surveyId as any));
+        navigation('/survey/detail/create/' + surveyId);
+    }
 
     const handleCreateSurvey = async () => {
         try {
@@ -34,6 +113,7 @@ function CreateSurveyModal(props: any) {
             }
             setLoading(true);
             let { data } = await axios.post(Endpoints.createSurvey(surveyName), {}, { withCredentials: true });
+            console.log("🚀 ~ handleCreateSurvey ~ data:", data);
             setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data.message, 'error');
@@ -42,8 +122,8 @@ function CreateSurveyModal(props: any) {
             snackbarRef?.current?.show(data.message, 'success');
             setSurveyName('');
             setShowScratch(false);
-            // props.surveys.push(data.data);
             props.update();
+            handleOpenSurvey(data?.data?.id);
         } catch (error: any) {
             console.log("🚀 ~ file: CreateSurveyModal.tsx:66 ~ handleCreateSurvey ~ error:", error)
             setLoading(false);
@@ -65,8 +145,39 @@ function CreateSurveyModal(props: any) {
         setShowScratch(true);
     }
 
+    const handleJoyrideCallback = (data: CallBackProps) => {
+        const { status, type, index, action } = data;
+        // const nextStepIndex = index + (action === ACTIONS.PREV ? -1 : 1);
+        const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
+
+        if (finishedStatuses.includes(status)) {
+            setState({ run: false, steps: steps, stepIndex: 0, });
+        }
+    };
+
     return (
         <>
+            <ReactJoyride
+                callback={handleJoyrideCallback}
+                continuous
+                hideCloseButton
+                run={run}
+                scrollToFirstStep
+                showProgress
+                showSkipButton
+                steps={steps}
+                styles={{
+                    options: {
+                        zIndex: 10000,
+                    },
+                    buttonNext: {
+                        backgroundColor: colorPalette.primary
+                    },
+                    buttonBack: {
+                        color: colorPalette.primary
+                    }
+                }}
+            />
             <Modal
                 open={props.open}
                 onClose={handleClose}
@@ -85,7 +196,7 @@ function CreateSurveyModal(props: any) {
 
                     {
                         showScratch === true ?
-                            <>
+                            < Box className="create-survey-scratch-2" >
                                 <Box sx={{ marginTop: '20px', marginBottom: '20px' }}>
                                     <CssTextField
                                         size='small'
@@ -117,7 +228,7 @@ function CreateSurveyModal(props: any) {
                                         </span>
                                     </LoadingButton>
                                 </Box>
-                            </> :
+                            </Box> :
                             <CreateSurveyDefaultScreen create={selectCreateFromScratch} />
                     }
                 </Box>
@@ -135,7 +246,7 @@ function CreateSurveyDefaultScreen(props: any) {
 
     return (
         <Box marginTop={'20px'} marginBottom={'20px'} display={'flex'} justifyContent={'space-around'}>
-            <Box onClick={props.create} sx={selectorBackground} >
+            <Box className="create-survey-scratch" onClick={props.create} sx={selectorBackground} >
                 <ReceiptIcon sx={{ fontSize: '150px', color: colorPalette.primary, marginBottom: '10px' }} />
                 <Typography textAlign={'center'} color={colorPalette.primary} >Start from scratch</Typography>
             </Box>

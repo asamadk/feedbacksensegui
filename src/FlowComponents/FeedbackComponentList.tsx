@@ -6,8 +6,9 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { STATUS } from 'react-joyride';
 import { CallBackProps } from 'react-joyride';
 import { Step } from 'react-joyride';
-import { colorPalette, componentList } from '../Utils/Constants';
+import { colorPalette, componentList, joyrideConstants } from '../Utils/Constants';
 import { useSelector } from 'react-redux';
+import { joyrideState } from '../Utils/types';
 
 const getCommonContainerStyle = () => {
     return {
@@ -35,15 +36,11 @@ const commonLogoStyle = {
 
 function FeedbackComponentList() {
 
-    interface State {
-        run: boolean;
-        steps: Step[];
-    }
-
     const [showJoyride, setShowJoyride] = useState(false);
-    const defaultColor = useSelector((state: any) => state.colorReducer);
-    const [{ run, steps }, setState] = useState<State>({
+
+    const [{ run, steps,stepIndex }, setState] = useState<joyrideState>({
         run: false,
+        stepIndex : 0,
         steps: [
             {
                 content: <h2>
@@ -54,10 +51,12 @@ function FeedbackComponentList() {
                 target: 'body',
             },
             {
-                content: <h2>Drag this component and drop in the canvas</h2>,
+                content: <h2>Drag this "Welcome Message" component and drop in the canvas</h2>,
                 floaterProps: {
                     disableAnimation: true,
                 },
+                placement: 'bottom',
+                spotlightClicks: true,
                 spotlightPadding: 20,
                 target: '.Welcome',
             },
@@ -66,51 +65,43 @@ function FeedbackComponentList() {
                 floaterProps: {
                     disableAnimation: true,
                 },
+                placement: 'bottom',
+                spotlightClicks: true,
                 spotlightPadding: 20,
                 target: '.Single',
             },
             {
-                content: <h2>After that connect both components with each other!</h2>,
+                content: <h2>Now connect both components with each other!</h2>,
                 locale: { skip: <strong aria-label="skip">SKIP</strong> },
                 placement: 'center',
                 target: 'body',
-            },
-            {
-                content: <h2>
-                    Or <a
-                        href='https://www.veed.io/embed/ebd4dcec-5541-4d2b-bea7-5208ca2b44b9'
-                        target='__blank'
-                    > click here</a> to watch a demo video!</h2>,
-                locale: { skip: <strong aria-label="skip">Cancel</strong> },
-                placement: 'center',
-                target: 'body',
-            },
+            }
         ],
     });
 
     useEffect(() => {
-        const hasSeenJoyride = localStorage.getItem('hasSeenJoyride');
+        const hasSeenJoyride = localStorage.getItem(joyrideConstants.JOYRIDE_7);
         if (!hasSeenJoyride) {
             handleClickStart();
             setShowJoyride(true);
-            localStorage.setItem('hasSeenJoyride', 'true');
+            localStorage.setItem(joyrideConstants.JOYRIDE_7, 'true');
         }
-        // localStorage.removeItem('hasSeenJoyride')
     }, []);
 
     const handleClickStart = () => {
         setState({
             run: true,
-            steps: steps
+            steps: steps,
+            stepIndex : 0
         });
     };
 
     const handleJoyrideCallback = (data: CallBackProps) => {
-        const { status, type } = data;
+        const { status, type,index } = data;
         const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
 
         if (finishedStatuses.includes(status)) {
-            setState({ run: false, steps: steps });
+            setState({ run: false, steps: steps, stepIndex :  index+1});
         }
     };
 
