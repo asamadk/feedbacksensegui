@@ -37,7 +37,9 @@ function SurveyThemeSelector(props: any) {
   const [selectedTheme, setSelectedTheme] = React.useState<ColorScheme>(getColorSchemes()[0]);
 
   const getSingleSurvey = async () => {
+    console.log("🚀 ~ surveysState?.forEach ~ surveysState:", surveysState?.length);
     surveysState?.forEach((srv: any) => {
+      console.log("🚀 ~ surveysState?.forEach ~ srv:", srv)
       if (srv.id === props.surveyId) {
         populateSurveyDesign(srv);
         return;
@@ -46,12 +48,14 @@ function SurveyThemeSelector(props: any) {
   }
 
   const populateSurveyDesign = (tempSurvey: any) => {
+    console.log("🚀 ~ populateSurveyDesign ~ tempSurvey:", tempSurvey)
     if (tempSurvey != null) {
       const surveyDesign = tempSurvey.survey_design_json;
       if (surveyDesign == null) {
         return;
       }
       const design = JSON.parse(surveyDesign);
+      console.log("🚀 ~ populateSurveyDesign ~ design:", design)
       props.updateTheme(design.theme);
       props.updateBackground(design?.background)
       setSelectedTheme(design.theme);

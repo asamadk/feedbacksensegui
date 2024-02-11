@@ -42,10 +42,12 @@ function CustomTabSet(props: any) {
         color: colorPalette.darkBackground,
         '&.Mui-selected': {
             color: colorPalette.primary,
+            fontWeight : 600
         },
         '&.Mui-focusVisible': {
             backgroundColor: colorPalette.primary,
         },
+        fontWeight : 500
     }));
 
     const [tabSetList, setTabsetList] = React.useState<any[]>(props.tabsetList)

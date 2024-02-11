@@ -161,7 +161,8 @@ function SurveyBlock(props: any) {
 
     const updateActiveSurveyCount = (type: 'add' | 'reduce') => {
         const tempSubsState = JSON.parse(JSON.stringify(subscriptionState));
-        let count = tempSubsState.surveyLimitUsed || 0;
+        if(tempSubsState == null){return;}
+        let count = tempSubsState?.surveyLimitUsed || 0;
 
         if (type === 'add') {
             count++;
@@ -174,7 +175,7 @@ function SurveyBlock(props: any) {
     }
 
     return (
-        <Box sx={{ ...surveyBlockMainContainer, backgroundColor: '#ffffff' }} >
+        <Box sx={{ ...surveyBlockMainContainer, backgroundColor: colorPalette.background }} >
             <Box
                 sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', height: '50px' }}
             >

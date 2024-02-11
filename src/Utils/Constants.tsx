@@ -132,142 +132,74 @@ export const getColorSchemes = (): any[] => {
     let count = 0;
 
     return [
-        {
-            id: count++,
-            header: 'Lavender',
-            text: 'Trending',
-            color: ['#8943FF', '#C9EEFF'],
-            textColor: '#ffffff',
-            shade: '#E4D3FF'
-        },
-        {
-            id: count++,
-            header: 'Off White',
-            text: 'Trending',
-            color: ['#ffffff', '#000000'],
-            textColor: '#454545',
-            shade: 'hsl(0deg 0% 88.76%)'
-        },
-        {
-            id: count++,
-            header: 'Black',
-            text: 'Trending',
-            color: ['#454545', '#C9EEFF'],
-            textColor: '#ffffff',
-            shade: '#b3b3b3'
-        },
-        {
-            id: count++,
-            header: 'Light Blue',
-            text: 'Classic',
-            color: ['#4ea4cc', '#FBEAEB'],
-            textColor: '#ffffff',
-            shade: '#e0f5ff'
-        },
-        {
-            id: count++,
-            header: 'Orange ',
-            text: 'Classic',
-            color: ['#e69550', '#FEE715FF'],
-            shade: '#ffe4cd',
-            textColor: '#ffffff'
-        },
-        {
-            id: count++,
-            header: 'Deep pink ',
-            text: 'Classic',
-            color: ['#e715ff', '#FEE715FF'],
-            shade: '#fad0ff',
-            textColor: '#ffffff'
-        },
-        {
-            id: count++,
-            header: 'Bunny Red',
-            text: 'Classic',
-            color: ['#bc4567', '#FCC8D1'],
-            shade: '#f6dbe3',
-            textColor: '#ffffff'
-        },
-        {
-            id: count++,
-            header: 'Baby pink',
-            text: 'Classic',
-            color: ['#b08c92', '#FCC8D1'],
-            shade: '#fee9ed',
-            textColor: '#ffffff'
-        },
-        {
-            id: count++,
-            header: 'Lime green ',
-            text: 'Trending',
-            color: ['#8faa5a', '#ADD8E6'],
-            shade: '#ebfacd',
-            textColor: '#ffffff'
-        },
-        {
-            id: count++,
-            header: 'Electric blue',
-            text: 'Trending',
-            color: ['#7997a1', '#ADD8E6'],
-            shade: '#deeff5',
-            textColor: '#ffffff'
-        },
-        {
-            id: count++,
-            header: 'Lavender',
-            text: 'Trending',
-            color: ['#9e92ae', '#317773'],
-            shade: '#eee3fb',
-            textColor: '#ffffff'
-        },
-        {
-            id: count++,
-            header: 'Teal',
-            text: 'Trending',
-            color: ['#2c6b68', '#317773'],
-            shade: '#c1d6d5',
-            textColor: '#ffffff'
-        },
-        {
-            id: count++,
-            header: 'Relaxed red',
-            text: 'classic',
-            color: ['#bd5e63', '#FCF6F5FF'],
-            shade: '#edc3c5',
-            textColor: '#ffffff'
-        },
-        {
-            id: count++,
-            header: 'Yellow',
-            text: 'classic',
-            color: ['#dead43', '#3F497F'],
-            shade: '#fdecc9',
-            textColor: '#f1f1f1'
-        },
-        {
-            id: count++,
-            header: 'Navy Blue',
-            text: 'classic',
-            color: ['#323a66', '#3F497F'],
-            shade: '#c5c8d9',
-            textColor: '#ffffff'
-        },
-        {
-            id: count++,
-            header: 'Cream & Green',
-            text: 'classic',
-            color: ['#9cb397', '#DFFFD8'],
-            shade: '#e5ffe0',
-            textColor: '#ffffff'
-        },
-        {
-            id: count++,
-            header: 'Vintage brown',
-            text: 'classic',
-            color: ['#7f7e75', '#E1EEDD'],
-            shade: '#e5e2d2',
-            textColor: '#ffffff'
-        },
+        { id: count++, header: 'Lavender', text: 'Trending', color: ['#8943FF', '#C9EEFF'], textColor: '#ffffff', shade: '#E4D3FF' },
+        { id: count++, header: 'Off White', text: 'Trending', color: ['#ffffff', '#000000'], textColor: '#454545', shade: 'hsl(0deg 0% 88.76%)' },
+        { id: count++, header: 'Black', text: 'Trending', color: ['#454545', '#C9EEFF'], textColor: '#ffffff', shade: '#b3b3b3' },
+        { id: count++, header: 'Light Blue', text: 'Classic', color: ['#4ea4cc', '#FBEAEB'], textColor: '#ffffff', shade: '#e0f5ff' },
+        { id: count++, header: 'Orange ', text: 'Classic', color: ['#e69550', '#FEE715FF'], shade: '#ffe4cd', textColor: '#ffffff' },
+        { id: count++, header: 'Deep pink ', text: 'Classic', color: ['#e715ff', '#FEE715FF'], shade: '#fad0ff', textColor: '#ffffff' },
+        { id: count++, header: 'Bunny Red', text: 'Classic', color: ['#bc4567', '#FCC8D1'], shade: '#f6dbe3', textColor: '#ffffff' },
+        { id: count++, header: 'Baby pink', text: 'Classic', color: ['#b08c92', '#FCC8D1'], shade: '#fee9ed', textColor: '#ffffff' },
+        { id: count++, header: 'Lime green ', text: 'Trending', color: ['#8faa5a', '#ADD8E6'], shade: '#ebfacd', textColor: '#ffffff' },
+        { id: count++, header: 'Electric blue', text: 'Trending', color: ['#7997a1', '#ADD8E6'], shade: '#deeff5', textColor: '#ffffff' },
+        { id: count++, header: 'Lavender', text: 'Trending', color: ['#9e92ae', '#317773'], shade: '#eee3fb', textColor: '#ffffff' },
+        { id: count++, header: 'Teal', text: 'Trending', color: ['#2c6b68', '#317773'], shade: '#c1d6d5', textColor: '#ffffff' },
+        { id: count++, header: 'Relaxed red', text: 'classic', color: ['#bd5e63', '#FCF6F5FF'], shade: '#edc3c5', textColor: '#ffffff' },
+        { id: count++, header: 'Yellow', text: 'classic', color: ['#dead43', '#3F497F'], shade: '#fdecc9', textColor: '#f1f1f1' },
+        { id: count++, header: 'Navy Blue', text: 'classic', color: ['#323a66', '#3F497F'], shade: '#c5c8d9', textColor: '#ffffff' },
+        { id: count++, header: 'Cream & Green', text: 'classic', color: ['#9cb397', '#DFFFD8'], shade: '#e5ffe0', textColor: '#ffffff' },
+        { id: count++, header: 'Vintage brown', text: 'classic', color: ['#7f7e75', '#E1EEDD'], shade: '#e5e2d2', textColor: '#ffffff' },
+        { id: count++, header: 'Color-1', text: 'classic', color: ['#FFEBEE', '#d9d9d9'], shade: '#e6d4d6', textColor: '#d9d9d9' },
+        { id: count++, header: 'Color-2', text: 'classic', color: ['#E57373', '#E1EEDD'], shade: '#f2b9b9', textColor: '#ffffff' },
+        { id: count++, header: 'Color-3', text: 'classic', color: ['#D32F2F', '#E1EEDD'], shade: '#e58282', textColor: '#ffffff' },
+        { id: count++, header: 'Color-4', text: 'classic', color: ['#B71C1C', '#E1EEDD'], shade: '#e58282', textColor: '#ffffff' },
+        { id: count++, header: 'Color-5', text: 'classic', color: ['#F48FB1', '#E1EEDD'], shade: '#fde9ef', textColor: '#ffffff' },
+        { id: count++, header: 'Color-6', text: 'classic', color: ['#C2185B', '#E1EEDD'], shade: '#fde9ef', textColor: '#ffffff' },
+        { id: count++, header: 'Color-7', text: 'classic', color: ['#880E4F', '#E1EEDD'], shade: '#fde9ef', textColor: '#ffffff' },
+        { id: count++, header: 'Color-8', text: 'classic', color: ['#E1BEE7', '#E1EEDD'], shade: '#f9f2fa', textColor: '#ffffff' },
+        { id: count++, header: 'Color-9', text: 'classic', color: ['#BA68C8', '#E1EEDD'], shade: '#e3c3e9', textColor: '#ffffff' },
+        { id: count++, header: 'Color-10', text: 'classic', color: ['#8E24AA', '#E1EEDD'], shade: '#e3c3e9', textColor: '#ffffff' },
+        { id: count++, header: 'Color-11', text: 'classic', color: ['#6A1B9A', '#E1EEDD'], shade: '#c3a4d7', textColor: '#ffffff' },
+        { id: count++, header: 'Color-12', text: 'classic', color: ['#673AB7', '#E1EEDD'], shade: '#b39ddb', textColor: '#ffffff' },
+        { id: count++, header: 'Color-13', text: 'classic', color: ['#512DA8', '#E1EEDD'], shade: '#cbc0e5', textColor: '#ffffff' },
+        { id: count++, header: 'Color-14', text: 'classic', color: ['#9575CD', '#E1EEDD'], shade: '#f4f1fa', textColor: '#ffffff' },
+        { id: count++, header: 'Color-15', text: 'classic', color: ['#B2EBF2', '#E1EEDD'], shade: '#a0d4da', textColor: '#ffffff' },
+        { id: count++, header: 'Color-16', text: 'classic', color: ['#4DD0E1', '#E1EEDD'], shade: '#edfafc', textColor: '#ffffff' },
+        { id: count++, header: 'Color-17', text: 'classic', color: ['#00BCD4', '#E1EEDD'], shade: '#ccf2f6', textColor: '#ffffff' },
+        { id: count++, header: 'Color-18', text: 'classic', color: ['#006064', '#E1EEDD'], shade: '#b3cfd1', textColor: '#ffffff' },
+        { id: count++, header: 'Color-19', text: 'classic', color: ['#B2DFDB', '#E1EEDD'], shade: '#8eb2af', textColor: '#ffffff' },
+        { id: count++, header: 'Color-20', text: 'classic', color: ['#80CBC4', '#E1EEDD'], shade: '#f2faf9', textColor: '#ffffff' },
+        { id: count++, header: 'Color-21', text: 'classic', color: ['#009688', '#E1EEDD'], shade: '#cceae7', textColor: '#ffffff' },
+        { id: count++, header: 'Color-22', text: 'classic', color: ['#004D40', '#E1EEDD'], shade: '#b3cac6', textColor: '#ffffff' },
+        { id: count++, header: 'Color-23', text: 'classic', color: ['#C8E6C9', '#E1EEDD'], shade: '#a0b8a1', textColor: '#ffffff' },
+        { id: count++, header: 'Color-24', text: 'classic', color: ['#4CAF50', '#E1EEDD'], shade: '#c9e7cb', textColor: '#ffffff' },
+        { id: count++, header: 'Color-25', text: 'classic', color: ['#C5E1A5', '#E1EEDD'], shade: '#f9fcf6', textColor: '#ffffff' },
+        { id: count++, header: 'Color-26', text: 'classic', color: ['#8BC34A', '#E1EEDD'], shade: '#e8f3db', textColor: '#ffffff' },
+        { id: count++, header: 'Color-27', text: 'classic', color: ['#CDDC39', '#E1EEDD'], shade: '#f0f5c4', textColor: '#ffffff' },
+        { id: count++, header: 'Color-29', text: 'classic', color: ['#AEEA00', '#E1EEDD'], shade: '#e7f9b3', textColor: '#ffffff' },
+        { id: count++, header: 'Color-30', text: 'classic', color: ['#FFEB3B', '#E1EEDD'], shade: '#e6d435', textColor: '#ffffff' },
+        { id: count++, header: 'Color-31', text: 'classic', color: ['#FDD835', '#E1EEDD'], shade: '#fff7d7', textColor: '#ffffff' },
+        { id: count++, header: 'Color-32', text: 'classic', color: ['#F57F17', '#E1EEDD'], shade: '#fcd9b9', textColor: '#ffffff' },
+        { id: count++, header: 'Color-33', text: 'classic', color: ['#FFD600', '#E1EEDD'], shade: '#fffbe6', textColor: '#ffffff' },
+        { id: count++, header: 'Color-34', text: 'classic', color: ['#FFB300', '#E1EEDD'], shade: '#fff7e6', textColor: '#ffffff' },
+        { id: count++, header: 'Color-35', text: 'classic', color: ['#FF6F00', '#E1EEDD'], shade: '#ffe2cc', textColor: '#ffffff' },
+        { id: count++, header: 'Color-36', text: 'classic', color: ['#FFAB00', '#E1EEDD'], shade: '#fff7e6', textColor: '#ffffff' },
+        { id: count++, header: 'Color-37', text: 'classic', color: ['#FF5722', '#E1EEDD'], shade: '#ffddd3', textColor: '#ffffff' },
+        { id: count++, header: 'Color-38', text: 'classic', color: ['#FF6E40', '#E1EEDD'], shade: '#ffd4c6', textColor: '#ffffff' },
+        { id: count++, header: 'Color-39', text: 'classic', color: ['#795548', '#E1EEDD'], shade: '#e4ddda', textColor: '#ffffff' },
+        { id: count++, header: 'Color-40', text: 'classic', color: ['#BCAAA4', '#E1EEDD'], shade: '#ffffff', textColor: '#ffffff' },
+        { id: count++, header: 'Color-41', text: 'classic', color: ['#D7CCC8', '#E1EEDD'], shade: '#e5e2d2', textColor: '#ffffff' },
+        { id: count++, header: 'Color-42', text: 'classic', color: ['#4E342E', '#E1EEDD'], shade: '#e4ddda', textColor: '#ffffff' },
+        { id: count++, header: 'Color-43', text: 'classic', color: ['#757575', '#E1EEDD'], shade: '#e5e2d2', textColor: '#ffffff' },
+        { id: count++, header: 'Color-44', text: 'classic', color: ['#424242', '#E1EEDD'], shade: '#e5e2d2', textColor: '#ffffff' },
+        { id: count++, header: 'Color-45', text: 'classic', color: ['#B0BEC5', '#E1EEDD'], shade: '#e5e2d2', textColor: '#ffffff' },
+        { id: count++, header: 'Color-46', text: 'classic', color: ['#607D8B', '#E1EEDD'], shade: '#eff2f3', textColor: '#ffffff' },
+        { id: count++, header: 'Color-47', text: 'classic', color: ['#37474F', '#E1EEDD'], shade: '#e5e2d2', textColor: '#ffffff' },
+        { id: count++, header: 'Color-48', text: 'classic', color: ['#0277BD', '#E1EEDD'], shade: '#b3d6eb', textColor: '#ffffff' },
+        { id: count++, header: 'Color-49', text: 'classic', color: ['#01579B', '#E1EEDD'], shade: '#b3cde1', textColor: '#ffffff' },
+        { id: count++, header: 'Color-50', text: 'classic', color: ['#E1F5FE', '#E1EEDD'], shade: '#b3cde1', textColor: '#ffffff' },
+        { id: count++, header: 'Color-52', text: 'classic', color: ['#D1C4E9', '#E1EEDD'], shade: '#a79dba', textColor: '#ffffff' },
+        { id: count++, header: 'Color-53', text: 'classic', color: ['#FCE4EC', '#E1EEDD'], shade: '#cab6bd', textColor: '#ffffff' },
     ];
 }
 
@@ -428,11 +360,11 @@ export const EmbedPositions = [
 ]
 
 export const joyrideConstants = {
-    JOYRIDE_1 : 'joyride-1',
-    JOYRIDE_2 : 'joyride-2',
-    JOYRIDE_3 : 'joyride-3',
-    JOYRIDE_4 : 'joyride-4',
-    JOYRIDE_5 : 'joyride-5',
-    JOYRIDE_6 : 'joyride-6',
-    JOYRIDE_7 : 'joyride-7',
+    JOYRIDE_1: 'joyride-1',
+    JOYRIDE_2: 'joyride-2',
+    JOYRIDE_3: 'joyride-3',
+    JOYRIDE_4: 'joyride-4',
+    JOYRIDE_5: 'joyride-5',
+    JOYRIDE_6: 'joyride-6',
+    JOYRIDE_7: 'joyride-7',
 }

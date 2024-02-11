@@ -57,12 +57,13 @@ function TextAnswerDisplay(props: any) {
         <Box marginTop={'20px'} sx={{ overflowY: 'scroll' }} >
           <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
           <Box marginTop={'20px'} >
-            <input
+            <textarea
               style={inputStyleCSS}
               value={textAnswerValue}
               placeholder='Type your answer here...'
               onChange={(e) => setTextAnswerValue(e.target.value)}
             />
+            <Typography color={colors?.primaryColor} >Press <b>Enter</b> for new line</Typography>
           </Box>
           <Button
             onClick={next}

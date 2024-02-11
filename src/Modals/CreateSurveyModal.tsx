@@ -19,6 +19,7 @@ import ReactJoyride, { CallBackProps, STATUS } from 'react-joyride';
 import { joyrideState } from '../Utils/types';
 import { useDispatch } from 'react-redux';
 import { updateCurrentWorkflow } from '../Redux/Actions/currentWorkflowActions';
+import { setSurvey } from '../Redux/Reducers/surveyReducer';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -32,6 +33,8 @@ function CreateSurveyModal(props: any) {
     const [surveyName, setSurveyName] = useState<string>('');
     const dispatch = useDispatch<any>();
     const defaultColor = useSelector((state: any) => state.colorReducer);
+    const surveysState = useSelector((state: any) => state.surveys);
+
 
     const [{ run, steps, stepIndex }, setState] = useState<joyrideState>({
         run: false,
@@ -96,8 +99,14 @@ function CreateSurveyModal(props: any) {
             });
             localStorage.setItem(joyrideConstants.JOYRIDE_4, 'true');
         }
-        //TODO JOYRIDE remove this
-        // localStorage.removeItem('create-survey-joyride');
+    }
+
+    const updateStore = (surveyData : any) => {
+        // let tmpSurveys :any[]= surveysState;
+        // if(tmpSurveys == null){tmpSurveys = [];}
+        // tmpSurveys.push(surveyData);
+        // dispatch(setSurvey(tmpSurveys));
+        handleOpenSurvey(surveyData?.id);
     }
 
     const handleOpenSurvey = (surveyId : string) => {
@@ -113,7 +122,6 @@ function CreateSurveyModal(props: any) {
             }
             setLoading(true);
             let { data } = await axios.post(Endpoints.createSurvey(surveyName), {}, { withCredentials: true });
-            console.log("🚀 ~ handleCreateSurvey ~ data:", data);
             setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data.message, 'error');
@@ -123,7 +131,7 @@ function CreateSurveyModal(props: any) {
             setSurveyName('');
             setShowScratch(false);
             props.update();
-            handleOpenSurvey(data?.data?.id);
+            updateStore(data?.data);
         } catch (error: any) {
             console.log("🚀 ~ file: CreateSurveyModal.tsx:66 ~ handleCreateSurvey ~ error:", error)
             setLoading(false);

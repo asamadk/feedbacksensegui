@@ -11,6 +11,8 @@ import SurveyEndPage from './SurveyEndPage';
 import { CoreUtils } from '../CoreUtils/CoreUtils';
 import { getSurveyUserInformation } from '../../Utils/FeedbackUtils';
 import { useSearchParams } from 'react-router-dom';
+import PoweredBy from '../../Components/PoweredBy';
+import { fsBadge } from '../../Styles/SurveyDisplay';
 
 type propType = {
     mode: 'test' | 'live',
@@ -166,7 +168,7 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
                 </Box>
             }
             {displayMssg.type !== 'error' && showEnd === false &&
-                <Box className={background?.value} sx={{ height: '100vh', backgroundColor: '#ffffff', overflowY: 'scroll' }} >
+                <Box className={background?.value} sx={{ height: '100vh', backgroundColor: background?.value, overflowY: 'scroll' }} >
                     <FSLoader show={loading} />
                     <Box>
                         <DynamicComponentDisplay
@@ -180,6 +182,7 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
                             imgData={imgData}
                         />
                     </Box>
+                    <PoweredBy imgData={imgData} />
                 </Box>
             }
             {displayMssg.type !== 'error' && showEnd === true &&

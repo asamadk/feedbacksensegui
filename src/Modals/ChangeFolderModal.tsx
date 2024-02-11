@@ -33,15 +33,18 @@ function ChangeFolderModal(props: any) {
             let surveyId = props.surveyId;
             setLoading(true);
             let { data } = await axios.post(Endpoints.moveSurveyFolder(surveyId, selectedFolder), {}, { withCredentials: true });
-            setLoading(false);
             if (data.statusCode !== 200) {
                 snackbarRef?.current?.show(data?.message, 'error');
                 return;
             }
+
             snackbarRef?.current?.show(data?.message, 'success');
-            let surveyData = data.data;
-            props.callback(surveyData);
-            props.close();
+            setTimeout(() => {
+                setLoading(false);
+                let surveyData = data.data;
+                props.callback(surveyData);
+                props.close();
+            },1500);
         } catch (error: any) {
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');

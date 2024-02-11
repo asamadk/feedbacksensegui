@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import PoweredBy from '../Components/PoweredBy';
 import { validateSurveyDisplay } from '../Utils/FeedbackUtils';
 import Notification from '../Utils/Notification';
 import ContactDisplay from './ContactDisplay';
@@ -14,14 +13,18 @@ import { TEMPLATE_KEY, colorPalette } from '../Utils/Constants';
 import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material';
 
+import '../Styles/CSS/Backgrounds.css'
+
 function DynamicComponentDisplay(props: any) {
 
     //props.surveyId if null that mean we are in edit mode else we are live
     const snackbarRef: any = useRef(null);
     const [surveyColors, setSurveyColors] = useState<any>();
+    const [showComponent, setShowComponent] = useState(false);
 
     useEffect(() => {
         populateTheme();
+        setShowComponent(true); // Show the component when it mounts
     }, [props]);
 
     const populateTheme = (): void => {
@@ -68,73 +71,72 @@ function DynamicComponentDisplay(props: any) {
     return (
         <>
             <ThemeProvider theme={lightTheme} >
-                {props.compId === 1 && <WelcomeDisplay
-                    key={props.uiId}
-                    data={props.data}
-                    theme={surveyColors}
-                    surveyId={props.surveyId}
-                    next={next}
-                />}
-                {props.compId === 3 && <SingleAnswerSelectionDisplay
-                    key={props.uiId}
-                    data={props.data}
-                    type={'single'}
-                    theme={surveyColors}
-                    surveyId={props.surveyId}
-                    next={next}
-                />}
-                {props.compId === 4 && <SingleAnswerSelectionDisplay
-                    key={props.uiId}
-                    type={'multiple'}
-                    data={props.data}
-                    theme={surveyColors}
-                    surveyId={props.surveyId}
-                    next={next}
-                />}
-                {props.compId === 5 && <TextAnswerDisplay
-                    key={props.uiId}
-                    data={props.data}
-                    theme={surveyColors}
-                    surveyId={props.surveyId}
-                    next={next}
-                />}
-                {props.compId === 6 && <SmileyScaleDisplay
-                    key={props.uiId}
-                    data={props.data}
-                    surveyId={props.surveyId}
-                    theme={surveyColors}
-                    next={next}
-                />}
-                {props.compId === 7 && <RatingScaleDisplay
-                    key={props.uiId}
-                    data={props.data}
-                    surveyId={props.surveyId}
-                    next={next}
-                    theme={surveyColors}
-                />}
-                {props.compId === 8 && <NPSDisplay
-                    key={props.uiId}
-                    data={props.data}
-                    surveyId={props.surveyId}
-                    next={next}
-                    theme={surveyColors}
-                />}
-                {props.compId === 11 && <ContactDisplay
-                    key={props.uiId}
-                    data={props.data}
-                    theme={surveyColors}
-                    surveyId={props.surveyId}
-                    next={next}
-                />}
-                {props.compId === 13 && <DateSelectorDisplay
-                    key={props.uiId}
-                    data={props.data}
-                    theme={surveyColors}
-                    surveyId={props.surveyId}
-                    next={next}
-                />}
+                    {props.compId === 1 && <WelcomeDisplay
+                        key={props.uiId}
+                        data={props.data}
+                        theme={surveyColors}
+                        surveyId={props.surveyId}
+                        next={next}
+                    />}
+                    {props.compId === 3 && <SingleAnswerSelectionDisplay
+                        key={props.uiId}
+                        data={props.data}
+                        type={'single'}
+                        theme={surveyColors}
+                        surveyId={props.surveyId}
+                        next={next}
+                    />}
+                    {props.compId === 4 && <SingleAnswerSelectionDisplay
+                        key={props.uiId}
+                        type={'multiple'}
+                        data={props.data}
+                        theme={surveyColors}
+                        surveyId={props.surveyId}
+                        next={next}
+                    />}
+                    {props.compId === 5 && <TextAnswerDisplay
+                        key={props.uiId}
+                        data={props.data}
+                        theme={surveyColors}
+                        surveyId={props.surveyId}
+                        next={next}
+                    />}
+                    {props.compId === 6 && <SmileyScaleDisplay
+                        key={props.uiId}
+                        data={props.data}
+                        surveyId={props.surveyId}
+                        theme={surveyColors}
+                        next={next}
+                    />}
+                    {props.compId === 7 && <RatingScaleDisplay
+                        key={props.uiId}
+                        data={props.data}
+                        surveyId={props.surveyId}
+                        next={next}
+                        theme={surveyColors}
+                    />}
+                    {props.compId === 8 && <NPSDisplay
+                        key={props.uiId}
+                        data={props.data}
+                        surveyId={props.surveyId}
+                        next={next}
+                        theme={surveyColors}
+                    />}
+                    {props.compId === 11 && <ContactDisplay
+                        key={props.uiId}
+                        data={props.data}
+                        theme={surveyColors}
+                        surveyId={props.surveyId}
+                        next={next}
+                    />}
+                    {props.compId === 13 && <DateSelectorDisplay
+                        key={props.uiId}
+                        data={props.data}
+                        theme={surveyColors}
+                        surveyId={props.surveyId}
+                        next={next}
+                    />}
 
-                <PoweredBy imgData={props.imgData} />
                 <Notification ref={snackbarRef} />
             </ThemeProvider>
         </>

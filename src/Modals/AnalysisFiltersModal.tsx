@@ -59,19 +59,12 @@ function AnalysisFiltersModal(props: any) {
         return (
             <>
                 {
-                    (filterData == null || filterData.length < 1) &&
-                    <Box textAlign={'center'} >
-                        <FilterAltOffIcon sx={{fontSize : '50px'}} />
-                        <Typography variant='h4' >No filter selected</Typography>
-                    </Box>
-                }
-                {
                     filterData != null && filterData.length > 0 &&
                     filterData.map((data, index) => (
                         <React.Fragment key={data.id}>
                             <Tooltip title={`${data.question} ${data.operator} ${data.value}`} >
                                 <Chip
-                                    style={{ marginTop: '5px', marginBottom: '10px', maxWidth: '300px',borderRadius : '5px' }}
+                                    style={{ marginTop: '5px', marginBottom: '10px', maxWidth: '300px', borderRadius: '5px' }}
                                     variant="outlined"
                                     onDelete={() => handleDelete(data.id)}
                                     label={

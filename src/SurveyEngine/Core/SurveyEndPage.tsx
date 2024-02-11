@@ -1,11 +1,10 @@
 import { Box, Button, Typography } from '@mui/material'
 import * as ButtonStyles from '../../Styles/ButtonStyle';
-import { useSelector } from 'react-redux';
 import { colorPalette } from '../../Utils/Constants';
 
 const bodyStyle: {} = {
     height: '100vh',
-    textAlign : 'start'
+    color : colorPalette.darkBackground
 }
 
 const subContainerStyle = {
@@ -18,17 +17,13 @@ const subContainerStyle = {
 function SurveyEndPage() {
 
     return (
-        <Box sx={{...bodyStyle,backgroundColor : colorPalette.darkBackground}} >
+        <Box sx={{...bodyStyle,backgroundColor : colorPalette.textSecondary}} >
             <Box sx={subContainerStyle} >
-                <Box display={'flex'} >
+                <Box display={'flex'} justifyContent={'center'}>
                     <img style={{ width: '50px' }} src='/fs_logo_small.png' alt='Logo' />
-                    <Box display={'flex'} marginTop={'5px'}>
-                        <Typography style={{ color: colorPalette.secondary, fontSize: '30px' }} variant='h4' >feedback</Typography>
-                        <Typography style={{ color: colorPalette.secondary, fontSize: '30px' }} variant='h4' >sense</Typography>
-                    </Box>
                 </Box>
                 <Box marginTop={'10px'} >
-                    <Typography style={{ color: colorPalette.secondary, fontSize: '24px' }}>
+                    <Typography style={{ color: colorPalette.primary, fontSize: '24px' }}>
                         Thank you for filling out this survey🎉
                     </Typography>
                 </Box>
@@ -49,7 +44,7 @@ function CreateOwnSurvey(){
 
     return(
         <Box marginTop={'20px'} color={'#f1f1f1'} >
-            <Typography fontSize={20} >Want to create your own surveys?</Typography>
+            <Typography color={colorPalette.darkBackground} fontSize={20} >Want to create your own surveys?</Typography>
             <Typography color={'#808080'} fontSize={14} >See how easy it is to get feedback using FeedbackSense</Typography>
             <Button onClick={handleCreateSurvey} sx={ButtonStyles.containedButton} style={{width : 'fit-content'}} >
                 {'Create your own survey'}

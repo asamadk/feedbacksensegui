@@ -184,7 +184,11 @@ function CreateLogic(props: propType, ref: any) {
         const tempLogics: logicType[] = JSON.parse(JSON.stringify(logicList));
         tempLogics.forEach(logic => {
             if (logic.id === logicId) {
-                logic.value += `,${value}`;
+                if(logic.value.length > 0){
+                    logic.value += `,${value}`;
+                }else{
+                    logic.value += `${value}`;
+                }
                 return;
             }
         });
@@ -270,8 +274,6 @@ function CreateLogic(props: propType, ref: any) {
 export default React.forwardRef(CreateLogic)
 
 function DraggableLogicItem({ logic, index, ...otherProps }: any) {
-
-    const defaultColor = useSelector((state: any) => state.colorReducer);
     
     const [, refDrag] = useDrag({
         type: 'LOGIC_ITEM',
@@ -360,7 +362,7 @@ function DraggableLogicItem({ logic, index, ...otherProps }: any) {
                             multiple
                             id="tags-filled"
                             options={[]}
-                            value={logic.value?.split(',')}
+                            value={logic.value?.length > 0 ? logic.value?.split(',') : ''}
                             freeSolo
                             onChange={(e) => otherProps.handleAutoCompleteSave(e, logic.id)}
                             renderTags={(value, getTagProps) =>

@@ -25,7 +25,7 @@ export const defaultEdgeOptions: DefaultEdgeOptions = {
 };
 
 export const getEdgePathMap = (edges: any[]) => {
-	let edgeMap : any = {};
+	let edgeMap: any = {};
 	edges.forEach(edge => {
 		const key = `${edge.source}-${edge.label}`;
 		edgeMap[key] = false;

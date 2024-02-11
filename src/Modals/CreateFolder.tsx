@@ -73,14 +73,16 @@ function CreateFolder(props: any) {
             });
             localStorage.setItem(joyrideConstants.JOYRIDE_2, 'true');
         }
-        //TODO JOYRIDE remove this
-        // localStorage.removeItem('createFolderModal');
     }
 
     const handleCreateButtonClick = async () => {
         try {
             if (folderName == null || folderName.length < 1) {
-                snackbarRef?.current?.show('Please give folder a name', 'error');
+                snackbarRef?.current?.show('Please give workspace a name', 'error');
+                return;
+            }
+            if(folderName.length > 80){
+                snackbarRef?.current?.show('Workspace name too long!', 'error');
                 return;
             }
             setLoading(true);

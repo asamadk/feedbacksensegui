@@ -8,3 +8,12 @@ export const getSurveyDisplayContainerStyle = (position : string,isTemplate : bo
         marginLeft : isTemplate === true ? '12%' : ''
     }
 }
+
+export const fsBadge = () => {
+    return {
+        position: 'absolute',
+        left: 0,
+        bottom: 0,
+        width: '199px'
+    }
+}

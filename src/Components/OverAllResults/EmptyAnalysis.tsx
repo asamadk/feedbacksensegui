@@ -1,9 +1,10 @@
 import { Box, Typography } from '@mui/material'
 import React from 'react'
+import { colorPalette } from '../../Utils/Constants'
 
 function EmptyAnalysis() {
   return (
-    <Box color={'#f1f1f1'} marginTop={'10%'}>
+    <Box color={colorPalette.darkBackground} marginTop={'10%'}>
             <Box>
                 <img 
                   style={{width : '250px',margin : 'auto'}} 

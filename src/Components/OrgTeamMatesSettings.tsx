@@ -161,7 +161,11 @@ function OrgTeamMatesSettings() {
         <Box display={'flex'} >
           <Avatar sx={{ bgcolor: colorPalette.darkBackground, width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
           <Box textAlign={'start'} >
-            <Typography variant='h6' color={colorPalette.textPrimary}>{user?.name}</Typography>
+            {
+              user?.name.length > 0 ? 
+              <Typography variant='h6' color={colorPalette.textPrimary}>{user?.name}</Typography> :
+              <Typography variant='h6' color={colorPalette.textPrimary}>Not Logged-In</Typography>
+            }
             <Typography fontSize={'13px'} color={colorPalette.textPrimary} >{user?.email}</Typography>
           </Box>
         </Box>

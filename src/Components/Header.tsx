@@ -33,6 +33,7 @@ function Header(props: any) {
         backgroundColor: defaultColor,
         padding: '5px 20px',
         borderBottom: `0.5px ${colorPalette.fsGray} solid`,
+        paddingBottom : '0px'
     }
 
     React.useEffect(() => {
@@ -105,7 +106,7 @@ function Header(props: any) {
                 }
 
                 {inOrgSelectionMode === false && showSurveyDetailHeader === true &&
-                    <Box sx={{ marginTop: '8px' }} onClick={handleRouteToHome} >
+                    <Box onClick={handleRouteToHome} >
                         <Logo />
                     </Box>
                 }

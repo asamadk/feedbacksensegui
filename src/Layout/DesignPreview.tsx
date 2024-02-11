@@ -1,12 +1,11 @@
 import { Box, Button, TextField, ThemeProvider, ToggleButton, ToggleButtonGroup, Typography, createTheme, useMediaQuery } from '@mui/material'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import LaptopIcon from '@mui/icons-material/Laptop';
 import CustomTabSet from '../Components/CustomTabSet';
 import SurveyThemeSelector from '../Components/SurveyThemeSelector';
 import BackgroundTemplates from '../Components/BackgroundTemplates';
 import { useParams } from 'react-router';
-import PoweredBy from '../Components/PoweredBy';
 import '../Styles/CSS/Backgrounds.css'
 import { useSelector } from 'react-redux';
 import { setSurvey } from '../Redux/Reducers/surveyReducer';
@@ -37,6 +36,14 @@ function DesignPreview() {
     const [selectedBackground, setSelectedBackground] = React.useState<any>();
     const [tabset, setTabset] = React.useState(0);
     const [devices, setDevices] = React.useState('laptop');
+
+    let init = false;
+
+    // useEffect(() => {
+    //     if(init === true){return;}
+    //     console.log("🚀 ~ DesignPreview ~ surveysState:", surveysState)
+    //     init = true;
+    // },[]);
 
     const handleDevices = (
         event: React.MouseEvent<HTMLElement>,

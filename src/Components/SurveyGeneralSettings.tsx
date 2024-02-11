@@ -159,7 +159,8 @@ function SurveyGeneralSettings() {
             !showUpgrade && CoreUtils.isComponentVisible(userRole, componentName.UPLOAD_LOGO) && <>
                 <Box sx={{ display: 'flex' }} >
                     <Box>
-                        <Typography color={colorPalette.darkBackground} sx={{ marginBottom: '10px' }} >Company Logo</Typography>
+                        <Typography color={colorPalette.darkBackground} sx={{ marginBottom: '10px',textAlign : 'start' }} >Company Logo</Typography>
+                        <Typography color={colorPalette.darkBackground} fontSize={'12px'} >Max size : 1MB | Type : PNG,JPG</Typography>
                         <Button
                             component="label"
                             variant="contained"

@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Typography } from '@mui/material'
+import { Box, Button, IconButton, Pagination, Stack, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import { outlinedButton } from '../Styles/ButtonStyle'
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -44,9 +44,9 @@ const selectedResponseStyle = (bgColor: string) => {
 
 const columnStyle = {
     overflowY: 'scroll',
-    background : colorPalette.background,
+    background: colorPalette.background,
     boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
-    borderRadius : '6px'
+    borderRadius: '6px'
 }
 
 type IndividualResponseProps = {
@@ -64,6 +64,8 @@ function IndividualResponse(props: IndividualResponseProps) {
     const [selectedResponse, setSelectedResponse] = useState<any>();
     const [loading, setLoading] = React.useState(false);
     const [isEmpty, setIsEmpty] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+
     const userRole: Types.userRoleType = useSelector((state: any) => state.userRole);
 
     let init = false;
@@ -94,12 +96,13 @@ function IndividualResponse(props: IndividualResponseProps) {
                     res.selected = false;
                 }
                 count++;
-            })
+            });
             if (responseList.length < 1) {
                 setIsEmpty(true);
             } else {
                 setIsEmpty(false);
             }
+
             setSurveyResponseList(responseList);
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
@@ -187,8 +190,8 @@ function IndividualResponse(props: IndividualResponseProps) {
 
             {
                 isEmpty === false &&
-                <Box sx={{ scrollbarWidth: '0.5px',background : colorPalette.textSecondary }} >
-                    <Box sx={{ textAlign: 'start', paddingTop: '4px', paddingLeft: '10px',height: '48px' }} >
+                <Box sx={{ scrollbarWidth: '0.5px', background: colorPalette.textSecondary }} >
+                    <Box sx={{ textAlign: 'start', paddingTop: '4px', paddingLeft: '10px', height: '48px' }} >
                         <Typography
                             paddingTop={'10px'}
                             paddingLeft={'10px'}
@@ -199,14 +202,14 @@ function IndividualResponse(props: IndividualResponseProps) {
                         </Typography>
                     </Box>
                     <Box display={'flex'} height={'calc(100vh - 120px)'} >
-                        <Box sx={{...columnStyle,margin : '0px 10px'}} width={'25%'} >
+                        <Box sx={{ ...columnStyle, margin: '0px 10px', height: 'calc(100vh - 125px)' }} width={'25%'} >
                             <Box sx={{ height: '48px' }} >
                                 <Box marginLeft={'10px'} marginRight={'10px'} color={colorPalette.darkBackground} display={'flex'} justifyContent={'space-between'} padding={'12px'} >
                                     <Typography border={'none'} fontWeight={'600'} fontSize={'14px'} >Response</Typography>
                                     <Typography border={'none'} color={colorPalette.fsGray} >{surveyResponseList?.length}</Typography>
                                 </Box>
                             </Box>
-                            {surveyResponseList.map((res: any) => {
+                            {surveyResponseList.map((res: any) => {   
                                 return (
                                     <Box
                                         key={res.id}
@@ -214,24 +217,33 @@ function IndividualResponse(props: IndividualResponseProps) {
                                         onClick={() => handleResponseListClick(res.id)}
                                         sx={res?.selected === true ? selectedResponseStyle(colorPalette.darkBackground) : responseStyle(colorPalette?.textSecondary)}
                                     >
-                                        <Typography fontSize={'14px'} fontWeight={'600'} color={res?.selected === true ? colorPalette.secondary :colorPalette.primary} >{'Anonymous Response'}</Typography>
-                                        <Typography 
-                                            sx={{ fontSize: '13px' }} 
-                                            color={res?.selected === true ? colorPalette.textSecondary : colorPalette.textPrimary} 
+                                        <Typography fontSize={'14px'} fontWeight={'600'} color={res?.selected === true ? colorPalette.secondary : colorPalette.primary} >{'Anonymous Response'}</Typography>
+                                        <Typography
+                                            sx={{ fontSize: '13px' }}
+                                            color={res?.selected === true ? colorPalette.textSecondary : colorPalette.textPrimary}
                                         >{res?.id}</Typography>
-                                        <Typography 
-                                            sx={{ fontSize: '13px' }} 
-                                            color={res?.selected === true ? colorPalette.secondary : colorPalette.primary } 
+                                        <Typography
+                                            sx={{ fontSize: '13px' }}
+                                            color={res?.selected === true ? colorPalette.secondary : colorPalette.primary}
                                         >
                                             {new Date(res?.created_at)?.toDateString()}
                                         </Typography>
                                     </Box>
                                 )
                             })}
+                            {/* <Stack direction={'row'} spacing={2} marginTop={'20px'} padding={'10px'}>
+                                <Pagination
+                                    count={Math.ceil((surveyResponseList?.length || 0) / 10)}
+                                    variant="outlined"
+                                    shape="rounded"
+                                    page={currentPage}
+                                    onChange={(event, page) => setCurrentPage(page)}
+                                />
+                            </Stack> */}
                         </Box>
-                        <Box 
-                            sx={columnStyle} 
-                            width={'53%'} 
+                        <Box
+                            sx={columnStyle}
+                            width={'53%'}
                         >
                             <Box sx={{ height: '48px' }} >
                                 <Box marginLeft={'10px'} marginRight={'10px'} color={colorPalette.darkBackground} display={'flex'} justifyContent={'space-between'} padding={'12px'} >
@@ -254,7 +266,7 @@ function IndividualResponse(props: IndividualResponseProps) {
                             </Box>
 
                         </Box>
-                        <Box  sx={{...columnStyle,width : '25%',margin : '0px 10px'}} padding={'10px'} color={colorPalette.darkBackground} textAlign={'start'}>
+                        <Box sx={{ ...columnStyle, width: '25%', margin: '0px 10px' }} padding={'10px'} color={colorPalette.darkBackground} textAlign={'start'}>
                             <Typography fontWeight={'600'} fontSize={'14px'} >Response details</Typography>
                             <Box color={colorPalette.fsGray} marginTop={'12px'}>
                                 <Typography>{selectedResponse?.userDetails}</Typography>
