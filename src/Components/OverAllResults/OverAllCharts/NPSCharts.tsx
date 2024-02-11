@@ -47,10 +47,12 @@ function NPSScore({ score } : any){
   return(
     <Box paddingTop={'50px'} >
       <GaugeChart id="gauge-chart1"
+        style={{color : 'red'}}
         colors={["#FF5F6D", "#90EE90"]} 
         percent={score/100} 
         nrOfLevels={2} 
       />
+      <Typography fontSize={20} fontWeight={600} color={colorPalette.darkBackground} >{score}%</Typography>
     </Box>
   )
 }

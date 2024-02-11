@@ -82,7 +82,7 @@ function SurveyListPage() {
 
     const [openInviteModal, setOpenInviteModal] = React.useState(false);
     const [openCreateFolderModal, setOpenCreateFolderModal] = React.useState(false);
-    const [folderManualClose,setFolderManualClose] = React.useState(false);
+    const [folderManualClose, setFolderManualClose] = React.useState(false);
     const [selectedFolder, setSelectedFolder] = React.useState<string>('All Surveys');
     const [selectedFolderId, setSelectedFolderId] = React.useState<string>('0');
     const defaultColor = useSelector((state: any) => state.colorReducer);
@@ -93,6 +93,7 @@ function SurveyListPage() {
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
     const [loading, setLoading] = React.useState(false);
+    const [hoveredRow, setHoveredRow] = useState<string | null>(null);
 
     const [{ run, steps, stepIndex }, setState] = useState<joyrideState>({
         run: false,
@@ -405,10 +406,8 @@ function SurveyListPage() {
             });
             setTimeout(() => {
                 localStorage.setItem(joyrideConstants.JOYRIDE_1, 'true');
-            },1000);
+            }, 1000);
         }
-        //TODO JOYRIDE remove this
-        // localStorage.removeItem('surveyPanelJoyride');
     }
 
     return (
@@ -459,21 +458,29 @@ function SurveyListPage() {
                         {
                             folderState?.map((folder: any) => {
                                 return (
-                                    <Tooltip key={folder.id} title={folder.name} >
-                                        <div key={folder.id} className="folders-data" style={surveyFolderText} onClick={(e) => handleFolderClick(e, folder.name, folder.id)} >
-                                            <Typography
-                                                title={folder.name}
-                                                style={{ pointerEvents: 'none' }}
-                                                variant='subtitle2'
-                                            >{folder.name?.substring(0, 15)}{folder?.name?.length > 15 ? '...' : ''}</Typography>
+                                    <div
+                                        key={folder.id}
+                                        className="folders-data"
+                                        style={surveyFolderText}
+                                        onClick={(e) => handleFolderClick(e, folder.name, folder.id)}
+                                        onMouseEnter={() => setHoveredRow(folder.id)}
+                                        onMouseLeave={() => setHoveredRow(null)}
+                                    >
+                                        <Typography
+                                            title={folder.name}
+                                            style={{ pointerEvents: 'none',fontWeight : hoveredRow === folder.id ? 600 : 500 }}
+                                            variant='subtitle2'
+                                        >{folder.name?.substring(0, 15)}{folder?.name?.length > 15 ? '...' : ''}</Typography>
+                                        {
+                                            hoveredRow === folder.id &&
                                             <IconButton
                                                 onClick={() => handleShowModalOnDelete(folder.id)}
                                                 style={{ padding: '0px' }}
                                                 size='small' >
                                                 <DeleteIcon sx={{ color: colorPalette.textPrimary, fontSize: '15px' }} />
                                             </IconButton>
-                                        </div>
-                                    </Tooltip>
+                                        }
+                                    </div>
                                 )
                             })
                         }

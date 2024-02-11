@@ -30,7 +30,6 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     const userRole: userRoleType = useSelector((state: any) => state.userRole);
     const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
     const [isWorkflowPublished, setIsWorkflowPublished] = useState<boolean>(props.published);
-    const defaultColor = useSelector((state: any) => state.colorReducer);
 
     useEffect(() => {
         setIsWorkflowPublished(props.published);
@@ -75,12 +74,10 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     const getComponentStyle = (color: string): React.CSSProperties => {
         return {
             color: color,
-            // border: `0.5px ${colorPalette.fsGray} solid`,
             width: '300px',
             height: '120px',
             borderRadius: '3px',
             padding: '10px',
-            // boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
             boxShadow: '0px 0px 20px 3px rgba(0,0,0,0.20)',
             background : colorPalette.background
         }

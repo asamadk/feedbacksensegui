@@ -4,7 +4,7 @@ export const backgroundColorMode = '#ffffff'
 
 export const containedButton = {
     "&.MuiButtonBase-root:hover": {
-        bgcolor: colorPalette.secondary
+        bgcolor: colorPalette.darkBackground
     },
     // backgroundColor: '#D81159',
     backgroundColor: colorPalette.primary,

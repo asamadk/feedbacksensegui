@@ -43,45 +43,36 @@ function Login() {
                     height={'calc(100vh - 89px)'}
                     overflow={'hidden'}
                     padding={'20px 40px'}
-                    sx={{ backgroundColor: colorPalette.darkBackground}}
                 >
-                    <Typography
+                    <img src='/hero.png' alt='Hero' />
+                </Box>
+            </Box>
+            <Box sx={{ ...subContainerStyle, backgroundColor: colorPalette.secondary,textAlign : 'center' }} >
+                <Typography
                         variant='h2'
                         fontWeight={600}
-                        textAlign={'start'}
-                        color={'#f1f1f1'}
+                        color={colorPalette.darkBackground}
+                        marginTop={'20px'}
                     >
                         Welcome, Start your journey with us
                     </Typography>
                     <Typography
                         variant='h4'
-                        textAlign={'start'}
                         color={colorPalette.primary}
                     >
                         Empower Your Feedback - Intuitively, Intelligently, Affordably
                     </Typography>
-                    <Typography
-                        color={colorPalette.fsGray}
-                        textAlign={'start'}
-                    >
-                        Our application is designed to cut through the noise,
-                        decipher the important messages, and present you with clear,
-                        actionable insight
-                    </Typography>
-                </Box>
-            </Box>
-            <Box sx={{ ...subContainerStyle, backgroundColor: colorPalette.darkBackground }} >
-                <Box sx={{ width: '250px', margin: 'auto', paddingTop: '20px', marginTop: '30%' }} >
+                <Box sx={{ width: '250px', margin: 'auto', paddingTop: '20px' }} >
                     <GoogleSignInButton onClick={googleAuth} />
                 </Box>
                 <Box sx={{ width: '250px', margin: 'auto', paddingTop: '20px' }} >
                     <MicrosoftSignInButton onClick={microsoftAuth} />
                 </Box>
-                <Box width={'250px'} margin={'auto'} marginTop={'20px'}>
+                <Box  width={'250px'} margin={'auto'} marginTop={'20px'}>
                     <Divider style={{background : colorPalette.primary}} />
                 </Box>
                 <Typography
-                    color={colorPalette.secondary}
+                    color={colorPalette.darkBackground}
                     marginTop={'20px'}
                 >
                     Do not have an account ?

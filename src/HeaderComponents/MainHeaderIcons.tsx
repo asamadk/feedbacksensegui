@@ -9,6 +9,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { outlinedButtonNoBorder, transparentButton } from '../Styles/ButtonStyle';
 import ReactJoyride, { CallBackProps, STATUS } from 'react-joyride';
 import { joyrideState } from '../Utils/types';
+import { useSelector } from 'react-redux';
 
 const iconStyle: {} = {
     color: colorPalette.primary,
@@ -35,6 +36,7 @@ function MainHeaderIcons(props: { backToHome: boolean, joyRideOver : any }) {
     const [showNotificationModal, setShowNotificationModal] = React.useState<Boolean>();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const currentUserState = useSelector((state: any) => state.currentUser);
 
     const [{ run, steps, stepIndex }, setState] = useState<joyrideState>({
         run: false,
@@ -115,8 +117,6 @@ function MainHeaderIcons(props: { backToHome: boolean, joyRideOver : any }) {
                 localStorage.setItem(joyrideConstants.JOYRIDE_5, 'true');
             },1000);
         }
-        //TODO JOYRIDE remove this
-        // localStorage.removeItem('header-joyride');
     }
 
     const handleSettingsClose = (event: any) => {
@@ -191,8 +191,8 @@ function MainHeaderIcons(props: { backToHome: boolean, joyRideOver : any }) {
                         className='settings-icon'
                         onClick={handleSettingsBellClick}
                         sx={avatarStyle}
-                        alt={'S'}
-                        src='/'
+                        alt={currentUserState?.name}
+                        src={currentUserState?.image}
                     />
                     <SettingsModal
                         close={handleSettingsClose}

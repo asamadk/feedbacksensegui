@@ -15,30 +15,9 @@ import { textFieldStyle } from '../Styles/InputStyles';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
-const StyledDropdown = styled(Autocomplete)({
-  '& label.Mui-focused': {
-    color: colorPalette.primary,
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: colorPalette.primary,
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#454545',
-    },
-    '&:hover fieldset': {
-      borderColor: colorPalette.primary,
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: colorPalette.primary,
-    },
-  },
-  color: 'white'
-});
-
 const subContainerCss = {
   borderRadius: '5px',
-  border: '1px #454545 solid',
+  boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
   padding: '20px',
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -97,20 +76,19 @@ function LoginSuccess() {
 
   return (
     <Box
-      sx={{ ...LayoutStyles.settingLayoutStyle, backgroundColor: defaultColor?.backgroundColor }}
+      sx={{ ...LayoutStyles.settingLayoutStyle }}
       style={{ height: 'calc(100vh - 120px)' }}
     >
-      <Box sx={{ ...subContainerCss, backgroundColor: defaultColor?.secondaryColor }} >
+      <Box sx={{ ...subContainerCss, backgroundColor: colorPalette.secondary,color : colorPalette.darkBackground }} >
         <Box marginBottom={'10px'} >
-          <Typography color='#f1f1f1' fontSize={'22px'} >Share a few details about you</Typography>
+          <Typography fontSize={'22px'} >Share a few details about you</Typography>
           <Typography color='#808080' fontSize={'14px'} >It will help us to get to know you better</Typography>
         </Box>
         <Box>
           <Box marginTop={'20px'} >
-            <InputLabel sx={{ color: '#f1f1f1', marginBottom: '5px', marginTop: '10px' }} >Enter Company name</InputLabel>
+            <InputLabel sx={{ color : colorPalette.darkBackground, marginBottom: '5px', marginTop: '10px' }} >Enter Company name</InputLabel>
             <CssTextField
               size='small'
-              sx={{ input: { color: 'white' } }}
               id="outlined-basic"
               placeholder='Company'
               variant="outlined"
@@ -119,10 +97,9 @@ function LoginSuccess() {
             />
           </Box>
           <Box marginTop={'20px'} >
-            <InputLabel sx={{ color: '#f1f1f1', marginBottom: '5px', marginTop: '10px' }} >Enter you address</InputLabel>
+            <InputLabel sx={{ color : colorPalette.darkBackground,marginBottom: '5px', marginTop: '10px' }} >Enter you address</InputLabel>
             <CssTextField
               size='small'
-              sx={{ input: { color: 'white' } }}
               id="outlined-basic"
               placeholder='Address'
               variant="outlined"
@@ -131,10 +108,9 @@ function LoginSuccess() {
             />
           </Box>
           <Box marginTop={'20px'} >
-            <InputLabel sx={{ color: '#f1f1f1', marginBottom: '5px', marginTop: '10px' }} >Enter you country</InputLabel>
+            <InputLabel sx={{ color : colorPalette.darkBackground, marginBottom: '5px', marginTop: '10px' }} >Enter you country</InputLabel>
             <CssTextField
               size='small'
-              sx={{ input: { color: 'white' } }}
               id="outlined-basic"
               placeholder='Country'
               variant="outlined"
@@ -143,10 +119,9 @@ function LoginSuccess() {
             />
           </Box>
           <Box marginTop={'20px'} >
-            <InputLabel sx={{ color: '#f1f1f1', marginBottom: '5px', marginTop: '10px' }} >Enter you pin code</InputLabel>
+            <InputLabel sx={{ color : colorPalette.darkBackground, marginBottom: '5px', marginTop: '10px' }} >Enter you pin code</InputLabel>
             <CssTextField
               size='small'
-              sx={{ input: { color: 'white' } }}
               id="outlined-basic"
               placeholder='Pin'
               type='number'

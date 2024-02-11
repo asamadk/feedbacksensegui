@@ -1,9 +1,8 @@
 import { AccordionDetails, AccordionSummary, Autocomplete, Box, Button, Divider, IconButton, TextField, Typography } from '@mui/material'
 import React from 'react'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import styled from '@emotion/styled';
-import { transparentButton } from '../../Styles/ButtonStyle';
+import { transparentButton,outlinedButtonNoBorder } from '../../Styles/ButtonStyle';
 import { ALL_TEMPLATE_KEY, colorPalette } from '../../Utils/Constants';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
@@ -86,8 +85,9 @@ function TemplateLeftPanel(
                     <Box key={key} >
                         {key === ALL_TEMPLATE_KEY ?
                             <Button
+                                variant='outlined'
                                 onClick={() => { filter(ALL_TEMPLATE_KEY, ''); setExpanded(false) }}
-                                sx={{ width: '100%', display: 'flex', justifyContent: 'start', marginBottom: '10px', color: colorPalette.darkBackground }}
+                                sx={{ ...outlinedButtonNoBorder,width: '100%', display: 'flex', justifyContent: 'start', marginBottom: '10px', color: colorPalette.darkBackground }}
                             >
                                 All Templates
                             </Button> :

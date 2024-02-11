@@ -100,10 +100,10 @@ function NodeComponent(props: any) {
                     </Box> :
                     <Box justifyContent={'space-between'} display={'flex'} overflow={'hidden'} >
                         <Box sx={{ width: '50px', height: '50px' }} ></Box>
-                        <IconButton sx={{ width: '50px', height: '50px', marginTop: '20px' }} onClick={handleShowComponentSelectorModal} >
+                        <IconButton sx={{ width: '50px', height: '50px', marginTop: '25px' }} onClick={handleShowComponentSelectorModal} >
                             <AddCircleOutlineIcon sx={{ width: '50px', height: '50px' }} />
                         </IconButton>
-                        <IconButton onClick={handleOpenMoreClick} sx={{ marginTop: '10px', width: '45px' }} >
+                        <IconButton onClick={handleOpenMoreClick} sx={{ marginTop: '25px', width: '45px',height : '45px' }} >
                             <MoreVertIcon sx={{ color: getIconColorById(props.compId) }} />
                         </IconButton>
                     </Box>

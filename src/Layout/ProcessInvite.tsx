@@ -59,7 +59,7 @@ function ProcessInvite() {
                     message={inviteMessage}
                 />}
                 {inviteResponse === 500 && <Box>
-                    <Typography variant='h6' color={'white'} >
+                    <Typography variant='h6' >
                         {inviteMessage}
                     </Typography>
                 </Box>}
@@ -98,7 +98,7 @@ function ProcessInvite() {
     return (
         <>
             <Box
-                sx={{ backgroundColor: defaultColor?.backgroundColor, textAlign: 'center' }}
+                sx={{ backgroundColor: defaultColor?.backgroundColor,color : colorPalette.darkBackground, textAlign: 'center' }}
                 height={'calc(100vh - 57px)'}
             >
                 <Box padding={'10%'}>
@@ -118,7 +118,6 @@ function SuccessDisplay({ defaultColor, next, reject, message }: any) {
         <Box sx={{ ...LayoutStyles.globalSettingSubContainers(defaultColor?.primaryColor), marginTop: 0, textAlign: 'start' }} >
             <Typography
                 variant='h6'
-                color={'white'}
                 marginBottom={'20px'}
             >{message}</Typography>
             <Typography

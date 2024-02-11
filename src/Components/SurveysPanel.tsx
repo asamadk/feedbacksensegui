@@ -1,4 +1,4 @@
-import { Button, Grid, IconButton, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
+import { Button, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Tooltip, Typography } from '@mui/material'
 import { Box, styled } from '@mui/system'
 import AddIcon from '@mui/icons-material/Add';
 import * as ButtonStyles from '../Styles/ButtonStyle'
@@ -27,7 +27,8 @@ import ReactJoyride, { CallBackProps, STATUS } from 'react-joyride';
 const buttonContainerStyles = {
     marginTop: '10px',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+
 }
 
 const mainContainerStyle = {
@@ -43,7 +44,6 @@ function SurveysPanel(props: any) {
 
     const snackbarRef: any = useRef(null);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const [surveys, setSurveys] = useState<any[]>([]);
     const [unfilteredSurveys, setUnfilteredSureveys] = useState<any[]>([]);
@@ -103,7 +103,6 @@ function SurveysPanel(props: any) {
 
     const handleJoyrideVisibility = () => {
         const hasSeenJoyRide1 = localStorage.getItem(Constants.joyrideConstants.JOYRIDE_1)
-        console.log("🚀 ~ handleJoyrideVisibility ~ hasSeenJoyRide1:", hasSeenJoyRide1)
         if (!hasSeenJoyRide1) {
             setState({
                 run: false,
@@ -121,8 +120,6 @@ function SurveysPanel(props: any) {
             });
             localStorage.setItem(Constants.joyrideConstants.JOYRIDE_3, 'true');
         }
-        //TODO JOYRIDE remove this
-        // localStorage.removeItem('survey-panel-joyride');
     }
 
     useEffect(() => {
@@ -163,6 +160,7 @@ function SurveysPanel(props: any) {
     }
 
     const getSurveys = async (): Promise<void> => {
+        console.log("🚀 ~ getSurveys");
         try {
             setLoading(true);
             let { data } = await axios.get(Endpoints.getSurveyList(), { withCredentials: true });
@@ -273,6 +271,7 @@ function SurveysPanel(props: any) {
     }
 
     const runOnCreate = () => {
+        getSurveys();
         setOpenCreateSurvey(false);
         setForceRerender(!forceRerender);
         props.runOnSurveyCreate();
@@ -308,110 +307,117 @@ function SurveysPanel(props: any) {
     };
 
     return (
-        <Box sx={{ overflowY: 'scroll' }} >
-            <Box sx={mainContainerStyle} >
-                <Box >
-                    <Box sx={buttonContainerStyles} >
-                        <Box>
-                            <Typography
-                                sx={{ textAlign: 'start', color: Constants.colorPalette.textPrimary, marginTop: '20px' }}
-                                variant='h5'
-                                title={props?.folder}
-                            >
-                                {props?.folder?.substring(0, 100)}
-                                {props?.folder?.length > 100 ? '...' : ''}
-                            </Typography>
-                        </Box>
-                        <Box marginTop={'9px'} >
-                            <Select
-                                onChange={handleUserChange}
-                                sx={{ ...muiSelectStyle, width: '150px', height: '36px' }}
-                                value={selectedUser}
-                                size='small'
-                            >
-                                <MenuItem value={'0'}>All Users</MenuItem>
-                                {userState.map((user: any) => {
-                                    return (
-                                        <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>
-                                    );
-                                })}
-                            </Select>
-                            <CssTextField
-                                onChange={handleSearch}
-                                value={searchText}
-                                size='small'
-                                sx={{ input: { color: Constants.colorPalette.darkBackground } }}
-                                placeholder='Search surveys.'
-                                style={searchBoxStyle}
-                                InputProps={{
-                                    endAdornment: <SearchIcon sx={{ color: Constants.colorPalette.darkBackground, paddingLeft: '5px' }} />
-                                }}
-                            />
-                            {
-                                CoreUtils.isComponentVisible(userRole, Constants.componentName.CREATE_SURVEY_BUTTON) &&
-                                <Button
-                                    className='create-new-survey-button'
-                                    sx={ButtonStyles.containedButton}
-                                    style={{ width: 'fit-content', marginBottom: '15px', marginLeft: '10px', textTransform: 'none' }}
-                                    startIcon={<AddIcon />}
-                                    variant='contained'
-                                    onClick={handleCreateNewSurvey}
+        <>
+            <Box sx={{ overflowY: 'scroll' }} >
+                <Box sx={mainContainerStyle} >
+                    <Box >
+                        <Box sx={{ ...buttonContainerStyles, marginBottom: userRole === 'GUEST' ? '20px' : '' }} >
+                            <Box>
+                                <Typography
+                                    sx={{ textAlign: 'start', color: Constants.colorPalette.textPrimary, marginTop: '20px' }}
+                                    variant='h5'
+                                    title={props?.folder}
                                 >
-                                    Create new survey
-                                </Button>
-                            }
+                                    {props?.folder?.substring(0, 100)}
+                                    {props?.folder?.length > 100 ? '...' : ''}
+                                </Typography>
+                            </Box>
+                            <Box display={'flex'} marginTop={'9px'} >
+                                <Box sx={{ display: 'flex', marginTop: '10px' }} >
+                                    <InputLabel sx={{ marginRight: '5px', marginTop: '5px' }} >Owned By : </InputLabel>
+                                    <Select
+                                        onChange={handleUserChange}
+                                        sx={{ ...muiSelectStyle, width: '150px', height: '36px' }}
+                                        value={selectedUser}
+                                        size='small'
+                                    >
+                                        <MenuItem value={'0'}>All Users</MenuItem>
+                                        {userState.map((user: any) => {
+                                            return (
+                                                <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>
+                                            );
+                                        })}
+                                    </Select>
+                                </Box>
+                                <CssTextField
+                                    onChange={handleSearch}
+                                    value={searchText}
+                                    size='small'
+                                    sx={{ input: { color: Constants.colorPalette.darkBackground } }}
+                                    placeholder='Search surveys'
+                                    style={searchBoxStyle}
+                                    InputProps={{
+                                        endAdornment: <SearchIcon sx={{ color: Constants.colorPalette.darkBackground, paddingLeft: '5px' }} />
+                                    }}
+                                />
+                                {
+                                    CoreUtils.isComponentVisible(userRole, Constants.componentName.CREATE_SURVEY_BUTTON) &&
+                                    <>
+                                        <Button
+                                            className='create-new-survey-button'
+                                            sx={ButtonStyles.containedButton}
+                                            style={{ width: 'fit-content', marginBottom: '15px', marginLeft: '10px', textTransform: 'none' }}
+                                            startIcon={<AddIcon />}
+                                            variant='contained'
+                                            onClick={handleCreateNewSurvey}
+                                        >
+                                            Create new survey
+                                        </Button>
+                                        {/* <ReactJoyride
+                                            callback={handleJoyrideCallback}
+                                            continuous
+                                            hideCloseButton
+                                            run={run}
+                                            scrollToFirstStep
+                                            showProgress
+                                            showSkipButton
+                                            steps={steps}
+                                            styles={{
+                                                options: {
+                                                    // zIndex: 10000,
+                                                },
+                                                buttonNext: {
+                                                    backgroundColor: Constants.colorPalette.primary
+                                                },
+                                                buttonBack: {
+                                                    color: Constants.colorPalette.primary
+                                                }
+                                            }}
+                                        /> */}
+                                    </>
+                                }
+                            </Box>
                         </Box>
                     </Box>
+                    <Grid
+                        container
+                        spacing={{ xs: 2, md: 3 }}
+                        columns={{ xs: 4, sm: 8, md: 12 }}
+                    >
+                        {surveys.map((survey: any) => (
+                            <Grid item xs={2} sm={4} md={4} key={survey.id}>
+                                <SurveyBlock
+                                    survey={survey}
+                                    delete={deleteSurvey}
+                                    rerender={rerenderAfterFolderChange}
+                                    updateSurvey={updateSurvey}
+                                    update={props.update}
+                                    updateSurveyList={updateSurveyList}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
                 </Box>
-                <Grid
-                    container
-                    spacing={{ xs: 2, md: 3 }}
-                    columns={{ xs: 4, sm: 8, md: 12 }}
-                >
-                    {surveys.map((survey: any) => (
-                        <Grid item xs={2} sm={4} md={4} key={survey.id}>
-                            <SurveyBlock
-                                survey={survey}
-                                delete={deleteSurvey}
-                                rerender={rerenderAfterFolderChange}
-                                updateSurvey={updateSurvey}
-                                update={props.update}
-                                updateSurveyList={updateSurveyList}
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
+                <CreateSurveyModal
+                    update={runOnCreate}
+                    surveys={surveys}
+                    open={openCreateSurvey}
+                    close={handleCloseCreateNewSurvey}
+                />
+                <FSLoader show={loading} />
+                <Notification ref={snackbarRef} />
             </Box>
-            <CreateSurveyModal
-                update={runOnCreate}
-                surveys={surveys}
-                open={openCreateSurvey}
-                close={handleCloseCreateNewSurvey}
-            />
-            <FSLoader show={loading} />
-            <Notification ref={snackbarRef} />
-            <ReactJoyride
-                callback={handleJoyrideCallback}
-                continuous
-                hideCloseButton
-                run={run}
-                scrollToFirstStep
-                showProgress
-                showSkipButton
-                steps={steps}
-                styles={{
-                    options: {
-                        zIndex: 10000,
-                    },
-                    buttonNext: {
-                        backgroundColor: Constants.colorPalette.primary
-                    },
-                    buttonBack: {
-                        color: Constants.colorPalette.primary
-                    }
-                }}
-            />
-        </Box>
+        </>
     )
 }
 

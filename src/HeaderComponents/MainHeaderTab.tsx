@@ -79,8 +79,6 @@ function MainHeaderTab(props : {joyrideStart : boolean}) {
             });
             localStorage.setItem(joyrideConstants.JOYRIDE_6, 'true');
         }
-        //TODO JOYRIDE remove this
-        // localStorage.removeItem('main-header-tab-joyride');
     }
 
     const handleJoyrideCallback = (data: CallBackProps) => {

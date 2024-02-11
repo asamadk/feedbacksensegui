@@ -18,11 +18,11 @@ const makeIconsUp = {
 }
 
 const tabsetList = [
-    { id: 1, name: 'WORKFLOW' },
-    { id: 2, name: 'DESIGN' },
-    { id: 3, name: 'CONFIGURE' },
-    { id: 4, name: 'SHARE' },
-    { id: 5, name: 'DASHBOARD' },
+    { id: 1, name: 'Automation' },
+    { id: 2, name: 'Design' },
+    { id: 3, name: 'Configure' },
+    { id: 4, name: 'Share' },
+    { id: 5, name: 'Dashboard' },
 ]
 
 function SurveyDetailHeader(props: any) {
@@ -105,7 +105,7 @@ function SurveyDetailHeader(props: any) {
     }
 
     return (
-        <Box sx={{ display: 'flex',marginTop : '5px' }} >
+        <Box sx={{ display: 'flex' }} >
             <Box sx={{ display: 'flex', justifyContent: 'center' }} >
                 <CustomTabSet tabsetList={tabsetList} change={(value: number) => changetabset(value)} index={props.tabset} />
             </Box>
