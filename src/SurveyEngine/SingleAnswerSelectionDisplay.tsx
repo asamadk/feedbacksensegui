@@ -1,5 +1,5 @@
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, Radio, RadioGroup, Tooltip, Typography, useMediaQuery } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
 import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
 import { TEMPLATE_KEY } from '../Utils/Constants';
@@ -11,6 +11,8 @@ function SingleAnswerSelectionDisplay(props: any) {
     const [position, setPosition] = useState('absolute');
     const [selectedRadio, setSelectedRadio] = useState('');
     const [selectedChecks, setSelectedChecks] = useState<Set<any>>(new Set<any>());
+    const containerRef = useRef<HTMLDivElement>(null); // Ref to the container element
+    const [showScrollDown, setShowScrollDown] = useState(false); // State to control the visibility of the scroll down icon
 
     const isSmallScreen = useMediaQuery('(max-width: 600px)');
 
@@ -19,7 +21,23 @@ function SingleAnswerSelectionDisplay(props: any) {
             processThemeData();
         }
         verifyLiveSurvey();
+
+        handleOverflow();
+
+        // Add event listener for "Enter" key press
+        document.addEventListener('keydown', handleKeyPress);
+
+        // Cleanup function to remove event listener
+        return () => {
+            document.removeEventListener('keydown', handleKeyPress);
+        };
     }, [props]);
+
+    const handleKeyPress = (event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            next();
+        }
+    };
 
     const verifyLiveSurvey = () => {
         if (props.surveyId) {
@@ -80,7 +98,7 @@ function SingleAnswerSelectionDisplay(props: any) {
         width: isSmallScreen === true ? '80%' : '55%',
         margin: "auto",
         marginBottom: '10px',
-        overflowX : 'scroll',
+        overflowX: 'scroll',
     }
 
     const RadioButtonStyle = {
@@ -90,11 +108,26 @@ function SingleAnswerSelectionDisplay(props: any) {
         },
     }
 
+    const handleOverflow = () => {
+        const container = containerRef.current;
+        if (container && container.scrollHeight > container.clientHeight) {
+            console.log('Overflow');
+            setShowScrollDown(true); // If content overflows, show the scroll down icon
+        } else {
+            console.log('No Overflow');
+            setShowScrollDown(false); // Otherwise, hide the scroll down icon
+        }
+    };
+
     return (
-        <Box sx={getSurveyDisplayContainerStyle(position,props.surveyId === TEMPLATE_KEY)} textAlign={'center'}>
-            <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll',overflowWrap : 'break-word' }} >
-                <Box marginTop={'10px'} sx={{overflowY : 'scroll'}} >
+        <Box sx={getSurveyDisplayContainerStyle(position, props.surveyId === TEMPLATE_KEY)} textAlign={'center'}>
+            <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', overflowWrap: 'break-word' }} >
+                <Box ref={containerRef} marginTop={'10px'} sx={{ overflowY: 'scroll' }} >
                     <Typography marginBottom={'20px'} fontSize={'26px'} color={colors?.primaryColor} fontWeight={400} >{props?.data?.question}</Typography>
+                    {
+                        showScrollDown &&
+                        <Typography marginTop={'20px'} color={colors?.primaryColor} >Please <b>Scroll Down</b> for more</Typography>
+                    }
                     {
                         props.type === 'single' ?
                             <RadioGroup name="radio-buttons-group" >
@@ -103,7 +136,7 @@ function SingleAnswerSelectionDisplay(props: any) {
                                         return (
                                             <Box sx={selectionBlock} >
                                                 <FormControlLabel
-                                                    sx={{ position: 'relative', top: '-5px',overflowWrap : 'break-word' }}
+                                                    sx={{ position: 'relative', top: '-5px', overflowWrap: 'break-word' }}
                                                     value={answer}
                                                     control={<Radio sx={RadioButtonStyle} />}
                                                     // label={answer}
@@ -146,6 +179,7 @@ function SingleAnswerSelectionDisplay(props: any) {
                     >
                         Submit
                     </Button>
+                    <Typography marginTop={'20px'} color={colors?.primaryColor} >Press <b>Enter</b> to submit</Typography>
                 </Box>
             </Box>
         </Box>

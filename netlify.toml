@@ -1,0 +1,6 @@
+[build]
+  # Define the build command to include both npm install and npm run build
+  command = "npm install --force && npm run build --legacy-peer-deps"
+
+  # Specify the directory where the built files are located
+  publish = "path/to/your/built/files"

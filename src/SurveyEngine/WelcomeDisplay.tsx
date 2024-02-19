@@ -15,6 +15,14 @@ function WelcomeDisplay(props: any) {
       processThemeData();
     }
     verifyLiveSurvey();
+
+    // Add event listener for "Enter" key press
+    document.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup function to remove event listener
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
   }, [props]);
 
   const verifyLiveSurvey = () => {
@@ -37,8 +45,14 @@ function WelcomeDisplay(props: any) {
     });
   }
 
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      next();
+    }
+  };
+
   return (
-    <Box sx={getSurveyDisplayContainerStyle(position,props.surveyId === TEMPLATE_KEY)} textAlign={'center'} >
+    <Box sx={getSurveyDisplayContainerStyle(position, props.surveyId === TEMPLATE_KEY)} textAlign={'center'} >
       <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center', overflowWrap: 'break-word' }} >
         <Box marginTop={'20px'} sx={{ overflowY: 'scroll' }} >
           <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={300} >{props?.data?.welcomeText}</Typography>
@@ -50,10 +64,12 @@ function WelcomeDisplay(props: any) {
               },
               backgroundColor: colors?.primaryColor,
               color: textColor,
+              marginTop : '10px'
             }}
             variant="contained" >
             {props?.data?.buttonText?.toUpperCase()}
           </Button>
+          <Typography marginTop={'20px'} color={colors?.primaryColor} >Press <b>Enter</b> to start</Typography>
         </Box>
       </Box>
     </Box>

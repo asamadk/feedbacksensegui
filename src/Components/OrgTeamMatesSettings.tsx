@@ -169,7 +169,7 @@ function OrgTeamMatesSettings() {
             <Typography fontSize={'13px'} color={colorPalette.textPrimary} >{user?.email}</Typography>
           </Box>
         </Box>
-        <Box marginTop={'5px'} >
+        <Box marginTop={'10px'} >
           <Chip sx={{ width: '70px' }} label={user?.role} />
           {
             CoreUtils.isComponentVisible(userRole, componentName.MANAGE_USER) &&

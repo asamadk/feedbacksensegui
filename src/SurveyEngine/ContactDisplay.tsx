@@ -18,7 +18,23 @@ function ContactDisplay(props: any) {
         }
         verifyLiveSurvey();
         populateAnswerResult();
+
+        // Add event listener for "Enter" key press
+        document.addEventListener('keydown', handleKeyPress);
+
+        // Cleanup function to remove event listener
+        return () => {
+            document.removeEventListener('keydown', handleKeyPress);
+        }
+
     }, [props]);
+
+
+    const handleKeyPress = (event: KeyboardEvent) => {
+        if (event.key === 'Enter' && event.shiftKey) {
+            next();
+        }
+    };
 
     const verifyLiveSurvey = () => {
         if (props.surveyId) {
@@ -72,16 +88,16 @@ function ContactDisplay(props: any) {
     }
 
     return (
-        <Box sx={getSurveyDisplayContainerStyle(position,props.surveyId === TEMPLATE_KEY)} textAlign={'center'} overflow={'scroll'} >
+        <Box sx={getSurveyDisplayContainerStyle(position, props.surveyId === TEMPLATE_KEY)} textAlign={'center'} overflow={'scroll'} >
             <Box height={'90vh'} sx={{ ...getCenterAlignmentStyle(), overflowY: 'scroll', textAlign: 'center' }} >
-                <Box marginTop={'10px'} sx={{ overflowY: 'scroll',overflowWrap : 'break-word' }} >
+                <Box marginTop={'10px'} sx={{ overflowY: 'scroll', overflowWrap: 'break-word' }} >
                     <Typography fontSize={'26px'} color={colors?.primaryColor} fontWeight={200} >{props?.data?.question}</Typography>
                     <Box marginTop={'20px'} >
                         {
-                            props?.data?.answerList?.map((answer: string,index :number) => {
+                            props?.data?.answerList?.map((answer: string, index: number) => {
                                 return (
-                                    <Box key={answer+index} >
-                                        <Box key={answer+index} sx={{ padding: '5px', marginTop: '5px' }}>
+                                    <Box key={answer + index} >
+                                        <Box key={answer + index} sx={{ padding: '5px', marginTop: '5px' }}>
                                             <input
                                                 style={inputStyleCSS}
                                                 value={answerResult != null && answerResult[answer] != null ? answerResult[answer] : ''}
@@ -94,18 +110,19 @@ function ContactDisplay(props: any) {
                             })
                         }
                     </Box>
-                <Button
-                    onClick={next}
-                    style={{
-                        width: 'fit-content',
-                        backgroundColor: colors?.primaryColor,
-                        color: textColor,
-                        marginTop: '10px'
-                    }}
-                    variant="contained"
-                >
-                    Submit
-                </Button>
+                    <Button
+                        onClick={next}
+                        style={{
+                            width: 'fit-content',
+                            backgroundColor: colors?.primaryColor,
+                            color: textColor,
+                            marginTop: '10px'
+                        }}
+                        variant="contained"
+                    >
+                        Submit
+                    </Button>
+                    <Typography marginTop={'20px'} color={colors?.primaryColor} >Press <b>Shift + Enter</b> to submit</Typography>
                 </Box>
             </Box>
         </Box>

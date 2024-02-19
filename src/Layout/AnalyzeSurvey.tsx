@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs } from '@mui/material'
+import { Box, Tab, Tabs, styled } from '@mui/material'
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import React, { useState } from 'react'
@@ -8,7 +8,6 @@ import OverAllResult from '../Components/OverAllResult';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import OverAllAIAnalysis from '../Components/OverAllAIAnalysis';
 import { colorPalette } from '../Utils/Constants';
-import CustomTabSet from '../Components/CustomTabSet';
 
 const mainContainerCss = {
   height: 'calc(100vh - 69px)',
@@ -21,28 +20,81 @@ function AnalyzeSurvey() {
 
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const handleSelectedTabChange = (event : any,newValue: number) => {
+  const handleSelectedTabChange = (event: any, newValue: number) => {
     setSelectedTab(newValue);
   };
 
+  interface StyledTabProps {
+    // label: string;
+    icon: any,
+    value: number
+  }
+
+  interface StyledTabsProps {
+    children?: React.ReactNode;
+    value: number;
+    onChange: (event: React.SyntheticEvent, newValue: number) => void;
+  }
+
+  const StyledTabs = styled((localProps: StyledTabsProps) => (
+    <Tabs
+      orientation='vertical'
+      {...localProps}
+      TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+    />
+  ))({
+    '& .MuiTabs-indicator': {
+      display: 'flex',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
+    },
+    '& .MuiTabs-indicatorSpan': {
+      maxWidth: 50,
+      width: '100%',
+      backgroundColor: colorPalette.primary,
+      // backgroundColor: 'transparent',
+    }
+  });
+
+  const StyledTab = styled((props: StyledTabProps) => (
+    <Tab disableRipple {...props} />
+  ))(({ theme }) => ({
+    textTransform: 'none',
+    marginRight: theme.spacing(1),
+    color: colorPalette.darkBackground,
+    '&.Mui-selected': {
+      color: colorPalette.primary,
+      fontWeight: 600,
+      // background : '#ddd5e6',
+      borderRadius: '7px'
+    },
+    '&.Mui-focusVisible': {
+      backgroundColor: colorPalette.secondary,
+    },
+    fontWeight: 550
+  }));
 
   return (
     <Box sx={{ ...mainContainerCss, backgroundColor: colorPalette.textSecondary }} >
       <Box width={'6%'} >
-        <Tabs
-          orientation="vertical"
+        <StyledTabs
+          // orientation="vertical"
           value={selectedTab}
           onChange={handleSelectedTabChange}
           sx={{ borderRight: `0.5px ${colorPalette.fsGray} solid`, height: 'calc(100vh - 69px)' }}
         >
-          <Tab
+          <StyledTab
             value={0}
             sx={{ width: 'fit-content' }}
             icon={<EqualizerIcon />}
           />
-          <Tab value={1} sx={{ width: 'fit-content' }} icon={<AssignmentIndIcon />} />
+          <StyledTab
+            value={1}
+            sx={{ width: 'fit-content' }}
+            icon={<AssignmentIndIcon />}
+          />
           {/* <Tab value={2} sx={{ width: 'fit-content' }} icon={<AutoFixHighIcon />} /> */}
-        </Tabs>
+        </StyledTabs>
       </Box>
       <Box width={'94%'} >
         <DynamicTabContainer

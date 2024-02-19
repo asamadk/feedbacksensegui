@@ -28,9 +28,10 @@ function CustomTabSet(props: any) {
             backgroundColor: 'transparent',
         },
         '& .MuiTabs-indicatorSpan': {
-            maxWidth: 40,
+            maxWidth: 50,
             width: '100%',
             backgroundColor: colorPalette.primary,
+            // backgroundColor: 'transparent',
         }
     });
 
@@ -42,16 +43,22 @@ function CustomTabSet(props: any) {
         color: colorPalette.darkBackground,
         '&.Mui-selected': {
             color: colorPalette.primary,
-            fontWeight : 600
+            fontWeight : 600,
+            // background : '#ddd5e6',
+            borderRadius : '7px'
         },
         '&.Mui-focusVisible': {
-            backgroundColor: colorPalette.primary,
+            backgroundColor: colorPalette.secondary,
         },
-        fontWeight : 500
+        fontWeight : 550
     }));
 
     const [tabSetList, setTabsetList] = React.useState<any[]>(props.tabsetList)
     const [value, setValue] = React.useState(parseInt(props.index));
+
+    useEffect(() => {
+        setValue(props.index);
+    },[props.index]);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);

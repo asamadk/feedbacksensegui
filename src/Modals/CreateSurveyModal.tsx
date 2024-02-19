@@ -102,10 +102,6 @@ function CreateSurveyModal(props: any) {
     }
 
     const updateStore = (surveyData : any) => {
-        // let tmpSurveys :any[]= surveysState;
-        // if(tmpSurveys == null){tmpSurveys = [];}
-        // tmpSurveys.push(surveyData);
-        // dispatch(setSurvey(tmpSurveys));
         handleOpenSurvey(surveyData?.id);
     }
 
