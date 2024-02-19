@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react'
 
 const FSTooltip = ({ active, payload, label,percent } : any) => {
-    
-    useEffect(() => {
-        console.log("🚀 ~ file: FSTooltip.tsx:4 ~ FSTooltip ~ payload:", payload)
-    },[]);
 
     if (active && payload && payload.length) {
         return (
