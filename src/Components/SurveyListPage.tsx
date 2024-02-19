@@ -39,7 +39,7 @@ const leftSectionStyle: any = {
     width: '18%',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    padding: '10px 0px',
+    // padding: '10px 0px',
     boxShadow: '10px 0px rgba(0, 0, 0, 0.08)'
 }
 
@@ -496,15 +496,15 @@ function SurveyListPage() {
                                     text={subscriptionState == null ? '0' : subscriptionState?.surveyLimitUsed + '/' + subscriptionState?.totalSurveyLimit}
                                 />
                             </Box> */}
-                            <Box className="create-folder-modal" padding={'10px 20px'} >
-                                <Button
+                            <Box className="create-folder-modal" padding={'10px 10px'} >
+                                {/* <Button
                                     sx={ButtonStyles.outlinedButton}
                                     onClick={handleUpgradePlanClick}
                                     variant="contained"
                                     startIcon={<AppsIcon />}
                                 >
                                     Apps & Integrations
-                                </Button>
+                                </Button> */}
                                 <Button
                                     className='invite-teammates'
                                     startIcon={<Groups2Icon />}

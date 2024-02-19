@@ -9,17 +9,17 @@ import { colorPalette, joyrideConstants } from '../Utils/Constants';
 const tabSetList = [
     { id: 0, name: 'Workspaces' },
     { id: 1, name: 'Templates' },
-    { id: 2, name: 'Integrations' },
+    { id: 2, name: 'Contacts' },
     { id: 3, name: 'Dashboard' },
 ];
 
 function MainHeaderTab(props : {joyrideStart : boolean}) {
 
     const navigate = useNavigate();
-    const [tabset, setTabset] = React.useState(0);
+    const [tabset, setTabSet] = React.useState(0);
 
     const handleTabChange = (value : number) =>  {
-        setTabset(value);
+        setTabSet(value);
         if(value === 0){
             navigate('/');
         }else if(value === 1){
@@ -59,6 +59,23 @@ function MainHeaderTab(props : {joyrideStart : boolean}) {
     useEffect(() => {
         handleJoyrideVisibility();
     }, []);
+
+    useEffect(() => {
+        handlePathChange();
+    },[window.location.pathname]);
+
+    const handlePathChange = () => {
+        const pathName : string = window.location.pathname;
+        if(pathName === '/'){
+            setTabSet(0);
+        }else if(pathName === '/template'){
+            setTabSet(1);
+        }else if(pathName === '/integration'){
+            setTabSet(2);
+        }else if(pathName === '/dashboard'){
+            setTabSet(3);
+        }
+    }
 
     const handleJoyrideVisibility = () => {
         const hasSeenPrevJoyride = localStorage.getItem(joyrideConstants.JOYRIDE_5);

@@ -17,7 +17,22 @@ function TextAnswerDisplay(props: any) {
       processThemeData();
     }
     verifyLiveSurvey();
+
+    // Add event listener for "Enter" key press
+    document.addEventListener('keydown', handleKeyPress);
+
+    // Cleanup function to remove event listener
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    }
   }, [props]);
+
+
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' && event.shiftKey) {
+      next();
+    }
+  };
 
   const verifyLiveSurvey = () => {
     if (props.surveyId) {
@@ -73,7 +88,9 @@ function TextAnswerDisplay(props: any) {
               marginTop: '20px',
               backgroundColor: colors?.primaryColor,
               color: textColor
-            }} variant="contained" >{'NEXT'}</Button>
+            }} variant="contained" >{'NEXT'}
+          </Button>
+        <Typography marginTop={'20px'} color={colors?.primaryColor} >Press <b>Shift + Enter</b> to submit</Typography>
         </Box>
       </Box>
     </Box>

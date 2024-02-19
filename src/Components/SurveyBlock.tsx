@@ -59,7 +59,7 @@ function SurveyBlock(props: any) {
     };
 
     const handleTextHighlight = (e: any) => {
-        e.target.style.color = colorPalette.secondary;
+        e.target.style.color = colorPalette.primary;
     }
 
     const handleTextUnhighlight = (e: any) => {
@@ -234,7 +234,7 @@ function SurveyBlock(props: any) {
                     <Box sx={{ display: 'flex' }} >
                         <EqualizerIcon sx={{color : colorPalette.fsGray}} />
                         <Typography
-                            sx={{ fontSize: 14, textDecoration: 'underline', cursor: 'pointer', color: colorPalette.fsGray }}
+                            sx={{ fontSize: 14,marginTop : '2px', textDecoration: 'underline', cursor: 'pointer', color: colorPalette.fsGray }}
                             onMouseEnter={handleTextHighlight}
                             onMouseLeave={handleTextUnhighlight}
                         >

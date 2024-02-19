@@ -1,9 +1,6 @@
-// export const BASE_URL = 'https://api.feedbacksense.io';
-
 import { durationType } from "./types";
 
-// export const BASE_URL = 'https://stagingapi.feedbacksense.io';
-export const BASE_URL = 'http://localhost:3001';
+export const BASE_URL = process.env.REACT_APP_ROOT_DOMAIN;
 
 export const createFolder = (folderName : string) : string => {
     return BASE_URL + `/folder/create/${folderName}`

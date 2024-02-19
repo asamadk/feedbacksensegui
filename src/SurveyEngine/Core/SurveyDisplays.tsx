@@ -13,6 +13,7 @@ import { getSurveyUserInformation } from '../../Utils/FeedbackUtils';
 import { useSearchParams } from 'react-router-dom';
 import PoweredBy from '../../Components/PoweredBy';
 import { fsBadge } from '../../Styles/SurveyDisplay';
+import FSProgressLoader from '../../Components/FSProgressLoader';
 
 type propType = {
     mode: 'test' | 'live',
@@ -35,6 +36,7 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
     const [currentSurvey, setCurrentSurvey] = useState<any>();
     const [currentPageData, setCurrentPagedata] = useState<any>();
     const [imgData, setImgData] = useState<string | null>(null);
+    const [removeFSLogo, setRemoveFSLogo] = useState<boolean | null>(null);
     const [showEnd, setShowEnd] = useState(false);
     const [displayMssg, setDisplayMssg] = useState({
         message: '',
@@ -53,10 +55,13 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
             setLoading(true);
             const { data } = await axios.get(getSurveyLogoAPI(surveyId as string), { withCredentials: true });
             const tmpData = data?.data;
-            if (tmpData == null || tmpData.length < 1) {
+            const tmpShowLogo = tmpData?.removeLogo;
+            setRemoveFSLogo(tmpShowLogo);
+            const imgData = tmpData?.img;
+            if (imgData == null || imgData.length < 1) {
                 setImgData(null);
             } else {
-                setImgData(tmpData);
+                setImgData(imgData);
             }
             setLoading(false);
         } catch (error) {
@@ -169,7 +174,7 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
             }
             {displayMssg.type !== 'error' && showEnd === false &&
                 <Box className={background?.value} sx={{ height: '100vh', backgroundColor: background?.value, overflowY: 'scroll' }} >
-                    <FSLoader show={loading} />
+                    <FSProgressLoader show={loading} />
                     <Box>
                         <DynamicComponentDisplay
                             theme={surveyTheme}
@@ -182,7 +187,11 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
                             imgData={imgData}
                         />
                     </Box>
-                    <PoweredBy imgData={imgData} />
+                    {
+                        (imgData == null || imgData.length < 1) && removeFSLogo != true &&
+                        <PoweredBy imgData={imgData} />
+                    }
+                    {imgData && imgData.length > 0 && <PoweredBy imgData={imgData} />}
                 </Box>
             }
             {displayMssg.type !== 'error' && showEnd === true &&

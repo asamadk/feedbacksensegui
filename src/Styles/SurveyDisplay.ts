@@ -5,7 +5,7 @@ export const getSurveyDisplayContainerStyle = (position : string,isTemplate : bo
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: isTemplate === true ? '75%' : '80%',
-        marginLeft : isTemplate === true ? '12%' : ''
+        marginLeft : isTemplate === true ? '12%' : '',
     }
 }
 
