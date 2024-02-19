@@ -1,12 +1,12 @@
 import { Box, Chip, Divider, Pagination, Stack, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import SentimentAnalysisChart from './SentimentAnalysisChart'
-import WordCloud from './WordCloud'
 import OverTimeSentimentChart from './OverTimeSentimentChart'
 import { useSelector } from 'react-redux'
 import { AI_TEXT_ANALYSIS } from '../../../Utils/CustomSettingsConst'
 import UpgradePlanError from '../../UpgradePlanError'
 import { colorPalette } from '../../../Utils/Constants'
+import CustomWordCloud from './WordCloud'
 
 const mainContainer = {
     marginTop: '20px',
@@ -101,7 +101,7 @@ function TextAnswerChart(props: propsType) {
                                     <TopicsDisplay topics={data?.topicModel} />
                                 </Box> */}
                                     <Box width={'50%'} >
-                                        <WordCloud data={data?.wordCloud} />
+                                        <CustomWordCloud data={data?.wordCloud} />
                                     </Box>
                                 </Box>
                                 <Box>
