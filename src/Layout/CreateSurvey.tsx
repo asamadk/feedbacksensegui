@@ -24,13 +24,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useSelector } from 'react-redux';
 import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
 import { useDispatch } from 'react-redux';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SaveIcon from '@mui/icons-material/Save';
 import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
 import WorkflowMore from '../FlowComponents/WorkflowMore';
 import SurveyLogsModal from '../Modals/SurveyLogsModal';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
-import SaveIcon from '@mui/icons-material/Save';
-import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetailReducer';
 import { textFieldStyle } from '../Styles/InputStyles';
 
 const CssTextField = styled(TextField)(textFieldStyle);
@@ -173,7 +171,7 @@ function CreateSurvey(props: any) {
       snackbarRef?.current?.show('Saved.', 'success');
     }
     const dataObj = JSON.parse(data);
-    childRef?.current.createEdge(dataObj, comUiId, Array.from(tempMap.keys()));
+    childRef?.current?.createEdge(dataObj, comUiId, Array.from(tempMap.keys()));
     //If changes are done in new component then we do not check to delete survey responses.
     if (isComponentExisting === true) {
       checkWorkflow(true);
@@ -246,6 +244,13 @@ function CreateSurvey(props: any) {
     }
     saveFlow(saveFlowTemp, true);
   }
+
+  const handleSaveButtonClick = () => {
+    const flowData = childRef.current.getFlowData();
+    if (flowData) {
+      handleSaveFlow(flowData);
+    }
+  };
 
   const handleSaveFlow = async (flow: any) => {
     try {
@@ -480,10 +485,23 @@ function CreateSurvey(props: any) {
               endIcon={<VisibilityIcon />}
               onClick={showPreview}
               style={{ width: '110px', marginRight: '10px' }}
-              sx={ButtonStyles.outlinedButton}
+              sx={ButtonStyles.getOutlinedButtonBG(colorPalette.textSecondary)}
               variant="text"
             >
               Test Run
+            </Button>
+          }
+          {
+            CoreUtils.isComponentVisible(userRole, componentName.SAVE_SURVEY_BUTTON) &&
+            surveyDetail?.is_published == false &&
+            <Button
+              endIcon={<SaveIcon />}
+              onClick={handleSaveButtonClick}
+              style={{ width: '110px', marginRight: '10px' }}
+              sx={ButtonStyles.getOutlinedButtonBG(colorPalette.textSecondary)}
+              variant="text"
+            >
+              Save
             </Button>
           }
           <Button

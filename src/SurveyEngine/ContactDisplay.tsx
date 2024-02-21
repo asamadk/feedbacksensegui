@@ -1,16 +1,19 @@
 import { Box, Button, TextField, Typography, useMediaQuery } from '@mui/material'
 import { useEffect, useRef, useState } from 'react';
 import { getSurveyDisplayContainerStyle } from '../Styles/SurveyDisplay';
-import { getCenterAlignmentStyle, getColorsFromTheme } from '../Utils/FeedbackUtils';
+import { getCenterAlignmentStyle, getColorsFromTheme, validateContactDisplay } from '../Utils/FeedbackUtils';
 import { TEMPLATE_KEY } from '../Utils/Constants';
+import Notification from '../Utils/Notification';
 
 function ContactDisplay(props: any) {
 
     const isSmallScreen = useMediaQuery('(max-width: 600px)');
+    const snackbarRef: any = useRef(null);
     const [colors, setColors] = useState<any>();
     const [textColor, setTextColor] = useState('');
     const [position, setPosition] = useState('absolute');
     const [answerResult, setAnswerResult] = useState<any>();
+    const [fieldList, setFieldList] = useState<string[]>(['']);
 
     useEffect(() => {
         if (props.theme != null) {
@@ -18,6 +21,7 @@ function ContactDisplay(props: any) {
         }
         verifyLiveSurvey();
         populateAnswerResult();
+        populateFieldList();
 
         // Add event listener for "Enter" key press
         document.addEventListener('keydown', handleKeyPress);
@@ -56,6 +60,11 @@ function ContactDisplay(props: any) {
         setAnswerResult(obj);
     }
 
+    const populateFieldList = () => {
+        const tmpFieldList = props?.data?.fieldList;
+        setFieldList(tmpFieldList);
+    }
+
     const processThemeData = () => {
         const currentTheme = props.theme;
         setColors(getColorsFromTheme(currentTheme));
@@ -74,6 +83,11 @@ function ContactDisplay(props: any) {
     }
 
     const next = () => {
+        const res = validateContactDisplay(fieldList,answerResult);
+        if(res != null){
+            snackbarRef?.current?.show(res, 'error');
+            return;
+        }
         props.next(answerResult);
     }
 
@@ -125,6 +139,7 @@ function ContactDisplay(props: any) {
                     <Typography marginTop={'20px'} color={colors?.primaryColor} >Press <b>Shift + Enter</b> to submit</Typography>
                 </Box>
             </Box>
+            <Notification ref={snackbarRef} />
         </Box>
     )
 }

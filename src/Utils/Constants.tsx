@@ -368,3 +368,26 @@ export const joyrideConstants = {
     JOYRIDE_6: 'joyride-6',
     JOYRIDE_7: 'joyride-7',
 }
+
+export type fieldTypes = 'first-name' | 'last-name' | 'organization' | 'e-mail' | 'job-title' | 'department' | 'comment'
+| 'phone' | 'website' | 'country' | 'address-1' | 'address-2' | 'city' | 'state' | 'zip' | 'annual-revenue' | 'employees';
+
+export const contactFieldTypes = {
+    FIRST_NAME: 'first-name',
+    LAST_NAME: 'last-name',
+    ORG: 'organization',
+    EMAIL: 'e-mail',
+    JOB_TITLE: 'job-title',
+    DEPARTMENT: 'department',
+    PHONE: 'phone',
+    WEBSITE: 'website',
+    COUNTRY: 'country',
+    ADDRESS_1: 'address-1',
+    ADDRESS_2: 'address-2',
+    CITY: 'city',
+    STATE: 'state',
+    ZIP: 'zip',
+    ANNUAL_REVENUE: 'annual-revenue',
+    EMP: 'employees',
+    COMMENT: 'comment',
+}
