@@ -65,7 +65,7 @@ function SurveysPanel(props: any) {
                 content:
                     <>
                         <h2 color={Constants.colorPalette.primary} >Congratulations! You've created your workspace.</h2>
-                        <h2>Now, let's create a survey. Click on “Create survey” </h2>
+                        <p>Now, let's create a survey. Click on “Create survey” </p>
                     </>,
                 target: '.create-new-survey-button',
                 disableBeacon: true,
@@ -160,7 +160,6 @@ function SurveysPanel(props: any) {
     }
 
     const getSurveys = async (): Promise<void> => {
-        console.log("🚀 ~ getSurveys");
         try {
             setLoading(true);
             let { data } = await axios.get(Endpoints.getSurveyList(), { withCredentials: true });

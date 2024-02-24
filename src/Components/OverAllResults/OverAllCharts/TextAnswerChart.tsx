@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SentimentAnalysisChart from './SentimentAnalysisChart'
 import OverTimeSentimentChart from './OverTimeSentimentChart'
 import { useSelector } from 'react-redux'
-import { AI_TEXT_ANALYSIS } from '../../../Utils/CustomSettingsConst'
+import { AI_TEXT_ANALYSIS, WORD_CLOUD } from '../../../Utils/CustomSettingsConst'
 import UpgradePlanError from '../../UpgradePlanError'
 import { colorPalette } from '../../../Utils/Constants'
 import CustomWordCloud from './WordCloud'
@@ -26,6 +26,7 @@ function TextAnswerChart(props: propsType) {
 
     const [data, setData] = useState(props.data);
     const [showAiAnalysis, setShowAiAnalysis] = useState(false);
+    const [showWordCloud, setShowWordCloud] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [answersPerPage] = useState(7); // Number of answers per page
     const [paginatedAnswers, setPaginatedAnswers] = useState([]);
@@ -51,6 +52,12 @@ function TextAnswerChart(props: propsType) {
         } else {
             setShowAiAnalysis(false);
         }
+
+        if (settings != null && settings[WORD_CLOUD] === 'true') {
+            setShowWordCloud(true);
+        } else {
+            setShowWordCloud(false);
+        }
     }
 
     return (
@@ -64,7 +71,7 @@ function TextAnswerChart(props: propsType) {
                 {
                     paginatedAnswers?.map((answers: string) => {
                         return (
-                            <Box sx={{ background: colorPalette.textSecondary, padding: '5px 10px', borderRadius: '5px', marginTop: '10px',boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
+                            <Box sx={{ background: colorPalette.textSecondary, padding: '5px 10px', borderRadius: '5px', marginTop: '10px', boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
                                 <Box display={'flex'} justifyContent={'space-between'} >
                                     <Typography >{answers}</Typography>
                                 </Box>
@@ -101,7 +108,18 @@ function TextAnswerChart(props: propsType) {
                                     <TopicsDisplay topics={data?.topicModel} />
                                 </Box> */}
                                     <Box width={'50%'} >
-                                        <CustomWordCloud data={data?.wordCloud} />
+                                        {
+                                            showWordCloud ?
+                                                <CustomWordCloud data={data?.wordCloud} /> :
+                                                <Box marginTop={'100px'} marginRight={'10px'} >
+                                                    <UpgradePlanError
+                                                        message='Upgrade for Word Cloud'
+                                                        desc='Unlock the power of word cloud.Upgrade now to gain valuable insights 
+                                                        for your survey.Get more details and unleash your full potential with our pro plan.'
+                                                        showButton={true}
+                                                    />
+                                                </Box>
+                                        }
                                     </Box>
                                 </Box>
                                 <Box>

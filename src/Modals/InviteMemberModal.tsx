@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, IconButton, InputLabel, MenuItem, Modal, Select, styled, Switch, TextField, Typography } from '@mui/material'
+import { Button, FormControlLabel, IconButton, InputLabel, MenuItem, Modal, Select, styled, Switch, TextField, Tooltip, Typography } from '@mui/material'
 import { Box } from '@mui/system';
 import CloseIcon from '@mui/icons-material/Close';
 import * as ButtonStyles from '../Styles/ButtonStyle'
@@ -12,6 +12,7 @@ import { handleLogout } from '../Utils/FeedbackUtils';
 import axios from 'axios';
 import { inviteUserAPI } from '../Utils/Endpoints';
 import { textFieldStyle } from '../Styles/InputStyles';
+import { TEAM_ROLES } from '../Utils/CustomSettingsConst';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -29,11 +30,25 @@ function InviteMemberModal(props: any) {
     ]
 
     const defaultColor = useSelector((state: any) => state.colorReducer);
+    const settings = useSelector((state: any) => state.settings);
     const snackbarRef: any = useRef(null);
 
     const [loading, setLoading] = React.useState(false);
-    const [userRole, setUserRole] = useState<'OWNER' | 'ADMIN' | 'USER' | 'GUEST'>('GUEST');
+    const [userRole, setUserRole] = useState<'OWNER' | 'ADMIN' | 'USER' | 'GUEST'>('OWNER');
+    const [teamRolesFeatureActive, setTeamRolesFeatureActive] = React.useState(false);
     const [emails, setEmail] = useState<string>('');
+
+    useEffect(() => {
+        handlePlanVisibility();
+    },[]);
+
+    const handlePlanVisibility = () => {
+        if (settings != null && settings[TEAM_ROLES] === 'true') {
+            setTeamRolesFeatureActive(true);
+        } else {
+            setTeamRolesFeatureActive(false);
+        }
+    }
 
     const handleTeamMemberInvite = async () => {
         try {
@@ -102,20 +117,23 @@ function InviteMemberModal(props: any) {
 
                     <Box marginTop={'20px'} >
                         <InputLabel id="demo-simple-select-label" sx={{ mb: '5px' }} >Choose Role</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            size='small'
-                            fullWidth
-                            value={userRole}
-                            onChange={(e: any) => setUserRole(e.target.value)}
-                        >
-                            {
-                                roles?.map((role: string) => (
-                                    <MenuItem value={role}>{role}</MenuItem>
-                                ))
-                            }
-                        </Select>
+                        <Tooltip title={teamRolesFeatureActive ? '' : 'Please upgrade to PRO plan if yoy want to change user roles'} >
+                            <Select
+                                disabled={!teamRolesFeatureActive}
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                size='small'
+                                fullWidth
+                                value={userRole}
+                                onChange={(e: any) => setUserRole(e.target.value)}
+                            >
+                                {
+                                    roles?.map((role: string) => (
+                                        <MenuItem value={role}>{role}</MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </Tooltip>
                     </Box>
                     <Box sx={ModalStyles.modalButtonContainerStyle} >
                         <Button

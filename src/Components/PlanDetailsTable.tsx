@@ -11,10 +11,10 @@ function PlanDetailsTable() {
             <Table aria-label="simple table">
                 <TableHead >
                     <TableRow>
-                        <TableCell>Pricing</TableCell>
-                        <TableCell>Starter</TableCell>
-                        <TableCell>Plus</TableCell>
-                        <TableCell>Ultimate</TableCell>
+                        <TableCell><b>Pricing</b></TableCell>
+                        <TableCell><b>Basic</b></TableCell>
+                        <TableCell><b>Plus</b></TableCell>
+                        <TableCell><b>Pro</b></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

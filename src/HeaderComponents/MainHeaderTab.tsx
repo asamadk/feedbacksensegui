@@ -9,8 +9,8 @@ import { colorPalette, joyrideConstants } from '../Utils/Constants';
 const tabSetList = [
     { id: 0, name: 'Workspaces' },
     { id: 1, name: 'Templates' },
-    { id: 2, name: 'Contacts' },
-    { id: 3, name: 'Dashboard' },
+    // { id: 2, name: 'Contacts' },
+    // { id: 3, name: 'Dashboard' },
 ];
 
 function MainHeaderTab(props : {joyrideStart : boolean}) {
@@ -36,9 +36,13 @@ function MainHeaderTab(props : {joyrideStart : boolean}) {
         stepIndex: 0,
         steps: [
             {
-                content: <h2>
-                    Start custom surveys from scratch with ready-made templates from here
-                </h2>,
+                content: 
+                <>
+                    <h2>Templates</h2>
+                    <p>
+                        Start custom surveys from scratch with ready-made templates from here
+                    </p>
+                </>,
                 target: '.main-header-tab',
                 disableBeacon: true,
                 disableOverlayClose: true,
@@ -114,7 +118,7 @@ function MainHeaderTab(props : {joyrideStart : boolean}) {
                 hideCloseButton
                 run={run}
                 scrollToFirstStep
-                showProgress
+                // showProgress
                 showSkipButton
                 steps={steps}
                 styles={{

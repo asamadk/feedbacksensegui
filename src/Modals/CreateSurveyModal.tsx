@@ -41,9 +41,13 @@ function CreateSurveyModal(props: any) {
         stepIndex: 0,
         steps: [
             {
-                content: <h2>
-                    Click on “Start from scratch” to create a new survey from scratch.
-                </h2>,
+                content: 
+                <>
+                    <h2>Create survey</h2>
+                    <p>
+                        Click on “Start from scratch” to create a new survey from scratch.
+                    </p>
+                </>,
                 target: '.create-survey-scratch',
                 disableBeacon: true,
                 disableOverlayClose: true,
@@ -58,9 +62,12 @@ function CreateSurveyModal(props: any) {
                 },
             },
             {
-                content: <h2>
-                    Give a name to your survey and click on "Create"
-                </h2>,
+                content: 
+                <>
+                    <p>
+                        Give a name to your survey and click on "Create"
+                    </p>
+                </>,
                 target: '.create-survey-scratch-2',
                 disableBeacon: true,
                 disableOverlayClose: true,
@@ -167,7 +174,7 @@ function CreateSurveyModal(props: any) {
                 hideCloseButton
                 run={run}
                 scrollToFirstStep
-                showProgress
+                // showProgress
                 showSkipButton
                 steps={steps}
                 styles={{

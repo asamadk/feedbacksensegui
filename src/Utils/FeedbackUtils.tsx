@@ -1,7 +1,7 @@
 import { logout } from "./Endpoints";
 import { logicType } from "./types";
 import { DEFAULT_KEY } from "../SurveyEngine/CoreUtils/CoreConstants";
-import { colorPalette } from "./Constants";
+import { colorPalette, contactFieldTypes, fieldTypes } from "./Constants";
 
 
 export const getComponentConfigFromNode = (node: any) => {
@@ -18,6 +18,88 @@ export const getCompConfigFromUiId = (props: any): any => {
     return compConfMap.get(props.uiId);
 }
 
+export const validateContactDisplay = (fieldList: any[], answerObj: any): string | null => {
+    const answerList: string[] = [];
+    for (const key in answerObj) {
+        answerList.push(answerObj[key]);
+    }
+    const length = answerList.length;
+
+    for (let i = 0; i < length; i++) {
+        const answer = answerList[i];
+        const field = fieldList[i];
+        const res = validateFieldAndAnswer(field, answer);
+        if (res != null) { return res; }
+    }
+
+    return null;
+}
+
+export const validateFieldAndAnswer = (field: fieldTypes, answer: any): string | null => {
+    switch (field) {
+        case 'first-name':
+        case 'last-name':
+        case 'organization':
+        case 'job-title':
+        case 'department':
+        case 'comment':
+        case 'city':
+        case 'state':
+            // For these fields, we might just check if the answer is a non-empty string
+            if (typeof answer !== 'string' || answer.trim() === '') {
+                return `Invalid ${field}: ${answer}`;
+            }
+            break;
+        case 'e-mail':
+            // For email, we can use a regular expression to validate its format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (typeof answer !== 'string' || !emailRegex.test(answer)) {
+                return `Invalid ${field}: ${answer}`;
+            }
+            break;
+        case 'phone':
+            // For phone, you might have specific rules, like minimum length, or formatting rules
+            // Here's a simple check for minimum length
+            if (typeof answer !== 'string' || answer.trim().length < 5) {
+                return `Invalid ${field}: ${answer}`;
+            }
+            break;
+        case 'website':
+            // For website, you might want to check if it's a valid URL
+            // This regex might not cover all cases but provides a basic check
+            const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+            if (typeof answer !== 'string' || !urlRegex.test(answer)) {
+                return `Invalid ${field}: ${answer}`;
+            }
+            break;
+        case 'country':
+        case 'address-1':
+        case 'address-2':
+            // For these fields, you might have specific rules, but for now, let's just ensure it's a non-empty string
+            if (typeof answer !== 'string' || answer.trim() === '') {
+                return `Invalid ${field}: ${answer}`;
+            }
+            break;
+        case 'zip':
+            // For zip code, you might have specific rules based on countries (e.g., length, format)
+            // For simplicity, let's just check if it's a non-empty string
+            if (typeof answer !== 'string' || answer.trim() === '') {
+                return `Invalid ${field}: ${answer}`;
+            }
+            break;
+        case 'annual-revenue':
+        case 'employees':
+            // For numeric fields, you might check if it's a valid number
+            if (isNaN(answer)) {
+                return `Invalid ${field}: ${answer}`;
+            }
+            break;
+        default:
+            return `Unknown field: ${field}`;
+    }
+
+    return null; // If all checks pass, return null indicating no error
+}
 
 export const validateSurveyDisplay = (data: any, componentId: number | undefined): string | null => {
     switch (componentId) {

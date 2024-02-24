@@ -2,7 +2,6 @@ import { Box, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import FSLoader from '../../Components/FSLoader';
 import { getLiveSurveyData, getSurveyLogoAPI, getTemplatesDisplayAPI, saveSurveyResponseDb } from '../../Utils/Endpoints';
 import DynamicComponentDisplay from '../DynamicComponentDisplay';
 import { v4 as uuidv4, v4 } from "uuid";
@@ -12,8 +11,8 @@ import { CoreUtils } from '../CoreUtils/CoreUtils';
 import { getSurveyUserInformation } from '../../Utils/FeedbackUtils';
 import { useSearchParams } from 'react-router-dom';
 import PoweredBy from '../../Components/PoweredBy';
-import { fsBadge } from '../../Styles/SurveyDisplay';
 import FSProgressLoader from '../../Components/FSProgressLoader';
+import { useTransition, animated } from 'react-spring';
 
 type propType = {
     mode: 'test' | 'live',
@@ -105,9 +104,9 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
 
     const checkIfSurveyAlreadyTaken = (): boolean => {
         if (mode === 'test') { return false; }
-        const embed : string | null = searchParams.get('embed');
-        if(embed === 'true'){return false;}
-        
+        const embed: string | null = searchParams.get('embed');
+        if (embed === 'true') { return false; }
+
         if (localStorage.getItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`) != null) {
             setDisplayMssg({
                 message: 'You have already taken this survey.',
@@ -165,6 +164,13 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
         }
     }
 
+    const transitions = useTransition(currentSurvey?.data?.uId, {
+        config: { duration: 350 }, // Customize the duration as needed
+        from: { opacity: 0, transform: 'translate3d(100%,0,0)' },
+        enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
+        leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
+    });
+
     return (
         <>
             {displayMssg.type === 'error' &&
@@ -173,26 +179,32 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
                 </Box>
             }
             {displayMssg.type !== 'error' && showEnd === false &&
-                <Box className={background?.value} sx={{ height: '100vh', backgroundColor: background?.value, overflowY: 'scroll' }} >
-                    <FSProgressLoader show={loading} />
-                    <Box>
-                        <DynamicComponentDisplay
-                            theme={surveyTheme}
-                            mode={mode}
-                            compId={currentSurvey?.data?.compId}
-                            data={currentPageData}
-                            next={next}
-                            uiId={currentSurvey?.data?.uId}
-                            surveyId={surveyId}
-                            imgData={imgData}
-                        />
-                    </Box>
-                    {
-                        (imgData == null || imgData.length < 1) && removeFSLogo != true &&
-                        <PoweredBy imgData={imgData} />
-                    }
-                    {imgData && imgData.length > 0 && <PoweredBy imgData={imgData} />}
-                </Box>
+                transitions((style, uId) =>
+                    uId === currentSurvey?.data?.uId ? (
+                        <animated.div style={style}>
+                            <Box className={background?.value} sx={{ height: '100vh', backgroundColor: background?.value, overflowY: 'scroll' }} >
+                                <FSProgressLoader show={loading} />
+                                <Box>
+                                    <DynamicComponentDisplay
+                                        theme={surveyTheme}
+                                        mode={mode}
+                                        compId={currentSurvey?.data?.compId}
+                                        data={currentPageData}
+                                        next={next}
+                                        uiId={currentSurvey?.data?.uId}
+                                        surveyId={surveyId}
+                                        imgData={imgData}
+                                    />
+                                </Box>
+                                {
+                                    (imgData == null || imgData.length < 1) && removeFSLogo != true &&
+                                    <PoweredBy imgData={imgData} />
+                                }
+                                {imgData && imgData.length > 0 && <PoweredBy imgData={imgData} />}
+                            </Box>
+                        </animated.div>
+                    ) : null
+                )
             }
             {displayMssg.type !== 'error' && showEnd === true &&
                 <SurveyEndPage />

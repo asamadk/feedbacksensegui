@@ -1,21 +1,18 @@
-import { Box, Button, Fab } from '@mui/material'
+import { Box } from '@mui/material'
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import 'reactflow/dist/style.css';
 import { v4 as uuidv4, v4 } from "uuid";
-import * as ButtonStyle from '../Styles/ButtonStyle'
-import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow, NodeToolbar, useReactFlow, MiniMap, StraightEdge, StepEdge, SmoothStepEdge, Edge, updateEdge, ReactFlowProvider } from 'reactflow'
+import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow,Edge, updateEdge, ReactFlowProvider } from 'reactflow'
 import CustomNode from './CustomNode';
-import SaveIcon from '@mui/icons-material/Save';
 import Notification from '../Utils/Notification';
 import { useDispatch } from 'react-redux';
 import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
 import { useSelector } from 'react-redux';
 import { defaultEdgeOptions, getConnectionMap, getEdgeKey, getEdgePathMap, getEdgesFromJson, getEdgesLabelMap } from '../Utils/WorkflowHelper';
 import { logicType, userRoleType } from '../Utils/types';
-import { colorPalette, componentList, componentName } from '../Utils/Constants';
+import { colorPalette, componentList } from '../Utils/Constants';
 import CustomConnectionLine from './CustomConnectionLine';
 import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
-import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 
 const elevateEdgesOnSelect = true;
 const proOptions = { hideAttribution: true };
@@ -79,7 +76,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
             borderRadius: '3px',
             padding: '10px',
             boxShadow: '0px 0px 20px 3px rgba(0,0,0,0.20)',
-            background : colorPalette.background
+            background: colorPalette.background
         }
     }
 
@@ -125,7 +122,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                 description: componentData.description,
                 onEdit: props.onEdit
             },
-            style: { ...getComponentStyle(componentData.bgColor)},
+            style: { ...getComponentStyle(componentData.bgColor) },
             position: position,
         }
 
@@ -134,7 +131,8 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     }
 
     useImperativeHandle(ref, () => ({
-        createEdge: updateEdges
+        createEdge: updateEdges,
+        getFlowData : getFlowData
     }));
 
     const updateEdges = (data: any, componentId: string, nodeIds: any[]) => {
@@ -373,13 +371,13 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
         return newNode;
     };
-
-    const handleSaveWorkflow = useCallback(() => {
-        if (reactFlowInstance) {
-            const flow = reactFlowInstance.toObject();
-            props.performSave(flow);
-        }
-    }, [reactFlowInstance, props.config, props.performSave]);
+    
+    const getFlowData = () => {
+            if (reactFlowInstance) {
+                return reactFlowInstance.toObject();
+            }
+            return null;
+    }
 
     const deleteNode = (id: string) => {
         if (isWorkflowPublished === true) {
@@ -508,19 +506,6 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
                         /> */}
                         <Background />
                         <Controls />
-                        {
-                            CoreUtils.isComponentVisible(userRole,componentName.SAVE_SURVEY_BUTTON) &&
-                            <Box sx={{ position: 'absolute', top: '10px', left: '-5px' }} >
-                                <Button
-                                    endIcon={<SaveIcon />}
-                                    style={{ position: 'relative', zIndex: '100', }}
-                                    sx={ButtonStyle.containedButton}
-                                    onClick={handleSaveWorkflow}
-                                >
-                                    Save
-                                </Button>
-                            </Box>
-                        }
                     </ReactFlow>
                 </Box>
             </ReactFlowProvider>

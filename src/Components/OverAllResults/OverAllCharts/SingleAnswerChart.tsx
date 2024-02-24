@@ -32,7 +32,7 @@ function SingleAnswerChart(props: propsType) {
                                 <Typography
                                     color={colorPalette.darkBackground}
                                     sx={{ flexWrap: 'wrap', overflowX: 'scroll', marginRight: '40px' }}
-                                >{answers?.name}</Typography>
+                                >{answers?.fullName}</Typography>
                                 <Typography color={colorPalette.darkBackground} >{answers?.Frequency}%</Typography>
                             </Box>
                         </Box>

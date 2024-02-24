@@ -171,23 +171,24 @@ export default function UpgradeSubscription() {
     }
 
     const handleGetAccessClick = async (planId: string, price: number) => {
-        try {
-            setLoading(true);
-            const reqBody = {
-                price: price,
-                planId: planId,
-                billing: billing
-            }
-            const { data } = await axios.post(initializePaymentAPI(), reqBody, { withCredentials: true })
-            setLoading(false);
-            proceedSubscriptionCheckout(data);
-        } catch (error: any) {
-            setLoading(false);
-            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-                handleLogout();
-            }
-        }
+        snackbarRef?.current?.show('You will be able to upgrade within a few days.', 'warning');
+        // try {
+        //     setLoading(true);
+        //     const reqBody = {
+        //         price: price,
+        //         planId: planId,
+        //         billing: billing
+        //     }
+        //     const { data } = await axios.post(initializePaymentAPI(), reqBody, { withCredentials: true })
+        //     setLoading(false);
+        //     proceedSubscriptionCheckout(data);
+        // } catch (error: any) {
+        //     setLoading(false);
+        //     snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+        //     if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        //         handleLogout();
+        //     }
+        // }
     }
 
     const proceedSubscriptionCheckout = (data: any,) => {
@@ -385,10 +386,10 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
                         </Typography>
                         <Box display={'flex'} >
                             <Typography variant="h2" sx={{ color: 'text.primary', fontSize: '5xl', mt: 4 }}>
-                                ₹{billing === 'year' ? plan?.price_cents : plan?.price_cents_monthly}
+                                ${billing === 'year' ? plan?.price_cents : plan?.price_cents_monthly}
                             </Typography>
                             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'text.secondary', fontSize: 'sm', lineHeight: '10', letterSpacing: 'wide' }}>
-                                INR / month
+                                USD / month
                             </Typography>
                         </Box>
                         <Box>

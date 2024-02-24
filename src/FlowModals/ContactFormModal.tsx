@@ -13,6 +13,7 @@ import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 import { colorPalette, componentName } from '../Utils/Constants';
 import { userRoleType } from '../Utils/types';
 import { textFieldStyle } from '../Styles/InputStyles';
+import ContactFieldType from '../FlowComponents/ContactFieldType';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -24,6 +25,7 @@ function ContactFormModal(props: any) {
 
     const [background, setBackground] = useState<any>();
     const [answerChoiceList, setAnswerChoiceList] = useState<string[]>(['']);
+    const [fieldList, setFieldList] = useState<string[]>(['']);
     const [questionText, setQuestionText] = useState('');
     const defaultColor = useSelector((state: any) => state.colorReducer);
     const userRole: userRoleType = useSelector((state: any) => state.userRole);
@@ -36,6 +38,11 @@ function ContactFormModal(props: any) {
         } else {
             setAnswerChoiceList(['']);
         }
+        if(compConfig?.fieldList != null){
+            setFieldList([...compConfig?.fieldList]);
+        }else{
+            setFieldList(['']);
+        }
         if (props.theme != null) {
             const currentTheme = JSON.parse(props.theme);
             setBackground(currentTheme.background);
@@ -46,6 +53,7 @@ function ContactFormModal(props: any) {
         let obj = {
             question: questionText,
             answerList: answerChoiceList,
+            fieldList : fieldList,
             type: props.type
         }
 
@@ -82,6 +90,13 @@ function ContactFormModal(props: any) {
         tempAnswerChoice[index] = event.target.value;
         let newArr = JSON.parse(JSON.stringify(tempAnswerChoice));
         setAnswerChoiceList(newArr);
+    }
+
+    const handleFieldTypeChange = (data : any,index : number) => {
+        let tempFieldList = fieldList;
+        tempFieldList[index] = data;
+        let newArr = JSON.parse(JSON.stringify(tempFieldList));
+        setFieldList(newArr);
     }
 
     return (
@@ -129,6 +144,13 @@ function ContactFormModal(props: any) {
                                     answerChoiceList.map((answer, index) => {
                                         return (
                                             <Box key={index} display={'flex'} >
+                                                <Box marginRight={'10px'} marginTop={'10px'} >
+                                                    <ContactFieldType  
+                                                        value={fieldList[index]}
+                                                        index={index}
+                                                        updateField={handleFieldTypeChange}
+                                                    />
+                                                 </Box>   
                                                 <CssTextField
                                                     onChange={(e) => handleAnswerChange(e, index)}
                                                     value={answer}
