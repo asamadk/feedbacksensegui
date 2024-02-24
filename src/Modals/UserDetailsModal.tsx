@@ -11,14 +11,31 @@ import axios from 'axios';
 import { updateUserRoleAPI } from '../Utils/Endpoints';
 import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
+import { TEAM_ROLES } from '../Utils/CustomSettingsConst';
+import UpgradePlanError from '../Components/UpgradePlanError';
 
 function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
 
     const defaultColor = useSelector((state: any) => state.colorReducer);
+    const settings = useSelector((state: any) => state.settings);
+
     const snackbarRef: any = useRef(null);
 
     const [userRole, setUserRole] = useState<'OWNER' | 'ADMIN' | 'USER' | 'GUEST'>(user?.role);
     const [loading, setLoading] = React.useState(false);
+    const [teamRolesFeatureActive, setTeamRolesFeatureActive] = React.useState(false);
+
+    useEffect(() => {
+        handlePlanVisibility();
+    }, []);
+
+    const handlePlanVisibility = () => {
+        if (settings != null && settings[TEAM_ROLES] === 'true') {
+            setTeamRolesFeatureActive(true);
+        } else {
+            setTeamRolesFeatureActive(false);
+        }
+    }
 
     useEffect(() => {
         setUserRole(user?.role);
@@ -82,44 +99,57 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                                 <Typography color={colorPalette.darkBackground} >{new Date(user?.created_at).toString()}</Typography>
                             </Box>
                         </Box>
-                        <Box marginLeft={'35px'} marginTop={'20px'} >
-                            <Box>
-                                <InputLabel id="demo-simple-select-label">Change Role</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    size='small'
-                                    fullWidth
-                                    sx={{ marginTop: '5px' }}
-                                    value={userRole}
-                                    onChange={handleOwnerChange}
-                                >
-                                    {
-                                        roles?.map((role: string) => (
-                                            <MenuItem value={role}>{role}</MenuItem>
-                                        ))
-                                    }
-                                </Select>
-                            </Box>
-                        </Box>
+                        {
+                            teamRolesFeatureActive ?
+                                <Box marginLeft={'35px'} marginTop={'20px'} >
+                                    <Box>
+                                        <InputLabel id="demo-simple-select-label">Change Role</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            size='small'
+                                            fullWidth
+                                            sx={{ marginTop: '5px' }}
+                                            value={userRole}
+                                            onChange={handleOwnerChange}
+                                        >
+                                            {
+                                                roles?.map((role: string) => (
+                                                    <MenuItem value={role}>{role}</MenuItem>
+                                                ))
+                                            }
+                                        </Select>
+                                    </Box>
+                                </Box> :
+                                <Box textAlign={'center'} marginTop={'20px'} >
+                                    <UpgradePlanError
+                                        message='Upgrade for Teammates roles'
+                                        desc='Manage teammates roles right from here, Upgrade to Pro Plan to access this resource.'
+                                        showButton={true}
+                                    />
+                                </Box>
+                        }
                     </Box>
 
-                    <Box sx={ModalStyles.modalButtonContainerStyle} >
-                        <Button
-                            style={{ width: 'fit-content', marginRight: '15px' }}
-                            sx={ButtonStyles.outlinedButton}
-                            variant="outlined"
-                            onClick={close}
-                        >Close</Button>
-                        <LoadingButton
-                            style={{ width: 'fit-content' }}
-                            sx={ButtonStyles.containedButton}
-                            variant="contained"
-                            loading={loading}
-                            onClick={handleUpdateUser} >
-                            Update
-                        </LoadingButton>
-                    </Box>
+                    {
+                        teamRolesFeatureActive &&
+                        <Box sx={ModalStyles.modalButtonContainerStyle} >
+                            <Button
+                                style={{ width: 'fit-content', marginRight: '15px' }}
+                                sx={ButtonStyles.outlinedButton}
+                                variant="outlined"
+                                onClick={close}
+                            >Close</Button>
+                            <LoadingButton
+                                style={{ width: 'fit-content' }}
+                                sx={ButtonStyles.containedButton}
+                                variant="contained"
+                                loading={loading}
+                                onClick={handleUpdateUser} >
+                                Update
+                            </LoadingButton>
+                        </Box>
+                    }
                 </Box>
             </Modal>
             <Notification ref={snackbarRef} />

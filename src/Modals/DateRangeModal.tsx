@@ -44,8 +44,6 @@ function DateRangeModal(props: any) {
     }
 
     const handleApply = () => {
-        console.log("🚀 ~ file: DateRangeModal.tsx:49 ~ handleApply ~ startDate:", startDate)
-        console.log("🚀 ~ file: DateRangeModal.tsx:50 ~ handleApply ~ endDate:", endDate)
         props?.update(selectedDuration, startDate, endDate);
         handleClose();
     }

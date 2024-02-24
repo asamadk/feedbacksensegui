@@ -48,10 +48,6 @@ export default SingleAnswerChart
 
 function SingleAnswerBarChart(props: any) {
 
-    useEffect(() => {
-        console.log("🚀 ~ useEffect ~ props?.data?.statsArr:", props?.data?.statsArr)
-    },[]);
-
     return (
         <Box marginTop={3} marginBottom={3} >
             <ResponsiveContainer height={props?.data?.statsArr.length * 100 || 400} >

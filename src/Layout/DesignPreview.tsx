@@ -39,12 +39,6 @@ function DesignPreview() {
 
     let init = false;
 
-    // useEffect(() => {
-    //     if(init === true){return;}
-    //     console.log("🚀 ~ DesignPreview ~ surveysState:", surveysState)
-    //     init = true;
-    // },[]);
-
     const handleDevices = (
         event: React.MouseEvent<HTMLElement>,
         newDevices: string,

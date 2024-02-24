@@ -26,6 +26,8 @@ import { setCustomSettings } from '../Redux/Reducers/customSettingsReducer';
 import GenericModal from '../Modals/GenericModal';
 import { textFieldStyle } from '../Styles/InputStyles';
 import ReactJoyride, { ACTIONS, CallBackProps, STATUS } from 'react-joyride';
+import { FOLDER_FEATURE_ACTIVE } from '../Utils/CustomSettingsConst';
+import UpgradePlanError from './UpgradePlanError';
 
 
 const surveyPageMainContainer = {
@@ -71,9 +73,6 @@ const folderText = {
     padding: '15px'
 }
 
-const CssTextField = styled(TextField)(textFieldStyle);
-
-
 function SurveyListPage() {
 
     const snackbarRef: any = useRef(null);
@@ -94,6 +93,7 @@ function SurveyListPage() {
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
     const [loading, setLoading] = React.useState(false);
     const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+    const [showFolder, setShowFolder] = useState(false);
 
     const [{ run, steps, stepIndex }, setState] = useState<joyrideState>({
         run: false,
@@ -110,8 +110,11 @@ function SurveyListPage() {
                 target: 'body',
             },
             {
-                content: <h2>
-                    You can invite your teammates directly from here</h2>,
+                content:
+                    <>
+                        <h2>Invite teammates</h2>
+                        <p>You can invite your teammates directly from here</p>
+                    </>,
                 target: '.invite-teammates',
                 disableBeacon: true,
                 disableOverlayClose: true,
@@ -123,14 +126,18 @@ function SurveyListPage() {
                 },
             },
             {
-                content: <h2>
-                    You can create, organize, and collaborate over your surveys here.
-                    Let's create your first workspace. Click on “+” to create your workspace</h2>,
+                content:
+                    <>
+                        <h2>Create workspace</h2>
+                        <p>
+                            You can create, organize, and collaborate over your surveys here.
+                            Let's create your first workspace. Click on “+” to create your workspace</p>
+                    </>,
                 target: '.create-workspace',
                 disableBeacon: true,
                 disableOverlayClose: true,
-                hideCloseButton: true,
-                hideFooter: true,
+                // hideCloseButton: true,
+                // hideFooter: true,
                 placement: 'bottom',
                 spotlightClicks: true,
                 styles: {
@@ -159,6 +166,14 @@ function SurveyListPage() {
         updateActiveSurveyCount();
     }, [surveyState]);
 
+    const handlePlanVisibility = (tempSettings :any) => {
+        if (tempSettings != null && tempSettings[FOLDER_FEATURE_ACTIVE] === 'true') {
+            setShowFolder(true);
+        } else {
+            setShowFolder(false);
+        }
+    }
+
     const fetchCustomSettings = async () => {
         try {
             setLoading(true);
@@ -166,6 +181,7 @@ function SurveyListPage() {
             setLoading(false);
             const tempSettings = data?.data;
             dispatch(setCustomSettings(tempSettings));
+            handlePlanVisibility(tempSettings);
         } catch (error: any) {
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
@@ -418,7 +434,7 @@ function SurveyListPage() {
                 hideCloseButton
                 run={run}
                 scrollToFirstStep
-                showProgress
+                // showProgress
                 showSkipButton
                 steps={steps}
                 styles={{
@@ -433,6 +449,7 @@ function SurveyListPage() {
                     }
                 }}
             />
+
             <div style={surveyPageMainContainer} >
                 <div style={leftSectionStyle} >
                     <div style={{ width: '100%', overflowY: 'scroll', paddingBottom: '20px' }} >
@@ -456,33 +473,41 @@ function SurveyListPage() {
                             <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >All Surveys</Typography>
                         </div>
                         {
-                            folderState?.map((folder: any) => {
-                                return (
-                                    <div
-                                        key={folder.id}
-                                        className="folders-data"
-                                        style={surveyFolderText}
-                                        onClick={(e) => handleFolderClick(e, folder.name, folder.id)}
-                                        onMouseEnter={() => setHoveredRow(folder.id)}
-                                        onMouseLeave={() => setHoveredRow(null)}
-                                    >
-                                        <Typography
-                                            title={folder.name}
-                                            style={{ pointerEvents: 'none',fontWeight : hoveredRow === folder.id ? 600 : 500 }}
-                                            variant='subtitle2'
-                                        >{folder.name?.substring(0, 15)}{folder?.name?.length > 15 ? '...' : ''}</Typography>
-                                        {
-                                            hoveredRow === folder.id &&
-                                            <IconButton
-                                                onClick={() => handleShowModalOnDelete(folder.id)}
-                                                style={{ padding: '0px' }}
-                                                size='small' >
-                                                <DeleteIcon sx={{ color: colorPalette.textPrimary, fontSize: '15px' }} />
-                                            </IconButton>
-                                        }
-                                    </div>
-                                )
-                            })
+                            showFolder ?
+                                folderState?.map((folder: any) => {
+                                    return (
+                                        <div
+                                            key={folder.id}
+                                            className="folders-data"
+                                            style={surveyFolderText}
+                                            onClick={(e) => handleFolderClick(e, folder.name, folder.id)}
+                                            onMouseEnter={() => setHoveredRow(folder.id)}
+                                            onMouseLeave={() => setHoveredRow(null)}
+                                        >
+                                            <Typography
+                                                title={folder.name}
+                                                style={{ pointerEvents: 'none', fontWeight: hoveredRow === folder.id ? 600 : 500 }}
+                                                variant='subtitle2'
+                                            >{folder.name?.substring(0, 15)}{folder?.name?.length > 15 ? '...' : ''}</Typography>
+                                            {
+                                                hoveredRow === folder.id &&
+                                                <IconButton
+                                                    onClick={() => handleShowModalOnDelete(folder.id)}
+                                                    style={{ padding: '0px' }}
+                                                    size='small' >
+                                                    <DeleteIcon sx={{ color: colorPalette.textPrimary, fontSize: '15px' }} />
+                                                </IconButton>
+                                            }
+                                        </div>
+                                    )
+                                }) :
+                                <Box marginTop={'20px'} >
+                                    <UpgradePlanError
+                                        message='Upgrade for Workspaces'
+                                        desc='Unlock the power of organization.Upgrade now to organize your surveys.'
+                                        showButton={true}
+                                    />
+                                </Box>
                         }
 
                     </div>

@@ -16,7 +16,7 @@ import { USER_UNAUTH_TEXT, colorPalette, componentName } from '../Utils/Constant
 import axios from 'axios';
 import { deleteLogoAPI, getLogoAPI, uploadLogoAPI } from '../Utils/Endpoints';
 import GenericModal from '../Modals/GenericModal';
-import { REMOVE_FEEDBACK_SENSE_LOGO } from '../Utils/CustomSettingsConst';
+import { ADD_CUSTOM_LOGO, REMOVE_FEEDBACK_SENSE_LOGO } from '../Utils/CustomSettingsConst';
 
 
 function SurveyGeneralSettings() {
@@ -69,7 +69,7 @@ function SurveyGeneralSettings() {
     }
 
     const handleVisibility = () => {
-        if(settings != null && settings[REMOVE_FEEDBACK_SENSE_LOGO] === 'true'){
+        if(settings != null && settings[ADD_CUSTOM_LOGO] === 'true'){
             getLogo();
         }else{
             setShowUpgrade(true);

@@ -111,10 +111,8 @@ function SingleAnswerSelectionDisplay(props: any) {
     const handleOverflow = () => {
         const container = containerRef.current;
         if (container && container.scrollHeight > container.clientHeight) {
-            console.log('Overflow');
             setShowScrollDown(true); // If content overflows, show the scroll down icon
         } else {
-            console.log('No Overflow');
             setShowScrollDown(false); // Otherwise, hide the scroll down icon
         }
     };

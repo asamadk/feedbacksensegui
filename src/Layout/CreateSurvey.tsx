@@ -16,7 +16,7 @@ import axios from 'axios';
 import Notification from '../Utils/Notification';
 import FSLoader from '../Components/FSLoader';
 import { enableSurvey } from '../Utils/Endpoints';
-import { colorPalette, componentName, USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { colorPalette, componentName, joyrideConstants, USER_UNAUTH_TEXT } from '../Utils/Constants';
 import { genericModalData, surveyFlowType, userRoleType } from '../Utils/types';
 import GenericModal from '../Modals/GenericModal';
 import DoneIcon from '@mui/icons-material/Done';
@@ -30,6 +30,8 @@ import WorkflowMore from '../FlowComponents/WorkflowMore';
 import SurveyLogsModal from '../Modals/SurveyLogsModal';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
 import { textFieldStyle } from '../Styles/InputStyles';
+import CreateSurveyModal from '../Modals/CreateSurveyModal';
+import CreateSurveyJoyride from '../Modals/CreateSurveyJoyride';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -61,8 +63,9 @@ function CreateSurvey(props: any) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const userRole: userRoleType = useSelector((state: any) => state.userRole);
   const subscriptionState = useSelector((state: any) => state.subscriptionDetail);
-
   const [openSurveyLogs, setOpenSurveyLogs] = useState(false);
+  const [showJoyride, setShowJoyride] = useState(false);
+
   const open = Boolean(anchorEl);
 
   let initialized = false;
@@ -72,6 +75,14 @@ function CreateSurvey(props: any) {
       getSingleSurvey();
       initialized = true;
     }
+  }, []);
+
+  useEffect(() => {
+      const hasSeenJoyride = localStorage.getItem(joyrideConstants.JOYRIDE_7);
+      if (!hasSeenJoyride) {
+          setShowJoyride(true);
+          localStorage.setItem(joyrideConstants.JOYRIDE_7, 'true');
+      }
   }, []);
 
   useEffect(() => {
@@ -569,6 +580,10 @@ function CreateSurvey(props: any) {
         open={openSurveyLogs}
         close={() => setOpenSurveyLogs(false)}
       />
+      {
+        showJoyride &&
+        <CreateSurveyJoyride open={showJoyride} close={() => setShowJoyride(false)} />
+      }
     </Box>
   )
 }

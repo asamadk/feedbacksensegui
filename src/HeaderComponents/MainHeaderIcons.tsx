@@ -43,9 +43,13 @@ function MainHeaderIcons(props: { backToHome: boolean, joyRideOver : any }) {
         stepIndex: 0,
         steps: [
             {
-                content: <h2>
-                    You can get in touch with us directly from here.
-                </h2>,
+                content: 
+                <>
+                    <h2>Get in touch</h2>
+                    <p>
+                        You can get in touch with us directly from here.
+                    </p>
+                </>,
                 target: '.get-in-touch',
                 disableBeacon: true,
                 disableOverlayClose: true,
@@ -57,9 +61,13 @@ function MainHeaderIcons(props: { backToHome: boolean, joyRideOver : any }) {
                 },
             },
             {
-                content: <h2>
-                    Keep an eye on notifications for all latest updates, news, and messages from your team
-                </h2>,
+                content: 
+                <>
+                    <h2>Notification</h2>
+                    <p>
+                        Keep an eye on notifications for all latest updates, news, and messages from your team
+                    </p>
+                </>,
                 target: '.notification',
                 disableBeacon: true,
                 disableOverlayClose: true,
@@ -71,9 +79,13 @@ function MainHeaderIcons(props: { backToHome: boolean, joyRideOver : any }) {
                 },
             },
             {
-                content: <h2>
-                    Make changes to your profile or your organization's workspace from the settings section in your profile tab
-                </h2>,
+                content: 
+                <>
+                    <h2>Profile</h2>
+                    <p>
+                        Make changes to your profile or your organization's workspace from the settings section in your profile tab
+                    </p>
+                </>,
                 target: '.settings-icon',
                 disableBeacon: true,
                 disableOverlayClose: true,
@@ -156,7 +168,7 @@ function MainHeaderIcons(props: { backToHome: boolean, joyRideOver : any }) {
                 hideCloseButton
                 run={run}
                 scrollToFirstStep
-                showProgress
+                // showProgress
                 showSkipButton
                 steps={steps}
                 styles={{

@@ -7,9 +7,9 @@ export const featureList = [
     },
     {
         name : 'Simultaneous active surveys',
-        starter : '3',
-        plus : '5',
-        business : '10',
+        starter : 'Unlimited',
+        plus : 'Unlimited',
+        business : 'Unlimited',
     },
     {
         name : 'Users',
@@ -20,7 +20,7 @@ export const featureList = [
     {
         name : 'Included monthly responses',
         starter : '100',
-        plus : '2000',
+        plus : '1000',
         business : '10000',
     },
     {
@@ -30,7 +30,19 @@ export const featureList = [
         business : '1',
     },
     {
-        name : 'NPS Date & Other question type',
+        name : 'Email & Link Surveys',
+        starter : 'yes',
+        plus : 'yes',
+        business : 'yes',
+    },
+    {
+        name : 'Website and In-product Surveys',
+        starter : 'yes',
+        plus : 'yes',
+        business : 'yes',
+    },
+    {
+        name : 'NPS, CSAT, CES and 12 more question types',
         starter : 'yes',
         plus : 'yes',
         business : 'yes',
@@ -110,19 +122,19 @@ export const featureList = [
     {
         name : 'Add company logo',
         starter : 'no',
-        plus : 'yes',
+        plus : 'no',
         business : 'yes',
     },
     {
         name : 'Brand removal',
         starter : 'no',
-        plus : 'no',
+        plus : 'yes',
         business : 'yes',
     },
     {
         name : 'Custom thank you screen',
         starter : 'no',
-        plus : 'no',
+        plus : 'yes',
         business : 'yes',
     },
     {
@@ -148,5 +160,41 @@ export const featureList = [
         starter : 'no',
         plus : 'no',
         business : 'yes',
+    },
+    {
+        name : 'AI Survey Analysis',
+        starter : 'no',
+        plus : 'yes',
+        business : 'yes',
+    },
+    {
+        name : 'Results export (CSV, XLS, PNG, PDF)',
+        starter : 'yes',
+        plus : 'yes',
+        business : 'yes',
+    },
+    {
+        name : 'Customer data filters',
+        starter : 'yes',
+        plus : 'yes',
+        business : 'yes',
+    },
+    {
+        name : 'Number of integrations',
+        starter : 'no',
+        plus : 'unlimited',
+        business : 'unlimited',
+    },
+    {
+        name : 'Responses capacity per survey',
+        starter : '250',
+        plus : '1500',
+        business : '6000',
+    },
+    {
+        name : 'Responses stored on active surveys',
+        starter : '500',
+        plus : '3000',
+        business : '20000',
     },
 ]

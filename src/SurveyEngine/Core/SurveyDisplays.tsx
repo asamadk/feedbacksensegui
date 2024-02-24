@@ -171,15 +171,6 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
         leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
     });
 
-    // const transitions = useTransition(currentSurvey?.data?.uId, {
-    //     from: { opacity: 0, transform: 'translate3d(0%,100%,0)' },
-    //     enter: { opacity: 1, transform: 'translate3d(0%,0%,0)' },
-    //     leave: { opacity: 0, transform: 'translate3d(0%,-50%,0)' },
-    //     config: { duration: 250 }
-    // });
-
-
-
     return (
         <>
             {displayMssg.type === 'error' &&

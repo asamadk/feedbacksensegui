@@ -140,7 +140,6 @@ function ConfigureSurvey() {
   }
 
   const populateSurveyConfig = (tempData: any) => {
-    console.log("🚀 ~ file: ConfigureSurvey.tsx:150 ~ populateSurveyConfig ~ tempData:", tempData)
     if (tempData?.response_limit != null && tempData?.response_limit !== 0) {
       setShowStopSurveyNumber(true);
       setShowStopSurveyNumberData(tempData?.response_limit?.toString());

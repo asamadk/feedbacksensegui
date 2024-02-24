@@ -152,7 +152,6 @@ function OverAllResult(props: IndividualResponseProps) {
         const filterCount = tmpFilterData.length;
         setSelectedFilters(filterCount);
         setFilterData(tmpFilterData)
-        console.log("🚀 ~ file: OverAllResult.tsx:156 ~ handleApplyFilter ~ tmpFilterData:", tmpFilterData)
     }
 
     const ExportHandler = () => {

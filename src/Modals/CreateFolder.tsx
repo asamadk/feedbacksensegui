@@ -32,9 +32,10 @@ function CreateFolder(props: any) {
         stepIndex: 0,
         steps: [
             {
-                content: <h2>
-                    Give your workspace a name and click "Create".
-                </h2>,
+                content: 
+                <>
+                    <p>Give your workspace a name and click "Create".</p>
+                </>,
                 target: '.create-folder-input',
                 disableBeacon: true,
                 disableOverlayClose: true,
@@ -129,7 +130,7 @@ function CreateFolder(props: any) {
                 hideCloseButton
                 run={run}
                 scrollToFirstStep
-                showProgress
+                // showProgress
                 showSkipButton
                 steps={steps}
                 styles={{
