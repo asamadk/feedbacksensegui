@@ -130,7 +130,7 @@ function TemplateLayout() {
     }
 
     return (
-        <Box height={'calc(100vh - 58px)'} display={'flex'} padding={'0px'}>
+        <Box height={'100vh'} display={'flex'} padding={'0px'}>
             <Box width={'20%'} >
                 <TemplateLeftPanel
                     data={categoryData}

@@ -59,7 +59,7 @@ function TemplateLeftPanel(
     }
 
     return (
-        <Box height={'calc(100vh - 62px)'} padding={'0px 20px'} sx={{backgroundColor : colorPalette.background}}>
+        <Box height={'100vh'} padding={'0px 20px'} sx={{backgroundColor : colorPalette.background}}>
             <Box textAlign={'start'} display={'flex'} justifyContent={'space-between'}>
                 <Typography sx={{ textAlign: 'start',marginTop: '10px' }} fontSize={24} color={colorPalette.darkBackground}>
                 Templates Library
@@ -80,7 +80,7 @@ function TemplateLeftPanel(
                     renderInput={(params) => <CssTextField {...params} label="Search Templates" />}
                 />
             </Box>
-            <Box sx={{overflowY : 'scroll',height : 'calc(100vh - 340px)'}} >
+            <Box sx={{overflowY : 'scroll',height : 'calc(100vh - 250px)'}} >
                 {Array.from(data.entries()).map(([key, value]) => (
                     <Box key={key} >
                         {key === ALL_TEMPLATE_KEY ?

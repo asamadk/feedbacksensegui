@@ -61,7 +61,7 @@ function SubscriptionSettings() {
     }
 
     return (
-        <Box sx={LayoutStyles.globalSettingSubContainers(colorPalette.background)} >
+        <Box sx={{...LayoutStyles.globalSettingSubContainers(colorPalette.background),height : 'calc(100vh - 80px)'}} >
             {
                 CoreUtils.isComponentVisible(userRole, componentName.SUBSCRIPTION) ?
                     <>

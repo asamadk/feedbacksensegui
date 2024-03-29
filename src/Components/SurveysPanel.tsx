@@ -25,7 +25,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 import ReactJoyride, { CallBackProps, STATUS } from 'react-joyride';
 
 const buttonContainerStyles = {
-    marginTop: '10px',
+    // marginTop: '10px',
     display: 'flex',
     justifyContent: 'space-between',
 
@@ -34,7 +34,7 @@ const buttonContainerStyles = {
 const mainContainerStyle = {
     padding: '15px 20px',
     backgroundColor: Constants.colorPalette.textSecondary,
-    height: 'calc(100vh - 100px)',
+    height: 'calc(100vh - 30px)',
     overflowY: 'scroll',
 }
 

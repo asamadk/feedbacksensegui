@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import './App.css';
 import Header from './Components/Header';
 import AnalyzeSurvey from './Layout/AnalyzeSurvey';
@@ -16,7 +16,7 @@ import SurveySettings from './Layout/SurveySettings';
 import UpgradeSubscription from './Layout/UpgradeSubscription';
 import LoginSuccess from './Layout/LoginSuccess';
 import SurveyDisplays from './SurveyEngine/Core/SurveyDisplays';
-import { ThemeProvider, createTheme } from '@mui/material';
+import { Box, ThemeProvider, createTheme } from '@mui/material';
 import PaymentSuccess from './Components/Stripe/PaymentSuccess';
 import TemplateLayout from './Layout/TemplateLayout';
 import TemplateDetailLayout from './Layout/TemplateDetailLayout';
@@ -32,12 +32,16 @@ import Support from './Layout/Support';
 import SignUpLayout from './Layout/SignUpLayout';
 import IntegrationLayout from './Layout/IntegrationLayout';
 import DashboardsLayout from './Layout/DashboardsLayout';
+import SideBar from './Components/SideBar';
+import SettingsLayout from './Layout/SettingsLayout';
 
 function App() {
 
   let navigate = useNavigate();
+  let location = useLocation();
 
   const defaultColor = useSelector((state: any) => state.colorReducer);
+  const [showLeftBar,setShowLeftBar] = useState(true);
   const [user, setUser] = useState(null);
   const dataFetchedRef = useRef(false);
   const [liveSurvey, setLiveSurvey] = useState(false);
@@ -70,22 +74,30 @@ function App() {
     }
   };
 
+
+
   useEffect(() => {
     if (dataFetchedRef.current === true) return;
     let currentPath: string = window.location.pathname;
     if (ignoreAuthPaths.includes(currentPath)) { return; }
     getUser();
+    handleLeftBarVisibility();
     dataFetchedRef.current = true;
   }, []);
 
-  const darkTheme = createTheme({
-    palette: {
-      mode: 'dark',
-    },
-    typography: {
-      fontFamily: 'Apercu Pro, sans-serif'
+  useEffect(() => {
+    handleLeftBarVisibility();
+  },[location.pathname])
+
+  const handleLeftBarVisibility = () => {
+    console.log('handleLeftBarVisibility');
+    let currentPath: string = location.pathname;
+    if (currentPath.includes('/survey/detail/')) {
+      setShowLeftBar(false);
+    } else {
+      setShowLeftBar(true);
     }
-  });
+  }
 
   const lightTheme = createTheme({
     palette: {
@@ -100,85 +112,97 @@ function App() {
     <>
       <ThemeProvider theme={lightTheme} >
         {liveSurvey === false && <div style={{ backgroundColor: defaultColor?.backgroundColor }} className="App">
-          <Header loggedIn={user != null} />
-          <Routes>
-            <Route
-              path='/'
-              element={user ? <MainBody /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/login'
-              element={user ? <MainBody /> : <Login />}
-            />
-            <Route
-              path='/template'
-              element={user ? <TemplateLayout /> : <Login />}
-            />
-            <Route
-              path='/template/details/:templateId'
-              element={user ? <TemplateDetailLayout /> : <Login />}
-            />
-            <Route
-              path='/org/general'
-              element={user ? <OrgSettings tabset={0} /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/org/teammates'
-              element={user ? <OrgSettings tabset={1} /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/org/subscription'
-              element={user ? <OrgSettings tabset={2} /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/survey/global/settings/general'
-              element={user ? <SurveySettings tabset={0} /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/survey/global/settings/web'
-              element={user ? <SurveySettings tabset={1} /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/survey/detail/create/:surveyId'
-              element={user ? <CreateSurvey /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/survey/detail/design/:surveyId'
-              element={user ? <DesignPreview /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/survey/detail/share/:surveyId'
-              element={user ? <ShareSurvey /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/survey/detail/analyze/:surveyId'
-              element={user ? <AnalyzeSurvey /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/survey/detail/configure/:surveyId'
-              element={user ? <ConfigureSurvey /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/upgrade/plan'
-              element={user ? <UpgradeSubscription /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/support'
-              element={user ? <Support /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/user/create/organization'
-              element={<LoginSuccess />}
-            />
-            <Route
-              path='/integration'
-              element={user ? <IntegrationLayout /> : <Navigate to={'/login'} />}
-            />
-            <Route
-              path='/dashboard'
-              element={user ? <DashboardsLayout /> : <Navigate to={'/login'} />}
-            />
-          </Routes>
+          <Box display={'flex'} >
+            {
+              user && showLeftBar &&
+              <SideBar loggedIn={user != null} />
+            }
+            <Box width={'100%'} >
+              <Header loggedIn={user != null} />
+              <Routes>
+                <Route
+                  path='/'
+                  element={user ? <MainBody /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/login'
+                  element={user ? <MainBody /> : <Login />}
+                />
+                <Route
+                  path='/template'
+                  element={user ? <TemplateLayout /> : <Login />}
+                />
+                <Route
+                  path='/settings'
+                  element={user ? <SettingsLayout /> : <Login />}
+                />
+                <Route
+                  path='/template/details/:templateId'
+                  element={user ? <TemplateDetailLayout /> : <Login />}
+                />
+                {/* <Route
+                  path='/org/general'
+                  element={user ? <OrgSettings tabset={0} /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/org/teammates'
+                  element={user ? <OrgSettings tabset={1} /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/org/subscription'
+                  element={user ? <OrgSettings tabset={2} /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/survey/global/settings/general'
+                  element={user ? <SurveySettings tabset={0} /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/survey/global/settings/web'
+                  element={user ? <SurveySettings tabset={1} /> : <Navigate to={'/login'} />}
+                /> */}
+                <Route
+                  path='/survey/detail/create/:surveyId'
+                  element={user ? <CreateSurvey /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/survey/detail/design/:surveyId'
+                  element={user ? <DesignPreview /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/survey/detail/share/:surveyId'
+                  element={user ? <ShareSurvey /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/survey/detail/analyze/:surveyId'
+                  element={user ? <AnalyzeSurvey /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/survey/detail/configure/:surveyId'
+                  element={user ? <ConfigureSurvey /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/upgrade/plan'
+                  element={user ? <UpgradeSubscription /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/support'
+                  element={user ? <Support /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/user/create/organization'
+                  element={<LoginSuccess />}
+                />
+                <Route
+                  path='/integration'
+                  element={user ? <IntegrationLayout /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/dashboard'
+                  element={user ? <DashboardsLayout /> : <Navigate to={'/login'} />}
+                />
+              </Routes>
+            </Box>
+          </Box>
         </div>}
       </ThemeProvider>
       {liveSurvey === true &&

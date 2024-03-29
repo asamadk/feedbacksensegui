@@ -17,7 +17,7 @@ export const globalSettingSubContainers = (bgColor: string) => {
         borderRadius: '5px',
         backgroundColor: bgColor,
         padding: '20px',
-        marginTop: '20px',
+        // marginTop: '20px',
         boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
     }
 }

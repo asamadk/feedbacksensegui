@@ -1,0 +1,26 @@
+.tabs{
+    display: flex;
+    cursor: pointer;
+    border-radius: 6px;
+    margin: 10px;
+    padding: 5px;
+    color: #808080;
+}
+
+.tabs p{
+    margin: 3px;
+    margin-left: 10px;
+    color: black;
+}
+
+.selected-tab{
+    background: white;
+    color: #8039DF;
+    width: 100%;
+    transition: 1s;
+    margin: auto;
+}
+
+.selected-tab p{
+    color : #8039DF;
+}

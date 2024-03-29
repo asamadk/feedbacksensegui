@@ -26,7 +26,7 @@ function Login() {
     const subContainerStyle = {
         width: '50%',
         padding: '50px 0px',
-        height: 'calc(100vh - 149px)',
+        height: 'calc(100vh - 99px)',
     }
 
     const handleSignUp = () => {
@@ -34,7 +34,7 @@ function Login() {
     }
 
     return (
-        <Box sx={{ height: 'calc(100vh - 45px)', display: 'flex' }} >
+        <Box sx={{ height: 'calc(100vh - 85px)', display: 'flex' }} >
             <Box width={'50%'}>
                 <Box
                     display={'flex'}
