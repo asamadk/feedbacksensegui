@@ -1,0 +1,23 @@
+.sidebar-main-container{
+    background-color: #8039DF;
+    height: calc(100vh - 40px);
+    color: #ffffff;
+    font-size: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.sidebar-icons{
+    cursor: pointer;
+}
+
+.sidebar-icon-container{
+    margin-bottom: 20px;
+}
+
+.selected-side-bar-icon{
+    padding-bottom: 3px;
+    border-bottom: 2px #ffffff solid;
+}

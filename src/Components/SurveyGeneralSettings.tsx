@@ -193,7 +193,7 @@ function SurveyGeneralSettings() {
     }
 
     return (
-        <Box style={{ display: 'flex' }} sx={LayoutStyles.globalSettingSubContainers(colorPalette.background)} >
+        <Box style={{ display: 'flex' }} sx={{...LayoutStyles.globalSettingSubContainers(colorPalette.background),height : 'calc(100vh - 80px)'}} >
             {showUpgradeScreen()}
             {showUploadLogoScreen()}
             <FSLoader show={loading} />

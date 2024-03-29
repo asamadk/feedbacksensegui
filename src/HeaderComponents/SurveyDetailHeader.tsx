@@ -105,11 +105,12 @@ function SurveyDetailHeader(props: any) {
     }
 
     return (
-        <Box sx={{ display: 'flex' }} >
+        <Box sx={{ display: 'flex',justifyContent : 'space-between' }} >
+            <Box width={'50px'} ></Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }} >
                 <CustomTabSet tabsetList={tabsetList} change={(value: number) => changetabset(value)} index={props.tabset} />
             </Box>
-            <Box sx={{ display: 'flex' }} >
+            <Box sx={{ display: 'flex',justifyContent : 'end' }} >
                 <IconButton
                     onClick={props.handleRouteToHome}
                     sx={makeIconsUp}

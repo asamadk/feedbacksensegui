@@ -61,7 +61,7 @@ function TemplateDetailLeftPanel({
 
   return (
     <Box
-      height={'calc(100vh - 62px)'}
+      height={'100vh'}
       display={'flex'}
       flexDirection={'column'}
       justifyContent={'space-between'}

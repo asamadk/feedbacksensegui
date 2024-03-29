@@ -14,6 +14,7 @@ import { templateReducer } from "./Reducers/templateReducer";
 import { paymentHistoryReducer } from "./Reducers/paymentHistoryReducer";
 import { customSettingsReducer } from "./Reducers/customSettingsReducer";
 import { surveyFilterDataReducer } from "./Reducers/surveyFilterReducer";
+import { sideBarReducer } from "./Reducers/sidebarPosReducer";
 
 const store = configureStore({
 	reducer: {
@@ -31,7 +32,8 @@ const store = configureStore({
 		templates : templateReducer,
 		paymentHistory : paymentHistoryReducer,
 		settings : customSettingsReducer,
-		surveyFilterData : surveyFilterDataReducer
+		surveyFilterData : surveyFilterDataReducer,
+		sideBarReducer : sideBarReducer
 	},
 	devTools: true,
 });

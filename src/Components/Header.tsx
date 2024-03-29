@@ -26,14 +26,14 @@ function Header(props: any) {
     const workflowDirty = useSelector((state: any) => state.workflowDirty);
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
-    const [backHome,setBackHome] = useState(false);
-    const [iconJoyrideOver,setIconJoyrideOver] = useState<any>(false);
+    const [backHome, setBackHome] = useState(false);
+    const [iconJoyrideOver, setIconJoyrideOver] = useState<any>(false);
 
     const bodyStyle: {} = {
         backgroundColor: defaultColor,
         padding: '5px 20px',
         borderBottom: `0.5px ${colorPalette.fsGray} solid`,
-        paddingBottom : '0px'
+        paddingBottom: '0px'
     }
 
     React.useEffect(() => {
@@ -72,7 +72,7 @@ function Header(props: any) {
             setBackHome(true);
         }
     }
-    
+
 
     const handleSuccessButtonClick = () => {
         navigate('/');
@@ -89,28 +89,10 @@ function Header(props: any) {
     }
 
     return (
-        <Box sx={{ ...bodyStyle, background: colorPalette.secondary }} >
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                {inOrgSelectionMode === false && showSurveyDetailHeader === false &&
-                    <Box sx={{ marginLeft: '10px' }} onClick={handleRouteToHome} >
-                        <Logo />
-                    </Box>
-                }
-                {
-                    props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === false &&
-                    <Box><MainHeaderTab joyrideStart={iconJoyrideOver} /></Box>
-                }
-                {
-                    props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === false &&
-                    <Box><MainHeaderIcons joyRideOver={handleIconJoyrideOver} backToHome={backHome} /></Box>
-                }
-
-                {inOrgSelectionMode === false && showSurveyDetailHeader === true &&
-                    <Box onClick={handleRouteToHome} >
-                        <Logo />
-                    </Box>
-                }
-                {props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === true &&
+        <>
+            {
+                props.loggedIn && inOrgSelectionMode === false && showSurveyDetailHeader === true &&
+                <Box sx={{ ...bodyStyle, background: colorPalette.secondary }} >
                     <div>
                         <SurveyDetailHeader
                             surveyId={currentWorkflowId}
@@ -118,16 +100,15 @@ function Header(props: any) {
                             handleRouteToHome={handleRouteToHome}
                         />
                     </div>
-                }
-
-            </div>
-            <GenericModal
-                payload={genericModalObj}
-                close={() => setShowGenericModal(false)}
-                open={showGenericModal}
-                callback={handleSuccessButtonClick}
-            />
-        </Box>
+                    <GenericModal
+                        payload={genericModalObj}
+                        close={() => setShowGenericModal(false)}
+                        open={showGenericModal}
+                        callback={handleSuccessButtonClick}
+                    />
+                </Box>
+            }
+        </>
     )
 }
 

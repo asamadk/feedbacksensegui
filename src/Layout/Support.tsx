@@ -17,19 +17,7 @@ function Support() {
 
     return (
         <Box sx={{ ...settingLayoutStyle, backgroundColor: defaultColor?.backgroundColor }} >
-            <Box display={'flex'} sx={{ textAlign: 'start' }} >
-                <IconButton onClick={handleBackButtonClick} >
-                    <ArrowBackIcon sx={{ color: colorPalette.textPrimary }} />
-                </IconButton>
-                <Typography
-                    variant='h4'
-                    style={{ paddingTop: '5px' }}
-                    sx={{...settingsHeaderTextStyle,color : colorPalette.textPrimary}}
-                >
-                    Help & Support
-                </Typography>
-            </Box>
-            <Box sx={{marginTop : '20px',display : 'flex',justifyContent : 'center',width : '100%'}}>
+            <Box >
                 <iframe
                     style={{ width: '50%', height: '500px' }}
                     id="zsfeedbackFrame"

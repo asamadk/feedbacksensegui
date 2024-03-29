@@ -511,37 +511,6 @@ function SurveyListPage() {
                         }
 
                     </div>
-                    {
-                        CoreUtils.isComponentVisible(userRole, componentName.BILLING_INFO_HOME) &&
-                        <div>
-                            {/* <Box sx={{ padding: '10px 20px' }} >
-                                <Typography style={{ textAlign: 'start', color: colorPalette.textPrimary }} variant='subtitle2' >Active survey limit</Typography>
-                                <LinearProgressWithLabel
-                                    value={subscriptionState == null ? 0 : subscriptionState?.surveyLimitUsed / subscriptionState?.totalSurveyLimit * 100}
-                                    text={subscriptionState == null ? '0' : subscriptionState?.surveyLimitUsed + '/' + subscriptionState?.totalSurveyLimit}
-                                />
-                            </Box> */}
-                            <Box className="create-folder-modal" padding={'10px 10px'} >
-                                {/* <Button
-                                    sx={ButtonStyles.outlinedButton}
-                                    onClick={handleUpgradePlanClick}
-                                    variant="contained"
-                                    startIcon={<AppsIcon />}
-                                >
-                                    Apps & Integrations
-                                </Button> */}
-                                <Button
-                                    className='invite-teammates'
-                                    startIcon={<Groups2Icon />}
-                                    sx={ButtonStyles.containedButton}
-                                    onClick={handleOpenInviteModal}
-                                    variant="outlined"
-                                >
-                                    Invite teammates
-                                </Button>
-                            </Box>
-                        </div>
-                    }
                 </div>
                 <div style={{ width: '85%' }} >
                     <SurveysPanel

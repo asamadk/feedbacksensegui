@@ -16,7 +16,7 @@ function OrgGeneralSettings() {
 
 
   return (
-    <Box sx={{...LayoutStyles.globalSettingSubContainers('#ffffff'),color : colorPalette.darkBackground}} >
+    <Box sx={{...LayoutStyles.globalSettingSubContainers('#ffffff'),color : colorPalette.darkBackground,height : 'calc(100vh - 80px)'}} >
       <Box display={'flex'} marginBottom={2}  >
         <Typography width={200} textAlign={'start'} >Organization Id </Typography>
         <Typography color={'#808080'} >{currentUserState?.organization_id}</Typography>

@@ -16,12 +16,12 @@ function Logo() {
                     src='/fs_logo_small.png'
                     alt='Logo'
                 />
-                <Typography
+                {/* <Typography
                     style={{ color: colorPalette.primary, fontSize: '20px',marginTop : '11px',marginLeft : '10px' }}
                     variant='h4'
                 >
                     feedbacksense
-                </Typography>
+                </Typography> */}
             </Box>
         </Box>
     )

@@ -141,7 +141,6 @@ function MainHeaderIcons(props: { backToHome: boolean, joyRideOver : any }) {
     }
 
     const handleSettingsBellClick = (event: any) => {
-        // closeAllModals();
         setAnchorEl(event.currentTarget);
     }
 
