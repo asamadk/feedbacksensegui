@@ -40,7 +40,6 @@ function TemplateBlock({ template }: any) {
                     fontSize={14}
                     fontWeight={600}
                 >
-                    {/* {`${template?.name?.substring(0, 35)} ${template?.name.length > 35 ? '...' : ''}`} */}
                     {`${template?.name}`}
                 </Typography>
             </Box>

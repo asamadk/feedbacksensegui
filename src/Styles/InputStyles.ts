@@ -4,10 +4,10 @@ export const muiSelectStyle = {
     color: colorPalette.textPrimary,
     '& .MuiOutlinedInput-notchedOutline': {
         borderColor: colorPalette.textPrimary,
-        border : `1px ${colorPalette.primary} solid`,
+        border : `1px ${colorPalette.secondary} solid`,
     },
     '& .MuiSvgIcon-root': {
-        color: colorPalette.primary
+        color: colorPalette.primary,
     }
 }
 
@@ -20,7 +20,7 @@ export const textFieldStyle = {
     },
     '& .MuiOutlinedInput-root': {
         '& fieldset': {
-            borderColor: colorPalette.fsGray,
+            borderColor: colorPalette.secondary,
         },
         '&:hover fieldset': {
             borderColor: colorPalette.primary,

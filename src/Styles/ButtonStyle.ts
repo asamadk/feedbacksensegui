@@ -26,11 +26,11 @@ export const textButton = {
 export const outlinedButton = {
     "&.MuiButtonBase-root:hover": {
         bgcolor: backgroundColorMode,
-        border: `1px ${colorPalette.secondary} solid`,
+        border: `1px ${colorPalette.primary} solid`,
     },
     backgroundColor: backgroundColorMode,
     color: colorPalette.primary,
-    border: `1px ${colorPalette.primary} solid`,
+    border: `1px ${colorPalette.secondary} solid`,
     width: '100%',
     marginTop: '10px',
     textTransform: 'none'

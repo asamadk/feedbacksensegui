@@ -197,7 +197,7 @@ function SurveyBlock(props: any) {
                             onClick={handleOpenSurvey}
                             sx={{ color: colorPalette.textPrimary, width: '50px' }}
                         >
-                            <EditIcon />
+                            <EditIcon fontSize='small' />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='More' >

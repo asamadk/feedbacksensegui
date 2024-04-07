@@ -84,3 +84,8 @@ export interface joyrideState {
     steps: Step[];
     stepIndex : number
 }
+
+export type sideBarListType = {
+    label : string,
+    value : string
+}

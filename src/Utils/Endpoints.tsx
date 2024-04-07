@@ -229,3 +229,51 @@ export const exportSurveyJsonAPI = (surveyId : string) => {
 export const updateEmbedConfigAPI = () => {
     return `${BASE_URL}/survey/config/embed`
 }
+
+export const addCompanyURL = () => {
+    return `${BASE_URL}/company/create/individual`
+}
+
+export const getCompanyPeopleOptionURL = () => {
+    return `${BASE_URL}/company/select-options`
+}
+
+export const getCompanyListURL = (page : number,limit : number,searchStr : string) => {
+    return `${BASE_URL}/company/get/list?page=${page}&limit=${limit}&search=${searchStr}`
+}
+
+export const addPersonURL = () => {
+    return `${BASE_URL}/people/create/individual`
+}
+
+export const getPersonListURL = (page : number,limit : number,searchStr : string) => {
+    return `${BASE_URL}/people/get/list?page=${page}&limit=${limit}&search=${searchStr}`
+}
+
+export const getCompanyColumnURL = () => {
+    return `${BASE_URL}/company/column-metadata`
+}
+
+export const uploadBulkCompanyURL = () => {
+    return `${BASE_URL}/company/bulk/upload`
+}
+
+export const getCompanyPersonListURL = (peopleId : string) => {
+    return `${BASE_URL}/company/people/${peopleId}`
+}
+
+export const createTagURL = () => {
+    return `${BASE_URL}/tag/create`
+}
+
+export const getTagURL = () => {
+    return `${BASE_URL}/tag/list`
+}
+
+export const createTaskURL = () => {
+    return `${BASE_URL}/task/create`
+}
+
+export const getTaskURL = (companyId: string, personId: string, page: number, limit: number) => {
+    return `${BASE_URL}/task/get?page=${page}&limit=${limit}&companyId=${companyId}&personId=${personId}`
+}

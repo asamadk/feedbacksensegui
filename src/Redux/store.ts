@@ -15,25 +15,29 @@ import { paymentHistoryReducer } from "./Reducers/paymentHistoryReducer";
 import { customSettingsReducer } from "./Reducers/customSettingsReducer";
 import { surveyFilterDataReducer } from "./Reducers/surveyFilterReducer";
 import { sideBarReducer } from "./Reducers/sidebarPosReducer";
+import { companyReducer } from "./Reducers/companyReducer";
+import { peopleReducer } from "./Reducers/peopleOptionReducer";
 
 const store = configureStore({
 	reducer: {
-        workflowDirty: workflowDirtyReducer,
-		workflowCheck : workflowCheckReducer,
+		workflowDirty: workflowDirtyReducer,
+		workflowCheck: workflowCheckReducer,
 		currentWorkflow: currentWorkflowReducer,
-		colorReducer : colorReducer,
-		userRole : userRoleReducer,
+		colorReducer: colorReducer,
+		userRole: userRoleReducer,
 		surveys: surveyReducer,
-		users : usersReducer,
-		folders : folderReducer,
-		currentUser : currentUserReducer,
-		subscriptionDetail : subscriptionDetailReducer,
-		surveyConfig : surveyConfigReducer,
-		templates : templateReducer,
-		paymentHistory : paymentHistoryReducer,
-		settings : customSettingsReducer,
-		surveyFilterData : surveyFilterDataReducer,
-		sideBarReducer : sideBarReducer
+		users: usersReducer,
+		folders: folderReducer,
+		currentUser: currentUserReducer,
+		subscriptionDetail: subscriptionDetailReducer,
+		surveyConfig: surveyConfigReducer,
+		templates: templateReducer,
+		paymentHistory: paymentHistoryReducer,
+		settings: customSettingsReducer,
+		surveyFilterData: surveyFilterDataReducer,
+		sideBarReducer: sideBarReducer,
+		companies: companyReducer,
+		people : peopleReducer
 	},
 	devTools: true,
 });

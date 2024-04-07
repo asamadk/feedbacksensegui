@@ -1,14 +1,12 @@
-import { Avatar, Box, Tooltip, TooltipProps, styled, tooltipClasses } from '@mui/material'
-import SettingsIcon from '@mui/icons-material/Settings';
-import HomeIcon from '@mui/icons-material/Home';
-import GridViewIcon from '@mui/icons-material/GridView';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import PersonIcon from '@mui/icons-material/Person';
+import { Box, Tooltip, TooltipProps, styled, tooltipClasses } from '@mui/material'
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import GroupsIcon from '@mui/icons-material/Groups';
+import SegmentIcon from '@mui/icons-material/Segment';
 import AutoModeIcon from '@mui/icons-material/AutoMode';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ArchitectureIcon from '@mui/icons-material/Architecture';
+import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 
 import '../Styles/CSS/SidebarStyle.css'
 import { useSelector } from 'react-redux';
@@ -18,8 +16,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import InviteMemberModal from '../Modals/InviteMemberModal';
 import SettingsModal from './SettingsModal';
-import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
-import { componentName } from '../Utils/Constants';
 import { userRoleType } from '../Utils/types';
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -34,16 +30,15 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 const SIDE_BAR_IDS = {
-    HOME: 'Home',
-    WORKFLOW: 'Workflows',
+    SURVEYS: 'Surveys',
+    FLOWS: 'Flows',
     CONTACTS: 'Contacts',
-    TEMPLATES: 'Templates',
+    SEGMENT: 'Segments',
     DASHBOARD: 'Dashboard',
-    INVITE_TEAMMATES: 'Invite Teammates',
-    INTEGRATIONS: 'Integrations',
     SETTINGS: 'Settings',
-    NOTIFICATION : 'Notifications',
-    ACCOUNT : 'Account'
+    NOTIFICATION: 'Notifications',
+    ACCOUNT: 'Account',
+    TASKS: 'Tasks'
 }
 
 function SideBar(props: any) {
@@ -58,24 +53,30 @@ function SideBar(props: any) {
 
     const handlePositionChange = (sideBarId: string) => {
         dispatch(setSideBarPosition(sideBarId));
-        switch(sideBarId){
-            case SIDE_BAR_IDS.HOME:
-                navigate('/');
+        switch (sideBarId) {
+            case SIDE_BAR_IDS.SURVEYS:
+                navigate('/surveys');
                 break;
-            case SIDE_BAR_IDS.TEMPLATES:
-                navigate('/template');
+            case SIDE_BAR_IDS.CONTACTS:
+                navigate('/contacts');
+                break;
+            case SIDE_BAR_IDS.SEGMENT:
+                navigate('/segment');
                 break;
             case SIDE_BAR_IDS.DASHBOARD:
                 navigate('/dashboard');
                 break;
-            case SIDE_BAR_IDS.INTEGRATIONS:
-                navigate('/integration');
+            case SIDE_BAR_IDS.FLOWS:
+                navigate('/flows');
                 break;
             case SIDE_BAR_IDS.SETTINGS:
                 navigate('/settings');
                 break;
-            case SIDE_BAR_IDS.INVITE_TEAMMATES:
-                setOpenInviteModal(true);
+            case SIDE_BAR_IDS.TASKS:
+                navigate('/tasks');
+                break;
+            case SIDE_BAR_IDS.NOTIFICATION:
+                navigate('/notifications');
                 break;
             default:
                 navigate('/');
@@ -91,56 +92,56 @@ function SideBar(props: any) {
         <Box className='sidebar-main-container' >
             <Box>
                 <Box className='sidebar-icon-container' >
-                    <LightTooltip title={SIDE_BAR_IDS.HOME} placement="right-start" arrow>
-                        <HomeIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.HOME)} className='sidebar-icons' />
+                    <LightTooltip title={''} placement="right-start" arrow>
+                        <img className='sidebar-icons logo' src='/logo-churn.png' alt='Logo' />
                     </LightTooltip>
                 </Box>
-                {/* <Box className='sidebar-icon-container' >
-                    <LightTooltip title={SIDE_BAR_IDS.WORKFLOW} placement="right-start" arrow>
-                        <AutoModeIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.WORKFLOW)} className='sidebar-icons' />
-                    </LightTooltip>
-                </Box> */}
-                {/* <Box className='sidebar-icon-container' >
-                    <LightTooltip title={SIDE_BAR_IDS.CONTACTS} placement="right-start" arrow>
-                        <PersonIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.CONTACTS)} className='sidebar-icons' />
-                    </LightTooltip>
-                </Box> */}
-                <Box className='sidebar-icon-container' >
-                    <LightTooltip title={SIDE_BAR_IDS.TEMPLATES} placement="right-start" arrow>
-                        <ArchitectureIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.TEMPLATES)} className='sidebar-icons' />
-                    </LightTooltip>
-                </Box>
-                <Box className='sidebar-icon-container' >
+                <Box className={sideBarPos === SIDE_BAR_IDS.DASHBOARD ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.DASHBOARD} placement="right-start" arrow>
                         <DashboardIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.DASHBOARD)} className='sidebar-icons' />
                     </LightTooltip>
                 </Box>
+                <Box className={sideBarPos === SIDE_BAR_IDS.CONTACTS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                    <LightTooltip title={SIDE_BAR_IDS.CONTACTS} placement="right-start" arrow>
+                        <GroupsIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.CONTACTS)} className='sidebar-icons' />
+                    </LightTooltip>
+                </Box>
+                <Box className={sideBarPos === SIDE_BAR_IDS.SEGMENT ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                    <LightTooltip title={SIDE_BAR_IDS.SEGMENT} placement="right-start" arrow>
+                        <SegmentIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.SEGMENT)} className='sidebar-icons' />
+                    </LightTooltip>
+                </Box>
+                <Box className={sideBarPos === SIDE_BAR_IDS.FLOWS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                    <LightTooltip title={SIDE_BAR_IDS.FLOWS} placement="right-start" arrow>
+                        <AutoModeIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.FLOWS)} className='sidebar-icons' />
+                    </LightTooltip>
+                </Box>
+                <Box className={sideBarPos === SIDE_BAR_IDS.TASKS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                    <LightTooltip title={SIDE_BAR_IDS.TASKS} placement="right-start" arrow>
+                        <FormatListBulletedIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.TASKS)} className='sidebar-icons' />
+                    </LightTooltip>
+                </Box>
+                <Box className={sideBarPos === SIDE_BAR_IDS.SURVEYS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                    <LightTooltip title={SIDE_BAR_IDS.SURVEYS} placement="right-start" arrow>
+                        <SentimentVerySatisfiedIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.SURVEYS)} className='sidebar-icons' />
+                    </LightTooltip>
+                </Box>
             </Box>
             <Box>
-                <Box className='sidebar-icon-container' >
-                    <LightTooltip title={SIDE_BAR_IDS.INVITE_TEAMMATES} placement="right-start" arrow>
-                        <PersonAddIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.INVITE_TEAMMATES)} className='sidebar-icons' />
-                    </LightTooltip>
-                </Box>
-                <Box className='sidebar-icon-container' >
-                    <LightTooltip title={SIDE_BAR_IDS.INTEGRATIONS} placement="right-start" arrow>
-                        <GridViewIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.INTEGRATIONS)} className='sidebar-icons' />
-                    </LightTooltip>
-                </Box>
-                {/* <Box className='sidebar-icon-container' >
+            <Box className={sideBarPos === SIDE_BAR_IDS.NOTIFICATION ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.NOTIFICATION} placement="right-start" arrow>
-                        <NotificationsNoneIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.NOTIFICATION)} className='sidebar-icons' />
+                        <NotificationsIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.NOTIFICATION)} className='sidebar-icons' />
                     </LightTooltip>
-                </Box> */}
-                {
+                </Box>
+                {/* {
                     CoreUtils.isComponentVisible(userRole, componentName.BILLING_INFO_HOME) &&
                     <Box className='sidebar-icon-container' >
                         <LightTooltip title={SIDE_BAR_IDS.SETTINGS} placement="right-start" arrow>
                             <SettingsIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.SETTINGS)} className='sidebar-icons' />
                         </LightTooltip>
                     </Box>
-                }
-                <Box className='sidebar-icon-container' >
+                } */}
+                <Box className={sideBarPos === SIDE_BAR_IDS.ACCOUNT ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.ACCOUNT} placement="right-start" arrow>
                         <AccountCircleIcon onClick={handleProfileClick} className='sidebar-icons' />
                     </LightTooltip>

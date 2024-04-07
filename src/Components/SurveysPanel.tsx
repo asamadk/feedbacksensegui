@@ -25,7 +25,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 import ReactJoyride, { CallBackProps, STATUS } from 'react-joyride';
 
 const buttonContainerStyles = {
-    // marginTop: '10px',
+    marginTop: '10px',
     display: 'flex',
     justifyContent: 'space-between',
 

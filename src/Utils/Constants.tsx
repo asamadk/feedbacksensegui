@@ -391,3 +391,11 @@ export const contactFieldTypes = {
     EMP: 'employees',
     COMMENT: 'comment',
 }
+
+export const getUsageTimeFilter = () => {
+    return [
+        {label : 'Last 90 Days', value : 'last_90_days'},
+        {label : 'Last 30 Days', value : 'last_30_days'},
+        {label : 'Last 15 Days', value : 'last_15_days'},
+    ]
+}

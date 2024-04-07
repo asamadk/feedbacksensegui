@@ -21,7 +21,7 @@ const Notification = forwardRef((props: any, ref) => {
 
     const lightTheme = createTheme({
         palette: {
-            mode: 'dark',
+            mode: 'light',
         },
         typography: {
             fontFamily: 'Apercu Pro, sans-serif'
@@ -30,7 +30,7 @@ const Notification = forwardRef((props: any, ref) => {
 
     return (
         <ThemeProvider theme={lightTheme} >
-            <Tooltip title={message} >
+            {/* <Tooltip title={message} > */}
                 <Snackbar
                     title={message}
                     anchorOrigin={{ vertical: "top", horizontal: "center" }}
@@ -54,7 +54,7 @@ const Notification = forwardRef((props: any, ref) => {
                         </Typography>
                     </Alert>
                 </Snackbar>
-            </Tooltip>
+            {/* </Tooltip> */}
         </ThemeProvider>
     );
 });

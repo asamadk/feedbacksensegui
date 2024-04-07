@@ -1,7 +1,7 @@
 import { logout } from "./Endpoints";
 import { logicType } from "./types";
 import { DEFAULT_KEY } from "../SurveyEngine/CoreUtils/CoreConstants";
-import { colorPalette, contactFieldTypes, fieldTypes } from "./Constants";
+import { USER_UNAUTH_TEXT, colorPalette, contactFieldTypes, fieldTypes } from "./Constants";
 
 
 export const getComponentConfigFromNode = (node: any) => {
@@ -377,6 +377,12 @@ export const handleLogout = () => {
         logout(),
         "_self"
     );
+}
+
+export const handleUnAuth = (error: any) => {
+    if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
+        handleLogout();
+    }
 }
 
 export const validateEmail = (email: string) => {
