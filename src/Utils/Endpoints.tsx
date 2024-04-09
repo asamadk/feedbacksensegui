@@ -274,6 +274,14 @@ export const createTaskURL = () => {
     return `${BASE_URL}/task/create`
 }
 
+export const updateTaskURL = () => {
+    return `${BASE_URL}/task/update`
+}
+
 export const getTaskURL = (companyId: string, personId: string, page: number, limit: number) => {
     return `${BASE_URL}/task/get?page=${page}&limit=${limit}&companyId=${companyId}&personId=${personId}`
+}
+
+export const deleteTaskURL = (taskId : string) => {
+    return `${BASE_URL}/task/delete?taskId=${taskId}`
 }

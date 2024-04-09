@@ -1,6 +1,6 @@
 import { Box, Button, IconButton, Menu, MenuItem, Tab, Tabs, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
-import { containedButton } from '../../Styles/ButtonStyle';
+import { containedButton, outlinedBlackButton, outlinedButton } from '../../Styles/ButtonStyle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { colorPalette } from '../../Utils/Constants';
 import CompanyDetailTab from './CompanyDetailTab';
@@ -14,6 +14,7 @@ import CompanyTicketTab from './CompanyTicketTab';
 import CompanySurveyTab from './CompanySurveytab';
 import { useLocation, useNavigate } from 'react-router';
 import CloseIcon from '@mui/icons-material/Close';
+import RowingIcon from '@mui/icons-material/Rowing';
 
 function CompanyDetailPage() {
 
@@ -64,9 +65,14 @@ function CompanyDetailPage() {
                     </Box>
                 </Box>
                 <Box display={'flex'} >
-                    {/* <Box sx={{ marginTop: '5px' }} >
-                        <QuickActions />
-                    </Box> */}
+                    <Box sx={{ marginTop: '7px' }} >
+                        {/* <QuickActions /> */}
+                        <Button
+                            startIcon={<RowingIcon />}
+                            sx={{ ...containedButton, marginTop: '0px' }}
+                            variant='contained'
+                        >Activities</Button>
+                    </Box>
                     <IconButton onClick={() => (navigate(-1))} sx={{ width: '50px', marginLeft: '10px' }} >
                         <CloseIcon />
                     </IconButton>

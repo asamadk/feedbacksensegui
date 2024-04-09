@@ -1,5 +1,5 @@
 import { Box, Button, IconButton, MenuItem, Modal, Select, TextField, Typography, styled } from '@mui/material';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { modalButtonContainerStyle, modalHeaderStyle, modalStyle } from '../../Styles/ModalStyle';
 import { colorPalette } from '../../Utils/Constants';
 import CloseIcon from '@mui/icons-material/Close';
@@ -11,7 +11,7 @@ import { taskPriorityOptions, taskStatusOptions } from '../../Utils/CompanyConst
 import { useSelector } from 'react-redux';
 import { handleUnAuth } from '../../Utils/FeedbackUtils';
 import axios from 'axios';
-import { createTaskURL } from '../../Utils/Endpoints';
+import { createTaskURL, updateTaskURL } from '../../Utils/Endpoints';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 const CustomSelect = styled(Select)(muiSelectStyle);
@@ -24,48 +24,76 @@ function CreateTaskModal(props: any) {
     const companiesOptions = useSelector((state: any) => state.companies);
     const peopleOptions = useSelector((state: any) => state.people);
 
-    const [title,setTitle] = useState('');
-    const [desc,setDesc] = useState('');
-    const [priority,setPriority] = useState('');
-    const [dueDate,setDueDate] = useState('');
-    const [person,setPerson] = useState('');
-    const [status,setStatus] = useState('');
+    const [title, setTitle] = useState('');
+    const [desc, setDesc] = useState('');
+    const [priority, setPriority] = useState('');
+    const [dueDate, setDueDate] = useState('');
+    const [person, setPerson] = useState('');
+    const [company, setCompany] = useState('');
+    const [status, setStatus] = useState('');
+
+    let init = false;
+    useEffect(() => {
+        if (init === false) {
+            if (props.data != null) {
+                populateTaskData(props.data);
+            }
+            init = true;
+        }
+    }, [props.data]);
+
+    function populateTaskData(task: any) {
+        setTitle(task.title);
+        setDesc(task.description);
+        setPriority(task.priority);
+        setDueDate(task.dueDate);
+        setPerson(task[0]?.id);
+        setCompany(task.company[0]?.id);
+        setStatus(task.status);
+    }
 
     const handleClose = () => {
         props.close({ refresh: false });
     }
 
     async function handleCreateTask() {
-        const payload = {
-            personID : person,
-            companyID : props.companyId,
-            title : title,
-            description : desc,
-            priority : priority,
-            dueDate : dueDate,
-            status : status,
+        const payload: any = {
+            personID: person,
+            companyID: props.companyId,
+            title: title,
+            description: desc,
+            priority: priority,
+            dueDate: dueDate,
+            status: status,
         }
 
-        if(
+        if (props.data != null) {
+            payload.id = props.data.id;
+        }
+
+        if (
             payload.title == null || payload.title.length < 1 ||
             payload.priority == null || payload.priority.length < 1 ||
             payload.dueDate == null || payload.dueDate.length < 1
-        ){
-            snackbarRef?.current?.show('Please select all the required values','warning');
+        ) {
+            snackbarRef?.current?.show('Please select all the required values', 'warning');
             return;
         }
 
         try {
             setLoading(true);
-            // await axios.post(createTaskURL(),payload,{withCredentials : true});
+            await axios.post(
+                props.data == null ? createTaskURL() : updateTaskURL(),
+                payload,
+                { withCredentials: true }
+            );
             props.close({ refresh: true });
             setLoading(false);
         } catch (error) {
-            snackbarRef?.current?.show('Something went wrong','error');
+            snackbarRef?.current?.show('Something went wrong', 'error');
             setLoading(false);
             handleUnAuth(error);
         }
-        console.log("🚀 ~ handleCreateTask ~ payload:", payload)
     }
 
     return (
@@ -80,7 +108,7 @@ function CreateTaskModal(props: any) {
                     <Box sx={modalHeaderStyle} >
                         <Box>
                             <Typography id="modal-modal-title" variant="h5" component="h2" >
-                                Create Task
+                                {props.data != null ? 'Update' : 'Create'} Task
                             </Typography>
                         </Box>
                         <IconButton sx={{ color: colorPalette.darkBackground }} >
@@ -213,7 +241,7 @@ function CreateTaskModal(props: any) {
                             loading={loading}
                             onClick={handleCreateTask}
                         >
-                            Create
+                            {props.data != null ? 'Update' : 'Create'}
                         </LoadingButton>
                     </Box>
                 </Box>
