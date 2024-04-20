@@ -12,6 +12,7 @@ import axios from 'axios';
 import { getCompanyPersonListURL } from '../../Utils/Endpoints';
 import { useNavigate, useParams } from 'react-router';
 import { handleLogout, handleUnAuth } from '../../Utils/FeedbackUtils';
+import { tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -96,12 +97,12 @@ function CompanyPeopleTab() {
         </Box>
       </Box>
       <Box sx={{ padding: '20px' }} >
-        <TableContainer sx={{ backgroundColor: colorPalette.textSecondary, border: 'none', height: 'calc(100vh - 95px)' }} >
+        <TableContainer sx={{ ...tableContainerStyle, height: 'calc(100vh - 95px)' }} >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow >
                 {col?.map((column: string) => (
-                  <TableCell sx={{ fontWeight: '600' }} key={column}>
+                  <TableCell sx={{ ...tableCellStyle,fontWeight: '600',background : colorPalette.secondary }} key={column}>
                     {
                       column !== 'checkbox' ? column :
                         <Checkbox onClick={handleSelectAll} color='secondary' />
@@ -114,22 +115,22 @@ function CompanyPeopleTab() {
               {
                 peopleList?.map(person => (
                   <TableRow key={person.id} >
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       <Checkbox checked={person?.checked} color='secondary' />
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {person.firstName + person.lastName}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {person.email}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {person.company.name}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {new Date(person.created_at).toLocaleDateString()}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       <IconButton onClick={() => handleOpenPeopleDetail(person.id)} size='small' >
                         <ArrowForwardIosIcon fontSize='small' />
                       </IconButton>
@@ -148,7 +149,6 @@ function CompanyPeopleTab() {
             page={0}
             onPageChange={() => { }}
             onRowsPerPageChange={() => { }}
-            sx={{ background: colorPalette.textSecondary }}
           />
         </TableContainer>
       </Box>

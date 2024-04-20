@@ -106,11 +106,11 @@ function SideBar(props: any) {
                         <GroupsIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.CONTACTS)} className='sidebar-icons' />
                     </LightTooltip>
                 </Box>
-                <Box className={sideBarPos === SIDE_BAR_IDS.SEGMENT ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                {/* <Box className={sideBarPos === SIDE_BAR_IDS.SEGMENT ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.SEGMENT} placement="right-start" arrow>
                         <SegmentIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.SEGMENT)} className='sidebar-icons' />
                     </LightTooltip>
-                </Box>
+                </Box> */}
                 <Box className={sideBarPos === SIDE_BAR_IDS.FLOWS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.FLOWS} placement="right-start" arrow>
                         <AutoModeIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.FLOWS)} className='sidebar-icons' />

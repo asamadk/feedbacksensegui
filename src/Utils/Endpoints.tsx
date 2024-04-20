@@ -58,8 +58,8 @@ export const checkBeforeSaveSurveyFlow = (surveyId : string) : string => {
     return BASE_URL + `/survey/save/check/${surveyId}`;
 }
 
-export const getShareSurveyLink = (currentLocation : string,surveyId : any) : string => {
-    return `${currentLocation}/share/survey/${surveyId}`;
+export const getShareSurveyLink = (currentLocation : string,surveyId : any,personId : string) : string => {
+    return `${currentLocation}/share/survey/${surveyId}?person=${personId}`;
 }
 
 export const saveSurveyDesgin = (surveyId : string) : string => {
@@ -238,6 +238,18 @@ export const getCompanyPeopleOptionURL = () => {
     return `${BASE_URL}/company/select-options`
 }
 
+export const deleteCompanyURL = () => {
+    return `${BASE_URL}/company/delete`;
+}
+
+export const getCompanySurveyResponseURL = (companyId : string) => {
+    return `${BASE_URL}/company/survey-response?companyId=${companyId}`;
+}
+
+export const deletePersonURL = () => {
+    return `${BASE_URL}/people/delete`;
+}
+
 export const getCompanyListURL = (page : number,limit : number,searchStr : string) => {
     return `${BASE_URL}/company/get/list?page=${page}&limit=${limit}&search=${searchStr}`
 }
@@ -278,10 +290,50 @@ export const updateTaskURL = () => {
     return `${BASE_URL}/task/update`
 }
 
-export const getTaskURL = (companyId: string, personId: string, page: number, limit: number) => {
+export const getTaskURL = (companyId: string | null, personId: string | null, page: number, limit: number) => {
+    if(companyId == null){
+        companyId = '';
+    }
+    if(personId == null){
+        personId = '';
+    }
     return `${BASE_URL}/task/get?page=${page}&limit=${limit}&companyId=${companyId}&personId=${personId}`
 }
 
 export const deleteTaskURL = (taskId : string) => {
     return `${BASE_URL}/task/delete?taskId=${taskId}`
+}
+
+export const getActivitiesURL = (personId : string,companyId : string) => {
+    return `${BASE_URL}/activity/get?companyId=${companyId}&personId=${personId}`
+}
+
+export const createNoteURL = () => {
+    return `${BASE_URL}/notes/create`
+}
+
+export const getNotesURL = (companyId: string | null, personId: string | null, page: number, limit: number) => {
+    if(companyId == null){
+        companyId = '';
+    }
+    if(personId == null){
+        personId = '';
+    }
+    return `${BASE_URL}/notes/get?page=${page}&limit=${limit}&companyId=${companyId}&personId=${personId}`;
+}
+
+export const deleteNotesURL = (noteId : string) => {
+    return `${BASE_URL}/notes/delete?noteId=${noteId}`
+}
+
+export const getUsageEventTypeURL = () => {
+    return `${BASE_URL}/usage-event-type/list`;
+}
+
+export const createUsageEventTypeURL = () => {
+    return `${BASE_URL}/usage-event-type/create`;
+}
+
+export const deleteUsageEventTypeURL = (eventTypeId : string) => {
+    return `${BASE_URL}/usage-event-type/delete?usageEventTypeId=${eventTypeId}`;
 }

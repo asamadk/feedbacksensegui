@@ -28,7 +28,7 @@ function CreateTaskModal(props: any) {
     const [desc, setDesc] = useState('');
     const [priority, setPriority] = useState('');
     const [dueDate, setDueDate] = useState('');
-    const [person, setPerson] = useState('');
+    const [person, setPerson] = useState(props.personId);
     const [company, setCompany] = useState('');
     const [status, setStatus] = useState('');
 
@@ -43,11 +43,12 @@ function CreateTaskModal(props: any) {
     }, [props.data]);
 
     function populateTaskData(task: any) {
+        console.log("🚀 ~ populateTaskData ~ task:", task)
         setTitle(task.title);
         setDesc(task.description);
         setPriority(task.priority);
         setDueDate(task.dueDate);
-        setPerson(task[0]?.id);
+        setPerson(task.person[0]?.id);
         setCompany(task.company[0]?.id);
         setStatus(task.status);
     }
@@ -56,10 +57,25 @@ function CreateTaskModal(props: any) {
         props.close({ refresh: false });
     }
 
+    function getCompanyId():string{
+        let compId = '';
+        if(props.companyId != null && props.companyId.length > 0){
+            compId = props.companyId;
+        }else{
+            peopleOptions.forEach((p : any) => {
+                if(p?.id === props.personId){
+                    compId = p.company.id;
+                    return;
+                }
+            })
+        }
+        return compId;
+    }
+
     async function handleCreateTask() {
         const payload: any = {
             personID: person,
-            companyID: props.companyId,
+            companyID: getCompanyId(),
             title: title,
             description: desc,
             priority: priority,
@@ -74,7 +90,8 @@ function CreateTaskModal(props: any) {
         if (
             payload.title == null || payload.title.length < 1 ||
             payload.priority == null || payload.priority.length < 1 ||
-            payload.dueDate == null || payload.dueDate.length < 1
+            payload.dueDate == null || payload.dueDate.length < 1 ||
+            payload.status == null || payload.status.length < 1 
         ) {
             snackbarRef?.current?.show('Please select all the required values', 'warning');
             return;
@@ -179,12 +196,12 @@ function CreateTaskModal(props: any) {
                                     size='small'
                                     placeholder='plan'
                                     fullWidth
+                                    disabled={props.personId != null}
                                     value={person}
                                     onChange={(e) => setPerson(e.target.value as string)}
                                 >
                                     {
                                         peopleOptions?.map((people: any) =>
-                                            people.company.id === props.companyId &&
                                             <MenuItem value={people.id} >{people.firstName}</MenuItem>
                                         )
                                     }
@@ -201,7 +218,6 @@ function CreateTaskModal(props: any) {
                                 >
                                     {
                                         companiesOptions?.map((company: any) =>
-                                            company.id === props.companyId &&
                                             <MenuItem value={company.id} >{company.name}</MenuItem>
                                         )
                                     }

@@ -2,6 +2,7 @@ import { logout } from "./Endpoints";
 import { logicType } from "./types";
 import { DEFAULT_KEY } from "../SurveyEngine/CoreUtils/CoreConstants";
 import { USER_UNAUTH_TEXT, colorPalette, contactFieldTypes, fieldTypes } from "./Constants";
+import platform from 'platform';
 
 
 export const getComponentConfigFromNode = (node: any) => {
@@ -295,6 +296,11 @@ export const getSurveyUserInformation = () => {
     const details = {
         userAgent: window.navigator.userAgent,
         languages: window.navigator.languages,
+        platform : {
+            os : platform.os,
+            browser : platform.name,
+            product : platform.product
+        }
     }
     return details;
 }
@@ -482,4 +488,16 @@ export const getTwelveMonthAgoDate = () => {
     const twelveMonthAgo = new Date(today);
     twelveMonthAgo.setDate(today.getDate() - 365);
     return twelveMonthAgo.toLocaleDateString('en-US');
+}
+
+export function getPersonName(person : any) : string{
+    let name = 'N/A';
+    if(person == null){return name}
+    if(person.firstName != null && person.firstName.length > 0){
+        name = person.firstName;
+    }
+    if(person.lastName != null && person.lastName.length > 0){
+        name = `${name} ${person.lastName}`;
+    }
+    return name;
 }

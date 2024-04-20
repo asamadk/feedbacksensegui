@@ -8,7 +8,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import FSLoader from '../Components/FSLoader';
 import Notification from '../Utils/Notification';
 import { handleLogout } from '../Utils/FeedbackUtils';
-import { USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
 import axios from 'axios';
 import { getSubscriptionPaymentHistory } from '../Utils/Endpoints';
 import { setPaymentHistoryRedux } from '../Redux/Reducers/paymentHistoryReducer';
@@ -95,7 +95,7 @@ function PaymentHistoryModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={{ ...modalStyle(defaultColor?.secondaryColor), width: '70%', height: 'calc(100vh - 250px)' }}>
+                <Box sx={{ ...modalStyle(colorPalette.background), width: '70%', height: 'calc(100vh - 250px)' }}>
                     <Box sx={modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Payment History

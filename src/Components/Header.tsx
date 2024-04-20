@@ -68,24 +68,19 @@ function Header(props: any) {
                 setGenericModalObj(genDeleteObj);
                 return;
             }
-            navigate('/');
+            navigate('/surveys');
             setBackHome(true);
         }
     }
 
 
     const handleSuccessButtonClick = () => {
-        navigate('/');
+        navigate('/surveys');
         setShowGenericModal(false);
         const tempWorkflowDirty: any = {};
         tempWorkflowDirty[currentWorkflowId] = false;
         dispatch(updateWorkflowDirty(tempWorkflowDirty));
         dispatch(updateWorkflowCheck(tempWorkflowDirty));
-    }
-
-    const handleIconJoyrideOver = () => {
-        setIconJoyrideOver(null);
-        setIconJoyrideOver(true);
     }
 
     return (

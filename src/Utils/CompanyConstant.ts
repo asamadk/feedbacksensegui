@@ -49,3 +49,5 @@ export const communicationPrefOptions = ['Email','Phone']
 export const taskPriorityOptions = ['Low','Medium','High','Urgent'];
 
 export const taskStatusOptions = ['Open' , 'InProgress' , 'Completed' , 'Cancelled'];
+
+export const noteVisibilityOptions = ['private' , 'team' , 'public' ];

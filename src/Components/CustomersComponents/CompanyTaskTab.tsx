@@ -11,31 +11,10 @@ import { handleUnAuth } from '../../Utils/FeedbackUtils';
 import axios from 'axios';
 import { deleteTaskURL, getTaskURL, updateTaskURL } from '../../Utils/Endpoints';
 import GenericModal from '../../Modals/GenericModal';
+import { taskStatusStyle } from '../../Styles/LayoutStyles';
+import { tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 
-const taskStatusStyle = (status: 'Open' | 'InProgress' | 'Completed' | 'Cancelled') => {
-
-  let bgColor = colorPalette.secondary;
-  let color = colorPalette.primary;
-  if (status === 'Completed') {
-    bgColor = '#CBF0CB';
-    color = '#008000';
-  } else if (status === 'Cancelled') {
-    bgColor = '#ffe6e6';
-    color = '#ff0000';
-  }
-
-  return {
-    background: bgColor,
-    color: color,
-    padding: '5px',
-    borderRadius: '6px',
-    fontWeight: '600',
-    width: 'fit-content',
-    cursor: 'pointer'
-  }
-}
-
-function CompanyTaskTab(props: { companyId: string }) {
+function CompanyTaskTab(props: { companyId: string | null, personId: string | null }) {
 
   const snackbarRef: any = useRef(null);
 
@@ -72,7 +51,7 @@ function CompanyTaskTab(props: { companyId: string }) {
   async function fetchTasks() {
     try {
       setLoading(true);
-      const { data } = await axios.get(getTaskURL(props.companyId, '', page, 20), { withCredentials: true });
+      const { data } = await axios.get(getTaskURL(props.companyId, props.personId, page, 20), { withCredentials: true });
       if (data.data) {
         const count = data.data.count;
         const list = data.data.list;
@@ -147,7 +126,6 @@ function CompanyTaskTab(props: { companyId: string }) {
 
   async function handleTaskStatusUpdate(task: any, status: string) {
     setAnchorEl(null);
-    console.log("🚀 ~ handleTaskStatusUpdate ~ task:", task)
     const payload: any = {
       // personID: person,
       // companyID: props.companyId,
@@ -196,12 +174,12 @@ function CompanyTaskTab(props: { companyId: string }) {
         }
       </Box>
       <Box marginTop={'20px'} >
-        <TableContainer sx={{ backgroundColor: colorPalette.textSecondary, border: 'none', height: 'calc(100vh - 335px)' }} >
+        <TableContainer sx={{ ...tableContainerStyle, height: 'calc(100vh - 335px)' }} >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
+            <TableHead >
               <TableRow >
                 {col?.map((column: string) => (
-                  <TableCell sx={{ fontWeight: '600' }} key={column}>
+                  <TableCell sx={{ ...tableCellStyle,fontWeight: '600',backgroundColor : colorPalette.secondary }} key={column}>
                     {column}
                   </TableCell>
                 ))}
@@ -211,25 +189,25 @@ function CompanyTaskTab(props: { companyId: string }) {
               {
                 taskList?.map(task => (
                   <TableRow key={task.id} >
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {/* <Checkbox color='secondary' /> */}
                       {task.title}
                       <Typography sx={{ color: colorPalette.primary }} >{task?.company[0]?.name}</Typography>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       <b style={{ color: colorPalette.primary }} >
                         {task.person?.firstName || 'N/A'}
                       </b>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       <b style={{ color: colorPalette.primary }} >
                         {task.owner?.name}
                       </b>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {task.dueDate}
                     </TableCell>
-                    <TableCell >
+                    <TableCell  sx={tableCellStyle} >
                       <Box sx={taskStatusStyle(task.status)} >
                         <span onClick={handleStatusClick} >{task.status}</span>
                       </Box>
@@ -254,7 +232,7 @@ function CompanyTaskTab(props: { companyId: string }) {
                         </MenuItem>
                       </Menu>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       <IconButton onClick={() => handleTaskEdit(task)} size='small' >
                         <EditIcon sx={{ color: colorPalette.fsGray }} />
                       </IconButton>
@@ -277,14 +255,19 @@ function CompanyTaskTab(props: { companyId: string }) {
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={() => { }}
-              sx={{ background: colorPalette.textSecondary }}
             />
           }
         </TableContainer>
       </Box>
       {
         showTaskModal &&
-        <CreateTaskModal data={updateTaskData} companyId={props.companyId} open={showTaskModal} close={handleCloseModal} />
+        <CreateTaskModal 
+          data={updateTaskData} 
+          companyId={props.companyId} 
+          personId={props.personId}
+          open={showTaskModal} 
+          close={handleCloseModal} 
+        />
       }
       <FSLoader show={loading} />
       <Notification ref={snackbarRef} />

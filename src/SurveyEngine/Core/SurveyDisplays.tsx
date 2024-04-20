@@ -147,6 +147,7 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
         }
         data.surveyCompleted = surveyCompleted;
         try {
+            const personId =  searchParams.get('person');
             const userDetails = getSurveyUserInformation();
             let tempResponse = {
                 uiId: currentSurvey?.data?.uId,
@@ -157,6 +158,7 @@ function SurveyDisplays({ mode, templateId, source }: propType) {
             axios.post(saveSurveyResponseDb(surveyId), {
                 data: tempResponse,
                 info: userDetails,
+                personId : personId,
                 anUserId: localStorage.getItem(`${surveyId}_${LIVE_SURVEY_USER_ID}`)
             }, { withCredentials: true });
         } catch (error: any) {

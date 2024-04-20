@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, TextField, Tooltip, Typography, styled } from '@mui/material';
+import { Box, Button, IconButton, SxProps, TextField, Theme, Tooltip, Typography, styled } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import InviteMemberModal from '../Modals/InviteMemberModal';
 import AppsIcon from '@mui/icons-material/Apps';
@@ -37,11 +37,12 @@ const surveyPageMainContainer = {
 }
 
 const leftSectionStyle: any = {
+    height : '100vh',
+    background : colorPalette.secondary,
     display: 'flex',
     width: '18%',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    // padding: '10px 0px',
     boxShadow: '10px 0px rgba(0, 0, 0, 0.08)'
 }
 
@@ -167,11 +168,13 @@ function SurveyListPage() {
     }, [surveyState]);
 
     const handlePlanVisibility = (tempSettings :any) => {
-        if (tempSettings != null && tempSettings[FOLDER_FEATURE_ACTIVE] === 'true') {
-            setShowFolder(true);
-        } else {
-            setShowFolder(false);
-        }
+        //TODO uncomment this section (commenting this just for testing) and remove the first setState
+        setShowFolder(true);
+        // if (tempSettings != null && tempSettings[FOLDER_FEATURE_ACTIVE] === 'true') {
+        //     setShowFolder(true);
+        // } else {
+        //     setShowFolder(false);
+        // }
     }
 
     const fetchCustomSettings = async () => {
@@ -272,10 +275,10 @@ function SurveyListPage() {
         setSelectedFolderId('0');
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = colorPalette.background;
+            element.style.background = colorPalette.secondary;
         });
 
-        e.target.style.background = colorPalette.secondary;
+        e.target.style.background = colorPalette.background;
     }
 
     const handleFolderClick = (e: any, folderName: string, folderId: string) => {
@@ -293,13 +296,13 @@ function SurveyListPage() {
         setSelectedFolderId(folderId);
 
         document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
-            element.style.background = colorPalette.background;
+            element.style.background = colorPalette.secondary;
         })
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = colorPalette.background;
+            element.style.background = colorPalette.secondary;
         });
-        e.target.style.background = colorPalette.secondary;
+        e.target.style.background = colorPalette.background;
     }
 
     const handleOpenInviteModal = () => setOpenInviteModal(true);
@@ -469,7 +472,7 @@ function SurveyListPage() {
                                 +
                             </Typography>
                         </div>
-                        <div style={allSurveyFolder(colorPalette.secondary)} className="all-folders-data" onClick={handleAllFolderClick} >
+                        <div style={allSurveyFolder(colorPalette.background)} className="all-folders-data" onClick={handleAllFolderClick} >
                             <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >All Surveys</Typography>
                         </div>
                         {

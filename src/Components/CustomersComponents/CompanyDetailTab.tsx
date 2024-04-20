@@ -40,8 +40,8 @@ const tagStyle = {
 
 function CompanyDetailTab({ company }: any) {
 
-  const [details, setDetails] = useState<any[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [details, setDetails] = useState<any[]>([]);
   const [tagList,setTagList] = useState(company.tags);
 
   useEffect(() => {

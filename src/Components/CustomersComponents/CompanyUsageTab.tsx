@@ -5,6 +5,7 @@ import Groups2Icon from '@mui/icons-material/Groups2';
 import ViewStreamIcon from '@mui/icons-material/ViewStream';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { colorPalette, getUsageTimeFilter } from '../../Utils/Constants'
+import { tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 
 const usageContainer = {
   border: `1px ${colorPalette.textSecondary} solid`,
@@ -105,12 +106,12 @@ function CompanyUsageTab() {
 
       <Box sx={{marginTop: '50px',textAlign : 'start' }} >
         <Typography variant='h5' ><Groups2Icon/>Top Contacts</Typography>
-        <TableContainer sx={{ backgroundColor: colorPalette.textSecondary, border: 'none',marginTop : '10px'}} >
+        <TableContainer sx={tableContainerStyle} >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow >
                 {col?.map((column: string) => (
-                  <TableCell sx={{ fontWeight: '600' }} key={column}>
+                  <TableCell sx={{ ...tableCellStyle,fontWeight: '600',background : colorPalette.secondary }} key={column}>
                     {column}
                   </TableCell>
                 ))}
@@ -120,19 +121,19 @@ function CompanyUsageTab() {
               {
                 people?.map(person => (
                   <TableRow key={person.id} >
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {person.name}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {person.account}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {person.totalEvents}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {person.days}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {person.timeInApp}
                     </TableCell>
                   </TableRow>

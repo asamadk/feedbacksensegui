@@ -1,5 +1,5 @@
-import { Box, Button, IconButton, Menu, MenuItem, Tab, Tabs, Typography } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import { Box, Button, IconButton, Menu, MenuItem, Tab, Tabs, Tooltip, Typography } from '@mui/material'
+import React, { SyntheticEvent, useEffect, useRef, useState } from 'react'
 import { containedButton, outlinedBlackButton, outlinedButton } from '../../Styles/ButtonStyle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { colorPalette } from '../../Utils/Constants';
@@ -14,7 +14,7 @@ import CompanyTicketTab from './CompanyTicketTab';
 import CompanySurveyTab from './CompanySurveytab';
 import { useLocation, useNavigate } from 'react-router';
 import CloseIcon from '@mui/icons-material/Close';
-import RowingIcon from '@mui/icons-material/Rowing';
+import CreateCompanyModal from '../../Modals/ContactModals/CreateCompanyModal';
 
 function CompanyDetailPage() {
 
@@ -25,6 +25,8 @@ function CompanyDetailPage() {
     const [value, setValue] = useState('details');
     const [loading, setLoading] = useState(false);
     const [company, setCompany] = useState(location.state);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [openActivities, setOpenActivities] = useState(false);
 
     useEffect(() => {
         setCompany(location.state);
@@ -40,16 +42,30 @@ function CompanyDetailPage() {
         } else if (value === 'people') {
             return <CompanyPeopleTab />
         } else if (value === 'task') {
-            return <CompanyTaskTab companyId={company.id} />
+            return <CompanyTaskTab personId={null} companyId={company.id} />
         } else if (value === 'notes') {
-            return <CompanyNotesTab />
-        } else if (value === 'activity') {
-            return <CompanyActivityTab />
+            return <CompanyNotesTab personId={null} companyId={company.id} />
         } else if (value === 'tickets') {
             return <CompanyTicketTab />
         } else if (value === 'survey') {
-            return <CompanySurveyTab />
+            return <CompanySurveyTab personId={null} companyId={company.id} />
         }
+    }
+
+    function handleCreateModalClose(data: any) {
+        setShowCreateModal(false);
+        console.log("🚀 ~ handleCreateModalClose ~ data:", data)
+    }
+
+    function handleEdit() {
+        setShowCreateModal(true);
+    }
+
+    function handleActivities() {
+        setOpenActivities(true);
+    }
+
+    function handleDelete() {
     }
 
     return (
@@ -65,13 +81,12 @@ function CompanyDetailPage() {
                     </Box>
                 </Box>
                 <Box display={'flex'} >
-                    <Box sx={{ marginTop: '7px' }} >
-                        {/* <QuickActions /> */}
-                        <Button
-                            startIcon={<RowingIcon />}
-                            sx={{ ...containedButton, marginTop: '0px' }}
-                            variant='contained'
-                        >Activities</Button>
+                    <Box marginTop={'7px'} >
+                        <QuickActions
+                            activities={handleActivities}
+                            delete={handleDelete}
+                            handleEdit={handleEdit}
+                        />
                     </Box>
                     <IconButton onClick={() => (navigate(-1))} sx={{ width: '50px', marginLeft: '10px' }} >
                         <CloseIcon />
@@ -80,6 +95,20 @@ function CompanyDetailPage() {
             </Box>
             <MultiTab value={(data: string) => setValue(data)} />
             <Box>{ShowTabPage()}</Box>
+
+            {
+                openActivities &&
+                <CompanyActivityTab companyId={company.id} open={openActivities} close={() => setOpenActivities(false)} />
+            }
+            {
+                showCreateModal &&
+                <CreateCompanyModal
+                    data={company}
+                    type='companies'
+                    open={showCreateModal}
+                    close={handleCreateModalClose}
+                />
+            }
         </Box>
     )
 }
@@ -106,19 +135,18 @@ function MultiTab(props: any) {
             >
                 <Tab value="details" label="Details" />
                 <Tab value="communication" label="Communication" />
-                {/* <Tab value="usage" label="Usage" /> */}
+                <Tab value="usage" label="Usage" />
                 <Tab value="people" label="People" />
                 <Tab value="task" label="Tasks" />
                 <Tab value="notes" label="Notes" />
-                <Tab value="activity" label="Activity" />
-                {/* <Tab value="tickets" label="Tickets" /> */}
+                <Tab value="tickets" label="Tickets" />
                 <Tab value="survey" label="Survey Responses" />
             </Tabs>
         </Box>
     )
 }
 
-function QuickActions() {
+function QuickActions(props: { handleEdit: any, activities: any, delete: any }) {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -128,6 +156,21 @@ function QuickActions() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    function handleEdit() {
+        props.handleEdit();
+        handleClose();
+    }
+
+    function handleActivities() {
+        props.activities();
+        handleClose();
+    }
+
+    function handleDelete() {
+        props.delete();
+        handleClose();
+    }
 
     return (
         <>
@@ -140,7 +183,7 @@ function QuickActions() {
                 sx={{ ...containedButton, marginTop: 0 }}
                 endIcon={<ExpandMoreIcon />}
             >
-                Quick Actions
+                Actions
             </Button>
             <Menu
                 id="basic-menu"
@@ -151,9 +194,9 @@ function QuickActions() {
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem onClick={handleEdit} id='edit' >Edit/Update</MenuItem>
+                <MenuItem onClick={handleActivities} id='activities' >View Activities</MenuItem>
+                {/* <MenuItem onClick={handleDelete} id='delete' sx={{ color: 'red' }} >Delete</MenuItem> */}
             </Menu>
         </>
     )

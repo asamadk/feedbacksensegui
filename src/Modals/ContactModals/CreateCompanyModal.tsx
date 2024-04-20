@@ -31,7 +31,7 @@ const VisuallyHiddenInput = styled('input')({
 const CssTextField = styled(TextField)(textFieldStyle);
 const CustomSelect = styled(Select)(muiSelectStyle);
 
-function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' | 'companies' }) {
+function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' | 'companies', data: any }) {
 
     const snackbarRef: any = useRef(null);
     const settings = useSelector((state: any) => state.settings);
@@ -42,7 +42,7 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
     const [addBulk, setAddBulk] = useState(false);
     const [userOptions, setUserOptions] = useState<{ label: any, value: any }[]>([]);
     const [columnNames, setColumnNames] = useState([]);
-    const [csvData,setCSVData] = useState('');
+    const [csvData, setCSVData] = useState('');
 
     const [name, setName] = useState('');
     const [website, setWebsite] = useState('');
@@ -53,6 +53,7 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
     const [plan, setPlan] = useState('');
     const [address, setAddress] = useState('');
     const [amount, setAmount] = useState<number>();
+    const [recordId, setRecordId] = useState<string | null>(null);
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -74,7 +75,37 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
         setUserOptions(tmp);
     }, [users]);
 
-    const handleClose = (refresh : any) => {
+    let init = false;
+    useEffect(() => {
+        if (props.data != null && init === false) {
+            if (props.type === 'companies') {
+                populateCompany(props.data);
+            } else {
+                populatePerson(props.data);
+            }
+            init = true;
+        }
+    }, [props.data]);
+
+    function populatePerson(record: any) {
+        console.log("🚀 ~ populateData ~ record:", record)
+    }
+
+    function populateCompany(record: any) {
+        console.log("🚀 ~ populateData ~ record:", record)
+        setName(record.name);
+        setWebsite(record.website);
+        setIndustry(record.industry);
+        setLStage(record.lifecycleStage);
+        setOwner(record?.owner?.id);
+        setStatus(record?.status);
+        // setPlan(record?.)
+        setAddress(record?.address);
+        setAmount(record.totalContractAmount);
+        setRecordId(record?.id);
+    }
+
+    const handleClose = (refresh: any) => {
         props.close({ refresh: refresh });
     }
 
@@ -122,7 +153,8 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
             status: status,
             plan: plan,
             address: address,
-            amount: amount
+            amount: amount,
+            id: recordId
         }
 
         if (
@@ -154,12 +186,6 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
                         <Typography id="modal-modal-title" variant="h5" component="h2" >
                             <BusinessIcon /> Create Person
                         </Typography>
-                        {/* <Typography
-                            onClick={() => setAddBulk(true)}
-                            sx={{ fontSize: '12px', textDecoration: 'underline', cursor: 'pointer' }}
-                        >
-                            Want to add bulk {props.type}? Click here
-                        </Typography> */}
                     </Box>
                     <IconButton sx={{ color: colorPalette.darkBackground }} >
                         <CloseIcon onClick={handleClose} />
@@ -317,14 +343,17 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
                 <Box sx={modalHeaderStyle} >
                     <Box>
                         <Typography id="modal-modal-title" variant="h5" component="h2" >
-                            <BusinessIcon /> Create Company
+                            <BusinessIcon /> {props.data != null ? 'Update' : 'Create'} Company
                         </Typography>
-                        <Typography
-                            onClick={() => setAddBulk(true)}
-                            sx={{ fontSize: '12px', textDecoration: 'underline', cursor: 'pointer' }}
-                        >
-                            Want to add bulk {props.type}? Click here
-                        </Typography>
+                        {
+                            props.data == null &&
+                            <Typography
+                                onClick={() => setAddBulk(true)}
+                                sx={{ fontSize: '12px', textDecoration: 'underline', cursor: 'pointer' }}
+                            >
+                                Want to add bulk {props.type}? Click here
+                            </Typography>
+                        }
                     </Box>
                     <IconButton sx={{ color: colorPalette.darkBackground }} >
                         <CloseIcon onClick={handleClose} />
@@ -477,7 +506,7 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
                         loading={loading}
                         onClick={handleCreateIndividualCompany}
                     >
-                        Create
+                        {props.data != null ? 'Update' : 'Create'}
                     </LoadingButton>
                 </Box>
             </Box>

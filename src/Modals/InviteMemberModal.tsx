@@ -91,7 +91,7 @@ function InviteMemberModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyle(defaultColor?.secondaryColor)}>
+                <Box sx={ModalStyles.modalStyle(colorPalette.background)}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2" >
                             Invite your team members !

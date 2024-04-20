@@ -8,6 +8,8 @@ import BrandingWatermarkIcon from '@mui/icons-material/BrandingWatermark';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
+import DeviceHubIcon from '@mui/icons-material/DeviceHub';
+import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 
 import '../Styles/CSS/SettingsSideBar.css';
 import { useNavigate } from 'react-router';
@@ -16,6 +18,8 @@ import OrgTeamMatesSettings from '../Components/OrgTeamMatesSettings';
 import SubscriptionSettings from '../Components/SubscriptionSettings';
 import SurveyGeneralSettings from '../Components/SurveyGeneralSettings';
 import Support from './Support';
+import CustomerHubSettingsLayout from './CustomerHubSettingsLayout';
+import AnalyticsSettingsLayout from './AnalyticsSettingsLayout';
 
 const sideBarStyle = {
     background: colorPalette.secondary,
@@ -36,7 +40,9 @@ const settingIds = {
     LOGO: 'LOGO',
     ACCOUNT: 'ACCOUNT',
     NOTIFICATIONS: 'NOTIFICATIONS',
-    TICKET: 'TICKET'
+    TICKET: 'TICKET',
+    CUSTOMER_HUB : 'CUSTOMER_HUB',
+    ANALYTICS : 'ANALYTICS'
 }
 
 function SettingsLayout() {
@@ -98,6 +104,14 @@ function SettingsLayout() {
                         <BrandingWatermarkIcon id={settingIds.LOGO} />
                         <p id={settingIds.LOGO}  >Custom Logo</p>
                     </Box>
+                    <Box className='tabs' id={settingIds.CUSTOMER_HUB} onClick={handleSettingsClick} >
+                        <DeviceHubIcon id={settingIds.CUSTOMER_HUB} />
+                        <p id={settingIds.CUSTOMER_HUB}  >Customer Hub</p>
+                    </Box>
+                    <Box className='tabs' id={settingIds.ANALYTICS} onClick={handleSettingsClick} >
+                        <AutoGraphIcon id={settingIds.ANALYTICS} />
+                        <p id={settingIds.ANALYTICS}  >Analytics</p>
+                    </Box>
                 </Box>
 
                 {/* user tab */}
@@ -118,11 +132,13 @@ function SettingsLayout() {
                 </Box>
             </Box>
 
-            <Box width={'80%'} sx={{backgroundColor : colorPalette.textSecondary}} padding={'20px'}>
+            <Box width={'90%'} sx={{backgroundColor : colorPalette.textSecondary}} padding={'20px'}>
                 {selectedPos === settingIds.GENERAL && <OrgGeneralSettings/>}
                 {selectedPos === settingIds.TEAM && <OrgTeamMatesSettings/>}
                 {selectedPos === settingIds.BILL && <SubscriptionSettings/>}
                 {selectedPos === settingIds.LOGO && <SurveyGeneralSettings/>}
+                {selectedPos === settingIds.CUSTOMER_HUB && <CustomerHubSettingsLayout/>}
+                {selectedPos === settingIds.ANALYTICS && <AnalyticsSettingsLayout/>}
                 {selectedPos === settingIds.TICKET && <Support />}
             </Box>
         </Box>

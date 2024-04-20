@@ -12,9 +12,12 @@ import GenericModal from '../Modals/GenericModal';
 import EmptyAnalysis from './OverAllResults/EmptyAnalysis';
 import { USER_UNAUTH_TEXT, colorPalette, componentName } from '../Utils/Constants';
 import { useNavigate } from 'react-router';
-import { handleLogout } from '../Utils/FeedbackUtils';
+import { getPersonName, handleLogout } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
 import { CoreUtils } from '../SurveyEngine/CoreUtils/CoreUtils';
+import AndroidIcon from '@mui/icons-material/Android';
+import CategoryIcon from '@mui/icons-material/Category';
+import TabIcon from '@mui/icons-material/Tab';
 
 const responseStyle = (bgColor: string) => {
     return {
@@ -75,7 +78,7 @@ function IndividualResponse(props: IndividualResponseProps) {
             fetchSurveyResponseList()
             init = true;
         }
-    }, []);
+    }, []);     
 
     const fetchSurveyResponseList = async () => {
         try {
@@ -89,14 +92,18 @@ function IndividualResponse(props: IndividualResponseProps) {
             const responseList: any[] = data.data;
             let count = 0;
             responseList.forEach(res => {
+                res.userDetails = JSON.parse(res.userDetails);
                 if (count === 0) {
                     setSelectedResponse(res);
                     res.selected = true;
+
                 } else {
                     res.selected = false;
                 }
                 count++;
             });
+            console.log("🚀 ~ fetchSurveyResponseList ~ responseList:", responseList)
+
             if (responseList.length < 1) {
                 setIsEmpty(true);
             } else {
@@ -217,11 +224,19 @@ function IndividualResponse(props: IndividualResponseProps) {
                                         onClick={() => handleResponseListClick(res.id)}
                                         sx={res?.selected === true ? selectedResponseStyle(colorPalette.darkBackground) : responseStyle(colorPalette?.textSecondary)}
                                     >
-                                        <Typography fontSize={'14px'} fontWeight={'600'} color={res?.selected === true ? colorPalette.secondary : colorPalette.primary} >{'Anonymous Response'}</Typography>
+                                        <Typography 
+                                            fontSize={'14px'} 
+                                            fontWeight={'600'} 
+                                            color={res?.selected === true ? colorPalette.secondary : colorPalette.primary} 
+                                        >
+                                            {getPersonName(res?.person)}
+                                        </Typography>
                                         <Typography
                                             sx={{ fontSize: '13px' }}
                                             color={res?.selected === true ? colorPalette.textSecondary : colorPalette.textPrimary}
-                                        >{res?.id}</Typography>
+                                        >
+                                            {res?.company != null ?res?.company?.name : 'N/A'}
+                                        </Typography>
                                         <Typography
                                             sx={{ fontSize: '13px' }}
                                             color={res?.selected === true ? colorPalette.secondary : colorPalette.primary}
@@ -269,7 +284,18 @@ function IndividualResponse(props: IndividualResponseProps) {
                         <Box sx={{ ...columnStyle, width: '25%', margin: '0px 10px' }} padding={'10px'} color={colorPalette.darkBackground} textAlign={'start'}>
                             <Typography fontWeight={'600'} fontSize={'14px'} >Response details</Typography>
                             <Box color={colorPalette.fsGray} marginTop={'12px'}>
-                                <Typography>{selectedResponse?.userDetails}</Typography>
+                                <Typography>
+                                    <AndroidIcon sx={{color : colorPalette.primary,position : 'relative',top : 5,marginRight : '10px'}} />
+                                    {`OS : ${selectedResponse?.userDetails?.os?.family}`}
+                                </Typography>
+                                <Typography>
+                                    <CategoryIcon sx={{color : colorPalette.primary,position : 'relative',top : 5,marginRight : '10px'}} />
+                                    {`Product : ${selectedResponse?.userDetails?.product}`}
+                                </Typography>
+                                <Typography>
+                                    <TabIcon sx={{color : colorPalette.primary,position : 'relative',top : 5,marginRight : '10px'}} />
+                                    {`Browser : ${selectedResponse?.userDetails?.browser}`}
+                                </Typography>
                             </Box>
                         </Box>
                     </Box>

@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Snackbar, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, Checkbox, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import * as ButtonStyles from '../Styles/ButtonStyle'
 import React, { useRef, useState } from 'react'
 import { styled } from '@mui/system';
@@ -8,12 +8,10 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadIcon from '@mui/icons-material/Download';
 import QRCode from "react-qr-code";
 import { useSelector } from 'react-redux';
-import { CopyBlock, dracula } from 'react-code-blocks';
-import { nord } from 'react-code-blocks';
-import CustomTabSet from '../Components/CustomTabSet';
-import { ConfigurePageTabList } from '../Utils/FeedbackUtils';
+import { CopyBlock} from 'react-code-blocks';
 import { textFieldStyle } from '../Styles/InputStyles';
 import { colorPalette } from '../Utils/Constants';
+import { tableBodyText, tableCellStyle,tableContainerStyle } from '../Styles/TableStyle';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -33,8 +31,10 @@ function ShareSurvey() {
   </script>
   <!-- End of feedbacksense code -->`;
 
+  const col = ['Person\'s Name','Company Name','Action'];
   const [open, setOpen] = React.useState(false);
-  const defaultColor = useSelector((state: any) => state.colorReducer);
+  
+  const peopleOptions = useSelector((state: any) => state.people);
 
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -43,9 +43,9 @@ function ShareSurvey() {
     setOpen(false);
   };
 
-  const handleCopyButton = () => {
+  const handleCopyButton = (personId : string) => {
     setOpen(true);
-    navigator.clipboard.writeText(getShareSurveyLink(window.location.host, surveyId));
+    navigator.clipboard.writeText(getShareSurveyLink(window.location.host, surveyId,personId));
   }
 
   const handleDownloadQRCode = () => {
@@ -73,14 +73,51 @@ function ShareSurvey() {
     };
   };
 
-  const handleEmbedCodeCopy = () => {
-    setOpen(true);
-    navigator.clipboard.writeText(integrationCode);
-  }
 
   return (
     <Box sx={{ overflowY: 'scroll', padding: '50px 30px',background : colorPalette.textSecondary }} >
-      <Box sx={{ borderRadius: '5px', backgroundColor: colorPalette.background,boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
+      <Box sx={{ padding: '20px' }} >
+                <TableContainer
+                    className='person-table-container'
+                    sx={{ ...tableContainerStyle, height: 'calc(100vh - 195px)' }}
+                >
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead>
+                            <TableRow >
+                                {col?.map((column: string) => (
+                                    <TableCell sx={{ ...tableCellStyle,fontWeight: '600' }} key={column}>
+                                        {column}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody >
+                            {
+                                peopleOptions?.map((person : any) => (
+                                    <TableRow key={person.id} >
+                                        <TableCell sx={tableCellStyle} >
+                                            <Typography sx={tableBodyText} >{`${person.firstName} ${person.lastName}`}</Typography>
+                                        </TableCell>
+                                        <TableCell sx={tableCellStyle} >
+                                            <Typography sx={{...tableBodyText,color : colorPalette.primary,fontWeight : 600}} >
+                                              {person.company.name}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell sx={tableCellStyle} >
+                                            <Button
+                                              size='small'
+                                              onClick={() => handleCopyButton(person.id)}
+                                              sx={{...ButtonStyles.outlinedButton,width : 'fit-content'}}
+                                            >Copy Link</Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
+      {/* <Box sx={{ borderRadius: '5px', backgroundColor: colorPalette.background,boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
         <Box sx={{ textAlign: 'start', padding: '15px' }} >
           <Typography sx={{ color: colorPalette.darkBackground, fontSize: '20px' }} >Survey Link</Typography>
         </Box>
@@ -106,9 +143,9 @@ function ShareSurvey() {
             />
           </Box>
         </Box>
-      </Box>
+      </Box> */}
 
-      <Box sx={{ borderRadius: '5px', backgroundColor: colorPalette.background, marginTop: '20px',boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
+      {/* <Box sx={{ borderRadius: '5px', backgroundColor: colorPalette.background, marginTop: '20px',boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
         <Box sx={{ textAlign: 'start', padding: '15px'}} >
           <Typography sx={{ color: colorPalette.darkBackground, fontSize: '20px' }} >Embed</Typography>
         </Box>
@@ -128,10 +165,10 @@ function ShareSurvey() {
             />
           </Box>
         </Box>
-      </Box>
+      </Box> */}
 
       {/* qr code */}
-      <Box sx={{ borderRadius: '5px', backgroundColor: colorPalette.background, marginTop: '20px',boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
+      {/* <Box sx={{ borderRadius: '5px', backgroundColor: colorPalette.background, marginTop: '20px',boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px' }} >
         <Box sx={{ textAlign: 'start', padding: '15px'}} >
           <Typography sx={{ color: colorPalette.darkBackground, fontSize: '20px' }} >QR Code</Typography>
         </Box>
@@ -158,7 +195,7 @@ function ShareSurvey() {
             </Button>
           </Box>
         </Box>
-      </Box>
+      </Box> */}
 
       <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>

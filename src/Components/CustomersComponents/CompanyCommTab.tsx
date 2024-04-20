@@ -3,6 +3,7 @@ import { containedButton, outlinedButton } from '../../Styles/ButtonStyle'
 import { Box, Button, Checkbox, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { colorPalette } from '../../Utils/Constants';
 import EmailIcon from '@mui/icons-material/Email';
+import { tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 
 function CompanyCommTab() {
   const col: string[] = ['Message Name', 'Origin', 'From', 'To', 'CC', 'BCC', 'Date Sent', 'Engagement'];
@@ -45,12 +46,12 @@ function CompanyCommTab() {
         }
       </Box>
       <Box marginTop={'20px'} >
-        <TableContainer sx={{ backgroundColor: colorPalette.textSecondary, border: 'none', height: 'calc(100vh - 335px)' }} >
+        <TableContainer sx={{ ...tableContainerStyle, height: 'calc(100vh - 335px)' }} >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
+            <TableHead >
               <TableRow >
                 {col?.map((column: string) => (
-                  <TableCell sx={{ fontWeight: '600' }} key={column}>
+                  <TableCell sx={{ ...tableCellStyle,fontWeight: '600',background : colorPalette.secondary }} key={column}>
                     {column}
                   </TableCell>
                 ))}
@@ -60,32 +61,29 @@ function CompanyCommTab() {
               {
                 messageList?.map(message => (
                   <TableRow key={message.id} >
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {message.name}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {message.origin}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {message.from}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {message.to}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {message.cc}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {message.bcc}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {message.date}
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={tableCellStyle} >
                       {message.engagement}
-                    </TableCell>
-                    <TableCell>
-
                     </TableCell>
                   </TableRow>
                 ))
