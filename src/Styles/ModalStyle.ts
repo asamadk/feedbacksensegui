@@ -15,6 +15,23 @@ export const modalStyle = (bgColor: string) => {
     }
 };
 
+export const verticalModalStyle = (bgColor: string) => {
+    return {
+        position: 'absolute' as 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        bgcolor: bgColor,
+        boxShadow: 30,
+        color: colorPalette.textPrimary,
+        borderRadius: '5px',
+        p: 4,
+        width : '35%',
+        maxHeight : 'calc(100vh - 120px)',
+        overflow : 'scroll'
+    }
+};
+
 export const modalStyleComponents = (bgColor: string) => {
     return {
         height: '100%',

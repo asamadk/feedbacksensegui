@@ -10,6 +10,8 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import DataObjectIcon from '@mui/icons-material/DataObject';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 
 import '../Styles/CSS/SettingsSideBar.css';
 import { useNavigate } from 'react-router';
@@ -20,12 +22,15 @@ import SurveyGeneralSettings from '../Components/SurveyGeneralSettings';
 import Support from './Support';
 import CustomerHubSettingsLayout from './CustomerHubSettingsLayout';
 import AnalyticsSettingsLayout from './AnalyticsSettingsLayout';
+import DataModelerLayout from './DataModelerLayout';
+import HealthDesignerLayout from './HealthDesignerLayout';
 
 const sideBarStyle = {
     background: colorPalette.secondary,
     height: 'calc(100vh - 40px)',
-    width: '200px',
-    padding: '20px'
+    width: '220px',
+    padding: '20px',
+    overflowY : 'scroll'
 }
 
 const sidebarTabStye = {
@@ -42,7 +47,9 @@ const settingIds = {
     NOTIFICATIONS: 'NOTIFICATIONS',
     TICKET: 'TICKET',
     CUSTOMER_HUB : 'CUSTOMER_HUB',
-    ANALYTICS : 'ANALYTICS'
+    ANALYTICS : 'ANALYTICS',
+    DATA_MODELER : 'DATA_MODELER',
+    HEALTH_DESIGNER : 'HEALTH_DESIGNER'
 }
 
 function SettingsLayout() {
@@ -50,6 +57,7 @@ function SettingsLayout() {
     const navigate = useNavigate();
     const [selectedPos , setSelectedPos] = useState(settingIds.GENERAL);
 
+    //TODO create settings layout URL based navigation instead of JS based
     useEffect(() => {
         handleTabHighlight(selectedPos);
     },[])
@@ -114,6 +122,19 @@ function SettingsLayout() {
                     </Box>
                 </Box>
 
+                {/* Data Management tab */}
+                <Box sx={sidebarTabStye.container} >
+                    <p style={sidebarTabStye.headingP} >Data Management</p>
+                    <Box className='tabs' id={settingIds.DATA_MODELER} onClick={handleSettingsClick} >
+                        <DataObjectIcon id={settingIds.DATA_MODELER} />
+                        <p id={settingIds.DATA_MODELER}  >Data Modeler</p>
+                    </Box>
+                    <Box className='tabs' id={settingIds.HEALTH_DESIGNER} onClick={handleSettingsClick} >
+                        <MonitorHeartIcon id={settingIds.HEALTH_DESIGNER} />
+                        <p id={settingIds.HEALTH_DESIGNER}  >Health Designer</p>
+                    </Box>
+                </Box>
+
                 {/* user tab */}
                 <Box sx={sidebarTabStye.container} >
                     <p style={sidebarTabStye.headingP} >USER</p>
@@ -140,6 +161,8 @@ function SettingsLayout() {
                 {selectedPos === settingIds.CUSTOMER_HUB && <CustomerHubSettingsLayout/>}
                 {selectedPos === settingIds.ANALYTICS && <AnalyticsSettingsLayout/>}
                 {selectedPos === settingIds.TICKET && <Support />}
+                {selectedPos === settingIds.DATA_MODELER && <DataModelerLayout />}
+                {selectedPos === settingIds.HEALTH_DESIGNER && <HealthDesignerLayout />}
             </Box>
         </Box>
     )

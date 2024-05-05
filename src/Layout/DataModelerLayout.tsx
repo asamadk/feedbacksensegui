@@ -1,0 +1,66 @@
+import React, { useState } from 'react'
+import { Box, Button, Typography } from '@mui/material'
+import { listStyleBlock } from '../Styles/LayoutStyles'
+import { colorPalette } from '../Utils/Constants'
+import { containedButton } from '../Styles/ButtonStyle'
+import { useNavigate } from 'react-router'
+import CustomerJourneyModeler from '../Components/CustomerJourneyModeler'
+
+function DataModelerLayout() {
+
+    const [display, setDisplay] = useState(0);
+
+    function MainDisplay() {
+        if (display !== 0) { return <></> }
+        return (
+            <>
+                <Box sx={listStyleBlock} >
+                    <Box textAlign={'start'} >
+                        <Typography variant='h6' fontWeight={550} >Customer Journey Stages</Typography>
+                        <Typography sx={{ color: colorPalette.fsGray }} >
+                            Create your own custom customer journey
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Button
+                            size='small'
+                            sx={containedButton}
+                            // onClick={handleCustomJourneyOpen}
+                            onClick={() => setDisplay(1)}
+                        >Details</Button>
+                    </Box>
+                </Box>
+
+                <Box sx={listStyleBlock} >
+                    <Box textAlign={'start'} >
+                        <Typography variant='h6' fontWeight={550} >Onboarding Stages</Typography>
+                        <Typography sx={{ color: colorPalette.fsGray }} >
+                            Create custom stages for customer onboarding
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Button
+                            size='small'
+                            sx={containedButton}
+                            onClick={() => setDisplay(2)}
+                        >Details</Button>
+                    </Box>
+                </Box>
+            </>
+        )
+    }
+
+    function CustomerJourneyModelerDisplay() {
+        if (display !== 1 && display !== 2) { return <></> }
+        return <CustomerJourneyModeler type={display === 1 ? 'stage' : 'sub-stage'} backClick={() => setDisplay(0)} />
+    }
+
+    return (
+        <Box>
+            {MainDisplay()}
+            {CustomerJourneyModelerDisplay()}
+        </Box>
+    )
+}
+
+export default DataModelerLayout

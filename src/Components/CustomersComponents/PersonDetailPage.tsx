@@ -32,7 +32,7 @@ function PersonDetailPage() {
         } else if (value === 'communication') {
             return <CompanyCommTab/>
         } else if (value === 'usage') {
-            return <CompanyUsageTab/>
+            return <CompanyUsageTab companyId={null} personId={person.id} />
         }else if (value === 'task') {
             return <CompanyTaskTab companyId={null} personId={person.id} />
         } else if (value === 'notes') {

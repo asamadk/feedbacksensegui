@@ -16,7 +16,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { handleUnAuth } from '../../Utils/FeedbackUtils';
 import GenericModal from '../../Modals/GenericModal';
 import { genericModalData } from '../../Utils/types';
-import { tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
+import { stageContainer, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -53,7 +53,8 @@ function CompaniesComponent() {
   const snackbarRef: any = useRef(null);
 
   const [loading, setLoading] = React.useState(false);
-  const col: string[] = ['Name', 'Lifecycle Stage', 'Health Score','CSM Rating', 'Website', 'Action'];
+  // const col: string[] = ['Name', 'Lifecycle Stage', 'Health Score','CSM Rating', 'Website', 'Action'];
+  const col: string[] = ['Name', 'Lifecycle Stage', 'Health Score', 'Website', 'Action'];
 
   const [companies, setCompanies] = useState<any[]>([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -265,16 +266,18 @@ function CompaniesComponent() {
                       {company.subscriptionPlan || 'N/A'}
                     </TableCell> */}
                     <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
-                      {company.lifecycleStage}
+                      <Box sx={{...stageContainer(company?.stage?.position),width : 'fit-content',margin : 'auto'}} >
+                        {company?.stage?.name || 'N/A'}
+                      </Box>
                     </TableCell>
                     <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
                       <Box sx={getHealthScoreStyle(company.healthScore || 'N/A')} >
                         {company.healthScore || 'N/A'}
                       </Box>
                     </TableCell>
-                    <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
+                    {/* <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
                       <Rating defaultValue={company.csmRating} precision={1} />
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
                       {company.website}
                     </TableCell>

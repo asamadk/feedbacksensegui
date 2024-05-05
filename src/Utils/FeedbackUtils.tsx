@@ -501,3 +501,30 @@ export function getPersonName(person : any) : string{
     }
     return name;
 }
+
+export function getLineChartColor(index : number) :string{
+    if(index === 0){
+        return colorPalette.primary
+    }else if(index === 1){
+        return colorPalette.darkBackground
+    }else if(index === 2){
+        return '#F0AB00'
+    }else if(index === 3){
+        return '#009596'
+    }else if(index === 4){
+        return '#C46100'
+    }else if(index === 5){
+        return '#C9190B'
+    }else if(index === 6){
+        return '#8481DD'
+    }else if(index === 7){
+        return '#8F4700'
+    }else if(index === 8){
+        return '#7D1007'
+    }else if(index === 9){
+        return '#003737'
+    }else if(index === 10){
+        return '#38812F'
+    }
+    return colorPalette.fsGray
+}

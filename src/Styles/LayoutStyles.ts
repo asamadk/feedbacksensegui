@@ -54,3 +54,14 @@ export const taskStatusStyle = (status: 'Open' | 'InProgress' | 'Completed' | 'C
       cursor: 'pointer'
     }
   }
+
+ export const listStyleBlock = {
+    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
+    border: `1px ${colorPalette.textSecondary} solid`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '40px',
+    background: colorPalette.background,
+    borderRadius: '6px',
+    marginTop : '20px'
+}

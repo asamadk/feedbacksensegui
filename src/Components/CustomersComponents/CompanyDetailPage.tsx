@@ -38,7 +38,7 @@ function CompanyDetailPage() {
         } else if (value === 'communication') {
             return <CompanyCommTab />
         } else if (value === 'usage') {
-            return <CompanyUsageTab />
+            return <CompanyUsageTab personId={null} companyId={company.id} />
         } else if (value === 'people') {
             return <CompanyPeopleTab />
         } else if (value === 'task') {

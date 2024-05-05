@@ -290,18 +290,29 @@ export const updateTaskURL = () => {
     return `${BASE_URL}/task/update`
 }
 
-export const getTaskURL = (companyId: string | null, personId: string | null, page: number, limit: number) => {
+export const getTaskURL = (
+    companyId: string | null, 
+    personId: string | null, 
+    status : string,
+    ownerId : string,
+    page: number, 
+    limit: number
+) => {
     if(companyId == null){
         companyId = '';
     }
     if(personId == null){
         personId = '';
     }
-    return `${BASE_URL}/task/get?page=${page}&limit=${limit}&companyId=${companyId}&personId=${personId}`
+    return `${BASE_URL}/task/get?page=${page}&limit=${limit}&companyId=${companyId}&personId=${personId}&status=${status}&ownerId=${ownerId}`
 }
 
 export const deleteTaskURL = (taskId : string) => {
     return `${BASE_URL}/task/delete?taskId=${taskId}`
+}
+
+export const completeTaskURL = () => {
+    return `${BASE_URL}/task/complete-task`
 }
 
 export const getActivitiesURL = (personId : string,companyId : string) => {
@@ -336,4 +347,44 @@ export const createUsageEventTypeURL = () => {
 
 export const deleteUsageEventTypeURL = (eventTypeId : string) => {
     return `${BASE_URL}/usage-event-type/delete?usageEventTypeId=${eventTypeId}`;
+}
+
+export const getEventsOverTimeData = (interval : string,personId : string,companyId : string) => {
+    return `${BASE_URL}/usage-event/events-over-time?interval=${interval}&personId=${personId}&companyId=${companyId}`;
+}
+
+export const getTimeSpentDataURL = (interval : string,personId : string,companyId : string) => {
+    return `${BASE_URL}/usage-event/time-spent?interval=${interval}&personId=${personId}&companyId=${companyId}`;
+}
+
+export const getTopUsagePeopleURL = (interval : string,companyId : string) => {
+    return `${BASE_URL}/usage-event/top-people?interval=${interval}&companyId=${companyId}`;
+}
+
+export const createJourneyStageURL = () => {
+    return `${BASE_URL}/journey-stage/create`;
+}
+
+export const createJourneySubStageURL = () => {
+    return `${BASE_URL}/journey-stage/create-sub-stage`;
+}
+
+export const getJourneyStageURL = () => {
+    return `${BASE_URL}/journey-stage/get-stage`;
+}
+
+export const getJourneySubStageURL = () => {
+    return `${BASE_URL}/journey-stage/get-sub-stage`;
+}
+
+export const updateCompanyJourneyURL = () => {
+    return `${BASE_URL}/journey-stage/update-company`;
+}
+
+export const getHealthConfigURL = () => {
+    return `${BASE_URL}/health/get`;
+}
+
+export const createHealthConfigURL = () => {
+    return `${BASE_URL}/health/create`;
 }

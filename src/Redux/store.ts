@@ -17,6 +17,8 @@ import { surveyFilterDataReducer } from "./Reducers/surveyFilterReducer";
 import { sideBarReducer } from "./Reducers/sidebarPosReducer";
 import { companyReducer } from "./Reducers/companyReducer";
 import { peopleReducer } from "./Reducers/peopleOptionReducer";
+import { journeyReducer } from "./Reducers/journeyStageReducer";
+import { journeySubStageReducer } from "./Reducers/journeySubStageReducer";
 
 const store = configureStore({
 	reducer: {
@@ -37,7 +39,9 @@ const store = configureStore({
 		surveyFilterData: surveyFilterDataReducer,
 		sideBarReducer: sideBarReducer,
 		companies: companyReducer,
-		people : peopleReducer
+		people : peopleReducer,
+		stage: journeyReducer,
+		subStage : journeySubStageReducer
 	},
 	devTools: true,
 });

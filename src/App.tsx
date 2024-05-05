@@ -41,6 +41,7 @@ import CompanyDetailPage from './Components/CustomersComponents/CompanyDetailPag
 import PersonDetailPage from './Components/CustomersComponents/PersonDetailPage';
 import ProductUsageConnect from './Components/ProductUsageConnect';
 import CustomEventsView from './Components/CustomEventsView';
+import CustomerJourneyModeler from './Components/CustomerJourneyModeler';
 
 function App() {
 
@@ -71,6 +72,8 @@ function App() {
         navigate('/user/create/organization');
         return;
       }
+      const freeTypeWindow :any = window;
+      freeTypeWindow.feedbacksense.track('login');
       setUser(currentUser);
       navigate('/');
     } catch (err: any) {

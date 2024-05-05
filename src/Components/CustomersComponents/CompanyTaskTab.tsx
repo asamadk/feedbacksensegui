@@ -51,7 +51,7 @@ function CompanyTaskTab(props: { companyId: string | null, personId: string | nu
   async function fetchTasks() {
     try {
       setLoading(true);
-      const { data } = await axios.get(getTaskURL(props.companyId, props.personId, page, 20), { withCredentials: true });
+      const { data } = await axios.get(getTaskURL(props.companyId, props.personId,'','', page, 20), { withCredentials: true });
       if (data.data) {
         const count = data.data.count;
         const list = data.data.list;
