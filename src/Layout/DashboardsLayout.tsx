@@ -10,6 +10,11 @@ import { setCompanyList } from '../Redux/Reducers/companyReducer';
 import { setPeopleOptions } from '../Redux/Reducers/peopleOptionReducer';
 import { setGlobalStages } from '../Redux/Reducers/journeyStageReducer';
 import { setGlobalSubStages } from '../Redux/Reducers/journeySubStageReducer';
+import { Box, Tab, Tabs } from '@mui/material';
+import { colorPalette } from '../Utils/Constants';
+import ClientCompass from '../Components/Dashboards/ClientCompass';
+import UsageCompass from '../Components/Dashboards/UsageCompass';
+import { setGlobalRiskStages } from '../Redux/Reducers/riskStageReducer';
 
 function DashboardsLayout() {
 
@@ -17,7 +22,6 @@ function DashboardsLayout() {
   const dispatch = useDispatch();
 
   const globalStage = useSelector((state: any) => state.stage);
-  const globalSubStage = useSelector((state: any) => state.subStage);
   const companiesState = useSelector((state: any) => state.companies);
 
   const [loading, setLoading] = React.useState(false);
@@ -37,7 +41,6 @@ function DashboardsLayout() {
       fetchCompanyPersonOptions();
     }
     fetchStages();
-    fetchSubStages();
   }
 
   async function fetchCompanyPersonOptions() {
@@ -66,7 +69,10 @@ function DashboardsLayout() {
       if (globalStage == null || globalStage.length < 1) {
         const { data } = await axios.get(getJourneyStageURL(), { withCredentials: true });
         if (data.data) {
-          dispatch(setGlobalStages(data.data));
+          const res = data.data;
+          dispatch(setGlobalStages(res.stage));
+          dispatch(setGlobalSubStages(res.onboarding));
+          dispatch(setGlobalRiskStages(res.risk));
         }
       }
       setLoading(false);
@@ -76,24 +82,28 @@ function DashboardsLayout() {
     }
   }
 
-  async function fetchSubStages() {
-    try {
-      setLoading(true);
-      if (globalSubStage == null || globalSubStage.length < 1) {
-        const { data } = await axios.get(getJourneySubStageURL(), { withCredentials: true });
-        if (data.data) {
-          dispatch(setGlobalSubStages(data.data));
-        }
-      }
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      handleUnAuth(error);
-    }
-  }
+  const [value, setValue] = React.useState('1');
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
   return (
     <>
+      <Box sx={{ width: '100%', background: colorPalette.textSecondary }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          textColor="secondary"
+          indicatorColor="secondary"
+          aria-label="secondary tabs example"
+        >
+          <Tab value="1" label="Dashboard" />
+          <Tab value="2" label="Usage Console" />
+        </Tabs>
+      </Box>
+      {value === '1' && <ClientCompass/>}
+      {value === '2' && <UsageCompass/>}
       <FSLoader show={loading} />
       <Notification ref={snackbarRef} />
     </>

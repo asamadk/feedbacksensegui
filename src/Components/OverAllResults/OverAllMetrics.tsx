@@ -77,8 +77,8 @@ function OverAllMetrics(props: propType) {
                 <Box sx={mainContainer}>
                     <Box sx={subContainerStyle(colorPalette.background)} >
                         <Box display={'flex'}  >
-                            <Box sx={{ backgroundColor: colorPalette.primary, borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
-                                <TextSnippetIcon sx={{ color: colorPalette.background }} />
+                            <Box sx={{ backgroundColor: colorPalette.textSecondary, borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
+                                <TextSnippetIcon sx={{ color: '#000000' }} />
                             </Box>
                             <Box sx={{ color: colorPalette.darkBackground, textAlign: 'start', paddingLeft: '20px' }} >
                                 <Typography fontSize={16} >Last Response</Typography>
@@ -88,8 +88,8 @@ function OverAllMetrics(props: propType) {
                     </Box>
                     <Box sx={subContainerStyle(colorPalette.background)} >
                         <Box display={'flex'}  >
-                            <Box sx={{ backgroundColor: colorPalette.primary, borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
-                                <BarChartIcon sx={{ color: colorPalette.background }} />
+                            <Box sx={{ backgroundColor: colorPalette.textSecondary, borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
+                                <BarChartIcon sx={{ color: '#000000' }} />
                             </Box>
                             <Box sx={{ color: colorPalette.darkBackground, textAlign: 'start', paddingLeft: '20px' }} >
                                 <Typography fontSize={16} >Completion Rate</Typography>
@@ -99,8 +99,8 @@ function OverAllMetrics(props: propType) {
                     </Box>
                     <Box sx={subContainerStyle(colorPalette.background)} >
                         <Box display={'flex'}  >
-                            <Box sx={{ backgroundColor: colorPalette.primary, borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
-                                <RemoveRedEyeIcon sx={{ color: colorPalette.background }} />
+                            <Box sx={{ backgroundColor: colorPalette.textSecondary, borderRadius: '6px', padding: '10px', paddingTop: '17px' }} >
+                                <RemoveRedEyeIcon sx={{ color: '#000000' }} />
                             </Box>
                             <Box sx={{ color: colorPalette.darkBackground, textAlign: 'start', paddingLeft: '20px' }} >
                                 <Typography fontSize={16} >Total Views</Typography>

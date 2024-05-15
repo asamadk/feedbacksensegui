@@ -29,10 +29,7 @@ function NPSCharts(props : propsType) {
           <BarChart width={600} height={250} data={props?.data?.chart}>
             <YAxis dataKey="percentage" />
             <XAxis dataKey="value" />
-            <Tooltip
-              cursor={{ fill: 'none' }}
-              content={<FSTooltip percent={true} />}
-            />
+            <Tooltip cursor={{ fill: 'none' }} />
             <Bar barSize={40} dataKey='percentage' fill={getIconColorById(props.id)} />
           </BarChart>
         </ResponsiveContainer>

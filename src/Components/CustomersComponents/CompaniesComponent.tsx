@@ -13,10 +13,10 @@ import Notification from '../../Utils/Notification';
 import axios from 'axios';
 import { deleteCompanyURL, getCompanyListURL } from '../../Utils/Endpoints';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { handleUnAuth } from '../../Utils/FeedbackUtils';
+import { getHealthScoreName, getLineChartColor, handleUnAuth } from '../../Utils/FeedbackUtils';
 import GenericModal from '../../Modals/GenericModal';
 import { genericModalData } from '../../Utils/types';
-import { stageContainer, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
+import { getHealthScoreStyle, stageContainer, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -28,24 +28,6 @@ const headerContainer = {
   paddingBottom : '10px'
 }
 
-const getHealthScoreStyle = (count: number) => {
-  const obj: any = {
-    padding: '5px 10px',
-    width: 'fit-content',
-    borderRadius: '6px',
-    color: '#ffffff',
-    margin: 'auto'
-  }
-  if (count < 25) {
-    obj.background = '#F1584E';
-  } else if (count <= 60) {
-    obj.background = '#F9C329';
-  } else {
-    obj.background = '#7ACB36';
-  }
-  return obj;
-}
-
 function CompaniesComponent() {
 
   const navigate = useNavigate();
@@ -54,7 +36,7 @@ function CompaniesComponent() {
 
   const [loading, setLoading] = React.useState(false);
   // const col: string[] = ['Name', 'Lifecycle Stage', 'Health Score','CSM Rating', 'Website', 'Action'];
-  const col: string[] = ['Name', 'Lifecycle Stage', 'Health Score', 'Website', 'Action'];
+  const col: string[] = ['Name', 'Website', 'Health Score','Lifecycle Stage', 'Action'];
 
   const [companies, setCompanies] = useState<any[]>([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -266,20 +248,20 @@ function CompaniesComponent() {
                       {company.subscriptionPlan || 'N/A'}
                     </TableCell> */}
                     <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
-                      <Box sx={{...stageContainer(company?.stage?.position),width : 'fit-content',margin : 'auto'}} >
-                        {company?.stage?.name || 'N/A'}
-                      </Box>
+                      {company.website}
                     </TableCell>
                     <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
-                      <Box sx={getHealthScoreStyle(company.healthScore || 'N/A')} >
-                        {company.healthScore || 'N/A'}
+                      <Box sx={getHealthScoreStyle(company.healthScore >= 0 ? company.healthScore : 'N/A')} >
+                        {getHealthScoreName(company.healthScore)}
                       </Box>
                     </TableCell>
                     {/* <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
                       <Rating defaultValue={company.csmRating} precision={1} />
                     </TableCell> */}
                     <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
-                      {company.website}
+                      <Box sx={{...stageContainer(4),margin : 'auto'}} >
+                        {company?.stage?.name || 'N/A'}
+                      </Box>
                     </TableCell>
                     <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
                       <IconButton onClick={() => handleCompanyDetailOpen(company.id)} size='small' >

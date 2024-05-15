@@ -134,12 +134,12 @@ function MultiTab(props: any) {
                 aria-label="secondary tabs example"
             >
                 <Tab value="details" label="Details" />
-                <Tab value="communication" label="Communication" />
+                {/* <Tab value="communication" label="Communication" /> */}
                 <Tab value="usage" label="Usage" />
                 <Tab value="people" label="People" />
                 <Tab value="task" label="Tasks" />
                 <Tab value="notes" label="Notes" />
-                <Tab value="tickets" label="Tickets" />
+                {/* <Tab value="tickets" label="Tickets" /> */}
                 <Tab value="survey" label="Survey Responses" />
             </Tabs>
         </Box>
@@ -196,6 +196,7 @@ function QuickActions(props: { handleEdit: any, activities: any, delete: any }) 
             >
                 <MenuItem onClick={handleEdit} id='edit' >Edit/Update</MenuItem>
                 <MenuItem onClick={handleActivities} id='activities' >View Activities</MenuItem>
+                {/* <MenuItem onClick={handleActivities} id='renew' >Renew Contract</MenuItem> */}
                 {/* <MenuItem onClick={handleDelete} id='delete' sx={{ color: 'red' }} >Delete</MenuItem> */}
             </Menu>
         </>

@@ -19,6 +19,7 @@ import { companyReducer } from "./Reducers/companyReducer";
 import { peopleReducer } from "./Reducers/peopleOptionReducer";
 import { journeyReducer } from "./Reducers/journeyStageReducer";
 import { journeySubStageReducer } from "./Reducers/journeySubStageReducer";
+import { riskStageReducer } from "./Reducers/riskStageReducer";
 
 const store = configureStore({
 	reducer: {
@@ -41,7 +42,8 @@ const store = configureStore({
 		companies: companyReducer,
 		people : peopleReducer,
 		stage: journeyReducer,
-		subStage : journeySubStageReducer
+		subStage : journeySubStageReducer,
+		riskStage : riskStageReducer
 	},
 	devTools: true,
 });

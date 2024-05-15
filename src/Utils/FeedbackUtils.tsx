@@ -370,6 +370,8 @@ export const getComponentNameById = (id: number): string => {
         return 'Rating scale';
     } else if (id === 8) {
         return 'NPS';
+    } else if (id === 9) {
+        return 'CSAT';
     } else if (id === 11) {
         return 'Contact form';
     } else if (id === 13) {
@@ -508,11 +510,11 @@ export function getLineChartColor(index : number) :string{
     }else if(index === 1){
         return colorPalette.darkBackground
     }else if(index === 2){
-        return '#F0AB00'
+        return '#8481DD'
     }else if(index === 3){
-        return '#009596'
+        return colorPalette.fsGray
     }else if(index === 4){
-        return '#C46100'
+        return '#a674e9'
     }else if(index === 5){
         return '#C9190B'
     }else if(index === 6){
@@ -527,4 +529,16 @@ export function getLineChartColor(index : number) :string{
         return '#38812F'
     }
     return colorPalette.fsGray
+}
+
+export function getHealthScoreName(count : number){
+    if(count === 0){
+        return 'Poor';
+    }else if(count === 50){
+        return 'Average';
+    }else if(count === 100){
+        return 'Good';
+    }else{
+        return 'N/A'
+    }
 }

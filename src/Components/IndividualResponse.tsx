@@ -102,7 +102,6 @@ function IndividualResponse(props: IndividualResponseProps) {
                 }
                 count++;
             });
-            console.log("🚀 ~ fetchSurveyResponseList ~ responseList:", responseList)
 
             if (responseList.length < 1) {
                 setIsEmpty(true);

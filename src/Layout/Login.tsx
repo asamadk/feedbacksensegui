@@ -35,7 +35,7 @@ function Login() {
 
     return (
         <Box sx={{ height: 'calc(100vh - 85px)', display: 'flex' }} >
-            <Box sx={{ ...subContainerStyle, backgroundColor: colorPalette.primary, textAlign: 'start',width : '15%' }} >
+            <Box sx={{ ...subContainerStyle, backgroundColor: colorPalette.primary, textAlign: 'start',width : '25%' }} >
                 <Box sx={{width : 'fit-content',position : 'absolute',top : '50%',transform : 'translateY(-50%)'}} >
                     <Typography sx={{color : 'white'}} variant='h3' fontWeight={600} >Sign In</Typography>
                     <Typography sx={{color : colorPalette.background,width : '80%'}} >
@@ -62,7 +62,7 @@ function Login() {
                     </Typography>
                 </Box>
             </Box>
-            <Box width={'80%'}>
+            <Box width={'75%'}>
                 <Box
                     display={'flex'}
                     flexDirection={'column'}

@@ -24,15 +24,40 @@ export const tableCellStyle :SxProps<Theme> = {
 }
 
 export const tableBodyText :SxProps<Theme> = {
-    // fontWeight : 600,
     fontSize : '14px',
 }
 
-export function stageContainer(index: number) {
+export function stageContainer(index: number) :SxProps<Theme>{
     return {
-        borderRadius: '50px',
-        padding: '8px 20px',
-        background: getLineChartColor(index + 3),
+        borderRadius: '6px',
+        padding: '2px 10px',
+        background: getLineChartColor(index),
         color: '#ffffff',
+        width : '85px',
+        maxHeight : '20px',
+        textAlign : 'center',
+        textOverflow : 'ellipsis'
     };
 }
+
+export const getHealthScoreStyle = (count: number) => {
+    const obj: any = {
+      padding: '2px 10px',
+      width: '50px',
+      borderRadius: '6px',
+      color: '#000000',
+      margin: 'auto',
+      fontWeight : '600'
+    }
+    if (count === 0) {
+      obj.background = '#ffb3b3';
+      obj.color = '#800000';
+    } else if (count === 50) {
+      obj.background = '#ffe4b3';
+      obj.color = '#e69500';
+    } else {
+      obj.background = '#CBF0CB';
+      obj.color = '#008000'
+    }
+    return obj;
+  }

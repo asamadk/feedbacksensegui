@@ -14,6 +14,7 @@ import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material';
 
 import '../Styles/CSS/Backgrounds.css'
+import CSATDisplay from './CSATDisplay';
 
 function DynamicComponentDisplay(props: any) {
 
@@ -116,6 +117,13 @@ function DynamicComponentDisplay(props: any) {
                         theme={surveyColors}
                     />}
                     {props.compId === 8 && <NPSDisplay
+                        key={props.uiId}
+                        data={props.data}
+                        surveyId={props.surveyId}
+                        next={next}
+                        theme={surveyColors}
+                    />}
+                    {props.compId === 9 && <CSATDisplay
                         key={props.uiId}
                         data={props.data}
                         surveyId={props.surveyId}

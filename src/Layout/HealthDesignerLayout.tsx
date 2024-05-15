@@ -13,9 +13,11 @@ import axios from 'axios';
 import { createHealthConfigURL, getHealthConfigURL } from '../Utils/Endpoints';
 import { handleUnAuth } from '../Utils/FeedbackUtils';
 import ReplayIcon from '@mui/icons-material/Replay';
+import { healthScoreMetrics } from '../Utils/ConditionConstants';
 
 type rowType = {
     metric: string,
+    metricInfo : any,
     good: {
         operator: string,
         value: any
@@ -36,7 +38,7 @@ function HealthDesignerLayout() {
     const [healthData, setHealthData] = useState<any>({});
 
     function handleAddCriteria() {
-        setRows([...rows, { metric: '', good: { operator: '', value: '' }, poor: { operator: '', value: '' } }]);
+        setRows([...rows, { metric: '',metricInfo : {}, good: { operator: '', value: '' }, poor: { operator: '', value: '' } }]);
     }
 
     let init = false;
@@ -66,9 +68,16 @@ function HealthDesignerLayout() {
 
     // Function to handle metric change
     function handleMetricChange(val: any, index: number) {
+        let metricInfo :any= {};
+        healthScoreMetrics.forEach(m => {
+            if(m.value === val){
+                metricInfo = m;
+            }
+        })
         setRows(prevRows => {
             const updatedRows = [...prevRows];
             updatedRows[index].metric = val;
+            updatedRows[index].metricInfo = metricInfo;
             return updatedRows;
         });
     }
@@ -157,11 +166,11 @@ function HealthDesignerLayout() {
                         </Typography>
                         <Typography sx={{ fontSize: '15px', marginBottom: '10px' }} >Customize how health score is calculated for your companies</Typography>
                     </Box>
-                    <Box>
+                    {/* <Box>
                         <Button onClick={recalculateHealthScore} endIcon={<ReplayIcon />} sx={getOutlinedButtonBG(colorPalette.textSecondary)} >
                             Recalculate Health Score
                         </Button>
-                    </Box>
+                    </Box> */}
                 </Box>
             </Box>
             <Box sx={{ ...globalSettingSubContainers('#ffffff'), height: 'calc(100vh - 140px)', textAlign: 'center', overflowY: 'scroll' }} >

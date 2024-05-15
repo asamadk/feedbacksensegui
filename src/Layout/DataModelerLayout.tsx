@@ -46,13 +46,32 @@ function DataModelerLayout() {
                         >Details</Button>
                     </Box>
                 </Box>
+
+                <Box sx={listStyleBlock} >
+                    <Box textAlign={'start'} >
+                        <Typography variant='h6' fontWeight={550} >Risk Stages</Typography>
+                        <Typography sx={{ color: colorPalette.fsGray }} >
+                            Create custom risk stages
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Button
+                            size='small'
+                            sx={containedButton}
+                            onClick={() => setDisplay(3)}
+                        >Details</Button>
+                    </Box>
+                </Box>
             </>
         )
     }
 
     function CustomerJourneyModelerDisplay() {
-        if (display !== 1 && display !== 2) { return <></> }
-        return <CustomerJourneyModeler type={display === 1 ? 'stage' : 'sub-stage'} backClick={() => setDisplay(0)} />
+        if (display !== 1 && display !== 2 && display !== 3) { return <></> }
+        let type :'Stage' | 'Onboarding' | 'Risk' = 'Stage';
+        if(display === 2){type = 'Onboarding';}
+        if(display === 3){type = 'Risk';}
+        return <CustomerJourneyModeler type={type} backClick={() => setDisplay(0)} />
     }
 
     return (

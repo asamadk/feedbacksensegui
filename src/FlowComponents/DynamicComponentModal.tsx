@@ -7,6 +7,7 @@ import SingleAnswerSelectionModal from '../FlowModals/SingleAnswerSelectionModal
 import SmileyScaleModal from '../FlowModals/SmileyScaleModal'
 import TextAnswerModal from '../FlowModals/TextAnswerModal'
 import WelcomModal from '../FlowModals/WelcomModal'
+import CSATModal from '../FlowModals/CSATModal'
 
 function DynamicComponentModal(props: any) {
   return (
@@ -90,6 +91,18 @@ function DynamicComponentModal(props: any) {
         data={props.data} 
         uiId={props.uiId} 
         header={'NPS'} 
+        save={props.save} 
+        open={props.open} 
+        close={props.close} 
+        theme={props.theme}
+        isPublished={props.isPublished}
+      />}
+
+      {props.compId === 9 && <CSATModal 
+        compId={props.compId} 
+        data={props.data} 
+        uiId={props.uiId} 
+        header={'CSAT'} 
         save={props.save} 
         open={props.open} 
         close={props.close} 

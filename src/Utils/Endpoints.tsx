@@ -246,6 +246,10 @@ export const getCompanySurveyResponseURL = (companyId : string) => {
     return `${BASE_URL}/company/survey-response?companyId=${companyId}`;
 }
 
+export const getCompanySurveyMetricsURL = (companyId : string) => {
+    return `${BASE_URL}/company/survey-score-metrics?companyId=${companyId}`;
+}
+
 export const deletePersonURL = () => {
     return `${BASE_URL}/people/delete`;
 }
@@ -272,6 +276,10 @@ export const uploadBulkCompanyURL = () => {
 
 export const getCompanyPersonListURL = (peopleId : string) => {
     return `${BASE_URL}/company/people/${peopleId}`
+}
+
+export const getCompanyHealthHistoryURL = (companyId : string) => {
+    return `${BASE_URL}/company/health-history-chart?companyId=${companyId}`
 }
 
 export const createTagURL = () => {
@@ -369,6 +377,10 @@ export const createJourneySubStageURL = () => {
     return `${BASE_URL}/journey-stage/create-sub-stage`;
 }
 
+export const createRiskStageURL = () => {
+    return `${BASE_URL}/journey-stage/create-risk-stage`;
+}
+
 export const getJourneyStageURL = () => {
     return `${BASE_URL}/journey-stage/get-stage`;
 }
@@ -387,4 +399,8 @@ export const getHealthConfigURL = () => {
 
 export const createHealthConfigURL = () => {
     return `${BASE_URL}/health/create`;
+}
+
+export const getClientCompassURL = (date :string,type : 'all' | 'my') => {
+    return `${BASE_URL}/dashboard/client-compass?date=${date}&type=${type}`
 }

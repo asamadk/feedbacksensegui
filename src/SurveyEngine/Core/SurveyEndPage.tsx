@@ -20,7 +20,7 @@ function SurveyEndPage() {
         <Box sx={{...bodyStyle,backgroundColor : colorPalette.textSecondary}} >
             <Box sx={subContainerStyle} >
                 <Box display={'flex'} justifyContent={'center'}>
-                    <img style={{ width: '50px' }} src='/fs_logo_small.png' alt='Logo' />
+                    <img style={{ width: '50px' }} src='/logo-churn.png' alt='Logo' />
                 </Box>
                 <Box marginTop={'10px'} >
                     <Typography style={{ color: colorPalette.primary, fontSize: '24px' }}>

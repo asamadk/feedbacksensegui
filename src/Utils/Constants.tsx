@@ -260,12 +260,13 @@ export const componentList = [
         description: 'Measure brand loyalty on a scale from 0 to 10 and get a predictor of repurchases & referrals.',
         isAvailable: true
     },
-    // {
-    //     id: 9,
-    //     bgColor: '#C1AEFC',
-    //     header: 'Dropdown List',
-    //     description: 'Let people pick one answer from a dropdown list of choices. Great for space-saving reasons.'
-    // },
+    {
+        id: 9,
+        bgColor: '#592de0',
+        header: 'CSAT',
+        description: 'Measure customer satisfaction, increase client retention and augment customer experience.',
+        isAvailable: true
+    },
     // {
     //     id: 10,
     //     bgColor: '#D1FFF3',
@@ -399,3 +400,7 @@ export const getUsageTimeFilter = () => {
         {label : 'Last 15 Days', value : 'last_15_days'},
     ]
 }
+
+export const dateLiterals = [
+    'Today', 'Yesterday','This Month','Last Month','This Quarter','Last Quarter','Last 6 Months','This Year'
+]

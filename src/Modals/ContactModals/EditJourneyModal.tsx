@@ -11,16 +11,16 @@ import { handleUnAuth } from '../../Utils/FeedbackUtils';
 import axios from 'axios';
 import { updateCompanyJourneyURL } from '../../Utils/Endpoints';
 
-function EditJourneyModal(props: any) {
+function EditJourneyModal(props: { companyId: string, open: boolean, close: any, value: string,field :string }) {
 
     const snackbarRef: any = useRef(null);
     const [loading, setLoading] = useState(false);
 
     const globalStage = useSelector((state: any) => state.stage);
-    const globalSubStage = useSelector((state: any) => state.subStage);
+    const globalOnboardingStage = useSelector((state: any) => state.subStage);
+    const globalRiskStage = useSelector((state: any) => state.riskStage);
 
-    const [stageVal, setStageVal] = useState<string>(props.journey);
-    const [subStageVal, setSubStageVal] = useState('');
+    const [stageVal, setStageVal] = useState<string>(props.value);
 
     const handleClose = () => {
         props.close({ refresh: false });
@@ -31,7 +31,8 @@ function EditJourneyModal(props: any) {
             setLoading(true);
             const payload = {
                 companyId: props.companyId,
-                journey: stageVal
+                journey: stageVal,
+                type : props.field
             }
             await axios.post(updateCompanyJourneyURL(), payload, { withCredentials: true });
             handleClose();
@@ -50,7 +51,7 @@ function EditJourneyModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={{...modalStyle(colorPalette.background),width : '30%'}}>
+                <Box sx={{ ...modalStyle(colorPalette.background), width: '30%' }}>
                     <Box sx={modalHeaderStyle} >
                         <Box>
                             <Typography id="modal-modal-title" variant="h5" component="h2" >
@@ -69,8 +70,24 @@ function EditJourneyModal(props: any) {
                             value={stageVal}
                             onChange={(e) => setStageVal(e.target.value)}
                         >
+                            <MenuItem value={'None'} >None</MenuItem>
                             {
+                                props.field === 'Journey Stage' &&
                                 globalStage?.map((stage: any) =>
+                                    stage?.isEnabled === true &&
+                                    <MenuItem value={stage.id} >{stage.name}</MenuItem>
+                                )
+                            }
+                            {
+                                props.field === 'Onboarding' &&
+                                globalOnboardingStage?.map((stage: any) =>
+                                    stage?.isEnabled === true &&
+                                    <MenuItem value={stage.id} >{stage.name}</MenuItem>
+                                )
+                            }
+                            {
+                                props.field === 'Risk' &&
+                                globalRiskStage?.map((stage: any) =>
                                     stage?.isEnabled === true &&
                                     <MenuItem value={stage.id} >{stage.name}</MenuItem>
                                 )

@@ -12,6 +12,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 import CallIcon from '@mui/icons-material/Call';
 import StarsIcon from '@mui/icons-material/Stars';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown';
 import { getIconColorById } from '../Utils/FeedbackUtils';
 
 function DynamicComponentIcon(props : any) {
@@ -25,7 +26,7 @@ function DynamicComponentIcon(props : any) {
         {props.id === 6 && <InsertEmoticonIcon sx={{ color: getIconColorById(props?.id) }} />}
         {props.id === 7 && <SubjectIcon sx={{ color: getIconColorById(props?.id) }} />}
         {props.id === 8 && <AvTimerIcon sx={{ color: getIconColorById(props?.id) }} />}
-        {props.id === 9 && <ArrowDropDownCircleIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 9 && <ThumbsUpDownIcon sx={{ color: getIconColorById(props?.id) }} />}
         {props.id === 10 && <AppsIcon sx={{ color: getIconColorById(props?.id) }} />}
         {props.id === 11 && <CallIcon sx={{ color: getIconColorById(props?.id) }} />}
         {props.id === 12 && <StarsIcon sx={{ color: getIconColorById(props?.id) }} />}

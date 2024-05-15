@@ -1,45 +1,42 @@
-import { Box, Button, Checkbox, IconButton, Switch, TextField, Typography, styled } from '@mui/material'
+import { Box, Button, Checkbox, IconButton, Switch, TextField, Tooltip, Typography, styled } from '@mui/material'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { colorPalette } from '../Utils/Constants'
 import { globalSettingSubContainers } from '../Styles/LayoutStyles';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { getLineChartColor, handleUnAuth } from '../Utils/FeedbackUtils';
+import { handleUnAuth } from '../Utils/FeedbackUtils';
 import { containedButton, outlinedButton } from '../Styles/ButtonStyle';
 import { textFieldStyle } from '../Styles/InputStyles';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
 import axios from 'axios';
-import { createJourneyStageURL, createJourneySubStageURL, getJourneyStageURL, getJourneySubStageURL } from '../Utils/Endpoints';
+import { createJourneyStageURL, createJourneySubStageURL, createRiskStageURL, getJourneyStageURL, getJourneySubStageURL } from '../Utils/Endpoints';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setGlobalStages } from '../Redux/Reducers/journeyStageReducer';
 import { setGlobalSubStages } from '../Redux/Reducers/journeySubStageReducer';
 import { stageContainer } from '../Styles/TableStyle';
+import { setGlobalRiskStages } from '../Redux/Reducers/riskStageReducer';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
-function CustomerJourneyModeler(props: { backClick: any, type: 'stage' | 'sub-stage' }) {
+function CustomerJourneyModeler(props: { backClick: any, type: 'Stage' | 'Onboarding' | 'Risk' }) {
 
     const snackbarRef: any = useRef(null);
     const dispatch = useDispatch();
 
     const globalStage = useSelector((state: any) => state.stage);
-    const globalSubStage = useSelector((state: any) => state.subStage);
-    
+    const globalOnboardingStage = useSelector((state: any) => state.subStage);
+    const globalRiskStage = useSelector((state: any) => state.riskStage);
+
     const [loading, setLoading] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [stages, setStages] = useState<any[]>([]);
 
     let init = false;
     useEffect(() => {
-        if(init === false){
-            if (props.type === 'stage') {
-                fetchStages();
-            } else {
-                fetchSubStages();
-            }
+        if (init === false) {
+            fetchStages();
             init = true;
         }
     }, [props.type]);
@@ -47,13 +44,28 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'stage' | 'sub-st
     async function fetchStages() {
         try {
             setLoading(true);
-            if(globalStage != null && globalStage.length > 0){
-                setStages(globalStage);
-            }else{
+            if (globalStage != null && globalStage.length > 0) {
+                if (props.type === 'Stage') {
+                    setStages(globalStage);
+                } else if (props.type === 'Onboarding') {
+                    setStages(globalOnboardingStage);
+                } else {
+                    setStages(globalRiskStage);
+                }
+            } else {
                 const { data } = await axios.get(getJourneyStageURL(), { withCredentials: true });
-                if(data.data){
-                    setStages(data.data);
-                    dispatch(setGlobalStages(data.data));
+                if (data.data) {
+                    const res = data.data;
+                    if (props.type === 'Stage') {
+                        setStages(res.stage);
+                    } else if (props.type === 'Onboarding') {
+                        setStages(res.onboarding);
+                    } else {
+                        setStages(res.risk);
+                    }
+                    dispatch(setGlobalStages(res.stage));
+                    dispatch(setGlobalSubStages(res.onboarding));
+                    dispatch(setGlobalRiskStages(res.risk));
                 }
             }
             setLoading(false);
@@ -62,27 +74,6 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'stage' | 'sub-st
             handleUnAuth(error);
         }
     }
-
-    async function fetchSubStages() {
-        try {
-            setLoading(true);
-            if(globalSubStage != null && globalSubStage.length > 0){
-                setStages(globalSubStage);
-            }else{
-                const { data } = await axios.get(getJourneySubStageURL(), { withCredentials: true });
-                if(data.data){
-                    setStages(data.data);
-                    dispatch(setGlobalSubStages(data.data));
-                }
-            }
-            setLoading(false);
-        } catch (error) {
-            setLoading(false);
-            handleUnAuth(error);
-        }
-    }
-
-    
 
     const handleDragStart = (e: any, index: any) => {
         e.dataTransfer.setData('index', index.toString());
@@ -139,7 +130,12 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'stage' | 'sub-st
         }
         try {
             setLoading(true);
-            const URL = props.type === 'stage' ? createJourneyStageURL() : createJourneySubStageURL();
+            let URL = createRiskStageURL();
+            if (props.type === 'Stage') {
+                URL = createJourneyStageURL();
+            } else if (props.type === 'Onboarding') {
+                URL = createJourneySubStageURL();
+            }
             await axios.post(URL, finalSave, { withCredentials: true });
             snackbarRef?.current?.show('Journey Saved', 'success');
             setLoading(false);
@@ -150,10 +146,12 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'stage' | 'sub-st
             handleUnAuth(error);
         }
         setEditMode(false);
-        if(props.type === 'stage'){
+        if (props.type === 'Stage') {
             dispatch(setGlobalStages(finalSave));
-        }else{
+        } else if (props.type === 'Onboarding') {
             dispatch(setGlobalSubStages(finalSave));
+        } else {
+            dispatch(setGlobalRiskStages(finalSave));
         }
     }
 
@@ -199,27 +197,28 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'stage' | 'sub-st
                         <ArrowBackIcon sx={{ color: colorPalette.darkBackground }} />
                     </IconButton>
                     <Typography variant='h6' marginTop={'4px'} >
-                        {props.type === 'stage' ? 'Custom Journey Stage' : 'Onboarding Stage'}
+                        {props.type === 'Stage' && 'Custom Journey Stage'}
+                        {props.type === 'Onboarding' && 'Onboarding Stage'}
+                        {props.type === 'Risk' && 'Risk Stage'}
                     </Typography>
                 </Box>
             </Box>
             <Box sx={{ ...globalSettingSubContainers('#ffffff'), height: 'calc(100vh - 120px)', textAlign: 'start', overflowY: 'scroll' }} >
                 <Typography fontSize={'13px'} >
-                    {
-                        props.type === 'stage' ? 'Customize Customer Journey Stage Labels, Stages & more' : 'Customize Onboarding stages'
-                    }
+                    {props.type === 'Stage' && 'Customize Customer Journey Stage Labels, Stages & more'}
+                    {props.type === 'Onboarding' && 'Customize Onboarding stages'}
+                    {props.type === 'Risk' && 'Customize Risk stages'}
                 </Typography>
                 <Box marginTop={'20px'} >
                     <div style={containerStyle}>
                         <Box sx={{ display: 'flex', marginTop: '5px' }} >
                             <Box >
-                                <Typography fontWeight={600} >{props.type === 'stage' ? 'Stage Name' : 'Sub-Stage Name'}</Typography>
+                                <Typography fontWeight={600} >{props.type + ' Name'}</Typography>
                             </Box>
                         </Box>
                         <Box sx={{ display: 'flex' }} >
                             <Typography fontWeight={600} >Enabled</Typography>
                             <Typography fontWeight={600} marginLeft={'20px'}>End</Typography>
-                            {/* <Typography fontWeight={600} marginLeft={'20px'}>Remove</Typography> */}
                         </Box>
                     </div>
                     {stages.map((stage, index) => (
@@ -238,9 +237,11 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'stage' | 'sub-st
                                 }
                                 {
                                     !editMode &&
-                                    <Box sx={stageContainer(stage.position)} >
-                                        <Typography fontSize={'13px'} >{stage.name}</Typography>
-                                    </Box>
+                                    <Tooltip title={stage.name} >
+                                        <Box sx={{ ...stageContainer(stage.position), padding: '5px 15px',cursor : 'pointer' }} >
+                                            <Typography fontSize={'13px'} >{stage.name}</Typography>
+                                        </Box>
+                                    </Tooltip>
 
                                 }
                                 {
@@ -278,7 +279,7 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'stage' | 'sub-st
                             <Typography
                                 sx={{ color: colorPalette.primary }}
                             >
-                                + Create {props.type === 'stage' ? 'Stage' : 'Sub-Stage'}
+                                + Create {props.type}
                             </Typography>
                         </div>
                     }
