@@ -63,5 +63,5 @@ export const taskStatusStyle = (status: 'Open' | 'InProgress' | 'Completed' | 'C
     padding: '20px',
     background: colorPalette.background,
     borderRadius: '6px',
-    marginTop : '20px'
+    marginTop : '10px'
 }

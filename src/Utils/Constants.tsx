@@ -401,6 +401,35 @@ export const getUsageTimeFilter = () => {
     ]
 }
 
+export const monthOptions = [
+    {label : 'January',value : 1},
+    {label : 'February',value : 2},
+    {label : 'March',value : 3},
+    {label : 'April',value : 4},
+    {label : 'May',value : 5},
+    {label : 'June',value : 6},
+    {label : 'July',value : 7},
+    {label : 'August',value : 8},
+    {label : 'September',value : 9},
+    {label : 'October',value : 10},
+    {label : 'November',value : 11},
+    {label : 'December',value : 12},
+];
+
 export const dateLiterals = [
     'Today', 'Yesterday','This Month','Last Month','This Quarter','Last Quarter','Last 6 Months','This Year'
 ]
+
+export const settingIds = {
+    HOME: 'HOME',
+    TEAM: 'TEAM',
+    BILL: 'BILL',
+    LOGO: 'LOGO',
+    ACCOUNT: 'ACCOUNT',
+    NOTIFICATIONS: 'NOTIFICATIONS',
+    TICKET: 'TICKET',
+    CUSTOMER_HUB : 'CUSTOMER_HUB',
+    ANALYTICS : 'ANALYTICS',
+    DATA_MODELER : 'DATA_MODELER',
+    HEALTH_DESIGNER : 'HEALTH_DESIGNER'
+}

@@ -6,6 +6,7 @@ import SegmentIcon from '@mui/icons-material/Segment';
 import AutoModeIcon from '@mui/icons-material/AutoMode';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import SettingsIcon from '@mui/icons-material/Settings';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 
 import '../Styles/CSS/SidebarStyle.css'
@@ -111,11 +112,11 @@ function SideBar(props: any) {
                         <SegmentIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.SEGMENT)} className='sidebar-icons' />
                     </LightTooltip>
                 </Box> */}
-                <Box className={sideBarPos === SIDE_BAR_IDS.FLOWS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                {/* <Box className={sideBarPos === SIDE_BAR_IDS.FLOWS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.FLOWS} placement="right-start" arrow>
                         <AutoModeIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.FLOWS)} className='sidebar-icons' />
                     </LightTooltip>
-                </Box>
+                </Box> */}
                 <Box className={sideBarPos === SIDE_BAR_IDS.TASKS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.TASKS} placement="right-start" arrow>
                         <FormatListBulletedIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.TASKS)} className='sidebar-icons' />
@@ -128,19 +129,16 @@ function SideBar(props: any) {
                 </Box>
             </Box>
             <Box>
-            <Box className={sideBarPos === SIDE_BAR_IDS.NOTIFICATION ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                {/* <Box className={sideBarPos === SIDE_BAR_IDS.NOTIFICATION ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.NOTIFICATION} placement="right-start" arrow>
                         <NotificationsIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.NOTIFICATION)} className='sidebar-icons' />
                     </LightTooltip>
+                </Box>                 */}
+                <Box className={sideBarPos === SIDE_BAR_IDS.SETTINGS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                    <LightTooltip title={SIDE_BAR_IDS.SETTINGS} placement="right-start" arrow>
+                        <SettingsIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.SETTINGS)} className='sidebar-icons' />
+                    </LightTooltip>
                 </Box>
-                {/* {
-                    CoreUtils.isComponentVisible(userRole, componentName.BILLING_INFO_HOME) &&
-                    <Box className='sidebar-icon-container' >
-                        <LightTooltip title={SIDE_BAR_IDS.SETTINGS} placement="right-start" arrow>
-                            <SettingsIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.SETTINGS)} className='sidebar-icons' />
-                        </LightTooltip>
-                    </Box>
-                } */}
                 <Box className={sideBarPos === SIDE_BAR_IDS.ACCOUNT ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.ACCOUNT} placement="right-start" arrow>
                         <AccountCircleIcon onClick={handleProfileClick} className='sidebar-icons' />

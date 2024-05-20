@@ -32,6 +32,9 @@ import EditCompanyAttributeModal from './EditCompanyAttributeModal';
 import RouteIcon from '@mui/icons-material/Route';
 import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 import WarningIcon from '@mui/icons-material/Warning';
+import { companyFieldType } from '../../Utils/types';
+import FactoryIcon from '@mui/icons-material/Factory';
+import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 
 const iconStyle = { fontWeight: 500, marginRight: '10px', color: colorPalette.fsGray };
 
@@ -67,42 +70,50 @@ function CompanyDetailTab({ company }: any) {
   const [healthScoreData, setHealthScoreData] = useState<any[]>([]);
   const [healthScoreLoading, setHealthScoreLoading] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-  const [selectedField,setSelectedField] = useState('');
-  const [selectedFieldData,setSelectedFieldData] = useState<any>('')
-  
-  let init = false;
+  const [selectedField, setSelectedField] = useState('');
+  const [selectedFieldData, setSelectedFieldData] = useState<any>('')
+  const [fieldType, setFieldType] = useState<companyFieldType>('owner');
 
+  let init = false;
   useEffect(() => {
     if (init === false) {
       getHealthScoreTimeline();
       init = true;
     }
-    console.log("🚀 ~ useEffect ~ company:", company)
+  }, [])
 
+  useEffect(() => {
+    populateAttributes();
+  }, [company]);
+
+  function populateAttributes() {
     const tmp = [];
     tmp.push({
       icon: <KeyIcon sx={iconStyle} />,
       label: 'Owner',
       value: company?.owner?.name,
-      edit: true
+      edit: true,
+      type: 'owner'
     });
     tmp.push({
       icon: <InfoIcon sx={iconStyle} />,
-      label: 'Status',
-      value: company?.status,
-      edit: true
+      label: 'Contract Status',
+      value: company.contractStatus,
+      edit: true,
+      type: 'contractStatus'
     });
     tmp.push({
       icon: <HourglassBottomIcon sx={iconStyle} />,
       label: 'Start Date',
-      value: company.startDate ? new Date(company.startDate).toLocaleDateString() : 'N/A',
+      value: company.created_at ? new Date(company.created_at).toDateString() : 'None',
       edit: false
     });
     tmp.push({
       icon: <CalendarMonthIcon sx={iconStyle} />,
       label: 'Next Renewal Date',
-      value: company.nextRenewalDate ? new Date(company.nextRenewalDate).toLocaleDateString() : 'N/A',
-      edit: true
+      value: company.nextRenewalDate ? new Date(company.nextRenewalDate).toDateString() : 'None',
+      edit: true,
+      type: 'nextRenewalDate'
     });
     tmp.push({
       icon: <LocalAtmIcon sx={iconStyle} />,
@@ -131,41 +142,51 @@ function CompanyDetailTab({ company }: any) {
     tmp.push({
       icon: <TrendingUpIcon sx={iconStyle} />,
       label: 'Usage Frequency',
-      value: company.usageFrequency || 'N/A',
+      value: company.usageFrequency || 'None',
       edit: false
     });
     tmp.push({
       icon: <TabIcon sx={iconStyle} />,
       label: 'Website',
       value: company.website,
-      edit: false
-    });
-    tmp.push({
-      icon: <FlightTakeoffIcon sx={iconStyle} />,
-      label: 'Contract Status',
-      value: company.contractStatus,
-      edit: true
+      edit: true,
+      type: 'website'
     });
     tmp.push({
       icon: <EmojiEmotionsIcon sx={iconStyle} />,
       label: 'NPS Score',
-      value: company.npsScore || 'N/A',
+      value: company.npsScore || '0',
       edit: false
     });
     tmp.push({
       icon: <ThumbsUpDownIcon sx={iconStyle} />,
       label: 'CSAT Score',
-      value: company.csatScore || 'N/A',
+      value: company.csatScore || '0',
       edit: false
     });
     tmp.push({
       icon: <NearMeIcon sx={iconStyle} />,
       label: 'Billing Address',
-      value: company.address || 'N/A',
-      edit: true
+      value: company.address || 'None',
+      edit: true,
+      type: 'address'
+    });
+    tmp.push({
+      icon: <FactoryIcon sx={iconStyle} />,
+      label: 'Industry',
+      value: company.industry || 'None',
+      edit: true,
+      type: 'industry'
+    });
+    tmp.push({
+      icon: <PermContactCalendarIcon sx={iconStyle} />,
+      label: 'Last Contact Date',
+      value: company.lastContactDate || 'None',
+      edit: true,
+      type: 'lastContactDate'
     });
     setDetails(tmp);
-  }, []);
+  }
 
   async function getHealthScoreTimeline() {
     try {
@@ -194,23 +215,36 @@ function CompanyDetailTab({ company }: any) {
     borderRadius: '5px',
   }
 
-  function handleEditAttribute(edit: boolean,label : string,val :any) {
-    if (edit === false){return;}
-    if(label === 'Journey Stage' || label === 'Onboarding' || label === 'Risk'){
-      if(label === 'Journey Stage'){
+  function handleEditAttribute(edit: boolean, label: string, val: any, type: companyFieldType) {
+    if (edit === false) { return; }
+    if (label === 'Journey Stage' || label === 'Onboarding' || label === 'Risk') {
+      if (label === 'Journey Stage') {
         setSelectedFieldData(company?.stage?.id)
-      }else if(label === 'Onboarding'){
+      } else if (label === 'Onboarding') {
         setSelectedFieldData(company?.onboardingStage?.id)
-      }else{
+      } else {
         setSelectedFieldData(company?.riskStage?.id)
       }
       setShowJourneyModal(true);
       setSelectedField(label);
-    }else{
+    } else {
       setShowEdit(true);
-      setSelectedField(label);
-      setSelectedFieldData(val)
+      setFieldType(type);
+      if (type === 'owner') {
+        setSelectedFieldData(company?.owner?.id);
+      } else {
+        setSelectedFieldData(val);
+      }
     }
+  }
+
+  function handleCompanyUpdate(data: any) {
+    setShowEdit(false);
+    if (data == null) { return; }
+    for (const key in data) {
+      company[key] = data[key];
+    }
+    populateAttributes();
   }
 
   return (
@@ -229,7 +263,7 @@ function CompanyDetailTab({ company }: any) {
                     <Typography
                       fontWeight={d.edit === true ? 600 : 500}
                       sx={{ color: colorPalette.textPrimary, cursor: d.edit === true ? 'pointer' : 'default' }}
-                      onClick={() => handleEditAttribute(d.edit,d.label,d.value)}
+                      onClick={() => handleEditAttribute(d.edit, d.label, d.value, d.type)}
                     >{d.value}</Typography>
                   </Grid>
                 </Grid>
@@ -269,22 +303,6 @@ function CompanyDetailTab({ company }: any) {
               </Box>
             </Box>
           </Box>
-          {/* <Box marginTop={'50px'} >
-            <Typography sx={{ textAlign: 'start' }} variant='h5' >
-              <ForkRightIcon />
-              Customer Journey Stage
-              <Tooltip title='Edit' >
-                <IconButton onClick={() => setShowJourneyModal(true)}>
-                  <EditIcon sx={{ color: colorPalette.fsGray, width: '20px' }} />
-                </IconButton>
-              </Tooltip>
-            </Typography>
-            <Box padding={'20px 30px'}>
-              <Box sx={journeyStyle(company?.stage?.position)} >
-                {company?.stage?.name || 'N/A'}
-              </Box>
-            </Box>
-          </Box> */}
         </Box>
       </Box>
       {/* <Box>
@@ -299,7 +317,6 @@ function CompanyDetailTab({ company }: any) {
         <EditJourneyModal
           companyId={company.id}
           open={showJourneyModal}
-          // journey={company?.stage?.id || ''}
           field={selectedField}
           value={selectedFieldData}
           close={() => setShowJourneyModal(false)}
@@ -307,7 +324,14 @@ function CompanyDetailTab({ company }: any) {
       }
       {
         showEdit &&
-        <EditCompanyAttributeModal open={showEdit} close={() => setShowEdit(false)} />
+        <EditCompanyAttributeModal
+          open={showEdit}
+          close={() => setShowEdit(false)}
+          companyId={company.id}
+          type={fieldType}
+          value={selectedFieldData}
+          update={handleCompanyUpdate}
+        />
       }
     </Box>
   )

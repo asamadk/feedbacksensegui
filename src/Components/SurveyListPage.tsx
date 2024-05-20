@@ -37,8 +37,8 @@ const surveyPageMainContainer = {
 }
 
 const leftSectionStyle: any = {
-    height : '100vh',
-    background : colorPalette.secondary,
+    height: '100vh',
+    background: colorPalette.secondary,
     display: 'flex',
     width: '18%',
     flexDirection: 'column',
@@ -54,7 +54,8 @@ const allSurveyFolder = (bgColor: string) => {
         paddingBottom: '10px',
         cursor: 'pointer',
         backgroundColor: bgColor,
-        color: colorPalette.textPrimary
+        color: colorPalette.textPrimary,
+        fontWeight : 600
     }
 }
 
@@ -64,7 +65,8 @@ const surveyFolderText = {
     padding: '10px',
     paddingBottom: '10px',
     cursor: 'pointer',
-    color: colorPalette.textPrimary
+    color: colorPalette.fsGray,
+    fontWeight : 600
 }
 
 const folderText = {
@@ -167,7 +169,7 @@ function SurveyListPage() {
         updateActiveSurveyCount();
     }, [surveyState]);
 
-    const handlePlanVisibility = (tempSettings :any) => {
+    const handlePlanVisibility = (tempSettings: any) => {
         //TODO uncomment this section (commenting this just for testing) and remove the first setState
         setShowFolder(true);
         // if (tempSettings != null && tempSettings[FOLDER_FEATURE_ACTIVE] === 'true') {
@@ -275,10 +277,11 @@ function SurveyListPage() {
         setSelectedFolderId('0');
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = colorPalette.secondary;
+            element.style.color = colorPalette.fsGray;
         });
 
-        e.target.style.background = colorPalette.background;
+        e.target.style.fontWeight = '600';
+        e.target.style.color = colorPalette.darkBackground;
     }
 
     const handleFolderClick = (e: any, folderName: string, folderId: string) => {
@@ -296,16 +299,18 @@ function SurveyListPage() {
         setSelectedFolderId(folderId);
 
         document.querySelectorAll<HTMLElement>('.all-folders-data').forEach(element => {
-            element.style.background = colorPalette.secondary;
+            element.style.color = colorPalette.fsGray;
         })
 
         document.querySelectorAll<HTMLElement>('.folders-data').forEach(element => {
-            element.style.background = colorPalette.secondary;
+            element.style.color = colorPalette.fsGray;
         });
-        e.target.style.background = colorPalette.background;
+
+        e.target.style.fontWeight = '600';
+        e.target.style.color = colorPalette.darkBackground;
+
     }
 
-    const handleOpenInviteModal = () => setOpenInviteModal(true);
     const handleCloseInviteModal = () => setOpenInviteModal(false);
 
     const handleOpenCreateFolderModal = () => {
@@ -383,10 +388,6 @@ function SurveyListPage() {
 
     const handleUpdateComponent = () => {
         getSubscriptionDetails();
-    }
-
-    const handleUpgradePlanClick = () => {
-        navigate('/upgrade/plan');
     }
 
     const handleRerenderSurveyCreate = () => {
@@ -472,7 +473,7 @@ function SurveyListPage() {
                                 +
                             </Typography>
                         </div>
-                        <div style={allSurveyFolder(colorPalette.background)} className="all-folders-data" onClick={handleAllFolderClick} >
+                        <div style={allSurveyFolder(colorPalette.secondary)} className="all-folders-data" onClick={handleAllFolderClick} >
                             <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >All Surveys</Typography>
                         </div>
                         {

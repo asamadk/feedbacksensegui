@@ -12,12 +12,12 @@ import InfoComponent from '../Components/InfoComponent';
 import axios from 'axios';
 import { createHealthConfigURL, getHealthConfigURL } from '../Utils/Endpoints';
 import { handleUnAuth } from '../Utils/FeedbackUtils';
-import ReplayIcon from '@mui/icons-material/Replay';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { healthScoreMetrics } from '../Utils/ConditionConstants';
 
 type rowType = {
     metric: string,
-    metricInfo : any,
+    metricInfo: any,
     good: {
         operator: string,
         value: any
@@ -38,7 +38,7 @@ function HealthDesignerLayout() {
     const [healthData, setHealthData] = useState<any>({});
 
     function handleAddCriteria() {
-        setRows([...rows, { metric: '',metricInfo : {}, good: { operator: '', value: '' }, poor: { operator: '', value: '' } }]);
+        setRows([...rows, { metric: '', metricInfo: {}, good: { operator: '', value: '' }, poor: { operator: '', value: '' } }]);
     }
 
     let init = false;
@@ -68,9 +68,9 @@ function HealthDesignerLayout() {
 
     // Function to handle metric change
     function handleMetricChange(val: any, index: number) {
-        let metricInfo :any= {};
+        let metricInfo: any = {};
         healthScoreMetrics.forEach(m => {
-            if(m.value === val){
+            if (m.value === val) {
                 metricInfo = m;
             }
         })
@@ -156,6 +156,10 @@ function HealthDesignerLayout() {
         }
     }
 
+    function handleRemoveRow(pos: number) {
+        setRows(rows.filter((row,index) => {return index !== pos}))
+    }
+
     return (
         <Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
@@ -234,6 +238,9 @@ function HealthDesignerLayout() {
                                         </Box>
                                     </TableCell>
                                 ))}
+                                <TableCell sx={{ fontWeight: '600', color: editMode ? '#000000' : colorPalette.fsGray }} >
+                                    Action
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -264,7 +271,7 @@ function HealthDesignerLayout() {
                                                 onValueChange={(val: any) => handleValueChange(val, index, 'good')}
                                             />
                                         </TableCell>
-                                        <TableCell sx={{ background: '#fff3f3' }} >
+                                        <TableCell sx={{ ...tableVerticalBorder, background: '#fff3f3' }} >
                                             <HealthConditionComponent
                                                 disabled={!editMode}
                                                 type='non-metric'
@@ -275,6 +282,15 @@ function HealthDesignerLayout() {
                                                 onOperatorChange={(val: any) => handleOperatorChange(val, index, 'poor')}
                                                 onValueChange={(val: any) => handleValueChange(val, index, 'poor')}
                                             />
+                                        </TableCell>
+                                        <TableCell >
+                                            <IconButton
+                                                onClick={() => handleRemoveRow(index)}
+                                                disabled={!editMode}
+                                                sx={{ height: 'fit-content' }}
+                                            >
+                                                <DeleteIcon />
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 ))

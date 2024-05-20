@@ -15,6 +15,8 @@ import CompanySurveyTab from './CompanySurveytab';
 import { useLocation, useNavigate } from 'react-router';
 import CloseIcon from '@mui/icons-material/Close';
 import CreateCompanyModal from '../../Modals/ContactModals/CreateCompanyModal';
+import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
+import EditCompanyAttributeModal from './EditCompanyAttributeModal';
 
 function CompanyDetailPage() {
 
@@ -27,6 +29,7 @@ function CompanyDetailPage() {
     const [company, setCompany] = useState(location.state);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [openActivities, setOpenActivities] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
 
     useEffect(() => {
         setCompany(location.state);
@@ -54,7 +57,6 @@ function CompanyDetailPage() {
 
     function handleCreateModalClose(data: any) {
         setShowCreateModal(false);
-        console.log("🚀 ~ handleCreateModalClose ~ data:", data)
     }
 
     function handleEdit() {
@@ -68,15 +70,30 @@ function CompanyDetailPage() {
     function handleDelete() {
     }
 
+    function handleCompanyUpdate(data: any) {
+        setShowEdit(false);
+        const tmpCompany = company;
+        if (data == null) { return; }
+        for (const key in data) {
+            tmpCompany[key] = data[key];
+        }
+        setCompany(JSON.parse(JSON.stringify(tmpCompany)));
+      }
+
     return (
         <Box>
             <Box sx={{ display: 'flex', padding: '10px', justifyContent: 'space-between', background: colorPalette.secondary }} >
                 <Box sx={{ display: 'flex' }} >
                     <Box sx={{ background: '#7ACB36', width: '12px', height: '12px', borderRadius: '50%', marginTop: '10px' }} ></Box>
                     <Box textAlign={'start'} marginLeft={'20px'} >
-                        <Typography marginLeft={'5px'} variant='h5' fontWeight={600} >
-                            {company.name}
-                        </Typography>
+                        <Box sx={{ display: 'flex' }} >
+                            <Typography marginLeft={'5px'} marginTop={'2px'} variant='h5' fontWeight={600} >
+                                {company.name}
+                            </Typography>
+                            <IconButton onClick={() => setShowEdit(true)} sx={{ marginRight: '5px' }} >
+                                <ModeEditOutlineIcon fontSize={'small'} />
+                            </IconButton>
+                        </Box>
                         <Typography sx={{ textAlign: 'start', fontSize: '14px', color: colorPalette.fsGray }} >{company.id}</Typography>
                     </Box>
                 </Box>
@@ -107,6 +124,17 @@ function CompanyDetailPage() {
                     type='companies'
                     open={showCreateModal}
                     close={handleCreateModalClose}
+                />
+            }
+            {
+                showEdit &&
+                <EditCompanyAttributeModal
+                    open={showEdit}
+                    close={() => setShowEdit(false)}
+                    companyId={company.id}
+                    type={'name'}
+                    value={company.name}
+                    update={handleCompanyUpdate}
                 />
             }
         </Box>

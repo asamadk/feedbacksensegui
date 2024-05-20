@@ -9,7 +9,7 @@ const listStyle = {
   border: `1px ${colorPalette.textSecondary} solid`,
   display: 'flex',
   justifyContent: 'space-between',
-  padding: '40px',
+  padding: '20px',
   background: colorPalette.background,
   borderRadius: '6px'
 }
@@ -25,7 +25,7 @@ function AnalyticsSettingsLayout() {
         <Box>
             <Box sx={listStyle} >
                 <Box textAlign={'start'} >
-                    <Typography variant='h5' fontWeight={550} >Custom Events</Typography>
+                    <Typography variant='h6' fontWeight={550} >Custom Events</Typography>
                     <Typography sx={{ color: colorPalette.fsGray }} >
                       View/Edit & Create custom events to personalize the tracking & improve analysis
                     </Typography>

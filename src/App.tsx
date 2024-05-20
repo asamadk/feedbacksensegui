@@ -221,14 +221,6 @@ function App() {
                   path='/notifications'
                   element={user ? <NotificationsLayout /> : <Navigate to={'/login'} />}
                 />
-                <Route
-                  path='/settings/product-usage-connect'
-                  element={user ? <ProductUsageConnect /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/settings/custom-events-view'
-                  element={user ? <CustomEventsView /> : <Navigate to={'/login'} />}
-                />
               </Routes>
             </Box>
           </Box>

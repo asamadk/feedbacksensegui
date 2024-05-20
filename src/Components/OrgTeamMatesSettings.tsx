@@ -49,7 +49,7 @@ function OrgTeamMatesSettings() {
   const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
   const [selectedUser, setSelectedUser] = useState<any>({});
   const [loading, setLoading] = React.useState(false);
-  const defaultColor = useSelector((state: any) => state.colorReducer);
+  
   const userRole: userRoleType = useSelector((state: any) => state.userRole);
   const userState = useSelector((state: any) => state.users);
 
@@ -157,7 +157,7 @@ function OrgTeamMatesSettings() {
 
   const SingleUserList = (user: any) => {
     return (
-      <Box sx={singleUserContainer(colorPalette.secondary)} >
+      <Box sx={singleUserContainer(colorPalette.textSecondary)} >
         <Box display={'flex'} >
           <Avatar sx={{ bgcolor: colorPalette.darkBackground, width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
           <Box textAlign={'start'} >

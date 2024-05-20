@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { colorPalette } from '../Utils/Constants'
+import { colorPalette, settingIds } from '../Utils/Constants'
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import GroupsIcon from '@mui/icons-material/Groups';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
@@ -24,6 +24,7 @@ import CustomerHubSettingsLayout from './CustomerHubSettingsLayout';
 import AnalyticsSettingsLayout from './AnalyticsSettingsLayout';
 import DataModelerLayout from './DataModelerLayout';
 import HealthDesignerLayout from './HealthDesignerLayout';
+import HomeSettings from '../Components/HomeSettings';
 
 const sideBarStyle = {
     background: colorPalette.secondary,
@@ -38,30 +39,24 @@ const sidebarTabStye = {
     headingP: { color: '#454545', fontSize: '13px', fontWeight: 500 },
 }
 
-const settingIds = {
-    GENERAL: 'GENERAL',
-    TEAM: 'TEAM',
-    BILL: 'BILL',
-    LOGO: 'LOGO',
-    ACCOUNT: 'ACCOUNT',
-    NOTIFICATIONS: 'NOTIFICATIONS',
-    TICKET: 'TICKET',
-    CUSTOMER_HUB : 'CUSTOMER_HUB',
-    ANALYTICS : 'ANALYTICS',
-    DATA_MODELER : 'DATA_MODELER',
-    HEALTH_DESIGNER : 'HEALTH_DESIGNER'
-}
-
 function SettingsLayout() {
 
     const navigate = useNavigate();
-    const [selectedPos , setSelectedPos] = useState(settingIds.GENERAL);
+    const [selectedPos , setSelectedPos] = useState(settingIds.HOME);
 
     //TODO create settings layout URL based navigation instead of JS based
     useEffect(() => {
         handleTabHighlight(selectedPos);
     },[])
 
+    function handleSettingsClickFromChild(id :string){
+        handleSettingsClick({
+            target : {
+                id : id
+            }
+        });
+    }
+    
     const handleSettingsClick = (event: any) => {
         const id: string = event.target.id;
         handleTabNavigate(id);
@@ -90,24 +85,16 @@ function SettingsLayout() {
 
                 {/* workspace tab */}
                 <Box sx={{ ...sidebarTabStye.container, marginTop: '10px' }} >
-                    <p style={sidebarTabStye.headingP} >WORKSPACE</p>
-                    <Box className='tabs' id={settingIds.GENERAL} onClick={handleSettingsClick} >
-                        <CorporateFareIcon id={settingIds.GENERAL} />
-                        <p id={settingIds.GENERAL} >General</p>
-                    </Box>
-                    <Box className='tabs' id={settingIds.TEAM} onClick={handleSettingsClick} >
-                        <GroupsIcon id={settingIds.TEAM} />
-                        <p id={settingIds.TEAM}  >Team</p>
-                    </Box>
-                    <Box className='tabs' id={settingIds.BILL} onClick={handleSettingsClick} >
-                        <CreditCardIcon id={settingIds.BILL} />
-                        <p id={settingIds.BILL}  >Billing</p>
+                    <p style={sidebarTabStye.headingP} >General</p>
+                    <Box className='tabs' id={settingIds.HOME} onClick={handleSettingsClick} >
+                        <CorporateFareIcon id={settingIds.HOME} />
+                        <p id={settingIds.HOME} >Home</p>
                     </Box>
                 </Box>
 
                 {/* branding tab */}
                 <Box sx={sidebarTabStye.container} >
-                    <p style={sidebarTabStye.headingP} >BRANDING</p>
+                    <p style={sidebarTabStye.headingP} >Customer Engagement</p>
                     <Box className='tabs' id={settingIds.LOGO} onClick={handleSettingsClick} >
                         <BrandingWatermarkIcon id={settingIds.LOGO} />
                         <p id={settingIds.LOGO}  >Custom Logo</p>
@@ -116,10 +103,10 @@ function SettingsLayout() {
                         <DeviceHubIcon id={settingIds.CUSTOMER_HUB} />
                         <p id={settingIds.CUSTOMER_HUB}  >Customer Hub</p>
                     </Box>
-                    <Box className='tabs' id={settingIds.ANALYTICS} onClick={handleSettingsClick} >
+                    {/* <Box className='tabs' id={settingIds.ANALYTICS} onClick={handleSettingsClick} >
                         <AutoGraphIcon id={settingIds.ANALYTICS} />
                         <p id={settingIds.ANALYTICS}  >Analytics</p>
-                    </Box>
+                    </Box> */}
                 </Box>
 
                 {/* Data Management tab */}
@@ -137,15 +124,23 @@ function SettingsLayout() {
 
                 {/* user tab */}
                 <Box sx={sidebarTabStye.container} >
-                    <p style={sidebarTabStye.headingP} >USER</p>
+                    <p style={sidebarTabStye.headingP} >User Management</p>
+                    <Box className='tabs' id={settingIds.TEAM} onClick={handleSettingsClick} >
+                        <GroupsIcon id={settingIds.TEAM} />
+                        <p id={settingIds.TEAM}  >Users</p>
+                    </Box>
+                    <Box className='tabs' id={settingIds.BILL} onClick={handleSettingsClick} >
+                        <CreditCardIcon id={settingIds.BILL} />
+                        <p id={settingIds.BILL}  >Billing</p>
+                    </Box>
                     <Box className='tabs' id={settingIds.ACCOUNT} onClick={handleSettingsClick} >
                         <AccountCircleIcon id={settingIds.ACCOUNT} />
                         <p id={settingIds.ACCOUNT}  >My Account</p>
                     </Box>
-                    <Box className='tabs' id={settingIds.NOTIFICATIONS} onClick={handleSettingsClick} >
+                    {/* <Box className='tabs' id={settingIds.NOTIFICATIONS} onClick={handleSettingsClick} >
                         <NotificationsNoneIcon id={settingIds.NOTIFICATIONS} />
                         <p id={settingIds.NOTIFICATIONS}  >Notifications</p>
-                    </Box>
+                    </Box> */}
                     <Box className='tabs' id={settingIds.TICKET} onClick={handleSettingsClick} >
                         <FactCheckIcon id={settingIds.TICKET} />
                         <p id={settingIds.TICKET}  >Create Ticket</p>
@@ -154,7 +149,8 @@ function SettingsLayout() {
             </Box>
 
             <Box width={'90%'} sx={{backgroundColor : colorPalette.textSecondary}} padding={'20px'}>
-                {selectedPos === settingIds.GENERAL && <OrgGeneralSettings/>}
+                {selectedPos === settingIds.HOME && <HomeSettings click={handleSettingsClickFromChild} />}
+                {selectedPos === settingIds.ACCOUNT && <OrgGeneralSettings/>}
                 {selectedPos === settingIds.TEAM && <OrgTeamMatesSettings/>}
                 {selectedPos === settingIds.BILL && <SubscriptionSettings/>}
                 {selectedPos === settingIds.LOGO && <SurveyGeneralSettings/>}

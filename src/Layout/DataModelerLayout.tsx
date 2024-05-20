@@ -16,8 +16,8 @@ function DataModelerLayout() {
             <>
                 <Box sx={listStyleBlock} >
                     <Box textAlign={'start'} >
-                        <Typography variant='h6' fontWeight={550} >Customer Journey Stages</Typography>
-                        <Typography sx={{ color: colorPalette.fsGray }} >
+                        <Typography fontWeight={600} >Customer Journey Stages</Typography>
+                        <Typography sx={{ color: colorPalette.fsGray,fontSize : '13px' }} >
                             Create your own custom customer journey
                         </Typography>
                     </Box>
@@ -33,8 +33,8 @@ function DataModelerLayout() {
 
                 <Box sx={listStyleBlock} >
                     <Box textAlign={'start'} >
-                        <Typography variant='h6' fontWeight={550} >Onboarding Stages</Typography>
-                        <Typography sx={{ color: colorPalette.fsGray }} >
+                        <Typography fontWeight={600} >Onboarding Stages</Typography>
+                        <Typography sx={{ color: colorPalette.fsGray,fontSize : '13px' }} >
                             Create custom stages for customer onboarding
                         </Typography>
                     </Box>
@@ -49,8 +49,8 @@ function DataModelerLayout() {
 
                 <Box sx={listStyleBlock} >
                     <Box textAlign={'start'} >
-                        <Typography variant='h6' fontWeight={550} >Risk Stages</Typography>
-                        <Typography sx={{ color: colorPalette.fsGray }} >
+                        <Typography fontWeight={600} >Risk Stages</Typography>
+                        <Typography sx={{ color: colorPalette.fsGray,fontSize : '13px' }} >
                             Create custom risk stages
                         </Typography>
                     </Box>

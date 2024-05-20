@@ -92,7 +92,6 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
     }
 
     function populateCompany(record: any) {
-        console.log("🚀 ~ populateData ~ record:", record)
         setName(record.name);
         setWebsite(record.website);
         setIndustry(record.industry);

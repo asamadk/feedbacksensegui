@@ -1,45 +1,86 @@
 import { Box, Button, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { colorPalette } from '../Utils/Constants'
 import { containedButton } from '../Styles/ButtonStyle'
-import { useNavigate } from 'react-router'
+import ProductUsageConnect from '../Components/ProductUsageConnect'
+import CustomEventsView from '../Components/CustomEventsView'
 
 const listStyle = {
     boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
     border: `1px ${colorPalette.textSecondary} solid`,
     display: 'flex',
     justifyContent: 'space-between',
-    padding: '40px',
+    padding: '20px',
     background: colorPalette.background,
-    borderRadius: '6px'
+    borderRadius: '6px',
+    marginTop: '10px'
 }
 
 function CustomerHubSettingsLayout() {
 
-    const navigate = useNavigate();
+    const [display, setDisplay] = useState(0);
 
-    function handleConnectClick(){
-        navigate('/settings/product-usage-connect');
+    function handleConnectClick() {
+        setDisplay(1);
+    }
+
+    function handleCustomEventClick() {
+        setDisplay(2);
+    }
+
+    function DynamicDisplay() {
+        if (display < 1) { return <></> }
+        if (display === 1) {
+            return <ProductUsageConnect back={() => setDisplay(0)} />
+        }else if(display === 2){
+            return <CustomEventsView back={() => setDisplay(0)} />
+        }
+        return <></>
+    }
+
+    function MainDisplay() {
+        if (display !== 0) { return <></> }
+        return (
+            <Box>
+                <Box sx={listStyle} >
+                    <Box textAlign={'start'} >
+                        <Typography fontWeight={600} >Product Usage</Typography>
+                        <Typography sx={{ color: colorPalette.fsGray, fontSize: '13px' }} >
+                            Automate your data streaming to feedbacksense by using feedbacksense's own tracking system
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Button
+                            size='small'
+                            sx={containedButton}
+                            onClick={handleConnectClick}
+                        >Connect</Button>
+                    </Box>
+                </Box>
+                <Box sx={listStyle} >
+                    <Box textAlign={'start'} >
+                        <Typography fontWeight={600} >Custom Events</Typography>
+                        <Typography sx={{ color: colorPalette.fsGray, fontSize: '13px' }} >
+                            View/Edit & Create custom events to personalize the tracking & improve analysis
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Button
+                            size='small'
+                            sx={containedButton}
+                            onClick={handleCustomEventClick}
+                        >View</Button>
+                    </Box>
+                </Box>
+            </Box>
+        )
     }
 
     return (
-        <Box>
-            <Box sx={listStyle} >
-                <Box textAlign={'start'} >
-                    <Typography variant='h5' fontWeight={550} >Product Usage</Typography>
-                    <Typography sx={{ color: colorPalette.fsGray }} >
-                        Automate your data streaming to feedbacksense by using feedbacksense's own tracking system
-                    </Typography>
-                </Box>
-                <Box>
-                    <Button 
-                        size='small' 
-                        sx={containedButton} 
-                        onClick={handleConnectClick}
-                    >Connect</Button>
-                </Box>
-            </Box>
-        </Box>
+        <>
+            {MainDisplay()}
+            {DynamicDisplay()}
+        </>
     )
 }
 

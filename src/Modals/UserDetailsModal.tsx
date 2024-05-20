@@ -33,7 +33,9 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
         if (settings != null && settings[TEAM_ROLES] === 'true') {
             setTeamRolesFeatureActive(true);
         } else {
-            setTeamRolesFeatureActive(false);
+            //TODO handle it "Stopping from accesing roles"
+            // setTeamRolesFeatureActive(false);
+            setTeamRolesFeatureActive(true);
         }
     }
 

@@ -197,7 +197,7 @@ function CreateSurveyModal(props: any) {
             >
                 <Box sx={ModalStyles.modalStyle(colorPalette.background)}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
-                        <Typography fontFamily={'Apercu Pro'} id="modal-modal-title" variant="h5" component="h2">
+                        <Typography color={'#000000'} fontFamily={'Apercu Pro'} id="modal-modal-title" variant="h5" component="h2">
                             Create a new survey
                         </Typography>
                         <IconButton sx={{ color: colorPalette.darkBackground }} >
@@ -258,19 +258,19 @@ function CreateSurveyDefaultScreen(props: any) {
     return (
         <Box marginTop={'20px'} marginBottom={'20px'} display={'flex'} justifyContent={'space-around'}>
             <Box className="create-survey-scratch" onClick={props.create} sx={selectorBackground} >
-                <ReceiptIcon sx={{ fontSize: '150px', color: colorPalette.primary, marginBottom: '10px' }} />
-                <Typography textAlign={'center'} color={colorPalette.primary} >Start from scratch</Typography>
+                <ReceiptIcon sx={{ fontSize: '150px', color: '#000000', marginBottom: '10px' }} />
+                <Typography textAlign={'center'} color={'#000000'} >Start from scratch</Typography>
             </Box>
             <Box onClick={() => navigate('/template')} sx={selectorBackground} >
-                <PostAddIcon sx={{ fontSize: '150px', color: colorPalette.primary, marginBottom: '10px' }} />
-                <Typography textAlign={'center'} color={colorPalette.primary} >Start from template</Typography>
+                <PostAddIcon sx={{ fontSize: '150px', color: '#000000', marginBottom: '10px' }} />
+                <Typography textAlign={'center'} color={'#000000'} >Start from template</Typography>
             </Box>
         </Box>
     )
 }
 
 const selectorBackground = {
-    background: colorPalette.background,
+    background: colorPalette.textSecondary,
     boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
     padding: '10px',
     borderRadius: '6px',

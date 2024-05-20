@@ -2,7 +2,7 @@ import store from "../Redux/store";
 
 export const healthScoreMetrics = [
     { label: 'Contract Status', value: 'contractStatus', type: 'options', table: 'company', relation: false, path: '' },
-    { label: 'Status', value: 'status', type: 'options', table: 'company', relation: false, path: '' },
+    // { label: 'Status', value: 'status', type: 'options', table: 'company', relation: false, path: '' },
     { label: 'Next Renewal Date', value: 'nextRenewalDate', type: 'date', table: 'company', relation: false, path: '' },
     { label: 'Start Date', value: 'startDate', type: 'date', table: 'company', relation: false, path: '' },
     { label: 'Last Activity Date', value: 'lastActivityDate', type: 'date', table: 'company', relation: false, path: '' },
@@ -24,15 +24,18 @@ export function getMetricOptions(metric: string) {
     if (metric === 'contractStatus') {
         res.push({ label: 'Paying', value: 'Paying' });
         res.push({ label: 'Free', value: 'Free' });
-    } else if (metric === 'status') {
-        res.push({ label: 'Active', value: 'Active' });
-        res.push({ label: 'Inactive', value: 'Inactive' });
-        res.push({ label: 'Verified', value: 'Verified' });
-        res.push({ label: 'Compliant', value: 'Compliant' });
-        res.push({ label: 'Non-Compliant', value: 'Non-Compliant' });
-        res.push({ label: 'Good Standing', value: 'Good Standing' });
-        res.push({ label: 'Delinquent', value: 'Delinquent' });
-    } else if (metric === 'usageFrequency') {
+        res.push({ label: 'Churned', value: 'Churned' });
+    }
+    // else if (metric === 'status') {
+    //     res.push({ label: 'Active', value: 'Active' });
+    //     res.push({ label: 'Inactive', value: 'Inactive' });
+    //     res.push({ label: 'Verified', value: 'Verified' });
+    //     res.push({ label: 'Compliant', value: 'Compliant' });
+    //     res.push({ label: 'Non-Compliant', value: 'Non-Compliant' });
+    //     res.push({ label: 'Good Standing', value: 'Good Standing' });
+    //     res.push({ label: 'Delinquent', value: 'Delinquent' });
+    // } 
+    else if (metric === 'usageFrequency') {
         res.push({ label: 'Daily', value: 'Daily' });
         res.push({ label: 'Monthly', value: 'Monthly' });
     } else if (metric === 'stage') {

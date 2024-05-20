@@ -234,6 +234,10 @@ export const addCompanyURL = () => {
     return `${BASE_URL}/company/create/individual`
 }
 
+export const updateCompanyURL = () => {
+    return `${BASE_URL}/company/update`
+}
+
 export const getCompanyPeopleOptionURL = () => {
     return `${BASE_URL}/company/select-options`
 }

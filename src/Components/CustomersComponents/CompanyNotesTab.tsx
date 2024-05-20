@@ -119,12 +119,12 @@ function CompanyNotesTab(props: { companyId: string | null, personId: string | n
           sx={{ ...containedButton, width: 'fit-content', marginTop: '0' }}
         >Add a Note</Button>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-evenly', marginTop: '20px' }} >
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }} >
         {
           metrics?.map(metric => (
-            <Box>
-              <Typography variant='h2' sx={{ color: colorPalette.primary }} >{metric.count}</Typography>
-              <Typography fontWeight={600} sx={{ color: colorPalette.fsGray }} >{metric.label}</Typography>
+            <Box sx={{ borderRadius: '6px', boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px', padding: '20px', textAlign: 'center', background: colorPalette.textSecondary, width: '20%' }} >
+              <Typography fontSize={13} fontWeight={600} >{metric.label}</Typography>
+              <Typography marginTop={'10px'} variant='h4' fontWeight={600} >{metric.count}</Typography>
             </Box>
           ))
         }
@@ -132,7 +132,7 @@ function CompanyNotesTab(props: { companyId: string | null, personId: string | n
       <Box marginTop={'20px'} >
         <TableContainer
           id='company-table-container'
-          sx={{ ...tableContainerStyle, height: 'calc(100vh - 335px)' }}
+          sx={{ ...tableContainerStyle, height: 'calc(100vh - 350px)' }}
         >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>

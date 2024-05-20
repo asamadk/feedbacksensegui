@@ -88,7 +88,7 @@ function SurveysPanel(props: any) {
     useEffect(() => {
         if (initialized === false) {
             getSurveys();
-            getUserList();
+            // getUserList();
             initialized = true;
         }
     }, [forceRerender]);
@@ -135,29 +135,29 @@ function SurveysPanel(props: any) {
         }
     }
 
-    const getUserList = async (): Promise<void> => {
-        try {
-            if (userState == null || userState.length < 1) {
-                setLoading(true);
-                let { data } = await axios.get(Endpoints.getUserListAPI(), { withCredentials: true });
-                setLoading(false);
-                if (data?.statusCode !== 200) {
-                    snackbarRef?.current?.show(data?.message, 'error');
-                    return;
-                }
+    // const getUserList = async (): Promise<void> => {
+    //     try {
+    //         if (userState == null || userState.length < 1) {
+    //             setLoading(true);
+    //             let { data } = await axios.get(Endpoints.getUserListAPI(), { withCredentials: true });
+    //             setLoading(false);
+    //             if (data?.statusCode !== 200) {
+    //                 snackbarRef?.current?.show(data?.message, 'error');
+    //                 return;
+    //             }
 
-                if (data.data != null) {
-                    dispatch(setUsers(data.data))
-                }
-            }
-        } catch (error: any) {
-            setLoading(false);
-            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            if (error?.response?.data?.message === Constants.USER_UNAUTH_TEXT) {
-                FeedbackUtils.handleLogout();
-            }
-        }
-    }
+    //             if (data.data != null) {
+    //                 dispatch(setUsers(data.data))
+    //             }
+    //         }
+    //     } catch (error: any) {
+    //         setLoading(false);
+    //         snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+    //         if (error?.response?.data?.message === Constants.USER_UNAUTH_TEXT) {
+    //             FeedbackUtils.handleLogout();
+    //         }
+    //     }
+    // }
 
     const getSurveys = async (): Promise<void> => {
         try {

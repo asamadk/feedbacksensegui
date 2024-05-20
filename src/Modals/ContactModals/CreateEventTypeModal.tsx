@@ -82,7 +82,7 @@ function CreateEventTypeModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={modalStyle(colorPalette.background)}>
+                <Box sx={{...modalStyle(colorPalette.background),width : '25%'}}>
                     <Box sx={modalHeaderStyle} >
                         <Box>
                             <Typography id="modal-modal-title" variant="h5" component="h2" >

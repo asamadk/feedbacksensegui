@@ -14,8 +14,9 @@ import { deleteUsageEventTypeURL, getUsageEventTypeURL } from '../Utils/Endpoint
 import CreateEventTypeModal from '../Modals/ContactModals/CreateEventTypeModal';
 import GenericModal from '../Modals/GenericModal';
 import { handleUnAuth } from '../Utils/FeedbackUtils';
+import { globalSettingSubContainers } from '../Styles/LayoutStyles';
 
-function CustomEventsView() {
+function CustomEventsView(props : {back : any}) {
 
     const col: string[] = ['Event Name', 'Event Type', 'Action'];
     const navigate = useNavigate();
@@ -57,7 +58,7 @@ function CustomEventsView() {
     }
 
     const handleBackButtonClick = () => {
-        navigate(-1);
+        props.back();
     }
 
     function handleCreateModalClose({ refresh }: any) {
@@ -100,13 +101,13 @@ function CustomEventsView() {
       }
 
     return (
-        <Box sx={{ padding: '20px 40px' }} >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
+        <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between',marginBottom : '10px' }} >
                 <Box display={'flex'}>
-                    <IconButton sx={{ marginTop: '10px' }} onClick={handleBackButtonClick}  >
+                    <IconButton onClick={handleBackButtonClick}  >
                         <ArrowBackIcon sx={{ color: colorPalette.darkBackground }} />
                     </IconButton>
-                    <Typography variant='h5' marginTop={'15px'} >Custom Event Configurations</Typography>
+                    <Typography variant='h6' marginTop={'4px'} >Custom Event Configurations</Typography>
                 </Box>
                 <Box>
                     <Button
@@ -117,42 +118,44 @@ function CustomEventsView() {
                     </Button>
                 </Box>
             </Box>
-            <Box marginTop={'50px'}>
-                <TableContainer sx={{ ...tableContainerStyle, height: 'calc(100vh - 215px)' }} >
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead >
-                            <TableRow >
-                                {col?.map((column: string) => (
-                                    <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.secondary }} key={column}>
-                                        {column}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {
-                                events?.map(event => (
-                                    <TableRow key={event.id} >
-                                        <TableCell sx={tableCellStyle} >
-                                            {event.eventName}
+            <Box sx={{ ...globalSettingSubContainers('#ffffff'), height: 'calc(100vh - 130px)', textAlign: 'start', overflowY: 'scroll' }} >
+                <Box>
+                    <TableContainer sx={{ ...tableContainerStyle, height: 'calc(100vh - 125px)' }} >
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <TableHead >
+                                <TableRow >
+                                    {col?.map((column: string) => (
+                                        <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.secondary }} key={column}>
+                                            {column}
                                         </TableCell>
-                                        <TableCell sx={tableCellStyle} >
-                                            {event.eventType}
-                                        </TableCell>
-                                        <TableCell sx={tableCellStyle} >
-                                            <IconButton onClick={() => handleEditClick(event)} size='small' >
-                                                <EditIcon sx={{ color: colorPalette.fsGray }} fontSize='small' />
-                                            </IconButton>
-                                            <IconButton onClick={() => handleDeleteClick(event.id)} size='small' >
-                                                <DeleteIcon sx={{ color: colorPalette.fsGray }} fontSize='small' />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    events?.map(event => (
+                                        <TableRow key={event.id} >
+                                            <TableCell sx={tableCellStyle} >
+                                                {event.eventName}
+                                            </TableCell>
+                                            <TableCell sx={tableCellStyle} >
+                                                {event.eventType}
+                                            </TableCell>
+                                            <TableCell sx={tableCellStyle} >
+                                                <IconButton onClick={() => handleEditClick(event)} size='small' >
+                                                    <EditIcon sx={{ color: colorPalette.fsGray }} fontSize='small' />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleDeleteClick(event.id)} size='small' >
+                                                    <DeleteIcon sx={{ color: colorPalette.fsGray }} fontSize='small' />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                }
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
             </Box>
             <FSLoader show={loading} />
             <Notification ref={snackbarRef} />

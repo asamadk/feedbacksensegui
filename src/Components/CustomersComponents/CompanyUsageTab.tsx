@@ -94,6 +94,7 @@ function CompanyUsageTab(props: { companyId: string | null, personId: string | n
       const { data } = await axios.get(url, { withCredentials: true });
       if (data.data) {
         const resData = data.data;
+        console.log("🚀 ~ fetchEventsOverTime ~ resData:", resData)
         setEvents(resData);
         populateDataForEventDetails(resData);
       }

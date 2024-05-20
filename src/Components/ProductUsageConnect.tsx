@@ -8,28 +8,29 @@ import { BASE_URL } from '../Utils/Endpoints';
 import LoopIcon from '@mui/icons-material/Loop';
 import { getProductUsageScript } from '../Utils/EventConstants';
 import { useSelector } from 'react-redux';
+import { globalSettingSubContainers } from '../Styles/LayoutStyles';
 
-function ProductUsageConnect() {
+function ProductUsageConnect(props: { back: any }) {
 
   const navigate = useNavigate();
   const currentUserState = useSelector((state: any) => state.currentUser);
 
   const handleBackButtonClick = () => {
-    navigate(-1);
+    props.back();
   }
 
   return (
-    <Box sx={{ padding: '20px 40px' }} >
+    <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
         <Box display={'flex'}>
-          <IconButton sx={{ marginTop: '10px' }} onClick={handleBackButtonClick}  >
+          <IconButton onClick={handleBackButtonClick}  >
             <ArrowBackIcon sx={{ color: colorPalette.darkBackground }} />
           </IconButton>
-          <Typography variant='h5' marginTop={'15px'} >Integration Snippet</Typography>
+          <Typography variant='h6' marginTop={'4px'} >Integration Snippet</Typography>
         </Box>
       </Box>
-      <Box textAlign={'start'} marginTop={'50px'}>
-        <Box>
+      <Box sx={{ ...globalSettingSubContainers('#ffffff'), height: 'calc(100vh - 130px)', textAlign: 'start', overflowY: 'scroll' }} >
+        <Box >
           <Typography variant='h6' marginTop={'15px'} >Current Integration Status :
             <span style={{ color: 'red' }} >  Not Connected</span>
             <IconButton>
@@ -45,15 +46,13 @@ function ProductUsageConnect() {
         <Typography color={colorPalette.fsGray} >
           Replace the highlighted line's values marked in <b style={{ color: 'green' }} >green</b> with your data
         </Typography>
-      </Box>
-      <Box marginTop={'20px'} >
-        <CopyBlock
-          text={getProductUsageScript(currentUserState.organization_id)}
-          language={'html'}
-          theme={'light'}
-          highlight='3,5,6,7,10,11'
-          // wrapLongLines
-        />
+        <Box marginTop={'20px'} >
+          <CopyBlock
+            text={getProductUsageScript(currentUserState.organization_id)}
+            language={'html'}
+            theme={'light'}
+          />
+        </Box>
       </Box>
     </Box>
   )

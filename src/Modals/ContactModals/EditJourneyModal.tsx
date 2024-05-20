@@ -55,7 +55,7 @@ function EditJourneyModal(props: { companyId: string, open: boolean, close: any,
                     <Box sx={modalHeaderStyle} >
                         <Box>
                             <Typography id="modal-modal-title" variant="h5" component="h2" >
-                                Update Journey
+                                Update {props.field}
                             </Typography>
                         </Box>
                         <IconButton sx={{ color: colorPalette.darkBackground }} >

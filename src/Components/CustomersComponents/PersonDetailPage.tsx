@@ -69,12 +69,12 @@ function PersonDetailPage() {
                     </Box>
                 </Box>
                 <Box display={'flex'} >
-                    <Box marginTop={'7px'} >
+                    {/* <Box marginTop={'7px'} >
                         <QuickActions
                             activities={handleActivities}
                             handleEdit={handleEdit}
                         />
-                    </Box>
+                    </Box> */}
                     <IconButton onClick={() => (navigate(-1))} sx={{ width: '50px', marginLeft: '10px' }} >
                         <CloseIcon />
                     </IconButton>
@@ -110,9 +110,8 @@ function MultiTab(props: any) {
                 aria-label="secondary tabs example"
             >
                 <Tab value="details" label="Details" />
-                <Tab value="communication" label="Communication" />
+                {/* <Tab value="communication" label="Communication" /> */}
                 <Tab value="usage" label="Usage" />
-                {/* <Tab value="people" label="People" /> */}
                 <Tab value="task" label="Tasks" />
                 <Tab value="notes" label="Notes" />
                 {/* <Tab value="tickets" label="Tickets" /> */}

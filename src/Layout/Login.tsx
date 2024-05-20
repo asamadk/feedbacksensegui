@@ -29,16 +29,17 @@ function Login() {
         height: 'calc(100vh - 99px)',
     }
 
-    const handleSignUp = () => {
+    //TODO redirect to book a meeting
+    const handleNoLogin = () => {
         navigate('/sign-up');
     }
 
     return (
         <Box sx={{ height: 'calc(100vh - 85px)', display: 'flex' }} >
-            <Box sx={{ ...subContainerStyle, backgroundColor: colorPalette.primary, textAlign: 'start',width : '25%' }} >
-                <Box sx={{width : 'fit-content',position : 'absolute',top : '50%',transform : 'translateY(-50%)'}} >
-                    <Typography sx={{color : 'white'}} variant='h3' fontWeight={600} >Sign In</Typography>
-                    <Typography sx={{color : colorPalette.background,width : '80%'}} >
+            <Box sx={{ ...subContainerStyle, backgroundColor: colorPalette.primary, textAlign: 'start', width: '25%' }} >
+                <Box sx={{ width: 'fit-content', position: 'absolute', top: '50%', transform: 'translateY(-50%)' }} >
+                    <Typography sx={{ color: 'white' }} variant='h3' fontWeight={600} >Sign In</Typography>
+                    <Typography sx={{ color: colorPalette.background, width: '80%' }} >
                         Sign In through application of your choice!
                     </Typography>
                     <Box sx={{ width: '250px', paddingTop: '20px' }} >
@@ -48,7 +49,7 @@ function Login() {
                         <MicrosoftSignInButton onClick={microsoftAuth} />
                     </Box>
                     <Box marginTop={'20px'}>
-                        <Divider style={{ background: colorPalette.fsGray,width : '80%' }} />
+                        <Divider style={{ background: colorPalette.fsGray, width: '80%' }} />
                     </Box>
                     <Typography
                         color={colorPalette.background}
@@ -57,8 +58,8 @@ function Login() {
                         Do not have an account ?
                         <span
                             style={{ textDecoration: 'underline', cursor: 'pointer' }}
-                            onClick={handleSignUp}
-                        > Sign Up</span>
+                            onClick={handleNoLogin}
+                        > Learn More</span>
                     </Typography>
                 </Box>
             </Box>
@@ -71,7 +72,8 @@ function Login() {
                     overflow={'hidden'}
                     padding={'20px 40px'}
                 >
-                    <img style={{maxWidth : '70%',margin : 'auto'}} src='/hero.png' alt='Hero' />
+                    <img style={{ maxWidth: '70%', margin: 'auto' }} src='/hero.png' alt='Hero' />
+                    {/* <img style={{maxWidth : '70%',margin : 'auto'}} src='/backgrounds/background1.png' alt='Hero' /> */}
                 </Box>
             </Box>
         </Box>

@@ -3,12 +3,6 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recha
 
 function DashboardGauge(props: { data: any[], colors: string[] }) {
 
-    const cx = 150;
-    const cy = 200;
-    const iR = 50;
-    const oR = 100;
-    const value = 50;
-
     return (
         <ResponsiveContainer width="100%" height="100%">
             <PieChart>

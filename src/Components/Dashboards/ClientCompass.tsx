@@ -9,6 +9,7 @@ import DashboardGauge from '../../ChartComponents/DashboardGauge';
 import FilterModal from '../../Modals/FilterModal';
 import { getClientCompassURL } from '../../Utils/Endpoints';
 import axios from 'axios';
+import { handleUnAuth } from '../../Utils/FeedbackUtils';
 
 function chipStyle(selected: boolean) {
   return {
@@ -53,7 +54,7 @@ function ClientCompass() {
   const [churnRiskReason, setChurnRiskReason] = useState<doughnutChartData[]>([]);
   const [npsScore, setNpsScore] = useState<doughnutChartData[]>([]);
   const [csatScore, setCsatScore] = useState<doughnutChartData[]>([]);
-  const [delayedOnboarding, setDelayedOnboarding] = useState<doughnutChartData[]>([]);
+  const [onboardingStages, setOnboardingStages] = useState<doughnutChartData[]>([]);
   const [OnboardingHealth, setOnboardingHealth] = useState<doughnutChartData[]>([]);
 
   const [contractValue, setContractValue] = useState('$0');
@@ -83,7 +84,7 @@ function ClientCompass() {
       setLoading(false);
       //Chart Data
       setOnboardingHealth(res.onboardingHealth);
-      setDelayedOnboarding(res.delayedOnboarding);
+      setOnboardingStages(res.onboardingStages);
       setCsatScore(res.csatScores);
       setNpsScore(res.npsScore);
       setChurnRiskReason(res.churnRiskReasons);
@@ -104,6 +105,7 @@ function ClientCompass() {
       setRiskContractVal(res.riskContractVal)
     } catch (error) {
       setLoading(false);
+      handleUnAuth(error);
     }
   }
 
@@ -121,16 +123,16 @@ function ClientCompass() {
           <Box onClick={() => setFilterType('my')} sx={chipStyle(filterType === 'my')} >My</Box>
         </Box>
         <Box>
-          <Select onChange={handleDateFilter} value={dateFilter} size='small' sx={{ marginTop: '10px' }} >
+          {/* <Select onChange={handleDateFilter} value={dateFilter} size='small' sx={{ marginTop: '10px' }} >
             {dateLiterals.map(d => <MenuItem value={d} >{d}</MenuItem>)}
-          </Select>
+          </Select> */}
         </Box>
       </Box>
 
       <Box marginTop={'20px'} textAlign={'start'} >
         <Typography variant='h6' fontWeight={600} marginBottom={'15px'} >Overall Customer Summary</Typography>
         <Grid container spacing={4} >
-          <Grid height={'250px%'} item xs={3} >
+          <Grid height={'250px'} item xs={3} >
             <Box sx={blockStyle} >
               <Typography fontSize={13} fontWeight={600} >Total ACV</Typography>
               <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.primary }} fontWeight={600} >{contractValue}</Typography>
@@ -160,19 +162,21 @@ function ClientCompass() {
         </Grid>
       </Box>
 
-      <Box marginTop={'50px'} textAlign={'start'} >
+      <Box marginTop={'30px'} textAlign={'start'} >
         <Typography variant='h6' fontWeight={600} marginBottom={'15px'} >Ensuring high renewal rates</Typography>
         <Grid container spacing={4} >
           <Grid item xs={3} >
             <Box sx={blockStyle} >
               <Typography fontSize={13} fontWeight={600} >Current Quarter Renewable Companies</Typography>
               <Typography marginTop={'10px'} sx={{ color: colorPalette.primary }} variant='h4' fontWeight={600} >{qtrRenewalCompanies}</Typography>
+              <Typography fontSize={13} >All Paying Companies</Typography>
             </Box>
           </Grid>
           <Grid item xs={3} >
             <Box sx={blockStyle} >
               <Typography fontSize={13} fontWeight={600} >Current Quarter Renewable ACV</Typography>
               <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.primary }} fontWeight={600} >{qtrRenewalContractVal}</Typography>
+              <Typography fontSize={13} >All Paying Companies</Typography>
             </Box>
           </Grid>
           <Grid item xs={3} >
@@ -185,6 +189,7 @@ function ClientCompass() {
             <Box sx={blockStyle} >
               <Typography fontSize={13} fontWeight={600} >Overdue Renewals</Typography>
               <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.darkBackground }} fontWeight={600} >{overdueRenewals}</Typography>
+              <Typography fontSize={13} >This Quarter</Typography>
             </Box>
           </Grid>
         </Grid>
@@ -205,6 +210,7 @@ function ClientCompass() {
             <Box sx={blockStyle} >
               <Typography fontSize={13} fontWeight={600} >Current Quarter Renewed Contract value</Typography>
               <DashboardDoughnut colors={renewedColors} data={currentQtrRnwlContract} />
+              {/* <DashboardGauge colors={renewedColors} data={currentQtrRnwlContract} /> */}
             </Box>
           </Grid>
           <Grid item xs={3} >
@@ -216,7 +222,7 @@ function ClientCompass() {
         </Grid>
       </Box>
 
-      <Box marginTop={'50px'} textAlign={'start'} >
+      <Box marginTop={'30px'} textAlign={'start'} >
         <Typography variant='h6' fontWeight={600} marginBottom={'15px'} >Mitigate Churn Risk</Typography>
         <Grid container spacing={4} >
           <Grid item xs={3} >
@@ -225,12 +231,12 @@ function ClientCompass() {
               <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.darkBackground }} fontWeight={600} >{riskContractVal}</Typography>
             </Box>
           </Grid>
-          <Grid item xs={3} >
+          {/* <Grid item xs={3} >
             <Box sx={blockStyle} >
               <Typography fontSize={13} fontWeight={600} >Churn Risk Reason</Typography>
               <DashboardDoughnut colors={getCstmrJrnyStgScoreColor()} data={churnRiskReason} />
             </Box>
-          </Grid>
+          </Grid> */}
           <Grid item xs={3} >
             <Box sx={blockStyle} >
               <Typography fontSize={13} fontWeight={600} >Latest NPS Score</Typography>
@@ -252,7 +258,7 @@ function ClientCompass() {
           <Grid item xs={3} >
             <Box sx={blockStyle} >
               <Typography fontSize={13} fontWeight={600} >Delayed Onboarding</Typography>
-              <DashboardDoughnut colors={[colorPalette.primary, colorPalette.fsGray]} data={delayedOnboarding} />
+              <DashboardDoughnut colors={getCstmrJrnyStgScoreColor()} data={onboardingStages} />
             </Box>
           </Grid>
           <Grid item xs={3} >

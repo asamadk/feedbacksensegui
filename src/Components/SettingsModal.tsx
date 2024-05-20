@@ -42,15 +42,6 @@ export default function SettingsModal(props: any) {
         <MenuItem onClick={() => window.open('https://calendly.com/feedbacksense/demo')} >
           <CallIcon sx={{color : colorPalette.primary,marginRight : '10px'}} />Get in touch
         </MenuItem>
-        <MenuItem onClick={() => handleSettingsRouting('/org/teammates')} >
-          <Person2Icon sx={{color : colorPalette.primary,marginRight : '10px'}} /> Profile
-        </MenuItem>
-        <MenuItem onClick={() => handleSettingsRouting('/support')} >
-          <SupportIcon sx={{color : colorPalette.primary,marginRight : '10px'}} />Support
-        </MenuItem>
-        <MenuItem onClick={() => handleSettingsRouting('/settings')} >
-          <SettingsIcon sx={{color : colorPalette.primary,marginRight : '10px'}} />Settings
-        </MenuItem >
         <MenuItem onClick={handleLogout} >
           <LogoutIcon sx={{color : colorPalette.primary,marginRight : '10px'}} />Logout
         </MenuItem>

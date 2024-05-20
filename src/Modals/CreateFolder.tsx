@@ -151,7 +151,7 @@ function CreateFolder(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box className='create-folder-input' sx={ModalStyles.modalStyle(colorPalette?.background)}>
+                <Box className='create-folder-input' sx={{...ModalStyles.modalStyle(colorPalette?.background),width : '30%'}}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Create folder
@@ -162,7 +162,7 @@ function CreateFolder(props: any) {
                     </Box>
                     <Box className="create-folder-modal" sx={textFieldStyleCSS} >
                         <InputLabel 
-                            style={{ color: colorPalette.darkBackground, paddingBottom: '3px' }} 
+                            style={{ color: colorPalette.fsGray, paddingBottom: '3px',fontSize : '13px' }} 
                             htmlFor="component-simple"
                         >
                             Name your folder
