@@ -50,7 +50,7 @@ function SurveyDetailHeader(props: any) {
             setGenericModalObj(genDeleteObj);
             return;
         }
-        navigate('/');
+        navigate(-1);
     }
 
     const changetabset = (value: number) => {
@@ -95,7 +95,7 @@ function SurveyDetailHeader(props: any) {
             const newValue = genericModalObj?.data.value;
             changeTab(newValue);
         } else if (genericModalObj?.type === 'home') {
-            navigate('/');
+            navigate(-1);
         }
         setShowGenericModal(false);
         const tempWorkflowDirty: any = {};

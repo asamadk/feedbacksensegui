@@ -22,7 +22,7 @@ function PersonDetailPage() {
 
     const [value, setValue] = React.useState('details');
     const [person, setPerson] = React.useState(location.state);
-    
+
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [openActivities, setOpenActivities] = useState(false);
 
@@ -30,17 +30,17 @@ function PersonDetailPage() {
         if (value === 'details') {
             return <PersonDetailTab person={person} />
         } else if (value === 'communication') {
-            return <CompanyCommTab/>
+            return <CompanyCommTab />
         } else if (value === 'usage') {
             return <CompanyUsageTab companyId={null} personId={person.id} />
-        }else if (value === 'task') {
+        } else if (value === 'task') {
             return <CompanyTaskTab companyId={null} personId={person.id} />
         } else if (value === 'notes') {
             return <CompanyNotesTab companyId={null} personId={person.id} />
-        }else if (value === 'tickets') {
-            return <CompanyTicketTab/>
+        } else if (value === 'tickets') {
+            return <CompanyTicketTab />
         } else if (value === 'survey') {
-            return <CompanySurveyTab personId={person.id} companyId={null}/>
+            return <CompanySurveyTab personId={person.id} companyId={null} />
         }
         return <></>
     }
@@ -69,12 +69,6 @@ function PersonDetailPage() {
                     </Box>
                 </Box>
                 <Box display={'flex'} >
-                    {/* <Box marginTop={'7px'} >
-                        <QuickActions
-                            activities={handleActivities}
-                            handleEdit={handleEdit}
-                        />
-                    </Box> */}
                     <IconButton onClick={() => (navigate(-1))} sx={{ width: '50px', marginLeft: '10px' }} >
                         <CloseIcon />
                     </IconButton>
@@ -122,53 +116,3 @@ function MultiTab(props: any) {
 }
 
 export default PersonDetailPage
-
-function QuickActions(props: { handleEdit: any, activities: any }) {
-
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    function handleEdit() {
-        props.handleEdit();
-        handleClose();
-    }
-
-    function handleActivities() {
-        props.activities();
-        handleClose();
-    }
-
-    return (
-        <>
-            <Button
-                id="basic-button"
-                aria-controls={open ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}
-                sx={{ ...containedButton, marginTop: 0 }}
-                endIcon={<ExpandMoreIcon />}
-            >
-                Actions
-            </Button>
-            <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                }}
-            >
-                <MenuItem onClick={handleEdit} id='edit' >Edit/Update</MenuItem>
-                <MenuItem onClick={handleActivities} id='activities' >View Activities</MenuItem>
-            </Menu>
-        </>
-    )
-}

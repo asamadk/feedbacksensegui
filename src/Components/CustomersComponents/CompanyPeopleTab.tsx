@@ -11,7 +11,7 @@ import Notification from '../../Utils/Notification';
 import axios from 'axios';
 import { getCompanyPersonListURL } from '../../Utils/Endpoints';
 import { useNavigate, useParams } from 'react-router';
-import { handleLogout, handleUnAuth } from '../../Utils/FeedbackUtils';
+import { getPersonName, handleLogout, handleUnAuth } from '../../Utils/FeedbackUtils';
 import { tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 
 const CssTextField = styled(TextField)(textFieldStyle);
@@ -23,7 +23,7 @@ const headerContainer = {
   padding: '0px 20px'
 }
 
-const col: string[] = ['checkbox', 'Full Name', 'Email', 'Company', 'Created Date', 'Actions'];
+const col: string[] = ['Full Name', 'Email', 'Company', 'Created Date', 'Actions'];
 
 
 function CompanyPeopleTab() {
@@ -58,37 +58,19 @@ function CompanyPeopleTab() {
     }
   }
 
-  const handleSelectAll = (event: any) => {
-    const isChecked = event.target.checked;
-    const tmp: any[] = JSON.parse(JSON.stringify(peopleList));
-    tmp.forEach(t => {
-      t.checked = isChecked;
-    });
-    setPeopleList(tmp);
-  }
-
-  function handleOpenPeopleDetail(personId: any) {
-    navigate(`/contacts/person/detail/${personId}`);
+  function handleOpenPeopleDetail(personId: any,person :any) {
+    navigate(`/contacts/person/detail/${personId}`,{ state:  person});
   }
 
   return (
     <Box sx={{ height: 'calc(100vh - 130px)', overflowY: 'scroll' }} >
       <Box sx={headerContainer} >
         <Box>
-          <Button
-            className='create-new-survey-button'
-            sx={outlinedButton}
-            style={{ width: 'fit-content', marginBottom: '15px', textTransform: 'none' }}
-            startIcon={<AddIcon />}
-            variant='outlined'
-          >
-            Add Filter
-          </Button>
         </Box>
         <Box>
           <CssTextField
             size='small'
-            sx={{ input: { color: colorPalette.darkBackground }, marginTop: '10px' }}
+            sx={{ input: { color: colorPalette.darkBackground }, marginTop: '10px',marginBottom : '10px' }}
             placeholder={`Search people`}
             InputProps={{
               endAdornment: <SearchIcon sx={{ color: colorPalette.darkBackground, paddingLeft: '5px' }} />
@@ -103,10 +85,7 @@ function CompanyPeopleTab() {
               <TableRow >
                 {col?.map((column: string) => (
                   <TableCell sx={{ ...tableCellStyle,fontWeight: '600',background : colorPalette.secondary }} key={column}>
-                    {
-                      column !== 'checkbox' ? column :
-                        <Checkbox onClick={handleSelectAll} color='secondary' />
-                    }
+                    {column}
                   </TableCell>
                 ))}
               </TableRow>
@@ -116,10 +95,7 @@ function CompanyPeopleTab() {
                 peopleList?.map(person => (
                   <TableRow key={person.id} >
                     <TableCell sx={tableCellStyle} >
-                      <Checkbox checked={person?.checked} color='secondary' />
-                    </TableCell>
-                    <TableCell sx={tableCellStyle} >
-                      {person.firstName + person.lastName}
+                      {getPersonName(person)}
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
                       {person.email}
@@ -131,7 +107,7 @@ function CompanyPeopleTab() {
                       {new Date(person.created_at).toLocaleDateString()}
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
-                      <IconButton onClick={() => handleOpenPeopleDetail(person.id)} size='small' >
+                      <IconButton onClick={() => handleOpenPeopleDetail(person.id,person)} size='small' >
                         <ArrowForwardIosIcon fontSize='small' />
                       </IconButton>
                     </TableCell>
@@ -141,7 +117,7 @@ function CompanyPeopleTab() {
             </TableBody>
           </Table>
 
-          <TablePagination
+          {/* <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={10}
@@ -149,7 +125,7 @@ function CompanyPeopleTab() {
             page={0}
             onPageChange={() => { }}
             onRowsPerPageChange={() => { }}
-          />
+          /> */}
         </TableContainer>
       </Box>
       <FSLoader show={loading} />

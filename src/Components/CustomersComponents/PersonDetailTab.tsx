@@ -12,6 +12,7 @@ import TitleIcon from '@mui/icons-material/Title';
 import ContactsIcon from '@mui/icons-material/Contacts';
 import EditPersonAttributeModal from './EditPersonAttributeModal';
 import { personFieldType } from '../../Utils/types';
+import { useNavigate } from 'react-router';
 
 const iconStyle = { fontWeight: 500, marginRight: '10px', color: colorPalette.fsGray };
 
@@ -22,7 +23,7 @@ function PersonDetailTab({ person }: any) {
     const [fieldType, setFieldType] = useState<personFieldType>('firstName');
     const [selectedFieldData, setSelectedFieldData] = useState<any>('')
 
-
+    const navigate = useNavigate();
 
     useEffect(() => {
         populateAttributes();
@@ -79,6 +80,8 @@ function PersonDetailTab({ person }: any) {
             label: 'Company',
             value: person?.company?.name,
             edit: false,
+            // edit: true,
+            type : 'company'
         });
         tmp.push({
             icon: <ContactPhoneIcon sx={iconStyle} />,
@@ -105,6 +108,9 @@ function PersonDetailTab({ person }: any) {
 
     function handleEditAttribute(edit: boolean, label: string, val: any, type: personFieldType) {
         if (edit === false) { return; }
+        // if(type === 'company'){
+        //     navigate(`/contacts/companies/detail/${person?.company?.id}`, { state: {id : person?.company?.id} });
+        // }
         setShowEdit(true);
         setFieldType(type);
         setSelectedFieldData(val);

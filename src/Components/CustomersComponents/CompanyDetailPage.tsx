@@ -17,6 +17,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CreateCompanyModal from '../../Modals/ContactModals/CreateCompanyModal';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import EditCompanyAttributeModal from './EditCompanyAttributeModal';
+import { getHealthScoreColor, getHealthScoreStyle } from '../../Styles/TableStyle';
 
 function CompanyDetailPage() {
 
@@ -84,7 +85,9 @@ function CompanyDetailPage() {
         <Box>
             <Box sx={{ display: 'flex', padding: '10px', justifyContent: 'space-between', background: colorPalette.secondary }} >
                 <Box sx={{ display: 'flex' }} >
-                    <Box sx={{ background: '#7ACB36', width: '12px', height: '12px', borderRadius: '50%', marginTop: '10px' }} ></Box>
+                    <Box 
+                        sx={{ background: getHealthScoreColor(company?.healthScore), width: '12px', height: '12px', borderRadius: '50%', marginTop: '10px' }} 
+                    ></Box>
                     <Box textAlign={'start'} marginLeft={'20px'} >
                         <Box sx={{ display: 'flex' }} >
                             <Typography marginLeft={'5px'} marginTop={'2px'} variant='h5' fontWeight={600} >
@@ -222,7 +225,7 @@ function QuickActions(props: { handleEdit: any, activities: any, delete: any }) 
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <MenuItem onClick={handleEdit} id='edit' >Edit/Update</MenuItem>
+                {/* <MenuItem onClick={handleEdit} id='edit' >Edit/Update</MenuItem> */}
                 <MenuItem onClick={handleActivities} id='activities' >View Activities</MenuItem>
                 {/* <MenuItem onClick={handleActivities} id='renew' >Renew Contract</MenuItem> */}
                 {/* <MenuItem onClick={handleDelete} id='delete' sx={{ color: 'red' }} >Delete</MenuItem> */}

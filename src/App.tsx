@@ -42,6 +42,8 @@ import PersonDetailPage from './Components/CustomersComponents/PersonDetailPage'
 import ProductUsageConnect from './Components/ProductUsageConnect';
 import CustomEventsView from './Components/CustomEventsView';
 import CustomerJourneyModeler from './Components/CustomerJourneyModeler';
+import CompaniesComponent from './Components/CustomersComponents/CompaniesComponent';
+import PeopleComponent from './Components/CustomersComponents/PeopleComponent';
 
 function App() {
 
@@ -50,7 +52,7 @@ function App() {
 
   const defaultColor = useSelector((state: any) => state.colorReducer);
   const [showLeftBar, setShowLeftBar] = useState(true);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   const dataFetchedRef = useRef(false);
   const [liveSurvey, setLiveSurvey] = useState(false);
   const dispatch = useDispatch<any>();
@@ -69,10 +71,11 @@ function App() {
       dispatch(setUserRole(currentUser.role));
       if (currentUser.organization_id == null || currentUser.organization_id === '') {
         setUser(currentUser);
+        setShowLeftBar(false);
         navigate('/user/create/organization');
         return;
       }
-      const freeTypeWindow :any = window;
+      const freeTypeWindow: any = window;
       freeTypeWindow.feedbacksense.track('login');
       setUser(currentUser);
       navigate('/');
@@ -80,11 +83,8 @@ function App() {
       if (err?.response?.data?.statusCode === 404) {
         navigate(`/failure?message=${err.response?.data?.message}&code=${err?.response?.data?.statusCode}`);
       }
-      console.error('Error in auth', err);
     }
   };
-
-
 
   useEffect(() => {
     if (dataFetchedRef.current === true) return;
@@ -97,14 +97,18 @@ function App() {
 
   useEffect(() => {
     handleLeftBarVisibility();
-  }, [location.pathname])
+  }, [location.pathname]);
 
   const handleLeftBarVisibility = () => {
     let currentPath: string = location.pathname;
     if (currentPath.includes('/survey/detail/')) {
       setShowLeftBar(false);
     } else {
-      setShowLeftBar(true);
+      if (user?.organization_id == null || user?.organization_id === '') {
+        setShowLeftBar(false);
+      } else {
+        setShowLeftBar(true);
+      }
     }
   }
 
@@ -194,10 +198,6 @@ function App() {
                   element={user ? <MainBody /> : <Navigate to={'/login'} />}
                 />
                 <Route
-                  path='/contacts'
-                  element={user ? <ContactLayout /> : <Navigate to={'/login'} />}
-                />
-                <Route
                   path='/contacts/companies/detail/:id'
                   element={user ? <CompanyDetailPage /> : <Navigate to={'/login'} />}
                 />
@@ -220,6 +220,14 @@ function App() {
                 <Route
                   path='/notifications'
                   element={user ? <NotificationsLayout /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/companies'
+                  element={user ? <ContactLayout /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/people'
+                  element={user ? <ContactLayout /> : <Navigate to={'/login'} />}
                 />
               </Routes>
             </Box>

@@ -10,6 +10,7 @@ import Notification from '../../Utils/Notification';
 import { textFieldStyle } from '../../Styles/InputStyles';
 import axios from 'axios';
 import { handleUnAuth } from '../../Utils/FeedbackUtils';
+import { updatePersonURL } from '../../Utils/Endpoints';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -77,10 +78,11 @@ function EditPersonAttributeModal(props: { open: boolean, close: any, type: pers
             snackbarRef?.current?.show('Please fill all fields', 'warning');
             return;
         }
+
         try {
             setLoading(true);
-            // const URL = ''
-            // axios.post(URL, payload, { withCredentials: true })
+            const URL = updatePersonURL();
+            axios.post(URL, payload, { withCredentials: true })
             setLoading(false);
             props.update(payload);
             snackbarRef?.current?.show('Saved', 'Success');

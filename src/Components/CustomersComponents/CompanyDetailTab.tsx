@@ -38,18 +38,6 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 
 const iconStyle = { fontWeight: 500, marginRight: '10px', color: colorPalette.fsGray };
 
-function journeyStyle(index: number) {
-  return {
-    padding: '5px',
-    // background: '#F9C329',
-    background: getLineChartColor(index),
-    width: 'fit-content',
-    color: colorPalette.textSecondary,
-    borderRadius: '5px',
-    cursor: 'pointer',
-  }
-}
-
 const tagStyle = {
   marginLeft: '20px',
   marginTop: '10px',

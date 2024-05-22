@@ -246,6 +246,10 @@ export const deleteCompanyURL = () => {
     return `${BASE_URL}/company/delete`;
 }
 
+export const getCompanyIndividualURL = (companyId : string) => {
+    return `${BASE_URL}/company/get?companyId=${companyId}`;
+}
+
 export const getCompanySurveyResponseURL = (companyId : string) => {
     return `${BASE_URL}/company/survey-response?companyId=${companyId}`;
 }
@@ -254,8 +258,20 @@ export const getCompanySurveyMetricsURL = (companyId : string) => {
     return `${BASE_URL}/company/survey-score-metrics?companyId=${companyId}`;
 }
 
+export const getPersonSurveyResponseURL = (personId : string) => {
+    return `${BASE_URL}/people/survey-response?personId=${personId}`;
+}
+
+export const getPersonSurveyMetricsURL = (personId : string) => {
+    return `${BASE_URL}/people/survey-score-metrics?personId=${personId}`;
+}
+
 export const deletePersonURL = () => {
     return `${BASE_URL}/people/delete`;
+}
+
+export const updatePersonURL = () => {
+    return `${BASE_URL}/people/update`;
 }
 
 export const getCompanyListURL = (page : number,limit : number,searchStr : string) => {

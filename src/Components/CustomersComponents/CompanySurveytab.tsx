@@ -5,14 +5,20 @@ import { colorPalette } from '../../Utils/Constants';
 import FSLoader from '../FSLoader';
 import Notification from '../../Utils/Notification';
 import axios from 'axios';
-import { getCompanySurveyMetricsURL, getCompanySurveyResponseURL } from '../../Utils/Endpoints';
+import { getCompanySurveyMetricsURL, getCompanySurveyResponseURL, getPersonSurveyMetricsURL, getPersonSurveyResponseURL } from '../../Utils/Endpoints';
 import { getPersonName, handleUnAuth } from '../../Utils/FeedbackUtils';
 import { tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
+import { updateCurrentWorkflow } from '../../Redux/Actions/currentWorkflowActions';
+import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
 
 function CompanySurveyTab(props: { personId: string | null, companyId: string | null }) {
 
   const snackbarRef: any = useRef(null);
   const col: string[] = ['Survey Name', 'Respondent', 'Response Date', 'Action'];
+
+  let navigation = useNavigate();
+  const dispatch = useDispatch<any>();
 
   const [loading, setLoading] = useState(false);
   const [surveys, setSurveys] = useState<any[]>([]);
@@ -28,15 +34,18 @@ function CompanySurveyTab(props: { personId: string | null, companyId: string | 
   }, []);
 
   async function populateMetrics() {
-    try{
+    try {
       setLoading(true);
-      const URL = getCompanySurveyMetricsURL(props.companyId != null ? props.companyId : '');
+      let URL = getCompanySurveyMetricsURL(props.companyId != null ? props.companyId : '');
+      if (props.personId != null) {
+        URL = getPersonSurveyMetricsURL(props.personId != null ? props.personId : '');
+      }
       const { data } = await axios.get(URL, { withCredentials: true });
       if (data.data) {
         setMetrics(data.data);
       }
       setLoading(false);
-    }catch(error){
+    } catch (error) {
       snackbarRef?.current?.show('Something went wrong', 'error');
       setLoading(false);
       handleUnAuth(error);
@@ -46,7 +55,10 @@ function CompanySurveyTab(props: { personId: string | null, companyId: string | 
   async function fetchCompanySurveys() {
     try {
       setLoading(true);
-      const URL = getCompanySurveyResponseURL(props.companyId != null ? props.companyId : '');
+      let URL = getCompanySurveyResponseURL(props.companyId != null ? props.companyId : '');
+      if (props.personId != null) {
+        URL = getPersonSurveyResponseURL(props.personId != null ? props.personId : '');
+      }
       const { data } = await axios.get(URL, { withCredentials: true });
       if (data.data) {
         const list = data.data.list;
@@ -59,6 +71,12 @@ function CompanySurveyTab(props: { personId: string | null, companyId: string | 
       handleUnAuth(error);
     }
   }
+
+  const handleOpenSurvey = (surveyId :string) => {
+    console.log("🚀 ~ handleOpenSurvey ~ surveyId:", surveyId)
+    dispatch(updateCurrentWorkflow(surveyId));
+    navigation('/survey/detail/create/' + surveyId);
+}
 
   return (
     <Box padding={'20px 40px'} >
@@ -105,7 +123,7 @@ function CompanySurveyTab(props: { personId: string | null, companyId: string | 
                       {new Date(response.created_at).toDateString()}
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
-                      <IconButton size='small' >
+                      <IconButton onClick={() => handleOpenSurvey(response?.survey?.id)} size='small' >
                         <ArrowForwardIosIcon sx={{ color: colorPalette.fsGray }} fontSize='small' />
                       </IconButton>
                     </TableCell>

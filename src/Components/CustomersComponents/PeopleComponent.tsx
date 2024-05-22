@@ -86,11 +86,11 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
     function handleOpenPeopleDetail(personId: any) {
         let selectedPerson = null;
         peopleList.forEach(person => {
-            if(personId === person.id){
+            if (personId === person.id) {
                 selectedPerson = person;
             }
         })
-        navigate(`/contacts/person/detail/${personId}`,{ state:  selectedPerson});
+        navigate(`/contacts/person/detail/${personId}`, { state: selectedPerson });
     }
 
     function handleCreateModalClose(data: any) {
@@ -151,22 +151,22 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
         setShowGenericModal(false);
         const deletePeopleList: string[] = [];
         peopleList.forEach(person => {
-          if (person.checked === true) {
-            deletePeopleList.push(person.id);
-          }
+            if (person.checked === true) {
+                deletePeopleList.push(person.id);
+            }
         });
         try {
-          setLoading(true);
-          await axios.post(deletePersonURL(), deletePeopleList, { withCredentials: true });
-          snackbarRef?.current?.show('Companies Deleted','success');
-          fetchPeople();
-          setLoading(false);
+            setLoading(true);
+            await axios.post(deletePersonURL(), deletePeopleList, { withCredentials: true });
+            snackbarRef?.current?.show('Companies Deleted', 'success');
+            fetchPeople();
+            setLoading(false);
         } catch (error) {
-          snackbarRef?.current?.show('Something went wrong','error');
-          setLoading(false);
-          handleUnAuth(error);
+            snackbarRef?.current?.show('Something went wrong', 'error');
+            setLoading(false);
+            handleUnAuth(error);
         }
-      }
+    }
 
     return (
         <Box>
@@ -216,7 +216,7 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                         <TableHead>
                             <TableRow >
                                 {col?.map((column: string) => (
-                                    <TableCell sx={{ ...tableCellStyle,fontWeight: '600',background : colorPalette.secondary }} key={column}>
+                                    <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.secondary }} key={column}>
                                         {
                                             column !== 'checkbox' ? column :
                                                 <Checkbox
@@ -246,7 +246,7 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                                             <Typography sx={tableBodyText} >{person.email}</Typography>
                                         </TableCell>
                                         <TableCell sx={tableCellStyle} >
-                                            <Typography sx={{...tableBodyText,color : colorPalette.primary,fontWeight : 600}} >
+                                            <Typography sx={{ ...tableBodyText, color: colorPalette.primary, fontWeight: 600 }} >
                                                 {person.company.name}
                                             </Typography>
                                         </TableCell>

@@ -59,7 +59,8 @@ function SideBar(props: any) {
                 navigate('/surveys');
                 break;
             case SIDE_BAR_IDS.CONTACTS:
-                navigate('/contacts');
+                // navigate('/contacts');
+                navigate('/companies');
                 break;
             case SIDE_BAR_IDS.SEGMENT:
                 navigate('/segment');

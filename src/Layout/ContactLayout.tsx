@@ -4,6 +4,7 @@ import { sideBarListType } from '../Utils/types'
 import { Box } from '@mui/material'
 import PeopleComponent from '../Components/CustomersComponents/PeopleComponent'
 import CompaniesComponent from '../Components/CustomersComponents/CompaniesComponent'
+import { useNavigate } from 'react-router'
 
 const sideBarData: sideBarListType[] = [
   { label: 'Companies', value: 'companies' },
@@ -12,7 +13,21 @@ const sideBarData: sideBarListType[] = [
 
 function ContactLayout() {
 
-  const [selectedTab, setSelectedTab] = useState<'companies' | 'people' >('companies');
+  const navigate = useNavigate();
+
+  const getInitialTab = () => {
+    const path = window.location.pathname;
+    if (path === '/people') return 'people';
+    if (path === '/companies') return 'companies';
+    return 'companies';
+  };
+
+  const [selectedTab, setSelectedTab] = useState<'companies' | 'people'>(getInitialTab());
+
+  const handleTabChange = (val: 'companies' | 'people') => {
+    setSelectedTab(val);
+    navigate(`/${val}`);
+  };
 
   const CustomerBody = () => {
     return (
@@ -30,7 +45,7 @@ function ContactLayout() {
 
   const CompaniesTab = () => {
     return (
-      <CompaniesComponent  />
+      <CompaniesComponent />
     )
   }
 
@@ -40,7 +55,7 @@ function ContactLayout() {
         header='Customers'
         list={sideBarData}
         selected={selectedTab}
-        callback={(val : any) => setSelectedTab(val)}
+        callback={handleTabChange}
       />
       <Box sx={{ width: '100%' }} >
         {CustomerBody()}

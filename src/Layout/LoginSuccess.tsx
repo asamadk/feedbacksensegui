@@ -64,7 +64,8 @@ function LoginSuccess() {
       }
 
       if (data.statusCode === 200) {
-        navigate('/');
+        // navigate('/');
+        window.location.reload();
       }
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
@@ -79,14 +80,14 @@ function LoginSuccess() {
       sx={{ ...LayoutStyles.settingLayoutStyle }}
       style={{ height: 'calc(100vh - 120px)' }}
     >
-      <Box sx={{ ...subContainerCss, backgroundColor: colorPalette.secondary,color : colorPalette.darkBackground }} >
+      <Box sx={{ ...subContainerCss, backgroundColor: colorPalette.textSecondary }} >
         <Box marginBottom={'10px'} >
           <Typography fontSize={'22px'} >Share a few details about you</Typography>
           <Typography color='#808080' fontSize={'14px'} >It will help us to get to know you better</Typography>
         </Box>
         <Box>
           <Box marginTop={'20px'} >
-            <InputLabel sx={{ color : colorPalette.darkBackground, marginBottom: '5px', marginTop: '10px' }} >Enter Company name</InputLabel>
+            <InputLabel sx={{ marginBottom: '5px', marginTop: '10px' }} >Enter Company name</InputLabel>
             <CssTextField
               size='small'
               id="outlined-basic"
@@ -97,7 +98,7 @@ function LoginSuccess() {
             />
           </Box>
           <Box marginTop={'20px'} >
-            <InputLabel sx={{ color : colorPalette.darkBackground,marginBottom: '5px', marginTop: '10px' }} >Enter you address</InputLabel>
+            <InputLabel sx={{ marginBottom: '5px', marginTop: '10px' }} >Enter you address</InputLabel>
             <CssTextField
               size='small'
               id="outlined-basic"
@@ -108,7 +109,7 @@ function LoginSuccess() {
             />
           </Box>
           <Box marginTop={'20px'} >
-            <InputLabel sx={{ color : colorPalette.darkBackground, marginBottom: '5px', marginTop: '10px' }} >Enter you country</InputLabel>
+            <InputLabel sx={{ marginBottom: '5px', marginTop: '10px' }} >Enter you country</InputLabel>
             <CssTextField
               size='small'
               id="outlined-basic"
@@ -119,7 +120,7 @@ function LoginSuccess() {
             />
           </Box>
           <Box marginTop={'20px'} >
-            <InputLabel sx={{ color : colorPalette.darkBackground, marginBottom: '5px', marginTop: '10px' }} >Enter you pin code</InputLabel>
+            <InputLabel sx={{ marginBottom: '5px', marginTop: '10px' }} >Enter you pin code</InputLabel>
             <CssTextField
               size='small'
               id="outlined-basic"

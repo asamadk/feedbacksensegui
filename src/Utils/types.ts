@@ -91,4 +91,4 @@ export type sideBarListType = {
 }
 
 export type companyFieldType = 'owner' | 'nextRenewalDate' | 'status' | 'contractStatus' | 'address' | 'name' | 'website' | 'industry' | 'lastContactDate';
-export type personFieldType = 'lastName' | 'firstName' | 'email' | 'phone' | 'title' | 'communicationPreferences' | 'lastContactedDate';
+export type personFieldType = 'lastName' | 'firstName' | 'email' | 'phone' | 'title' | 'communicationPreferences' | 'lastContactedDate' | 'company';

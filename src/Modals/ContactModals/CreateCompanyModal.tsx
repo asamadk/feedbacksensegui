@@ -15,6 +15,7 @@ import { communicationPrefOptions, companyStatusOptions, industryOptions, lifecy
 import axios from 'axios';
 import { addCompanyURL, addPersonURL } from '../../Utils/Endpoints';
 import CSVMapperComponent from '../../Components/CustomersComponents/CSVMapperComponent';
+import { getMetricOptions } from '../../Utils/ConditionConstants';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -403,26 +404,6 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
                                 </CustomSelect>
                             </Box>
                             <Box sx={{ width: '49%' }} >
-                                <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Lifecycle Stage</Typography>
-                                <CustomSelect
-                                    size='small'
-                                    placeholder='lStage'
-                                    fullWidth
-                                    value={lStage}
-                                    onChange={(e) => setLStage(e.target.value as string)}
-                                >
-                                    {
-                                        lifecycleStageOptions.map(stage => (
-                                            <MenuItem value={stage.value}>{stage.label}</MenuItem>
-                                        ))
-                                    }
-                                </CustomSelect>
-                            </Box>
-                        </Box>
-                    </Box>
-                    <Box marginTop={'20px'} >
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
-                            <Box sx={{ width: '49%' }} >
                                 <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Owner*</Typography>
                                 <CustomSelect
                                     size='small'
@@ -438,8 +419,24 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
                                     }
                                 </CustomSelect>
                             </Box>
+                        </Box>
+                    </Box>
+                    <Box marginTop={'20px'} >
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
                             <Box sx={{ width: '49%' }} >
-                                <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >status</Typography>
+                                <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Contract Amount</Typography>
+                                <CssTextField
+                                    size='small'
+                                    placeholder='Amount'
+                                    type='number'
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value as any)}
+                                    sx={{ input: { color: colorPalette.darkBackground } }}
+                                    fullWidth
+                                />
+                            </Box>
+                            <Box sx={{ width: '49%' }} >
+                                <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Contract Status</Typography>
                                 <CustomSelect
                                     size='small'
                                     placeholder='status'
@@ -448,7 +445,7 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
                                     fullWidth
                                 >
                                     {
-                                        companyStatusOptions.map(status => (
+                                        getMetricOptions('contractStatus').map(status => (
                                             <MenuItem value={status.value} >{status.label}</MenuItem>
                                         ))
                                     }
@@ -456,38 +453,17 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
                             </Box>
                         </Box>
                     </Box>
-                    <Box marginTop={'20px'} >
-                        <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Plan</Typography>
-                        <CustomSelect
+                    <Box sx={{ marginTop: '20px' }} >
+                        <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Address</Typography>
+                        <CssTextField
+                            placeholder='Address'
+                            multiline
                             size='small'
-                            placeholder='plan'
-                            value={plan}
-                            onChange={(e) => setPlan(e.target.value as string)}
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            sx={{ input: { color: colorPalette.darkBackground } }}
                             fullWidth
-                        ></CustomSelect>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }} >
-                        <Box sx={{ width: '49%' }} >
-                            <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Address</Typography>
-                            <CssTextField
-                                size='small'
-                                value={address}
-                                onChange={(e) => setAddress(e.target.value)}
-                                sx={{ input: { color: colorPalette.darkBackground } }}
-                                fullWidth
-                            />
-                        </Box>
-                        <Box sx={{ width: '49%' }} >
-                            <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Contract Amount</Typography>
-                            <CssTextField
-                                size='small'
-                                type='number'
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value as any)}
-                                sx={{ input: { color: colorPalette.darkBackground } }}
-                                fullWidth
-                            />
-                        </Box>
+                        />
                     </Box>
                 </Box>
 
