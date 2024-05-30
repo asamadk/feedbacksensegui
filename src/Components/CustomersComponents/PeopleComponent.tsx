@@ -13,8 +13,8 @@ import axios from 'axios';
 import { deletePersonURL, getPersonListURL } from '../../Utils/Endpoints';
 import { genericModalData } from '../../Utils/types';
 import GenericModal from '../../Modals/GenericModal';
-import { handleUnAuth } from '../../Utils/FeedbackUtils';
-import { tableBodyText, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
+import { getPersonName, handleUnAuth } from '../../Utils/FeedbackUtils';
+import { paginationStyle, tableBodyText, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -25,7 +25,7 @@ const headerContainer = {
     padding: '0px 20px'
 }
 
-const col: string[] = ['checkbox', 'Full Name', 'Email', 'Company', 'Created Date', 'Actions'];
+const col: string[] = ['Full Name', 'Email', 'Company', 'Created Date', 'Actions'];
 
 function PeopleComponent(props: { type: 'people' | 'companies' }) {
 
@@ -42,30 +42,13 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
 
-    let init = false;
-    useEffect(() => {
-        if (init === false) {
-            fetchPeople();
-            init = true;
-        }
-    }, []);
-
     useEffect(() => {
         fetchPeople();
     }, [page]);
 
     useEffect(() => {
-        let count = 0;
-        peopleList.forEach(p => {
-            if (p.checked === true) {
-                count++;
-            }
-        });
-        if (count > 0) {
-            setShowDeleteButton(true);
-        } else {
-            setShowDeleteButton(false);
-        }
+        const count = peopleList.filter(p => p.checked).length;
+        setShowDeleteButton(count > 0);
     }, [peopleList]);
 
     async function fetchPeople() {
@@ -75,7 +58,7 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
             if (data.data) {
                 const res = data.data;
                 setTotalCount(res.count);
-                setPeopleList(res.list);
+                setPeopleList(res?.list?.map((person: any) => ({ ...person, checked: false })));  // Ensure 'checked' field is initialized
             }
             setLoading(false);
         } catch (error) {
@@ -126,6 +109,10 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
         if (key === 'Enter') {
             fetchPeople();
         }
+    }
+
+    function handleSearchInputChange(e: any) {
+        setSearchStr(e.target.value);
     }
 
     function handleCheckboxChange(event: any, companyId: string) {
@@ -189,10 +176,10 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                         size='small'
                         sx={{ input: { color: colorPalette.darkBackground }, marginTop: '10px' }}
                         placeholder={`Search ${props.type}`}
-                        onChange={(e) => setSearchStr(e.target.value)}
+                        onChange={handleSearchInputChange}
                         onKeyDown={handleSearch}
                         InputProps={{
-                            endAdornment: <SearchIcon sx={{ color: colorPalette.darkBackground, paddingLeft: '5px' }} />
+                            endAdornment: <IconButton onClick={fetchPeople} ><SearchIcon sx={{ color: colorPalette.darkBackground, paddingLeft: '5px' }} /></IconButton>
                         }}
                     />
                     <Button
@@ -216,13 +203,16 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                         <TableHead>
                             <TableRow >
                                 {col?.map((column: string) => (
-                                    <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.secondary }} key={column}>
+                                    <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary }} key={column}>
                                         {
-                                            column !== 'checkbox' ? column :
-                                                <Checkbox
-                                                    color='secondary'
-                                                    onClick={(e) => handleCheckboxChange(e, 'all')}
-                                                />
+                                            column !== 'Full Name' ? column :
+                                                <>
+                                                    <Checkbox
+                                                        color='secondary'
+                                                        onClick={(e) => handleCheckboxChange(e, 'all')}
+                                                    />
+                                                    {column}
+                                                </>
                                         }
                                     </TableCell>
                                 ))}
@@ -238,20 +228,18 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                                                 checked={person?.checked}
                                                 color='secondary'
                                             />
-                                        </TableCell>
-                                        <TableCell sx={tableCellStyle} >
-                                            <Typography sx={tableBodyText} >{`${person.firstName} ${person.lastName}`}</Typography>
+                                            <b>{getPersonName(person)}</b>
                                         </TableCell>
                                         <TableCell sx={tableCellStyle} >
                                             <Typography sx={tableBodyText} >{person.email}</Typography>
                                         </TableCell>
                                         <TableCell sx={tableCellStyle} >
-                                            <Typography sx={{ ...tableBodyText, color: colorPalette.primary, fontWeight: 600 }} >
+                                            <Typography sx={{ ...tableBodyText}} >
                                                 {person.company.name}
                                             </Typography>
                                         </TableCell>
                                         <TableCell sx={tableCellStyle} >
-                                            <Typography sx={tableBodyText} >{new Date(person.created_at).toLocaleDateString()}</Typography>
+                                            <Typography sx={tableBodyText} >{new Date(person.created_at).toDateString()}</Typography>
                                         </TableCell>
                                         <TableCell sx={tableCellStyle} >
                                             <IconButton onClick={() => handleOpenPeopleDetail(person.id)} size='small' >
@@ -270,6 +258,9 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                         count={totalCount}
                         rowsPerPage={20}
                         page={page}
+                        sx={paginationStyle}
+                        showFirstButton={true}
+                        showLastButton={true}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={() => { }}
                     />

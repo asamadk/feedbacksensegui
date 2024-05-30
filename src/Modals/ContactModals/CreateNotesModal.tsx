@@ -1,6 +1,6 @@
 import { Box, Button, IconButton, MenuItem, Modal, Select, TextField, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
-import { modalButtonContainerStyle, modalHeaderStyle, modalStyle } from '../../Styles/ModalStyle'
+import { modalButtonContainerStyle, modalHeaderStyle, modalStyle, verticalModalStyle } from '../../Styles/ModalStyle'
 import { colorPalette } from '../../Utils/Constants'
 import CloseIcon from '@mui/icons-material/Close';
 import { containedButton, outlinedButton } from '../../Styles/ButtonStyle';
@@ -119,7 +119,7 @@ function CreateNotesModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={modalStyle(colorPalette.background)}>
+                <Box sx={verticalModalStyle(colorPalette.background)}>
                     <Box sx={modalHeaderStyle} >
                         <Box>
                             <Typography id="modal-modal-title" variant="h5" component="h2" >
@@ -184,7 +184,8 @@ function CreateNotesModal(props: any) {
                                     onChange={(e) => setPerson(e.target.value as string)}
                                 >
                                     {
-                                        peopleOptions?.map((people: any) =>
+                                        peopleOptions?.map((people: any) => 
+                                            people.company.id === props.companyId &&
                                             <MenuItem value={people.id} >{`${people.firstName} ${people.lastName}`}</MenuItem>
                                         )
                                     }

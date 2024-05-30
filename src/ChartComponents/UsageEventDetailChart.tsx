@@ -3,14 +3,21 @@ import React, { useEffect, useState } from 'react'
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import FSTooltip from '../Components/FSTooltip';
 import { getLineChartColor, handleUnAuth } from '../Utils/FeedbackUtils';
+import { Box } from '@mui/material';
 
 function UsageEventDetailChart({ data }: any) {
 
     const [eventOverTimeData, setEventsOverTimeData] = useState<any[]>([]);
     const [lines, setLines] = useState<string[]>([]);
+    const [showUI, setShowUI] = useState(true);
 
     useEffect(() => {
-        transformDataForChart();
+        if (data == null || data.length < 1) {
+            setShowUI(false);
+        } else {
+            transformDataForChart();
+            setShowUI(true);
+        }
     }, [data]);
 
     function transformDataForChart() {
@@ -56,7 +63,14 @@ function UsageEventDetailChart({ data }: any) {
         });
     }
 
-    return (
+    function EmptyUI() {
+        return <Box height={300} >
+            <img style={{height : '100%',width : '100%',margin : 'auto'}} src='/no-data.svg' alt='No Data'/>
+        </Box>
+    }
+
+    function ChartUI() {
+        return <>
         <ResponsiveContainer width="99%" height="100%">
             <LineChart
                 data={eventOverTimeData}
@@ -78,7 +92,17 @@ function UsageEventDetailChart({ data }: any) {
                 }
             </LineChart>
         </ResponsiveContainer>
-    )
+        </>
+    }
+
+    function ShowData() {
+        if (showUI) {
+            return ChartUI();
+        }
+        return EmptyUI();
+    }
+
+    return (<>{ShowData()}</>)
 }
 
 export default UsageEventDetailChart

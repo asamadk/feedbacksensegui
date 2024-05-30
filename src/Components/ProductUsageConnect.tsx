@@ -1,19 +1,48 @@
 import { Box, IconButton, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router';
 import { colorPalette } from '../Utils/Constants';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { CopyBlock } from 'react-code-blocks';
-import { BASE_URL } from '../Utils/Endpoints';
+import { BASE_URL, getUsageStatusURL } from '../Utils/Endpoints';
 import LoopIcon from '@mui/icons-material/Loop';
 import { getProductUsageScript } from '../Utils/EventConstants';
 import { useSelector } from 'react-redux';
 import { globalSettingSubContainers } from '../Styles/LayoutStyles';
+import axios from 'axios';
+import { handleUnAuth } from '../Utils/FeedbackUtils';
+import FSLoader from './FSLoader';
+import Notification from '../Utils/Notification';
 
 function ProductUsageConnect(props: { back: any }) {
 
-  const navigate = useNavigate();
+  const snackbarRef: any = useRef(null);
+
+  const [loading, setLoading] = useState(false);
   const currentUserState = useSelector((state: any) => state.currentUser);
+  const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    fetchConnectionStatus();
+  }, []);
+
+  async function fetchConnectionStatus() {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(getUsageStatusURL(), { withCredentials: true });
+      setLoading(false);
+      if (data.data && data.data > 0) {
+        setIsConnected(true);
+      } else {
+        setIsConnected(false);
+      }
+    } catch (error) {
+      snackbarRef?.current?.show('Something went wrong','error')
+      setLoading(false);
+      console.log("🚀 ~ fetchConnectionStatus ~ error:", error);
+      handleUnAuth(error);
+    }
+  }
 
   const handleBackButtonClick = () => {
     props.back();
@@ -23,21 +52,25 @@ function ProductUsageConnect(props: { back: any }) {
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
         <Box display={'flex'}>
-          <IconButton onClick={handleBackButtonClick}  >
+          <IconButton sx={{ position: 'relative', bottom: '5px' }} onClick={handleBackButtonClick}  >
             <ArrowBackIcon sx={{ color: colorPalette.darkBackground }} />
           </IconButton>
-          <Typography variant='h6' marginTop={'4px'} >Integration Snippet</Typography>
+          <Typography variant='h6' >Integration Snippet</Typography>
+
+        </Box>
+        <Box margin={'3px'} >
+          {
+            isConnected ? <Box sx={{ color: '#008000', background: '#CBF0CB', padding: '5px 15px', fontSize: 12, borderRadius: 2, width: 'fit-content' }} >
+              Connected
+            </Box> :
+              <Box sx={{ border: `0.5px ${colorPalette.fsGray} solid`, color: colorPalette.fsGray, padding: '5px 15px', fontSize: 12, borderRadius: 2, width: 'fit-content' }} >
+                Not Connected
+              </Box>
+          }
         </Box>
       </Box>
+
       <Box sx={{ ...globalSettingSubContainers('#ffffff'), height: 'calc(100vh - 130px)', textAlign: 'start', overflowY: 'scroll' }} >
-        <Box >
-          <Typography variant='h6' marginTop={'15px'} >Current Integration Status :
-            <span style={{ color: 'red' }} >  Not Connected</span>
-            <IconButton>
-              <LoopIcon />
-            </IconButton>
-          </Typography>
-        </Box>
         <Typography color={colorPalette.fsGray} >
           Plug in this code to every page in your application
           (just before the closing of head tag. This will send basic
@@ -54,6 +87,8 @@ function ProductUsageConnect(props: { back: any }) {
           />
         </Box>
       </Box>
+      <FSLoader show={loading} />
+      <Notification ref={snackbarRef} />
     </Box>
   )
 }

@@ -226,7 +226,7 @@ function IndividualResponse(props: IndividualResponseProps) {
                                         <Typography 
                                             fontSize={'14px'} 
                                             fontWeight={'600'} 
-                                            color={res?.selected === true ? colorPalette.secondary : colorPalette.primary} 
+                                            color={res?.selected === true ? colorPalette.secondary : colorPalette.darkBackground} 
                                         >
                                             {getPersonName(res?.person)}
                                         </Typography>
@@ -238,7 +238,7 @@ function IndividualResponse(props: IndividualResponseProps) {
                                         </Typography>
                                         <Typography
                                             sx={{ fontSize: '13px' }}
-                                            color={res?.selected === true ? colorPalette.secondary : colorPalette.primary}
+                                            color={res?.selected === true ? colorPalette.secondary : colorPalette.darkBackground}
                                         >
                                             {new Date(res?.created_at)?.toDateString()}
                                         </Typography>

@@ -71,9 +71,10 @@ function CreateTagModal(props: any) {
         try {
             setLoading(true);
             const { data } = await axios.post(createTagURL(), payload, { withCredentials: true });
+            const res = data.data;
             snackbarRef?.current?.show(data.message, data.data ? 'success' : 'error');
             setLoading(false);
-            handleClose();
+            props.update(res);
         } catch (error) {
             setLoading(false);
             handleUnAuth(error);

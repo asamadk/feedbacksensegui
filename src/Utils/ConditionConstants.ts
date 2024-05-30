@@ -6,13 +6,14 @@ export const healthScoreMetrics = [
     { label: 'Next Renewal Date', value: 'nextRenewalDate', type: 'date', table: 'company', relation: false, path: '' },
     { label: 'Start Date', value: 'startDate', type: 'date', table: 'company', relation: false, path: '' },
     { label: 'Last Activity Date', value: 'lastActivityDate', type: 'date', table: 'company', relation: false, path: '' },
-    { label: 'License Count', value: 'licenseCount', type: 'number', table: 'company', relation: false, path: '' },
+    // { label: 'License Count', value: 'licenseCount', type: 'number', table: 'company', relation: false, path: '' },
     { label: 'NPS Score', value: 'npsScore', type: 'number', table: 'company', relation: false, path: '' },
     { label: 'CSAT Score', value: 'csatScore', type: 'number', table: 'company', relation: false, path: '' },
     { label: 'Usage Frequency', value: 'usageFrequency', type: 'options', table: 'company', relation: false, path: '' },
     { label: 'Last Contact Date', value: 'lastContactDate', type: 'date', table: 'company', relation: false, path: '' },
     { label: 'Journey Stage', value: 'stage', type: 'options', table: 'company', relation: true, path: 'stage.id' },
-    { label: 'Onboarding Stage', value: 'subStage', type: 'options', table: 'company', relation: true, path: 'subStage.id' },
+    { label: 'Onboarding Stage', value: 'onboardingStage', type: 'options', table: 'company', relation: true, path: 'onboardingStage.id' },
+    { label: 'Risk Stage', value: 'riskStage', type: 'options', table: 'company', relation: true, path: 'riskStage.id' },
     // { label: 'Login Frequency', value: 'loginFrequency', type: 'options', table: 'usageEvent', relation: false, path: '' },
     // { label: 'Number of Login', value: 'eventName', type: 'number', table: 'usageEvent', relation: false, path: '' },
     // { label: 'Total Usage / day (hrs)', value: 'totalUsage', type: 'number', table: 'usageSession', relation: false, path: '' },
@@ -44,13 +45,19 @@ export function getMetricOptions(metric: string) {
         data.forEach(d => {
             res.push({ label: d.name, value: d.id });
         });
-    } else if (metric === 'subStage') {
+    } else if (metric === 'onboardingStage') {
         const state = store.getState();
         const data: any[] = state.subStage;
         data.forEach(d => {
             res.push({ label: d.name, value: d.id });
         });
-    } else if (metric === 'loginFrequency') {
+    } else if (metric === 'riskStage'){
+        const state = store.getState();
+        const data: any[] = state.riskStage;
+        data.forEach(d => {
+            res.push({ label: d.name, value: d.id });
+        });
+    }else if (metric === 'loginFrequency') {
         res.push({ label: 'Daily', value: 'daily' });
         res.push({ label: 'Monthly', value: 'monthly' });
     }

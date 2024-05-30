@@ -539,6 +539,10 @@ export function getHealthScoreName(count : number){
     }else if(count === 100){
         return 'Good';
     }else{
-        return 'N/A'
+        return 'None'
     }
+}
+
+export function getAPIErrorMessage(error :any) :string{
+    return error?.response?.data?.message || ''
 }

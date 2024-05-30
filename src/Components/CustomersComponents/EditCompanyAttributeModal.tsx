@@ -61,12 +61,26 @@ function EditCompanyAttributeModal(props: { open: boolean, close: any, type: com
             setLoading(true);
             axios.post(updateCompanyURL(), payload, { withCredentials: true })
             setLoading(false);
-            props.update(payload);
+            if(props.type === 'owner'){
+                props.update(getUserName());
+            }else{
+                props.update(payload);
+            }
             snackbarRef?.current?.show('Saved', 'Success');
         } catch (error) {
             setLoading(false);
             handleUnAuth(error);
         }
+    }
+
+    function getUserName(){
+        let name = '';
+        globalUsers?.map((user :any) => {
+            if(localVal === user.id){
+                name = user.name; 
+            }
+        });
+        return name;
     }
 
     function getFieldDisplay() {

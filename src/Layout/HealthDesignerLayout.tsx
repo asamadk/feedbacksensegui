@@ -87,6 +87,9 @@ function HealthDesignerLayout() {
         setRows(prevRows => {
             const updatedRows = [...prevRows];
             updatedRows[index][type].operator = val;
+            if(val === 'Is Empty' || val === 'Is Not Empty'){
+                updatedRows[index][type].value = 'empty';
+            }
             return updatedRows;
         });
     }
@@ -157,7 +160,7 @@ function HealthDesignerLayout() {
     }
 
     function handleRemoveRow(pos: number) {
-        setRows(rows.filter((row,index) => {return index !== pos}))
+        setRows(rows.filter((row, index) => { return index !== pos }))
     }
 
     return (
@@ -203,101 +206,104 @@ function HealthDesignerLayout() {
                         </>
                     }
                 </Box>
-                <TableContainer sx={tableContainerStyle} >
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead >
-                            <TableRow >
-                                {col?.map((column: string) => (
-                                    <TableCell
-                                        sx={
-                                            {
-                                                ...tableVerticalBorder,
-                                                fontWeight: '600',
-                                                backgroundColor: column.includes('Good') ? '#f5faf5' : column.includes('Poor') ? '#fff3f3' : '',
-                                                color: column.includes('Good') ? '#008000' : column.includes('Poor') ? '#ff0000' : '',
-                                                textAlign: 'center'
-                                            }
-                                        }
-                                        key={column}
-                                    >
-                                        <Box display={'flex'} sx={{ justifyContent: 'center' }} >
-                                            <Typography>{column}</Typography>
-                                            <Box sx={{ marginTop: '2px', marginLeft: '5px' }} >
+                {
+                    !loading &&
+                    <TableContainer sx={tableContainerStyle} >
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                            <TableHead >
+                                <TableRow >
+                                    {col?.map((column: string) => (
+                                        <TableCell
+                                            sx={
                                                 {
-                                                    (column.includes('Good') || column.includes('Poor')) &&
-                                                    <InfoComponent
-                                                        color=''
-                                                        message={
-                                                            column.includes('Good') ?
-                                                                'If All good criteria are satisfied then company is in good health' :
-                                                                'If any one of poor criteria is satisfied then company is in poor health'
-                                                        }
-                                                    />
+                                                    ...tableVerticalBorder,
+                                                    fontWeight: '600',
+                                                    backgroundColor: column.includes('Good') ? '#f5faf5' : column.includes('Poor') ? '#fff3f3' : '',
+                                                    color: column.includes('Good') ? '#008000' : column.includes('Poor') ? '#ff0000' : '',
+                                                    textAlign: 'center'
                                                 }
+                                            }
+                                            key={column}
+                                        >
+                                            <Box display={'flex'} sx={{ justifyContent: 'center' }} >
+                                                <Typography>{column}</Typography>
+                                                <Box sx={{ marginTop: '2px', marginLeft: '5px' }} >
+                                                    {
+                                                        (column.includes('Good') || column.includes('Poor')) &&
+                                                        <InfoComponent
+                                                            color=''
+                                                            message={
+                                                                column.includes('Good') ?
+                                                                    'If All good criteria are satisfied then company is in good health' :
+                                                                    'If any one of poor criteria is satisfied then company is in poor health'
+                                                            }
+                                                        />
+                                                    }
+                                                </Box>
                                             </Box>
-                                        </Box>
+                                        </TableCell>
+                                    ))}
+                                    <TableCell sx={{ fontWeight: '600', color: editMode ? '#000000' : colorPalette.fsGray }} >
+                                        Action
                                     </TableCell>
-                                ))}
-                                <TableCell sx={{ fontWeight: '600', color: editMode ? '#000000' : colorPalette.fsGray }} >
-                                    Action
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {
-                                rows?.map((row, index) => (
-                                    <TableRow key={row?.metric} >
-                                        <TableCell sx={{ ...tableVerticalBorder }} >
-                                            <HealthConditionComponent
-                                                disabled={!editMode}
-                                                type='metric'
-                                                metric={row?.metric}
-                                                operator={''}
-                                                value={''}
-                                                onMetricChange={(val: any) => handleMetricChange(val, index)}
-                                                onOperatorChange={() => { }}
-                                                onValueChange={() => { }}
-                                            />
-                                        </TableCell>
-                                        <TableCell sx={{ ...tableVerticalBorder, background: '#f5faf5' }} >
-                                            <HealthConditionComponent
-                                                disabled={!editMode}
-                                                type='non-metric'
-                                                metric={row?.metric}
-                                                operator={row?.good?.operator}
-                                                value={row?.good?.value}
-                                                onMetricChange={() => { }}
-                                                onOperatorChange={(val: any) => handleOperatorChange(val, index, 'good')}
-                                                onValueChange={(val: any) => handleValueChange(val, index, 'good')}
-                                            />
-                                        </TableCell>
-                                        <TableCell sx={{ ...tableVerticalBorder, background: '#fff3f3' }} >
-                                            <HealthConditionComponent
-                                                disabled={!editMode}
-                                                type='non-metric'
-                                                metric={row?.metric}
-                                                operator={row.poor?.operator}
-                                                value={row?.poor?.value}
-                                                onMetricChange={() => { }}
-                                                onOperatorChange={(val: any) => handleOperatorChange(val, index, 'poor')}
-                                                onValueChange={(val: any) => handleValueChange(val, index, 'poor')}
-                                            />
-                                        </TableCell>
-                                        <TableCell >
-                                            <IconButton
-                                                onClick={() => handleRemoveRow(index)}
-                                                disabled={!editMode}
-                                                sx={{ height: 'fit-content' }}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    rows?.map((row, index) => (
+                                        <TableRow key={row?.metric} >
+                                            <TableCell sx={{ ...tableVerticalBorder }} >
+                                                <HealthConditionComponent
+                                                    disabled={!editMode}
+                                                    type='metric'
+                                                    metric={row?.metric}
+                                                    operator={''}
+                                                    value={''}
+                                                    onMetricChange={(val: any) => handleMetricChange(val, index)}
+                                                    onOperatorChange={() => { }}
+                                                    onValueChange={() => { }}
+                                                />
+                                            </TableCell>
+                                            <TableCell sx={{ ...tableVerticalBorder, background: '#f5faf5' }} >
+                                                <HealthConditionComponent
+                                                    disabled={!editMode}
+                                                    type='non-metric'
+                                                    metric={row?.metric}
+                                                    operator={row?.good?.operator}
+                                                    value={row?.good?.value}
+                                                    onMetricChange={() => { }}
+                                                    onOperatorChange={(val: any) => handleOperatorChange(val, index, 'good')}
+                                                    onValueChange={(val: any) => handleValueChange(val, index, 'good')}
+                                                />
+                                            </TableCell>
+                                            <TableCell sx={{ ...tableVerticalBorder, background: '#fff3f3' }} >
+                                                <HealthConditionComponent
+                                                    disabled={!editMode}
+                                                    type='non-metric'
+                                                    metric={row?.metric}
+                                                    operator={row.poor?.operator}
+                                                    value={row?.poor?.value}
+                                                    onMetricChange={() => { }}
+                                                    onOperatorChange={(val: any) => handleOperatorChange(val, index, 'poor')}
+                                                    onValueChange={(val: any) => handleValueChange(val, index, 'poor')}
+                                                />
+                                            </TableCell>
+                                            <TableCell >
+                                                <IconButton
+                                                    onClick={() => handleRemoveRow(index)}
+                                                    disabled={!editMode}
+                                                    sx={{ height: 'fit-content' }}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                }
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                }
                 <Button disabled={!editMode} onClick={handleAddCriteria} startIcon={<AddIcon />} sx={outlinedButton} >
                     Add Criteria
                 </Button>

@@ -16,6 +16,7 @@ import axios from 'axios';
 import { addCompanyURL, addPersonURL } from '../../Utils/Endpoints';
 import CSVMapperComponent from '../../Components/CustomersComponents/CSVMapperComponent';
 import { getMetricOptions } from '../../Utils/ConditionConstants';
+import { getAPIErrorMessage, handleUnAuth } from '../../Utils/FeedbackUtils';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -173,6 +174,8 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
             setLoading(false);
             props.close({ refresh: true });
         } catch (err) {
+            snackbarRef?.current?.show(getAPIErrorMessage(err),'error');
+            handleUnAuth(err);
             setLoading(false);
         }
     }

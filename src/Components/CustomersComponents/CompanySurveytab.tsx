@@ -1,7 +1,7 @@
 import { Box, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { colorPalette } from '../../Utils/Constants';
+import { SURVEY_OPEN_SOURCE, colorPalette } from '../../Utils/Constants';
 import FSLoader from '../FSLoader';
 import Notification from '../../Utils/Notification';
 import axios from 'axios';
@@ -72,11 +72,10 @@ function CompanySurveyTab(props: { personId: string | null, companyId: string | 
     }
   }
 
-  const handleOpenSurvey = (surveyId :string) => {
-    console.log("🚀 ~ handleOpenSurvey ~ surveyId:", surveyId)
+  const handleOpenSurvey = (surveyId: string) => {
     dispatch(updateCurrentWorkflow(surveyId));
     navigation('/survey/detail/create/' + surveyId);
-}
+  }
 
   return (
     <Box padding={'20px 40px'} >
@@ -96,12 +95,12 @@ function CompanySurveyTab(props: { personId: string | null, companyId: string | 
       </Box>
 
       <Box marginTop={'20px'} >
-        <TableContainer sx={{ ...tableContainerStyle, height: 'calc(100vh - 215px)' }} >
+        <TableContainer sx={{ ...tableContainerStyle, height: 'calc(100vh - 355px)' }} >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead >
               <TableRow >
                 {col?.map((column: string) => (
-                  <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.secondary }} key={column}>
+                  <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary }} key={column}>
                     {column}
                   </TableCell>
                 ))}
@@ -112,12 +111,10 @@ function CompanySurveyTab(props: { personId: string | null, companyId: string | 
                 surveys?.map(response => (
                   <TableRow key={response.id} >
                     <TableCell sx={tableCellStyle} >
-                      <b style={{ color: colorPalette.primary, cursor: 'pointer' }} >{response.survey.name}</b>
+                      <b>{response.survey.name}</b>
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
-                      <b style={{ color: colorPalette.primary, cursor: 'pointer' }} >
-                        {getPersonName(response.person)}
-                      </b>
+                      {getPersonName(response.person)}
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
                       {new Date(response.created_at).toDateString()}

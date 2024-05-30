@@ -11,7 +11,7 @@ import { handleUnAuth } from '../../Utils/FeedbackUtils';
 import axios from 'axios';
 import { updateCompanyJourneyURL } from '../../Utils/Endpoints';
 
-function EditJourneyModal(props: { companyId: string, open: boolean, close: any, value: string,field :string }) {
+function EditJourneyModal(props: { companyId: string, open: boolean, close: any, value: string, field: string, update: any }) {
 
     const snackbarRef: any = useRef(null);
     const [loading, setLoading] = useState(false);
@@ -26,16 +26,49 @@ function EditJourneyModal(props: { companyId: string, open: boolean, close: any,
         props.close({ refresh: false });
     }
 
+    function getStageName() {
+        let stageName: string = '';
+        switch (props.field) {
+            case 'Risk':
+                globalRiskStage?.map((stg: any) => {
+                    if (stg.id === stageVal) {
+                        stageName = stg.name;
+                        return;
+                    }
+                });
+                break;
+            case 'Journey Stage':
+                globalStage?.map((stg: any) => {
+                    if (stg.id === stageVal) {
+                        stageName = stg.name;
+                        return;
+                    }
+                });
+                break;
+            case 'Onboarding':
+                globalOnboardingStage?.map((stg: any) => {
+                    if (stg.id === stageVal) {
+                        stageName = stg.name;
+                        return;
+                    }
+                });
+                break;
+            default:
+                return stageName;
+        }
+        return stageName;
+    }
+
     async function updateCompanyStage() {
         try {
             setLoading(true);
             const payload = {
                 companyId: props.companyId,
                 journey: stageVal,
-                type : props.field
+                type: props.field,
             }
             await axios.post(updateCompanyJourneyURL(), payload, { withCredentials: true });
-            handleClose();
+            props.update(props.field,getStageName());
             setLoading(false);
         } catch (error) {
             setLoading(false);

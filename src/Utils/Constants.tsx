@@ -22,6 +22,8 @@ export const PERM_ISSUE_TEXT = 'You do not have permission to access this resour
 export const ALL_TEMPLATE_KEY = 'All Templates';
 export const TEMPLATE_KEY = 'Templates';
 
+export const SURVEY_OPEN_SOURCE = 'survey_open_source';
+
 export const componentName = {
     SUBSCRIPTION: 'SUBSCRIPTION',
     BILLING_INFO_HOME: 'BILLING_INFO_HOME',
@@ -433,3 +435,10 @@ export const settingIds = {
     DATA_MODELER : 'DATA_MODELER',
     HEALTH_DESIGNER : 'HEALTH_DESIGNER'
 }
+
+export const userRoles = [
+    {key : 'Power User',value : 'OWNER'},
+    // {key : '',value : 'ADMIN'},
+    {key : 'Collaborator',value : 'USER'},
+    {key : 'Spectator',value : 'GUEST'},
+]

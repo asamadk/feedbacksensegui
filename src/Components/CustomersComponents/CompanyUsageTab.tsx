@@ -57,7 +57,7 @@ function CompanyUsageTab(props: { companyId: string | null, personId: string | n
       fetchTopUsagePeople();
       init = true;
     }
-  }, []);
+  }, [usageDurationVal]);
 
   function populateDataForEventDetails(data: any) {
     const labelCount = new Map<string, number>();
@@ -79,7 +79,11 @@ function CompanyUsageTab(props: { companyId: string | null, personId: string | n
         percentage: (val * 100) / data?.length
       })
     });
-    setEventDetails(transformedData);
+
+    transformedData.sort((a :any, b :any) => b.percentage - a.percentage);
+    const top20Records = transformedData.slice(0, 20);
+
+    setEventDetails(top20Records);
   }
 
   async function fetchEventsOverTime() {
@@ -160,13 +164,13 @@ function CompanyUsageTab(props: { companyId: string | null, personId: string | n
         </Box>
       </Box>
 
-      <Typography textAlign={'start'} variant='h5' margin={'20px 0px'} ><SsidChartIcon />Events Over Time</Typography>
+      <Typography textAlign={'start'} variant='h6' margin={'20px 0px'} ><SsidChartIcon fontSize={'small'} />Events Over Time</Typography>
       <Box sx={usageContainer} >
         <UsageEventDetailChart data={events} />
       </Box>
 
       <Box sx={{ textAlign: 'start', marginTop: '50px' }} >
-        <Typography variant='h5' ><EmojiEventsIcon />Event Details</Typography>
+        <Typography variant='h6' ><EmojiEventsIcon fontSize='small' />Event Details</Typography>
         <Box sx={{ flexGrow: 1, color: colorPalette.fsGray, fontSize: '10px' }}>
           <Grid sx={{ marginTop: '5px' }} container spacing={3}>
             <Grid item xs>
@@ -198,7 +202,8 @@ function CompanyUsageTab(props: { companyId: string | null, personId: string | n
       </Box>
 
       <Box sx={{ marginTop: '50px', textAlign: 'start' }} >
-        <Typography variant='h5' ><ViewStreamIcon />Time Spent in App Over Time</Typography>
+        <Typography variant='h6' ><ViewStreamIcon fontSize='small' />Time Spent in App Over Time</Typography>
+        <Typography sx={{fontSize : '12px',color : colorPalette.fsGray}} >Time unit : Hours</Typography>
         <Box sx={{ ...usageContainer, marginTop: '10px' }} >
           <UsageTimeSpent data={timeSpentData} />
         </Box>
@@ -207,13 +212,13 @@ function CompanyUsageTab(props: { companyId: string | null, personId: string | n
       {
         props.companyId != null &&
         <Box sx={{ marginTop: '50px', textAlign: 'start' }} >
-          <Typography variant='h5' ><Groups2Icon />Top Contacts</Typography>
+          <Typography variant='h6' marginBottom={'10px'} ><Groups2Icon fontSize='small' />Top Contacts</Typography>
           <TableContainer sx={tableContainerStyle} >
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow >
                   {col?.map((column: string) => (
-                    <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.secondary }} key={column}>
+                    <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary }} key={column}>
                       {column}
                     </TableCell>
                   ))}

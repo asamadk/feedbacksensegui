@@ -31,7 +31,8 @@ function Login() {
 
     //TODO redirect to book a meeting
     const handleNoLogin = () => {
-        navigate('/sign-up');
+        // navigate('/sign-up');
+        window.open('https://www.feedbacksense.io/support')
     }
 
     return (
@@ -72,8 +73,7 @@ function Login() {
                     overflow={'hidden'}
                     padding={'20px 40px'}
                 >
-                    <img style={{ maxWidth: '70%', margin: 'auto' }} src='/hero.png' alt='Hero' />
-                    {/* <img style={{maxWidth : '70%',margin : 'auto'}} src='/backgrounds/background1.png' alt='Hero' /> */}
+                    <img style={{ maxWidth: '100%', margin: 'auto' }} src='/feature-2.png' alt='Hero' />
                 </Box>
             </Box>
         </Box>

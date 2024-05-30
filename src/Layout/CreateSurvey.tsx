@@ -39,7 +39,7 @@ function CreateSurvey(props: any) {
 
   const snackbarRef: any = useRef(null);
   const dispatch = useDispatch<any>();
-  const navigate = useNavigate();
+  
   const childRef = useRef<any>(null);
 
   const { surveyId } = useParams();

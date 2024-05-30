@@ -49,11 +49,13 @@ function ClientCompass() {
   const [overAllCustomerHealth, setOverAllCustomerHealth] = useState<doughnutChartData[]>([]);
   const [quarterCustomerHealth, setQuarterCustomerHealth] = useState<doughnutChartData[]>([]);
   const [customerJourneyStage, setCustomerJourneyStage] = useState<doughnutChartData[]>([]);
-  const [currentQtrRnwlContract, setCurrentQtrRnwlContract] = useState<doughnutChartData[]>([]);
-  const [currentQtrChurnContract, setCurrentQtrChurnContract] = useState<doughnutChartData[]>([]);
+  const [currentQtrRnwlContract, setCurrentQtrRnwlContract] = useState<string>('');
+  const [currentQtrChurnContract, setCurrentQtrChurnContract] = useState<string>('');
   const [churnRiskReason, setChurnRiskReason] = useState<doughnutChartData[]>([]);
   const [npsScore, setNpsScore] = useState<doughnutChartData[]>([]);
+  const [avgNpsScore,setAvgNpsScore] = useState<doughnutChartData[]>([]);
   const [csatScore, setCsatScore] = useState<doughnutChartData[]>([]);
+  const [avgCsatScore,setAvgCsatScore] = useState<doughnutChartData[]>([]);
   const [onboardingStages, setOnboardingStages] = useState<doughnutChartData[]>([]);
   const [OnboardingHealth, setOnboardingHealth] = useState<doughnutChartData[]>([]);
 
@@ -87,6 +89,8 @@ function ClientCompass() {
       setOnboardingStages(res.onboardingStages);
       setCsatScore(res.csatScores);
       setNpsScore(res.npsScore);
+      setAvgNpsScore(res.avgNpsScore);
+      setAvgCsatScore(res.avgCsatScore);
       setChurnRiskReason(res.churnRiskReasons);
       setCurrentQtrChurnContract(res.qtrChurnContract);
       setCurrentQtrRnwlContract(res.qtrRenewContract);
@@ -209,14 +213,14 @@ function ClientCompass() {
           <Grid item xs={3} >
             <Box sx={blockStyle} >
               <Typography fontSize={13} fontWeight={600} >Current Quarter Renewed Contract value</Typography>
-              <DashboardDoughnut colors={renewedColors} data={currentQtrRnwlContract} />
-              {/* <DashboardGauge colors={renewedColors} data={currentQtrRnwlContract} /> */}
+              <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.primary }} fontWeight={600} >{currentQtrRnwlContract}</Typography>
             </Box>
           </Grid>
           <Grid item xs={3} >
             <Box sx={blockStyle} >
               <Typography fontSize={13} fontWeight={600} >Current Quarter Churned Contract Value</Typography>
-              <DashboardDoughnut colors={renewedColors} data={currentQtrChurnContract} />
+              {/* <DashboardDoughnut colors={renewedColors} data={currentQtrChurnContract} /> */}
+              <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.primary }} fontWeight={600} >{currentQtrChurnContract}</Typography>
             </Box>
           </Grid>
         </Grid>
@@ -245,8 +249,20 @@ function ClientCompass() {
           </Grid>
           <Grid item xs={3} >
             <Box sx={blockStyle} >
+              <Typography fontSize={13} fontWeight={600} >Average NPS Score</Typography>
+              <DashboardDoughnut colors={npsColors} data={avgNpsScore} />
+            </Box>
+          </Grid>
+          <Grid item xs={3} >
+            <Box sx={blockStyle} >
               <Typography fontSize={13} fontWeight={600} >Latest CSAT Score</Typography>
               <DashboardDoughnut colors={npsColors} data={csatScore} />
+            </Box>
+          </Grid>
+          <Grid item xs={3} >
+            <Box sx={blockStyle} >
+              <Typography fontSize={13} fontWeight={600} >Average CSAT Score</Typography>
+              <DashboardDoughnut colors={npsColors} data={avgCsatScore} />
             </Box>
           </Grid>
         </Grid>
@@ -257,7 +273,7 @@ function ClientCompass() {
         <Grid container spacing={4} >
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Delayed Onboarding</Typography>
+              <Typography fontSize={13} fontWeight={600} >Companies by Onboarding Stage</Typography>
               <DashboardDoughnut colors={getCstmrJrnyStgScoreColor()} data={onboardingStages} />
             </Box>
           </Grid>

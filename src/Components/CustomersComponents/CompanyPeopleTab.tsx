@@ -33,7 +33,9 @@ function CompanyPeopleTab() {
 
   const snackbarRef: any = useRef(null);
   const [peopleList, setPeopleList] = useState<any[]>([]);
+  const [filteredPeopleList, setFilteredPeopleList] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchTxt, setSearchTxt] = useState('');
 
   let init = false;
   useEffect(() => {
@@ -48,18 +50,27 @@ function CompanyPeopleTab() {
       setLoading(true);
       const { data } = await axios.get(getCompanyPersonListURL(id as string), { withCredentials: true });
       if (data.data) {
-        setPeopleList(data.data)
+        setPeopleList(data.data);
+        setFilteredPeopleList(data.data);
       }
       setLoading(false);
-    } catch (error : any) {
+    } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       setLoading(false);
       handleUnAuth(error);
     }
   }
 
-  function handleOpenPeopleDetail(personId: any,person :any) {
-    navigate(`/contacts/person/detail/${personId}`,{ state:  person});
+  function handleOpenPeopleDetail(personId: any, person: any) {
+    navigate(`/contacts/person/detail/${personId}`, { state: person });
+  }
+
+  function handlePeopleSearch(e: any) {
+    const searchStr = e.target.value;
+    setSearchTxt(searchStr);
+    setFilteredPeopleList(
+      peopleList.filter(person => person.firstName?.toLowerCase()?.includes(searchStr) || person.lastName?.toLowerCase()?.includes(searchStr))
+    );
   }
 
   return (
@@ -70,7 +81,9 @@ function CompanyPeopleTab() {
         <Box>
           <CssTextField
             size='small'
-            sx={{ input: { color: colorPalette.darkBackground }, marginTop: '10px',marginBottom : '10px' }}
+            onChange={handlePeopleSearch}
+            value={searchTxt}
+            sx={{ input: { color: colorPalette.darkBackground }, marginTop: '10px', marginBottom: '10px' }}
             placeholder={`Search people`}
             InputProps={{
               endAdornment: <SearchIcon sx={{ color: colorPalette.darkBackground, paddingLeft: '5px' }} />
@@ -84,7 +97,7 @@ function CompanyPeopleTab() {
             <TableHead>
               <TableRow >
                 {col?.map((column: string) => (
-                  <TableCell sx={{ ...tableCellStyle,fontWeight: '600',background : colorPalette.secondary }} key={column}>
+                  <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary }} key={column}>
                     {column}
                   </TableCell>
                 ))}
@@ -92,7 +105,7 @@ function CompanyPeopleTab() {
             </TableHead>
             <TableBody>
               {
-                peopleList?.map(person => (
+                filteredPeopleList?.map(person => (
                   <TableRow key={person.id} >
                     <TableCell sx={tableCellStyle} >
                       {getPersonName(person)}
@@ -107,7 +120,7 @@ function CompanyPeopleTab() {
                       {new Date(person.created_at).toLocaleDateString()}
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
-                      <IconButton onClick={() => handleOpenPeopleDetail(person.id,person)} size='small' >
+                      <IconButton onClick={() => handleOpenPeopleDetail(person.id, person)} size='small' >
                         <ArrowForwardIosIcon fontSize='small' />
                       </IconButton>
                     </TableCell>

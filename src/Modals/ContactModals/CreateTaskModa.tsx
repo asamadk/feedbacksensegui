@@ -223,7 +223,7 @@ function CreateTaskModal(props: any) {
                         </Box>
                         <Box marginTop={'20px'} >
                             <Box width={'100%'} >
-                                <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Assign To</Typography>
+                                <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Assign To*</Typography>
                                 <CustomSelect
                                     size='small'
                                     placeholder='Owner'
@@ -241,7 +241,7 @@ function CreateTaskModal(props: any) {
                         </Box>
                         <Box marginTop={'20px'} >
                             <Box width={'100%'} >
-                                <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Status</Typography>
+                                <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Status*</Typography>
                                 <CustomSelect
                                     size='small'
                                     placeholder='plan'

@@ -15,7 +15,7 @@ import { completeTaskURL, deleteTaskURL, getTaskURL } from '../Utils/Endpoints';
 import { handleUnAuth } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
 
-const col: string[] = ['Task', 'Assigned To', 'Due Date', 'Status', 'Action'];
+const col: string[] = ['Task', 'Description', 'Person', 'Company', 'Assigned To', 'Due Date', 'Status', 'Action'];
 
 function TasksLayout() {
 
@@ -141,16 +141,7 @@ function TasksLayout() {
       await axios.post(completeTaskURL(), { id: taskId }, { withCredentials: true });
       snackbarRef?.current?.show('Task Updated', 'success');
       setLoading(false);
-      setTasksList(taskList.map(task => {
-        if (task.id === taskId) {
-          if(task.status === 'Completed'){
-            task.status = 'Open';
-          }else{
-            task.status = 'Completed';
-          }
-        }
-        return task;
-      }))
+      fetchTasks();
     } catch (error) {
       snackbarRef?.current?.show('Something went wrong', 'error');
       setLoading(false);
@@ -191,7 +182,7 @@ function TasksLayout() {
             <TableHead >
               <TableRow >
                 {col?.map((column: string) => (
-                  <TableCell sx={{ ...tableCellStyle, fontWeight: '600', backgroundColor: colorPalette.secondary }} key={column}>
+                  <TableCell sx={{ ...tableCellStyle, fontWeight: '600', backgroundColor: colorPalette.textSecondary }} key={column}>
                     {column}
                   </TableCell>
                 ))}
@@ -206,29 +197,37 @@ function TasksLayout() {
                         <Checkbox onChange={() => completeTask(task.id, task.status)} checked={task.status === 'Completed'} color='secondary' />
                       </Tooltip>
                       <b>{task.title}</b>
-                      <Typography sx={{ fontSize: 15, fontWeight: 550, marginLeft: '30px' }} >
-                        {task.description?.length > 70 ? task.description.substring(0, 70) + '...' : task.description}
-                      </Typography>
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
-                      <b style={{ color: colorPalette.primary }} >
-                        {task.owner?.name}
-                      </b>
+                      <Tooltip title={task.description} >
+                        <p style={{ margin: 0 }} >
+                          {task.description?.length > 50 ? task.description.substring(0, 50) + '...' : task.description}
+                        </p>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell sx={tableCellStyle} >
+                      {task.person[0]?.firstName || 'None'}
+                    </TableCell>
+                    <TableCell sx={tableCellStyle} >
+                      {task.company[0]?.name || 'None'}
+                    </TableCell>
+                    <TableCell sx={tableCellStyle} >
+                      {task.owner?.name}
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
                       {task.dueDate}
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
-                      <Box sx={taskStatusStyle(task.status)} >
+                      <Box sx={{ ...taskStatusStyle(task.status), width: '70px', textAlign: 'center' }} >
                         <span >{task.status}</span>
                       </Box>
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
                       <IconButton onClick={() => handleTaskEdit(task)} size='small' >
-                        <EditIcon sx={{ color: colorPalette.fsGray }} />
+                        <EditIcon sx={{ color: colorPalette.fsGray, fontSize: '20px' }} />
                       </IconButton>
                       <IconButton onClick={() => handleDeleteClick(task.id)} size='small' >
-                        <DeleteIcon sx={{ color: colorPalette.fsGray }} />
+                        <DeleteIcon sx={{ color: colorPalette.fsGray, fontSize: '20px' }} />
                       </IconButton>
                     </TableCell>
                   </TableRow>

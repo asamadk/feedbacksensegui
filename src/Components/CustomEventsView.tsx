@@ -125,7 +125,7 @@ function CustomEventsView(props : {back : any}) {
                             <TableHead >
                                 <TableRow >
                                     {col?.map((column: string) => (
-                                        <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.secondary }} key={column}>
+                                        <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary }} key={column}>
                                             {column}
                                         </TableCell>
                                     ))}

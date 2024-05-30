@@ -1,7 +1,7 @@
 import { Box, Button, Grid, MenuItem, Select, Typography, styled } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { muiSelectStyle } from "../../Styles/InputStyles";
-import { handleUnAuth } from "../../Utils/FeedbackUtils";
+import { getAPIErrorMessage, handleUnAuth } from "../../Utils/FeedbackUtils";
 import FSLoader from "../FSLoader";
 import Notification from "../../Utils/Notification";
 import axios from "axios";
@@ -116,6 +116,7 @@ function CSVMapperComponent(props: { columns: string[], close: any,csv : string 
             setLoading(false);
             props.close(true);
         } catch (error) {
+            snackbarRef?.current?.show(getAPIErrorMessage(error),'error');
             setLoading(false);
             handleUnAuth(error);
         }

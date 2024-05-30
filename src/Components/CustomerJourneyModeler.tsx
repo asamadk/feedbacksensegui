@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, IconButton, Switch, TextField, Tooltip, Typograp
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { colorPalette } from '../Utils/Constants'
-import { globalSettingSubContainers } from '../Styles/LayoutStyles';
+import { globalSettingSubContainers, taskStatusStyle } from '../Styles/LayoutStyles';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { handleUnAuth } from '../Utils/FeedbackUtils';
 import { containedButton, outlinedButton } from '../Styles/ButtonStyle';
@@ -238,8 +238,8 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'Stage' | 'Onboar
                                 {
                                     !editMode &&
                                     <Tooltip title={stage.name} >
-                                        <Box sx={{ ...stageContainer(stage.position), padding: '5px 15px',cursor : 'pointer' }} >
-                                            <Typography fontSize={'13px'} >{stage.name}</Typography>
+                                        <Box sx={{...taskStatusStyle('Open'),height : '20px'}} >
+                                            <Typography fontWeight={600} fontSize={'13px'} >{stage.name}</Typography>
                                         </Box>
                                     </Tooltip>
 

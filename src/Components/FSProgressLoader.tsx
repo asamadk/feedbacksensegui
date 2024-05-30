@@ -11,9 +11,19 @@ function FSProgressLoader(props: any) {
                 >
                     <Box>
                         <Box sx={{borderRadius : '6px',padding : '10px',background : '#fff'}} >
-                            <Box display={'flex'} >
-                                <Typography marginTop={'8px'} marginRight={'10px'} color={colorPalette.darkBackground} >Powered By</Typography>
-                                <Typography variant='h4' color={colorPalette.darkBackground} >FeedbackSense</Typography>
+                            <Box display={'flex'} textAlign={'start'} >
+                                <Typography 
+                                    height={'15px'}
+                                    marginTop={'8px'}
+                                    marginRight={'10px'} 
+                                    fontSize={'12px'}
+                                    color={colorPalette.fsGray} 
+                                >Powered By</Typography>
+                                <Typography 
+                                    variant='h6'
+                                    fontWeight={600}
+                                    color={'#000000'}
+                                >FeedbackSense</Typography>
                             </Box>
                             <LinearProgress color="secondary" />
                         </Box>

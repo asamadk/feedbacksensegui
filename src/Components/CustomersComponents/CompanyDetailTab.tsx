@@ -1,5 +1,5 @@
-import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { Box, Chip, Grid, IconButton, Tooltip, Typography } from '@mui/material'
+import React, { useEffect, useRef, useState } from 'react'
 import KeyIcon from '@mui/icons-material/Key';
 import InfoIcon from '@mui/icons-material/Info';
 import TabIcon from '@mui/icons-material/Tab';
@@ -18,14 +18,14 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import SellIcon from '@mui/icons-material/Sell';
 import CreateTagModal from '../../Modals/ContactModals/CreateTagModal';
 import numeral from 'numeral';
-import { getHealthScoreName, getLineChartColor } from '../../Utils/FeedbackUtils';
+import { getHealthScoreName, getLineChartColor, handleUnAuth } from '../../Utils/FeedbackUtils';
 import EditIcon from '@mui/icons-material/Edit';
 import EditJourneyModal from '../../Modals/ContactModals/EditJourneyModal';
 import CompanyFieldTable from './CompanyFieldTable';
 import CompanyDetailHealthScore from './CompanyDetailHealthScore';
 import { getHealthScoreStyle } from '../../Styles/TableStyle';
 import axios from 'axios';
-import { getCompanyHealthHistoryURL } from '../../Utils/Endpoints';
+import { deleteTagURL, getCompanyHealthHistoryURL } from '../../Utils/Endpoints';
 import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import EditCompanyAttributeModal from './EditCompanyAttributeModal';
@@ -35,6 +35,9 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { companyFieldType } from '../../Utils/types';
 import FactoryIcon from '@mui/icons-material/Factory';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
+import AddIcon from '@mui/icons-material/Add';
+import Notification from '../../Utils/Notification';
+import FSLoader from '../FSLoader';
 
 const iconStyle = { fontWeight: 500, marginRight: '10px', color: colorPalette.fsGray };
 
@@ -51,10 +54,12 @@ const tagStyle = {
 
 function CompanyDetailTab({ company }: any) {
 
+  const snackbarRef: any = useRef(null);
+  const [loading, setLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showJourneyModal, setShowJourneyModal] = useState(false);
   const [details, setDetails] = useState<any[]>([]);
-  const [tagList, setTagList] = useState(company.tags);
+  const [tagList, setTagList] = useState<any[]>(company.tags);
   const [healthScoreData, setHealthScoreData] = useState<any[]>([]);
   const [healthScoreLoading, setHealthScoreLoading] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -169,7 +174,7 @@ function CompanyDetailTab({ company }: any) {
     tmp.push({
       icon: <PermContactCalendarIcon sx={iconStyle} />,
       label: 'Last Contact Date',
-      value: company.lastContactDate || 'None',
+      value: new Date(company.lastContactDate).toDateString() || 'None',
       edit: true,
       type: 'lastContactDate'
     });
@@ -190,11 +195,8 @@ function CompanyDetailTab({ company }: any) {
   }
 
 
-  function handleCreateModalClose(data: any) {
+  function handleCreateModalClose() {
     setShowCreateModal(false);
-    if (data.refresh === true) {
-      // fetchCompanies();
-    }
   }
 
   const blockStyle = {
@@ -226,13 +228,68 @@ function CompanyDetailTab({ company }: any) {
     }
   }
 
+  function handleCompanyJourneyUpdate(type: string, name: string) {
+    setShowJourneyModal(false);
+    switch (type) {
+      case 'Risk':
+        if (company.riskStage == null) {
+          company.riskStage = {};
+        }
+        company.riskStage.name = name;
+        break;
+      case 'Journey Stage':
+        if (company.stage == null) {
+          company.stage = {};
+        }
+        company.stage.name = name;
+        break;
+      case 'Onboarding':
+        if (company.onboardingStage == null) {
+          company.onboardingStage = {};
+        }
+        company.onboardingStage.name = name;
+        break;
+    }
+    populateAttributes();
+  }
+
   function handleCompanyUpdate(data: any) {
     setShowEdit(false);
     if (data == null) { return; }
-    for (const key in data) {
-      company[key] = data[key];
+    if (fieldType === 'owner') {
+      company.owner = {};
+      company.owner.name = data;
+    } else {
+      for (const key in data) {
+        company[key] = data[key];
+      }
     }
     populateAttributes();
+  }
+
+  function updateTagList(tag: any) {
+    handleCreateModalClose();
+    for (let i = 0; i < tagList.length; i++) {
+      const obj = tagList[i];
+      if (obj.name === tag?.name) {
+        return;
+      }
+    }
+    setTagList([...tagList, tag]);
+  }
+
+  async function handleTagDelete(tagId: number) {
+    try {
+      setLoading(true);
+      const { data } = await axios.delete(deleteTagURL(company.id, tagId), { withCredentials: true });
+      setTagList(tagList.filter(tag => tag.id !== tagId));
+      snackbarRef?.current?.show(data.message, 'success');
+      setLoading(false);
+    } catch (error) {
+      snackbarRef?.current?.show('Something went wrong', 'error');
+      setLoading(false);
+      handleUnAuth(error);
+    }
   }
 
   return (
@@ -250,7 +307,7 @@ function CompanyDetailTab({ company }: any) {
                   <Grid sx={{ display: 'flex' }} item xs>
                     <Typography
                       fontWeight={d.edit === true ? 600 : 500}
-                      sx={{ color: colorPalette.textPrimary, cursor: d.edit === true ? 'pointer' : 'default' }}
+                      sx={{ cursor: d.edit === true ? 'pointer' : 'default' }}
                       onClick={() => handleEditAttribute(d.edit, d.label, d.value, d.type)}
                     >{d.value}</Typography>
                   </Grid>
@@ -263,7 +320,7 @@ function CompanyDetailTab({ company }: any) {
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'start' }} >
               <Typography sx={{ textAlign: 'start' }} variant='h5' ><EmojiEventsIcon />Health</Typography>
-              <Box sx={{ ...getHealthScoreStyle(company.healthScore >= 0 ? company.healthScore : 'N/A'), margin: '5px' }} >
+              <Box sx={{ ...getHealthScoreStyle(company.healthScore >= 0 ? company.healthScore : 'None'), margin: '5px' }} >
                 {getHealthScoreName(company.healthScore)}
               </Box>
             </Box>
@@ -281,24 +338,33 @@ function CompanyDetailTab({ company }: any) {
             <Box sx={{ flexWrap: 'wrap' }} display={'flex'} padding={'10px'}>
               {
                 tagList?.map((tag: any) => (<>
-                  <Box sx={tagStyle}>
-                    {tag.name}
-                  </Box>
+                  <Chip
+                    sx={{ marginRight: '4px', marginTop: '5px' }}
+                    variant='outlined'
+                    label={tag.name}
+                    onDelete={() => handleTagDelete(tag.id)}
+                  />
                 </>))
               }
-              <Box onClick={() => setShowCreateModal(true)} sx={{ ...tagStyle, color: colorPalette.fsGray }}>
-                Add Tag +
-              </Box>
+              <Chip
+                clickable
+                onClick={() => setShowCreateModal(true)}
+                sx={{ marginRight: '4px', marginTop: '5px' }}
+                variant='filled'
+                label="Add Tags +"
+              />
             </Box>
           </Box>
         </Box>
       </Box>
-      {/* <Box>
-        <CompanyFieldTable companyId={company.id} />
-      </Box> */}
       {
         showCreateModal &&
-        <CreateTagModal companyId={company.id} open={showCreateModal} close={handleCreateModalClose} />
+        <CreateTagModal
+          companyId={company.id}
+          open={showCreateModal}
+          close={handleCreateModalClose}
+          update={updateTagList}
+        />
       }
       {
         showJourneyModal &&
@@ -308,6 +374,7 @@ function CompanyDetailTab({ company }: any) {
           field={selectedField}
           value={selectedFieldData}
           close={() => setShowJourneyModal(false)}
+          update={handleCompanyJourneyUpdate}
         />
       }
       {
@@ -321,6 +388,8 @@ function CompanyDetailTab({ company }: any) {
           update={handleCompanyUpdate}
         />
       }
+      <Notification ref={snackbarRef} />
+      <FSLoader show={loading} />
     </Box>
   )
 }

@@ -39,11 +39,6 @@ import TasksLayout from './Layout/TasksLayout';
 import NotificationsLayout from './Layout/NotificationsLayout';
 import CompanyDetailPage from './Components/CustomersComponents/CompanyDetailPage';
 import PersonDetailPage from './Components/CustomersComponents/PersonDetailPage';
-import ProductUsageConnect from './Components/ProductUsageConnect';
-import CustomEventsView from './Components/CustomEventsView';
-import CustomerJourneyModeler from './Components/CustomerJourneyModeler';
-import CompaniesComponent from './Components/CustomersComponents/CompaniesComponent';
-import PeopleComponent from './Components/CustomersComponents/PeopleComponent';
 
 function App() {
 

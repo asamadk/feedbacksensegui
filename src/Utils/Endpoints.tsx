@@ -310,6 +310,10 @@ export const getTagURL = () => {
     return `${BASE_URL}/tag/list`
 }
 
+export const deleteTagURL = (companyId : string,tagId : number) => {
+    return `${BASE_URL}/tag/remove?companyId=${companyId}&tagId=${tagId}`
+}
+
 export const createTaskURL = () => {
     return `${BASE_URL}/task/create`
 }
@@ -371,6 +375,10 @@ export const getUsageEventTypeURL = () => {
 
 export const createUsageEventTypeURL = () => {
     return `${BASE_URL}/usage-event-type/create`;
+}
+
+export const getUsageStatusURL = () => {
+    return `${BASE_URL}/usage-event/usage-status`;
 }
 
 export const deleteUsageEventTypeURL = (eventTypeId : string) => {

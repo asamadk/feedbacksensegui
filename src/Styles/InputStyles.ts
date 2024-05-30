@@ -1,7 +1,7 @@
 import { colorPalette } from "../Utils/Constants";
 
 export const muiSelectStyle = {
-    color: colorPalette.textPrimary,
+    // color: colorPalette.textPrimary,
     '& .MuiOutlinedInput-notchedOutline': {
         borderColor: colorPalette.textPrimary,
         border : `1px ${colorPalette.secondary} solid`,
@@ -13,7 +13,7 @@ export const muiSelectStyle = {
 
 export const textFieldStyle = {
     '& label.Mui-focused': {
-        color: colorPalette.primary,
+        // color: colorPalette.primary,
     },
     '& .MuiInput-underline:after': {
         borderBottomColor: colorPalette.primary,

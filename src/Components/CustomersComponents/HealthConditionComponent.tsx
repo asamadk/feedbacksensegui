@@ -108,6 +108,26 @@ function Value({ disabled, val, change, operator, metric }: { disabled: boolean,
             <CssTextField type={type} {...commonInputProps} value={val} />
         )
     }
+
+    const handleAutoCompleteSave = (e: any) => {
+        let value = e.target.value;
+        if(val.length > 0){
+            value = val + `,${value}`;
+        }else{
+            value = val + `${value}`;
+        }
+        change(value);
+    }
+
+    function handleChipDelete(value :any){
+        const valStr :any[]  =  val.split(',');
+        const newStr :string[] = [];
+        valStr.forEach(v => {
+            if(v !== value){newStr.push(v);}
+        });
+        change(newStr.join(','));
+    }
+
     function ListSelector() {
         return (
 
@@ -118,14 +138,15 @@ function Value({ disabled, val, change, operator, metric }: { disabled: boolean,
                     options={[]}
                     value={val?.length > 0 ? val?.split(',') : ''}
                     freeSolo
-                    onChange={(e: any) => change(e.target.value)}
+                    disabled={disabled}
+                    onChange={(e: any) => handleAutoCompleteSave(e)}
                     renderTags={(value, getTagProps) =>
                         value.map((option, index) => (
                             <Chip
                                 variant="outlined"
                                 label={option}
                                 {...getTagProps({ index })}
-                            // onDelete={(e) => otherProps.handleChipDelete(option, logic.id)}
+                                onDelete={(e) => handleChipDelete(option)}
                             />
                         ))
                     }

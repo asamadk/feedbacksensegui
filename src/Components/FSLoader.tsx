@@ -2,7 +2,7 @@ import { Backdrop, CircularProgress } from '@mui/material'
 import React from 'react'
 import { colorPalette } from '../Utils/Constants'
 
-function FSLoader(props: any) {
+function FSLoader(props: {show : boolean}) {
   return (
     <>
       {props.show && (

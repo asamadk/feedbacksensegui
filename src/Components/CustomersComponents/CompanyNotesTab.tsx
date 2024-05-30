@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Box, Button, Checkbox, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
+import { Box, Button, Checkbox, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
 import { containedButton } from '../../Styles/ButtonStyle'
 import { colorPalette } from '../../Utils/Constants'
 import EditIcon from '@mui/icons-material/Edit';
@@ -7,14 +7,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CreateNotesModal from '../../Modals/ContactModals/CreateNotesModal';
 import Notification from '../../Utils/Notification';
 import FSLoader from '../FSLoader';
-import { handleUnAuth } from '../../Utils/FeedbackUtils';
+import { getPersonName, handleUnAuth } from '../../Utils/FeedbackUtils';
 import axios from 'axios';
 import { deleteNotesURL, getNotesURL } from '../../Utils/Endpoints';
 import GenericModal from '../../Modals/GenericModal';
 import { tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 
 function CompanyNotesTab(props: { companyId: string | null, personId: string | null }) {
-  const col: string[] = ['Title', '', 'Company', 'Note Date', 'Action'];
+  const col: string[] = ['Title', 'Description', 'Person','Owner', 'Note Date', 'Action'];
   const [metrics, setMetrics] = useState<any[]>([]);
   const [notes, setNotes] = useState<any[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -47,7 +47,7 @@ function CompanyNotesTab(props: { companyId: string | null, personId: string | n
   async function fetchData() {
     try {
       setLoading(true);
-      const URL = getNotesURL(props.companyId,props.personId,page,20);
+      const URL = getNotesURL(props.companyId, props.personId, page, 20);
       const { data } = await axios.get(URL, { withCredentials: true });
       if (data.data) {
         const res = data.data;
@@ -138,7 +138,7 @@ function CompanyNotesTab(props: { companyId: string | null, personId: string | n
             <TableHead>
               <TableRow >
                 {col?.map((column: string) => (
-                  <TableCell sx={{ ...tableCellStyle,fontWeight: '600',backgroundColor : colorPalette.secondary }} key={column}>
+                  <TableCell sx={{ ...tableCellStyle, fontWeight: '600', backgroundColor: colorPalette.textSecondary }} key={column}>
                     {column}
                   </TableCell>
                 ))}
@@ -149,11 +149,21 @@ function CompanyNotesTab(props: { companyId: string | null, personId: string | n
                 notes?.map(note => (
                   <TableRow key={note?.id} >
                     <TableCell sx={tableCellStyle} >
-                      {note.title}
+                      <b>{note.title}</b>
                     </TableCell>
-                    <TableCell sx={tableCellStyle} > </TableCell>
                     <TableCell sx={tableCellStyle} >
-                      {note.company?.name}
+                      <Tooltip title={note.description} >
+                        <p style={{ margin: 0 }} >
+                          {note.description?.substring(0, 50)}
+                          {note.description?.length > 50 ? '...' : ''}
+                        </p>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell sx={tableCellStyle} >
+                      {getPersonName(note.person)}
+                    </TableCell>
+                    <TableCell sx={tableCellStyle} >
+                      {note?.owner?.name}
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
                       {new Date(note.created_at).toLocaleDateString()}
@@ -181,7 +191,6 @@ function CompanyNotesTab(props: { companyId: string | null, personId: string | n
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={() => { }}
-              sx={{ background: colorPalette.textSecondary }}
             />
           }
         </TableContainer>

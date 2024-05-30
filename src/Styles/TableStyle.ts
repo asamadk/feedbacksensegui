@@ -7,12 +7,15 @@ export const tableContainerStyle: SxProps<Theme> = {
   boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
   // border: 'none',
   backgroundColor: colorPalette.background,
-  borderRadius: '10px',
+  borderRadius: '3px',
   border: `1px ${colorPalette.textSecondary} solid`,
 }
 
 export const paginationStyle: SxProps<Theme> = {
-
+  position : 'fixed',
+  bottom : 0,
+  margin : '20px',
+  right : 0
 }
 
 export const tableVerticalBorder: SxProps<Theme> = {
@@ -20,7 +23,10 @@ export const tableVerticalBorder: SxProps<Theme> = {
 }
 
 export const tableCellStyle: SxProps<Theme> = {
-  border: 'none'
+  border: `1px ${colorPalette.textSecondary} solid`,
+  // borderRight : 'none',
+  // borderLeft : 'none',
+  padding : '6px 15px'
 }
 
 export const tableBodyText: SxProps<Theme> = {
@@ -51,13 +57,10 @@ export const getHealthScoreStyle = (count: number) => {
   }
   if (count === 0) {
     obj.background = '#ffb3b3';
-    // obj.color = '#800000';
   } else if (count === 50) {
     obj.background = '#ffe4b3';
-    // obj.color = '#e69500';
   } else {
     obj.background = '#CBF0CB';
-    // obj.color = '#008000'
   }
   obj.color = getHealthScoreColor(count);
   return obj;

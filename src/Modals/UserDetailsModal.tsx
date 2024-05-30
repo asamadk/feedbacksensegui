@@ -116,8 +116,8 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                                             onChange={handleOwnerChange}
                                         >
                                             {
-                                                roles?.map((role: string) => (
-                                                    <MenuItem value={role}>{role}</MenuItem>
+                                                roles?.map((role :any) => (
+                                                    <MenuItem value={role.value}>{role.key}</MenuItem>
                                                 ))
                                             }
                                         </Select>

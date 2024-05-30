@@ -1,10 +1,10 @@
-import { Box, Button, Checkbox, IconButton, Rating, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography, styled } from '@mui/material'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { Box, Button, Checkbox, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, styled } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 import BusinessIcon from '@mui/icons-material/Business';
 import SearchIcon from '@mui/icons-material/Search';
-import { colorPalette } from '../../Utils/Constants'
+import { colorPalette } from '../../Utils/Constants';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { containedButton, outlinedButton } from '../../Styles/ButtonStyle'
+import { containedButton, outlinedButton } from '../../Styles/ButtonStyle';
 import { textFieldStyle } from '../../Styles/InputStyles';
 import { useNavigate } from 'react-router';
 import CreateCompanyModal from '../../Modals/ContactModals/CreateCompanyModal';
@@ -13,10 +13,11 @@ import Notification from '../../Utils/Notification';
 import axios from 'axios';
 import { deleteCompanyURL, getCompanyListURL } from '../../Utils/Endpoints';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { getHealthScoreName, getLineChartColor, handleUnAuth } from '../../Utils/FeedbackUtils';
+import { getHealthScoreName, handleUnAuth } from '../../Utils/FeedbackUtils';
 import GenericModal from '../../Modals/GenericModal';
 import { genericModalData } from '../../Utils/types';
-import { getHealthScoreStyle, stageContainer, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
+import { getHealthScoreStyle, paginationStyle, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
+import { taskStatusStyle } from '../../Styles/LayoutStyles';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -25,18 +26,17 @@ const headerContainer = {
   display: 'flex',
   justifyContent: 'space-between',
   padding: '0px 20px',
-  paddingBottom : '10px'
-}
+  paddingBottom: '10px'
+};
 
 function CompaniesComponent() {
 
   const navigate = useNavigate();
 
-  const snackbarRef: any = useRef(null);
+  const snackbarRef :any = useRef(null);
 
-  const [loading, setLoading] = React.useState(false);
-  // const col: string[] = ['Name', 'Lifecycle Stage', 'Health Score','CSM Rating', 'Website', 'Action'];
-  const col: string[] = ['Name', 'Website', 'Health Score','Lifecycle Stage', 'Action'];
+  const [loading, setLoading] = useState(false);
+  const col: string[] = ['Name', 'Website','Contract Status','Owner', 'Health Score', 'Lifecycle Stage', 'Action'];
 
   const [companies, setCompanies] = useState<any[]>([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -44,34 +44,16 @@ function CompaniesComponent() {
   const [page, setPage] = useState(0);
   const [searchStr, setSearchStr] = useState('');
   const [showDeleteButton, setShowDeleteButton] = useState(false);
-  const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
-  const [showGenericModal, setShowGenericModal] = React.useState(false);
-
-  let init = false;
-
-  useEffect(() => {
-    if (init === false) {
-      fetchCompanies();
-      init = true;
-    }
-  }, []);
+  const [genericModalObj, setGenericModalObj] = useState<genericModalData>();
+  const [showGenericModal, setShowGenericModal] = useState(false);
 
   useEffect(() => {
     fetchCompanies();
-  }, [page])
+  }, [page, searchStr]);
 
   useEffect(() => {
-    let count = 0;
-    companies.forEach(c => {
-      if (c.checked === true) {
-        count++;
-      }
-    });
-    if (count > 0) {
-      setShowDeleteButton(true);
-    } else {
-      setShowDeleteButton(false);
-    }
+    const count = companies.filter(c => c.checked).length;
+    setShowDeleteButton(count > 0);
   }, [companies]);
 
   async function fetchCompanies() {
@@ -81,7 +63,7 @@ function CompaniesComponent() {
       if (data.data) {
         const res = data.data;
         setTotalCount(res.count);
-        setCompanies(res.list);
+        setCompanies(res?.list?.map((company: any) => ({ ...company, checked: false })));  // Ensure 'checked' field is initialized
       }
       setLoading(false);
     } catch (error) {
@@ -91,14 +73,9 @@ function CompaniesComponent() {
   }
 
   const handleCompanyDetailOpen = (id: any) => {
-    let selectedCompany;
-    companies.forEach(com => {
-      if (com.id === id) {
-        selectedCompany = com;
-      }
-    })
+    const selectedCompany = companies.find(com => com.id === id);
     navigate(`/contacts/companies/detail/${id}`, { state: selectedCompany });
-  }
+  };
 
   function handleCreateModalClose(data: any) {
     setShowCreateModal(false);
@@ -116,7 +93,7 @@ function CompaniesComponent() {
   };
 
   function handleSearch(e: any) {
-    const key = e.key
+    const key = e.key;
     if (key === 'Enter') {
       fetchCompanies();
     }
@@ -124,21 +101,17 @@ function CompaniesComponent() {
 
   function handleCheckboxChange(event: any, companyId: string) {
     const isChecked = event.target.checked;
-    let tmp: any[] = [];
+
     if (companyId === 'all') {
-      tmp = companies.map(comp => {
-        comp.checked = isChecked
-        return comp;
-      });
+      setCompanies(prevCompanies => prevCompanies.map(comp => ({
+        ...comp,
+        checked: isChecked
+      })));
     } else {
-      tmp = companies.map(comp => {
-        if (comp.id === companyId) {
-          comp.checked = isChecked
-        }
-        return comp;
-      });
+      setCompanies(prevCompanies => prevCompanies.map(comp =>
+        comp.id === companyId ? { ...comp, checked: isChecked } : comp
+      ));
     }
-    setCompanies(tmp);
   }
 
   function handleDeleteClick() {
@@ -150,18 +123,13 @@ function CompaniesComponent() {
       successButtonText: 'Delete',
       cancelButtonText: 'Cancel',
       type: 'home'
-    }
+    };
     setGenericModalObj(genDeleteObj);
   }
 
   async function handleSuccessButtonClick() {
     setShowGenericModal(false);
-    const deleteCompaniesList: string[] = [];
-    companies.forEach(c => {
-      if (c.checked === true) {
-        deleteCompaniesList.push(c.id);
-      }
-    });
+    const deleteCompaniesList: string[] = companies.filter(c => c.checked).map(c => c.id);
     try {
       setLoading(true);
       await axios.post(deleteCompanyURL(), deleteCompaniesList, { withCredentials: true });
@@ -175,9 +143,19 @@ function CompaniesComponent() {
     }
   }
 
+  function getColumnAlignment(column : string){
+    if(
+      column === 'checkbox' || column === 'Name' 
+      || column === 'Website' || column === 'Contract Status' || column === 'Owner'
+    ){
+      return 'start';
+    }
+    return 'center';
+  }
+
   return (
     <Box>
-      <Box sx={headerContainer} >
+      <Box sx={headerContainer}>
         <Box>
           <Button
             disabled={!showDeleteButton}
@@ -216,12 +194,15 @@ function CompaniesComponent() {
         </Box>
       </Box>
       <Box sx={{ padding: '10px 20px' }} >
-        <TableContainer id='company-table-container' sx={{ ...tableContainerStyle, height: 'calc(100vh - 95px)',marginTop : '10px' }} >
+        <TableContainer id='company-table-container' sx={{ ...tableContainerStyle, height: 'calc(100vh - 95px)', marginTop: '10px' }} >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                {col?.map((column: string) => (
-                  <TableCell sx={{ ...tableCellStyle, fontWeight: '600',background : colorPalette.secondary, textAlign: column === 'checkbox' || column === 'Name' ? 'start' : 'center' }} key={column}>
+                {col.map((column: string) => (
+                  <TableCell 
+                    sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary, textAlign: getColumnAlignment(column) }} 
+                    key={column}
+                  >
                     {
                       column !== 'Name' ? column :
                         <>
@@ -234,38 +215,39 @@ function CompaniesComponent() {
             </TableHead>
             <TableBody>
               {
-                companies?.map(company => (
+                companies.map(company => (
                   <TableRow key={company.id} >
                     <TableCell sx={tableCellStyle} >
                       <Checkbox
-                        checked={company?.checked}
+                        value={company.checked || false}
+                        checked={company.checked || false}
                         onChange={(e) => handleCheckboxChange(e, company.id)}
                         color='secondary'
                       />
-                      <b style={{ color: colorPalette.darkBackground }} >{company.name}</b>
+                      <b>{company.name}</b>
                     </TableCell>
-                    {/* <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
-                      {company.subscriptionPlan || 'N/A'}
-                    </TableCell> */}
-                    <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
+                    <TableCell sx={{ ...tableCellStyle, textAlign: 'start' }}>
                       {company.website}
                     </TableCell>
-                    <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
-                      <Box sx={getHealthScoreStyle(company.healthScore >= 0 ? company.healthScore : 'N/A')} >
+                    <TableCell sx={{ ...tableCellStyle, textAlign: 'start' }}>
+                      {company.contractStatus}
+                    </TableCell>
+                    <TableCell sx={{ ...tableCellStyle, textAlign: 'start' }}>
+                      {company?.owner?.name}
+                    </TableCell>
+                    <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }}>
+                      <Box sx={getHealthScoreStyle(company.healthScore >= 0 ? company.healthScore : 'None')}>
                         {getHealthScoreName(company.healthScore)}
                       </Box>
                     </TableCell>
-                    {/* <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
-                      <Rating defaultValue={company.csmRating} precision={1} />
-                    </TableCell> */}
-                    <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
-                      <Box sx={{...stageContainer(4),margin : 'auto'}} >
-                        {company?.stage?.name || 'N/A'}
+                    <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }}>
+                      <Box sx={{ ...taskStatusStyle('Open'), margin: 'auto', width: '100px', textOverflow: 'ellipsis' }}>
+                        {company?.stage?.name || 'None'}
                       </Box>
                     </TableCell>
-                    <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }} >
-                      <IconButton onClick={() => handleCompanyDetailOpen(company.id)} size='small' >
-                        <ArrowForwardIosIcon fontSize='small' />
+                    <TableCell sx={{ ...tableCellStyle, textAlign: 'center' }}>
+                      <IconButton onClick={() => handleCompanyDetailOpen(company.id)} size="small">
+                        <ArrowForwardIosIcon fontSize="small" />
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -282,6 +264,9 @@ function CompaniesComponent() {
               count={totalCount}
               rowsPerPage={20}
               page={page}
+              sx={paginationStyle}
+              showFirstButton={true}
+              showLastButton={true}
               onPageChange={handleChangePage}
               onRowsPerPageChange={() => { }}
             />
@@ -306,7 +291,7 @@ function CompaniesComponent() {
         callback={handleSuccessButtonClick}
       />
     </Box>
-  )
+  );
 }
 
-export default CompaniesComponent
+export default CompaniesComponent;
