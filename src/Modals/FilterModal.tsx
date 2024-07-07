@@ -44,7 +44,7 @@ function FilterModal(props: { open: boolean, close: any, update: any, data: any 
                         <Typography id="modal-modal-title" variant="h5" component="h2">Apply Filter</Typography>
                     </Box>
                     <Box sx={{ maxHeight: '400px', overflowY: 'scroll' }} >
-                        <ConditionBuilder/>
+                        {/* <ConditionBuilder/> */}
                     </Box>
                     <Box sx={modalButtonContainerStyle} >
                         <Button

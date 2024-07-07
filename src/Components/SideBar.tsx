@@ -2,9 +2,11 @@ import { Box, Tooltip, TooltipProps, styled, tooltipClasses } from '@mui/materia
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import GroupsIcon from '@mui/icons-material/Groups';
+import MergeIcon from '@mui/icons-material/Merge';
 import SegmentIcon from '@mui/icons-material/Segment';
 import AutoModeIcon from '@mui/icons-material/AutoMode';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
@@ -18,6 +20,7 @@ import { useNavigate } from 'react-router';
 import InviteMemberModal from '../Modals/InviteMemberModal';
 import SettingsModal from './SettingsModal';
 import { userRoleType } from '../Utils/types';
+import { colorPalette } from '../Utils/Constants';
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -32,7 +35,7 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 const SIDE_BAR_IDS = {
     SURVEYS: 'Surveys',
-    FLOWS: 'Flows',
+    FLOWS: 'Automation',
     CONTACTS: 'Contacts',
     SEGMENT: 'Segments',
     DASHBOARD: 'Dashboard',
@@ -93,11 +96,11 @@ function SideBar(props: any) {
     return (
         <Box className='sidebar-main-container' >
             <Box>
-                <Box className='sidebar-icon-container' >
-                    <LightTooltip title={''} placement="right-start" arrow>
-                        <img className='sidebar-icons logo' src='/logo-churn.png' alt='Logo' />
-                    </LightTooltip>
-                </Box>
+                {/* <Box className='sidebar-icon-container' >
+                    <Box sx={{backgroundColor : colorPalette.darkBackground,borderRadius : '6px'}} >
+                        <img className='sidebar-icons logo' src='/logo-churn-original.png' alt='Logo' />
+                    </Box>
+                </Box> */}
                 <Box className={sideBarPos === SIDE_BAR_IDS.DASHBOARD ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.DASHBOARD} placement="right-start" arrow>
                         <DashboardIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.DASHBOARD)} className='sidebar-icons' />
@@ -113,14 +116,15 @@ function SideBar(props: any) {
                         <SegmentIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.SEGMENT)} className='sidebar-icons' />
                     </LightTooltip>
                 </Box> */}
-                {/* <Box className={sideBarPos === SIDE_BAR_IDS.FLOWS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
-                    <LightTooltip title={SIDE_BAR_IDS.FLOWS} placement="right-start" arrow>
-                        <AutoModeIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.FLOWS)} className='sidebar-icons' />
-                    </LightTooltip>
-                </Box> */}
                 <Box className={sideBarPos === SIDE_BAR_IDS.TASKS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.TASKS} placement="right-start" arrow>
                         <FormatListBulletedIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.TASKS)} className='sidebar-icons' />
+                    </LightTooltip>
+                </Box>
+                <Box className={sideBarPos === SIDE_BAR_IDS.FLOWS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                    <LightTooltip title={SIDE_BAR_IDS.FLOWS} placement="right-start" arrow>
+                        {/* <MergeIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.FLOWS)} className='sidebar-icons' /> */}
+                        <AutoFixHighIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.FLOWS)} className='sidebar-icons' />
                     </LightTooltip>
                 </Box>
                 <Box className={sideBarPos === SIDE_BAR_IDS.SURVEYS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >

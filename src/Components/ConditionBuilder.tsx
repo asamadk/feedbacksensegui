@@ -1,190 +1,236 @@
-import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  MenuItem,
-  Select,
-  TextField,
-  Typography
-} from '@mui/material';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { Box, Button, Chip, IconButton, MenuItem, Select, TextField, styled } from '@mui/material';
 import { Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
+import { containedButton, outlinedButton } from '../Styles/ButtonStyle';
+import { modalContainerStyle } from '../Styles/ModalStyle';
+import { colorPalette, dateLiterals } from '../Utils/Constants';
+import { dateLiteralsOptions, fieldInputTypes, fieldOptions, selectOptions } from '../Utils/ConditionConstants';
+import { DatePicker } from '@mui/lab';
+import { textFieldStyle } from '../Styles/InputStyles';
 
-interface Condition {
-  id: number;
-  field: string;
-  operator: string;
-  value: string | number | boolean | Date;
-  logic: 'AND' | 'OR';
+const conditionGroupContainer = {
+  ...modalContainerStyle,
+  marginTop: '10px',
+  boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
 }
 
-const fields = [
-  { name: 'name', label: 'Name', type: 'text' },
-  { name: 'website', label: 'Website', type: 'text' },
-  { name: 'industry', label: 'Industry', type: 'text' },
-  {
-    name: 'contractStatus',
-    label: 'Contract Status',
-    type: 'select',
-    options: ['Paying', 'Free']
-  },
-  {
-    name: 'status',
-    label: 'Status',
-    type: 'select',
-    options: [
-      'Active', 'Inactive', 'Verified', 'Unverified', 
-      'Compliant', 'Non-Compliant', 'Good Standing', 'Delinquent'
-    ]
-  },
-  { name: 'startDate', label: 'Start Date', type: 'date' },
-  { name: 'nextRenewalDate', label: 'Next Renewal Date', type: 'date' },
-  { name: 'totalContractAmount', label: 'Total Contract Amount', type: 'number' },
-  { name: 'lastActivityDate', label: 'Last Activity Date', type: 'date' },
-  { name: 'licenseCount', label: 'License Count', type: 'number' },
-  { name: 'subscriptionPlan', label: 'Subscription Plan', type: 'text' },
-  { name: 'address', label: 'Address', type: 'text' },
-  { name: 'healthScore', label: 'Health Score', type: 'number' },
-  { name: 'attributeHealthScore', label: 'Attribute Health Score', type: 'text' },
-  { name: 'npsScore', label: 'NPS Score', type: 'number' },
-  { name: 'csatScore', label: 'CSAT Score', type: 'number' },
-  { name: 'avgNpsScore', label: 'Avg NPS Score', type: 'number' },
-  { name: 'avgCsatScore', label: 'Avg CSAT Score', type: 'number' },
-  { name: 'churnRiskLevel', label: 'Churn Risk Level', type: 'text' },
-  { name: 'usageFrequency', label: 'Usage Frequency', type: 'text' },
-  { name: 'lastContactDate', label: 'Last Contact Date', type: 'date' },
-  { name: 'onboardingCompletionStatus', label: 'Onboarding Completion Status', type: 'text' }
-];
+const CssTextField = styled(TextField)(textFieldStyle);
 
-const operators :any = {
-  text: ['equals', 'not equals', 'contains', 'does not contain'],
-  number: ['equals', 'not equals', 'greater than', 'less than'],
-  date: ['equals', 'not equals', 'before', 'after'],
-  select: ['equals', 'not equals']
-};
+interface ConditionBuilderProps {
+  recordType: string;
+  data :any
+}
 
-const QueryBuilder: React.FC = () => {
-  const [conditions, setConditions] = useState<Condition[]>([
-    { id: Date.now(), field: '', operator: '', value: '', logic: 'AND' }
-  ]);
+export interface ConditionBuilderRef {
+  getState: () => any;
+}
 
-  const addCondition = () => {
-    setConditions([
-      ...conditions,
-      { id: Date.now(), field: '', operator: '', value: '', logic: 'AND' }
-    ]);
+
+
+const ConditionBuilder = forwardRef<ConditionBuilderRef, ConditionBuilderProps>(({ recordType,data }, ref) => {
+
+  const [conditions, setConditions] = useState<any[][]>([[]]);
+
+  const operators = ['Equal', 'Not Equals', 'Less Than', 'Greater That', 'Less Than or Equal', 'Greater Than or Equal', 'Contains'];
+
+  useImperativeHandle(ref, () => ({
+    getState: () => conditions,
+  }));
+
+  useEffect(() => {
+    if(data){
+      setConditions(data || [[]]);
+    }
+  },[data]);
+
+  function addGroupCondition() {
+    const tmp = JSON.parse(JSON.stringify(conditions));
+    tmp.push([]);
+    setConditions(tmp);
+  }
+
+  function addCondition(index: number) {
+    const tmp: any[][] = JSON.parse(JSON.stringify(conditions));
+    tmp[index].push({});
+    setConditions(tmp);
+  }
+
+  function removeCondition(index: number) {
+    const tmp: any[][] = JSON.parse(JSON.stringify(conditions));
+    tmp.splice(index, 1);
+    setConditions(tmp);
+  }
+
+  function removeSingleCondition(indexMain: number, indexSub: number) {
+    const tmp: any[][] = JSON.parse(JSON.stringify(conditions));
+    tmp[indexMain].splice(indexSub, 1);
+    setConditions(tmp);
+  }
+
+  function addData(indexMain: number, indexSub: number, data: any, type: 'field' | 'operator' | 'value') {
+    const tmp: any[][] = JSON.parse(JSON.stringify(conditions));
+    tmp[indexMain][indexSub][type] = data;
+    if (tmp[indexMain][indexSub]['where'] == null) {
+      tmp[indexMain][indexSub]['where'] = 'AND'
+    }
+    setConditions(tmp);
+  }
+
+  function changeWhere(indexMain: number, indexSub: number) {
+    const tmp: any[][] = JSON.parse(JSON.stringify(conditions));
+    if (tmp[indexMain][indexSub]['where'] == 'AND') {
+      tmp[indexMain][indexSub]['where'] = 'OR';
+    } else {
+      tmp[indexMain][indexSub]['where'] = 'AND';
+    }
+    setConditions(tmp);
+  }
+
+  const renderValueInput = (indexMain: number, indexSub: number) => {
+    const inputType = fieldInputTypes[recordType][conditions[indexMain][indexSub]['field']];
+
+    switch (inputType) {
+      case 'select':
+        return (
+          <Select
+            sx={{ width: '30%' }}
+            size='small'
+            value={conditions[indexMain][indexSub]['value']}
+            onChange={(e) => addData(indexMain, indexSub, e.target.value, 'value')}
+            displayEmpty
+          >
+            <MenuItem value="" disabled>Select Value</MenuItem>
+            {selectOptions[recordType][conditions[indexMain][indexSub]['field']].map((option: any) => (
+              <MenuItem key={option} value={option}>{option}</MenuItem>
+            ))}
+          </Select>
+        );
+      case 'date':
+        return (
+          <Select
+            sx={{ width: '30%' }}
+            size='small'
+            value={conditions[indexMain][indexSub]['value']}
+            onChange={(e) => addData(indexMain, indexSub, e.target.value, 'value')}
+            displayEmpty
+          >
+            <MenuItem value="" disabled>Select Value</MenuItem>
+            {dateLiteralsOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+            ))}
+          </Select>
+        );
+      case 'number':
+        return (
+          <CssTextField
+            sx={{ width: '30%' }}
+            size='small'
+            type="number"
+            value={conditions[indexMain][indexSub]['value']}
+            onChange={(e) => addData(indexMain, indexSub, e.target.value, 'value')}
+            placeholder="Value"
+          />
+        );
+      default:
+        return (
+          <CssTextField
+            size='small'
+            value={conditions[indexMain][indexSub]['value']}
+            onChange={(e) => addData(indexMain, indexSub, e.target.value, 'value')}
+            placeholder="Value"
+          />
+        );
+    }
   };
 
-  const removeCondition = (id: number) => {
-    setConditions(conditions.filter(cond => cond.id !== id));
-  };
+  function Condition(showChip: boolean, indexMain: number, indexSub: number, onRemove: any) {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: '10px' }}>
+        <Select
+          sx={{ width: '30%' }}
+          size='small'
+          value={conditions[indexMain][indexSub]['field']}
+          onChange={(e) => addData(indexMain, indexSub, e.target.value, 'field')}
+          displayEmpty
+        >
+          <MenuItem value="" disabled>Select Field</MenuItem>
+          {fieldOptions[recordType].map((option: any) => (
+            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+          ))}
+        </Select>
 
-  const updateCondition = (id: number, key: string, value: any) => {
-    setConditions(conditions.map(cond =>
-      cond.id === id ? { ...cond, [key]: value } : cond
-    ));
-  };
-
-  const handleApplyConditions = () => {
-    console.log('Conditions:', conditions);
-    // Here, you would typically send the conditions to your backend
-  };
+        <Select
+          sx={{ width: '20%' }}
+          size='small'
+          value={conditions[indexMain][indexSub]['operator']}
+          onChange={(e) => addData(indexMain, indexSub, e.target.value, 'operator')}
+          displayEmpty
+        >
+          <MenuItem value="" disabled>Select Operator</MenuItem>
+          {operators.map((op) => (
+            <MenuItem key={op} value={op}>{op}</MenuItem>
+          ))}
+        </Select>
+        {renderValueInput(indexMain, indexSub)}
+        <IconButton onClick={() => onRemove()}><RemoveIcon /></IconButton>
+        {showChip && <WhereClause change={() => changeWhere(indexMain, indexSub)} type={conditions[indexMain][indexSub]['where'] || 'AND'} />}
+      </Box>
+    )
+  }
 
   return (
-    <Box className="container">
-      {conditions.map((cond, index) => (
-        <Grid container spacing={2} alignItems="center" key={cond.id}>
-          <Grid item xs={2}>
-            <Select
-              fullWidth
-              value={cond.field}
-              onChange={e => updateCondition(cond.id, 'field', e.target.value)}
-            >
-              {fields.map(field => (
-                <MenuItem key={field.name} value={field.name}>
-                  {field.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </Grid>
-          <Grid item xs={2}>
-            <Select
-              fullWidth
-              value={cond.operator}
-              onChange={e => updateCondition(cond.id, 'operator', e.target.value)}
-            >
-              {(operators[fields.find(field => field.name === cond.field)?.type || 'text'] || []).map((op :any) => (
-                <MenuItem key={op} value={op}>
-                  {op}
-                </MenuItem>
-              ))}
-            </Select>
-          </Grid>
-          <Grid item xs={3}>
-            {fields.find(field => field.name === cond.field)?.type === 'select' ? (
-              <Select
-                fullWidth
-                value={cond.value}
-                onChange={e => updateCondition(cond.id, 'value', e.target.value)}
-              >
-                {(fields.find(field => field.name === cond.field)?.options || []).map(option => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Select>
-            ) : (
-              <TextField
-                fullWidth
-                type={fields.find(field => field.name === cond.field)?.type || 'text'}
-                value={cond.value}
-                onChange={e => updateCondition(cond.id, 'value', e.target.value)}
-              />
-            )}
-          </Grid>
-          {index > 0 && (
-            <Grid item xs={1}>
-              <Select
-                fullWidth
-                value={cond.logic}
-                onChange={e => updateCondition(cond.id, 'logic', e.target.value)}
-              >
-                <MenuItem value="AND">AND</MenuItem>
-                <MenuItem value="OR">OR</MenuItem>
-              </Select>
-            </Grid>
-          )}
-          <Grid item xs={1}>
-            <IconButton
-              color="secondary"
-              onClick={() => removeCondition(cond.id)}
-            >
-              <RemoveIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ))}
-      <Box mt={2}>
-        <Button
-          variant="outlined"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={addCondition}
-        >
-          Add Condition
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginLeft: 16 }}
-          onClick={handleApplyConditions}
-        >
-          Apply Conditions
-        </Button>
+    <Box color={'black'} className="container">
+      <Box>
+        {
+          conditions?.map((condition, index) => <>
+            <Box sx={conditionGroupContainer} >
+              {
+                condition.map((singleCondition, pos) => <Box>
+                  {Condition(
+                    pos < condition.length - 1,
+                    index,
+                    pos,
+                    () => removeSingleCondition(index, pos),
+                  )}
+                </Box>)
+              }
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
+                <Button
+                  onClick={() => addCondition(index)}
+                  size='small'
+                  sx={{ ...outlinedButton, width: 'fit-content' }}
+                >
+                  Add Condition
+                </Button>
+                {/* <Button
+                  onClick={() => removeCondition(index)}
+                  size='small'
+                  sx={{ ...outlinedButton, width: 'fit-content' }}
+                >
+                  Remove
+                </Button> */}
+              </Box>
+            </Box>
+            {/* {
+              index < conditions.length - 1 &&
+              <WhereClause change={() => changeWhere(index,pos)} type='AND' />
+            } */}
+          </>)
+        }
       </Box>
+      {/* <Box justifyContent={'center'} display={'flex'} >
+        <Button onClick={addGroupCondition} size='small' sx={{ ...containedButton, width: 'fit-content' }} >Add Group Condition</Button>
+      </Box> */}
     </Box>
   );
-};
+});
 
-export default QueryBuilder;
+export default ConditionBuilder;
+
+function WhereClause(props: { type: 'AND' | 'OR', change: any }) {
+  return (
+    <Box sx={{ padding: '5px', width: 'fit-content', margin: 'auto', marginTop: '10px' }} >
+      <Chip onClick={props.change} sx={{ cursor: 'pointer' }} size='small' color='secondary' variant='outlined' label={props.type} />
+    </Box>
+  )
+}

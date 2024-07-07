@@ -20,7 +20,7 @@ function ShareSurvey() {
   const { surveyId } = useParams();
   const qrCodeRef = useRef<any>(null);
 
-  let integrationCode = `<!-- Start of feedbacksense (www.feedbacksense.com) code --> 
+  let integrationCode = `<!-- Start of RetainSense (www.retainsense.com) code --> 
   <script type='text/javascript'> 
     (function(w) {var s = document.createElement('script');
       s.src = '${BASE_URL}/live/web-surveys/${surveyId}';
@@ -29,7 +29,7 @@ function ShareSurvey() {
       e.parentNode.insertBefore(s, e);
     })(window);
   </script>
-  <!-- End of feedbacksense code -->`;
+  <!-- End of RetainSense code -->`;
 
   const col = ['Person\'s Name','Company Name','Action'];
   const [open, setOpen] = React.useState(false);

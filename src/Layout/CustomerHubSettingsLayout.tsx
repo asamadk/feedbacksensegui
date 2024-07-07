@@ -46,7 +46,7 @@ function CustomerHubSettingsLayout() {
                     <Box textAlign={'start'} >
                         <Typography fontWeight={600} >Product Usage</Typography>
                         <Typography sx={{ color: colorPalette.fsGray, fontSize: '13px' }} >
-                            Automate your data streaming to feedbacksense by using feedbacksense's own tracking system
+                            Automate your data streaming to RetainSense by using RetainSense's own tracking system
                         </Typography>
                     </Box>
                     <Box>

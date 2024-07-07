@@ -187,16 +187,80 @@ export const validateFlowComponent = (data: any, componentId: number | undefined
                 return 'Important: Don\'t forget to fill in the question field.'
             }
 
-            // if (data.leftText == null || data.leftText?.length < 1) {
-            //     return 'Left text field cannot be empty.'
-            // }
-
-            // if (data.rightText == null || data.rightText?.length < 1) {
-            //     return 'Right text field cannot be empty.'
-            // }
             break;
         case 14:
             return 'Important : Please update the selector node.';
+        case 15:
+        case 16:
+            if (data.insertType === 'some') {
+                const conditions: any[][] = data.conditionBlock || [[]];
+                if (conditions.length < 1) { return 'Incorrect condition'; }
+                if (conditions[0].length < 1) { return 'Incorrect condition'; }
+                for (let i = 0; i < conditions.length; i++) {
+                    const condition = conditions[i];
+                    for (let j = 0; j < condition.length; j++) {
+                        const singleCond = condition[j];
+                        if (
+                            singleCond == null ||
+                            singleCond?.field == null || singleCond?.field.length < 1 ||
+                            singleCond?.operator == null || singleCond?.operator.length < 1 ||
+                            singleCond?.value == null || singleCond?.value.length < 1 ||
+                            singleCond?.where == null || singleCond?.where.length < 1
+                        ) {
+                            return 'Incorrect condition'
+                        }
+                    }
+                }
+            }
+            break;
+        case 18:
+            if (data?.days == null || data?.days === 0) {
+                return 'Please select number of days.'
+            }
+            break;
+        case 19:
+            if (
+                data == null ||
+                data.title == null || data.title.length < 1 ||
+                data.owner == null || data.owner.length < 1 ||
+                data.priority == null || data.priority.length < 1 ||
+                data.dueDate == null || data.dueDate.length < 1
+            ) {
+                return 'Please fill all the fields';
+            }
+            break;
+        case 20:
+            if (
+                data == null ||
+                data?.subject == null || data?.subject?.length < 1 ||
+                data?.body == null || data?.body?.length < 1
+            ) {
+                return 'Please fill all the fields';
+            }
+            break;
+        case 21:
+            if (data?.owner == null || data?.owner.length < 1) {
+                return 'Please select an owner.';
+            }
+            break;
+        case 22:
+            if (data.fields == null || data.fields.length < 1) { return 'Incorrect values'; }
+            const fields: { field: string, value: string }[] = data.fields;
+            for (let i = 0; i < fields.length; i++) {
+                const tmp = fields[i];
+                if(
+                    tmp.field == null || tmp.field.length < 1 ||
+                    tmp.value == null || tmp.value.length < 1
+                ){
+                    return 'Please fill all the value';
+                }
+            }
+            break;
+        case 24:
+            if(data.survey == null || data.survey.length < 1){
+                return 'Please select a survey';
+            }
+            break;
         default:
             break;
     }
@@ -296,10 +360,10 @@ export const getSurveyUserInformation = () => {
     const details = {
         userAgent: window.navigator.userAgent,
         languages: window.navigator.languages,
-        platform : {
-            os : platform.os,
-            browser : platform.name,
-            product : platform.product
+        platform: {
+            os: platform.os,
+            browser: platform.name,
+            product: platform.product
         }
     }
     return details;
@@ -349,7 +413,7 @@ export const getIconColorById = (id: number): string => {
     } else if (id === 13) {
         return '#5F4444';
     }
-    return colorPalette.darkBackground;
+    return colorPalette.primary;
 }
 
 export const getComponentNameById = (id: number): string => {
@@ -492,57 +556,66 @@ export const getTwelveMonthAgoDate = () => {
     return twelveMonthAgo.toLocaleDateString('en-US');
 }
 
-export function getPersonName(person : any) : string{
+export function getPersonName(person: any): string {
     let name = 'N/A';
-    if(person == null){return name}
-    if(person.firstName != null && person.firstName.length > 0){
+    if (person == null) { return name }
+    if (person.firstName != null && person.firstName.length > 0) {
         name = person.firstName;
     }
-    if(person.lastName != null && person.lastName.length > 0){
+    if (person.lastName != null && person.lastName.length > 0) {
         name = `${name} ${person.lastName}`;
     }
     return name;
 }
 
-export function getLineChartColor(index : number) :string{
-    if(index === 0){
+export function getLineChartColor(index: number): string {
+    if (index === 0) {
         return colorPalette.primary
-    }else if(index === 1){
+    } else if (index === 1) {
         return colorPalette.darkBackground
-    }else if(index === 2){
+    } else if (index === 2) {
         return '#8481DD'
-    }else if(index === 3){
+    } else if (index === 3) {
         return colorPalette.fsGray
-    }else if(index === 4){
+    } else if (index === 4) {
         return '#a674e9'
-    }else if(index === 5){
+    } else if (index === 5) {
         return '#C9190B'
-    }else if(index === 6){
+    } else if (index === 6) {
         return '#8481DD'
-    }else if(index === 7){
+    } else if (index === 7) {
         return '#8F4700'
-    }else if(index === 8){
+    } else if (index === 8) {
         return '#7D1007'
-    }else if(index === 9){
+    } else if (index === 9) {
         return '#003737'
-    }else if(index === 10){
+    } else if (index === 10) {
         return '#38812F'
     }
     return colorPalette.fsGray
 }
 
-export function getHealthScoreName(count : number){
-    if(count === 0){
+export function getHealthScoreName(count: number) {
+    if (count === 0) {
         return 'Poor';
-    }else if(count === 50){
+    } else if (count === 50) {
         return 'Average';
-    }else if(count === 100){
+    } else if (count === 100) {
         return 'Good';
-    }else{
+    } else {
         return 'None'
     }
 }
 
-export function getAPIErrorMessage(error :any) :string{
+export function getAPIErrorMessage(error: any): string {
     return error?.response?.data?.message || ''
+}
+
+export function getEmailRecipientDesc(recordType: string): string {
+    if (recordType === 'task') {
+        return `Email will be sent to company's person of contact`;
+    } else if (recordType === 'person') {
+        return `Email will be send to person's email`;
+    }
+    return `Email will be sent to company's person of contact`
 }

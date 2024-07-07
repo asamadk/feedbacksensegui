@@ -20,6 +20,8 @@ import { peopleReducer } from "./Reducers/peopleOptionReducer";
 import { journeyReducer } from "./Reducers/journeyStageReducer";
 import { journeySubStageReducer } from "./Reducers/journeySubStageReducer";
 import { riskStageReducer } from "./Reducers/riskStageReducer";
+import { loadingReducer } from "./Reducers/LoadingReducer";
+import { notificationReducer } from "./Reducers/NotificationReducer";
 
 const store = configureStore({
 	reducer: {
@@ -43,7 +45,9 @@ const store = configureStore({
 		people : peopleReducer,
 		stage: journeyReducer,
 		subStage : journeySubStageReducer,
-		riskStage : riskStageReducer
+		riskStage : riskStageReducer,
+		loading: loadingReducer,
+        notification: notificationReducer,
 	},
 	devTools: true,
 });

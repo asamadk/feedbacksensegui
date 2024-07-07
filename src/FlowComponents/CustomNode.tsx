@@ -2,18 +2,20 @@ import React, { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import NodeComponent from './NodeComponent';
 
-// export default memo(({ data, isConnectable, onNodeSelection, config,edges }: any) => {
-function CustomNode({ data, isConnectable, onNodeSelection, config, edges, onDelete }: any) {
+function CustomNode({ data, isConnectable, onNodeSelection, config, edges, onDelete, source }: any) {
 
   return (
     <>
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ background: '#555', width: '10px', height: '10px' }}
-        onConnect={(params) => console.log('handle onConnect', params)}
-        isConnectable={isConnectable}
-      />
+      {
+        data.compId !== 15 && data.compId !== 16 &&
+        <Handle
+          type="target"
+          position={Position.Top}
+          style={{ background: '#555', width: '10px', height: '10px' }}
+          onConnect={(params) => console.log('handle onConnect', params)}
+          isConnectable={isConnectable}
+        />
+      }
       <div>
         <NodeComponent
           delete={onDelete}
@@ -25,6 +27,7 @@ function CustomNode({ data, isConnectable, onNodeSelection, config, edges, onDel
           onNodeSelection={onNodeSelection}
           config={config}
           edges={edges}
+          source={source}
         />
       </div>
 

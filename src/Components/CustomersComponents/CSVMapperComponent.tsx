@@ -128,7 +128,7 @@ function CSVMapperComponent(props: { columns: string[], close: any,csv : string 
         <>
             <Grid container rowSpacing={1} sx={{ textAlign: 'center' }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid item xs={6}>
-                    <Typography fontWeight={600} >FeedbackSense Company's Field</Typography>
+                    <Typography fontWeight={600} >RetainSense Company's Field</Typography>
                 </Grid>
                 <Grid item xs={6}>
                     <Typography fontWeight={600} >CSV Fields</Typography>
@@ -141,7 +141,7 @@ function CSVMapperComponent(props: { columns: string[], close: any,csv : string 
                                     size='small'
                                     fullWidth
                                     value={selectFsField[index]}
-                                    placeholder="FeedbackSense Field"
+                                    placeholder="RetainSense Field"
                                     onChange={(e) => handleFSFieldSelect(e, index)}
                                 >
                                     {

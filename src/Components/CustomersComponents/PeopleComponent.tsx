@@ -159,7 +159,7 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
         <Box>
             <Box sx={headerContainer} >
                 <Box>
-                    <Button
+                    {/* <Button
                         disabled={!showDeleteButton}
                         className='create-new-survey-button'
                         sx={outlinedButton}
@@ -169,7 +169,7 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                         onClick={handleDeleteClick}
                     >
                         Delete
-                    </Button>
+                    </Button> */}
                 </Box>
                 <Box>
                     <CssTextField
@@ -192,12 +192,15 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                     >
                         Create Person
                     </Button>
+                    <IconButton onClick={handleDeleteClick} sx={{ marginTop: '10px' }} disabled={!showDeleteButton} >
+                        <DeleteIcon />
+                    </IconButton>
                 </Box>
             </Box>
             <Box sx={{ padding: '20px' }} >
                 <TableContainer
                     className='person-table-container'
-                    sx={{ ...tableContainerStyle, height: 'calc(100vh - 95px)' }}
+                    sx={{ ...tableContainerStyle, height: 'calc(100vh - 145px)' }}
                 >
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
@@ -234,7 +237,7 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                                             <Typography sx={tableBodyText} >{person.email}</Typography>
                                         </TableCell>
                                         <TableCell sx={tableCellStyle} >
-                                            <Typography sx={{ ...tableBodyText}} >
+                                            <Typography sx={{ ...tableBodyText }} >
                                                 {person.company.name}
                                             </Typography>
                                         </TableCell>

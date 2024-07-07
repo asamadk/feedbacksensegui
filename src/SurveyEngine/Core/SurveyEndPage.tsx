@@ -45,7 +45,7 @@ function CreateOwnSurvey(){
     return(
         <Box marginTop={'20px'} color={'#f1f1f1'} >
             <Typography color={colorPalette.darkBackground} fontSize={20} >Want to create your own surveys?</Typography>
-            <Typography color={'#808080'} fontSize={14} >See how easy it is to get feedback using FeedbackSense</Typography>
+            <Typography color={'#808080'} fontSize={14} >See how easy it is to get feedback using RetainSense</Typography>
             <Button onClick={handleCreateSurvey} sx={ButtonStyles.containedButton} style={{width : 'fit-content'}} >
                 {'Create your own survey'}
             </Button>

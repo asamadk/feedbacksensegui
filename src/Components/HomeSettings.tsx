@@ -37,7 +37,7 @@ function HomeSettings(props : {click :any}) {
             <Box sx={{ textAlign: 'start' }} >
                 <Typography fontWeight={600} variant='h6' >Home</Typography>
                 <Typography sx={{ fontSize: '13px', color: colorPalette.fsGray }} >
-                    To get the most out of feedbacksense, please use these quick links
+                    To get the most out of RetainSense, please use these quick links
                 </Typography>
             </Box>
 
@@ -72,7 +72,7 @@ function HomeSettings(props : {click :any}) {
                             </Box>
                             <Box margin={'auto 10px'} >
                                 <Typography fontWeight={600} >Invite Teammate</Typography>
-                                <Typography fontSize={'13px'} >Invite your team to join feedbacksense</Typography>
+                                <Typography fontSize={'13px'} >Invite your team to join RetainSense</Typography>
                             </Box>
                         </Box>
                     </Grid>

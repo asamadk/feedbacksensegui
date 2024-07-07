@@ -93,7 +93,7 @@ function OrgTeamMatesSettings() {
       warning: 'Warning: There\'s no turning back! I acknowledge that',
       successButtonText: 'Delete',
       cancelButtonText: 'Cancel',
-      description: 'The user will be removed from FeedbackSense.',
+      description: 'The user will be removed from RetainSense.',
       type: 'delete',
       data: {
         userId: userId

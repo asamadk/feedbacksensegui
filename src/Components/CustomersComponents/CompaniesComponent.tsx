@@ -24,7 +24,7 @@ const CssTextField = styled(TextField)(textFieldStyle);
 const headerContainer = {
   borderBottom: `1px ${colorPalette.textSecondary} solid`,
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'end',
   padding: '0px 20px',
   paddingBottom: '10px'
 };
@@ -157,19 +157,6 @@ function CompaniesComponent() {
     <Box>
       <Box sx={headerContainer}>
         <Box>
-          <Button
-            disabled={!showDeleteButton}
-            className='create-new-survey-button'
-            sx={outlinedButton}
-            style={{ width: 'fit-content', textTransform: 'none' }}
-            startIcon={<DeleteIcon />}
-            variant='outlined'
-            onClick={handleDeleteClick}
-          >
-            Delete
-          </Button>
-        </Box>
-        <Box>
           <CssTextField
             size='small'
             sx={{ input: { color: colorPalette.darkBackground }, marginTop: '10px' }}
@@ -191,10 +178,13 @@ function CompaniesComponent() {
           >
             Create Company
           </Button>
+          <IconButton onClick={handleDeleteClick} sx={{marginTop : '10px'}} disabled={!showDeleteButton} >
+            <DeleteIcon/>
+          </IconButton>
         </Box>
       </Box>
       <Box sx={{ padding: '10px 20px' }} >
-        <TableContainer id='company-table-container' sx={{ ...tableContainerStyle, height: 'calc(100vh - 95px)', marginTop: '10px' }} >
+        <TableContainer id='company-table-container' sx={{ ...tableContainerStyle, height: 'calc(100vh - 145px)', marginTop: '10px' }} >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>

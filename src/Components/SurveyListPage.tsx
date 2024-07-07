@@ -38,7 +38,7 @@ const surveyPageMainContainer = {
 
 const leftSectionStyle: any = {
     height: '100vh',
-    background: colorPalette.secondary,
+    background: colorPalette.textSecondary,
     display: 'flex',
     width: '18%',
     flexDirection: 'column',
@@ -106,7 +106,7 @@ function SurveyListPage() {
                 content:
                     <>
                         <h2>Welcome to Feedback Sense,</h2>
-                        <p>Take a quick look around FeedbackSense with our short tutorial </p>
+                        <p>Take a quick look around RetainSense with our short tutorial </p>
                     </>,
                 locale: { skip: <strong aria-label="skip">SKIP</strong> },
                 placement: 'center',
@@ -473,7 +473,7 @@ function SurveyListPage() {
                                 +
                             </Typography>
                         </div>
-                        <div style={allSurveyFolder(colorPalette.secondary)} className="all-folders-data" onClick={handleAllFolderClick} >
+                        <div style={allSurveyFolder(colorPalette.textSecondary)} className="all-folders-data" onClick={handleAllFolderClick} >
                             <Typography style={{ pointerEvents: 'none' }} variant='subtitle2' >All Surveys</Typography>
                         </div>
                         {

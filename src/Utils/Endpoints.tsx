@@ -432,3 +432,15 @@ export const createHealthConfigURL = () => {
 export const getClientCompassURL = (date :string,type : 'all' | 'my') => {
     return `${BASE_URL}/dashboard/client-compass?date=${date}&type=${type}`
 }
+
+export const endpoints = {
+    flows : {
+        get : `${BASE_URL}/flow/all`,
+        create : `${BASE_URL}/flow/create`,
+        getOneById : (id : string | undefined) => `${BASE_URL}/flow/one?flowId=${id}`,
+        update : `${BASE_URL}/flow/update-attribute`,
+        updateJSON : `${BASE_URL}/flow/update-flow-json`,
+        publish : (id : string | undefined) => `${BASE_URL}/flow/publish?flowId=${id}`,
+        unpublish : (id : string | undefined) => `${BASE_URL}/flow/unpublish?flowId=${id}`
+    }
+}

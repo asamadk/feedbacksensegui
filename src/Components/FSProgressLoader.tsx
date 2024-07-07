@@ -23,7 +23,7 @@ function FSProgressLoader(props: any) {
                                     variant='h6'
                                     fontWeight={600}
                                     color={'#000000'}
-                                >FeedbackSense</Typography>
+                                >RetainSense</Typography>
                             </Box>
                             <LinearProgress color="secondary" />
                         </Box>

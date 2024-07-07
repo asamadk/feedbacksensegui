@@ -74,7 +74,7 @@ function ProductUsageConnect(props: { back: any }) {
         <Typography color={colorPalette.fsGray} >
           Plug in this code to every page in your application
           (just before the closing of head tag. This will send basic
-          user engagement details to feedbacksense's account)
+          user engagement details to RetainSense's account)
         </Typography>
         <Typography color={colorPalette.fsGray} >
           Replace the highlighted line's values marked in <b style={{ color: 'green' }} >green</b> with your data

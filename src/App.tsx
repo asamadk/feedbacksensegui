@@ -39,6 +39,10 @@ import TasksLayout from './Layout/TasksLayout';
 import NotificationsLayout from './Layout/NotificationsLayout';
 import CompanyDetailPage from './Components/CustomersComponents/CompanyDetailPage';
 import PersonDetailPage from './Components/CustomersComponents/PersonDetailPage';
+import CreateFlow from './Layout/FlowDetailLayout';
+import FlowDetailLayout from './Layout/FlowDetailLayout';
+import GlobalAlert from './Components/GlobalAlert';
+import GlobalLoader from './Components/GlobalLoader';
 
 function App() {
 
@@ -147,6 +151,10 @@ function App() {
                 <Route
                   path='/template/details/:templateId'
                   element={user ? <TemplateDetailLayout /> : <Login />}
+                />
+                <Route
+                  path='/flow/detail/create/:flowId'
+                  element={user ? <FlowDetailLayout /> : <Navigate to={'/login'} />}
                 />
                 <Route
                   path='/survey/detail/create/:surveyId'
@@ -261,6 +269,9 @@ function App() {
           />
         </Routes>
       </ThemeProvider>
+      
+      <GlobalAlert/>
+      <GlobalLoader/>
     </>
   );
 }

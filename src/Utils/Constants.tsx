@@ -305,6 +305,39 @@ export const componentList = [
     },
 ];
 
+export const automationComponentList = (recordType : string) => {
+    return [
+        {
+            id: 1,
+            name: 'Trigger',
+            components: [
+                { id: 15, bgColor: '', header: `Insert ${recordType}`, description: 'Runs on creating a new record', isAvailable: true },
+                { id: 16, bgColor: '', header: `Update ${recordType} `, description: 'Runs on updating a record', isAvailable: true },
+            ]
+        },
+        {
+            id: 2,
+            name: 'Decision',
+            components: [
+                // { id: 17, bgColor: '', header: 'Segment', description: 'Segmenting record based on condition', isAvailable: true },
+                { id: 18, bgColor: '', header: 'Wait For/Until', description: 'Stopping the flow', isAvailable: true },
+            ]
+        },
+        {
+            id: 3,
+            name: 'Action',
+            components: [
+                { id: 19, bgColor: '', header: 'New Task', description: 'Creates new task', isAvailable: true },
+                { id: 20, bgColor: '', header: 'Send Email', description: 'Sends Email', isAvailable: true },
+                { id: 21, bgColor: '', header: 'Assign User', description: 'Assign Owner to Company', isAvailable: true },
+                { id: 22, bgColor: '', header: 'Set Attribute Value', description: 'Changes record\'s field value', isAvailable: true },
+                // { id: 23, bgColor: '', header: 'Add note to company', description: 'Create new note', isAvailable: true },
+                { id: 24, bgColor: '', header: 'Send Survey', description: 'Send survey via Email', isAvailable: true },
+            ]
+        },
+    ]
+}
+
 export const singleAnswerOperators = [
     CONDITION_IS,
     CONDITION_IS_NOT,
@@ -373,7 +406,7 @@ export const joyrideConstants = {
 }
 
 export type fieldTypes = 'first-name' | 'last-name' | 'organization' | 'e-mail' | 'job-title' | 'department' | 'comment'
-| 'phone' | 'website' | 'country' | 'address-1' | 'address-2' | 'city' | 'state' | 'zip' | 'annual-revenue' | 'employees';
+    | 'phone' | 'website' | 'country' | 'address-1' | 'address-2' | 'city' | 'state' | 'zip' | 'annual-revenue' | 'employees';
 
 export const contactFieldTypes = {
     FIRST_NAME: 'first-name',
@@ -397,29 +430,29 @@ export const contactFieldTypes = {
 
 export const getUsageTimeFilter = () => {
     return [
-        {label : 'Last 90 Days', value : 'last_90_days'},
-        {label : 'Last 30 Days', value : 'last_30_days'},
-        {label : 'Last 15 Days', value : 'last_15_days'},
+        { label: 'Last 90 Days', value: 'last_90_days' },
+        { label: 'Last 30 Days', value: 'last_30_days' },
+        { label: 'Last 15 Days', value: 'last_15_days' },
     ]
 }
 
 export const monthOptions = [
-    {label : 'January',value : 1},
-    {label : 'February',value : 2},
-    {label : 'March',value : 3},
-    {label : 'April',value : 4},
-    {label : 'May',value : 5},
-    {label : 'June',value : 6},
-    {label : 'July',value : 7},
-    {label : 'August',value : 8},
-    {label : 'September',value : 9},
-    {label : 'October',value : 10},
-    {label : 'November',value : 11},
-    {label : 'December',value : 12},
+    { label: 'January', value: 1 },
+    { label: 'February', value: 2 },
+    { label: 'March', value: 3 },
+    { label: 'April', value: 4 },
+    { label: 'May', value: 5 },
+    { label: 'June', value: 6 },
+    { label: 'July', value: 7 },
+    { label: 'August', value: 8 },
+    { label: 'September', value: 9 },
+    { label: 'October', value: 10 },
+    { label: 'November', value: 11 },
+    { label: 'December', value: 12 },
 ];
 
 export const dateLiterals = [
-    'Today', 'Yesterday','This Month','Last Month','This Quarter','Last Quarter','Last 6 Months','This Year'
+    'Today', 'Yesterday', 'This Month', 'Last Month', 'This Quarter', 'Last Quarter', 'Last 6 Months', 'This Year'
 ]
 
 export const settingIds = {
@@ -430,15 +463,21 @@ export const settingIds = {
     ACCOUNT: 'ACCOUNT',
     NOTIFICATIONS: 'NOTIFICATIONS',
     TICKET: 'TICKET',
-    CUSTOMER_HUB : 'CUSTOMER_HUB',
-    ANALYTICS : 'ANALYTICS',
-    DATA_MODELER : 'DATA_MODELER',
-    HEALTH_DESIGNER : 'HEALTH_DESIGNER'
+    CUSTOMER_HUB: 'CUSTOMER_HUB',
+    ANALYTICS: 'ANALYTICS',
+    DATA_MODELER: 'DATA_MODELER',
+    HEALTH_DESIGNER: 'HEALTH_DESIGNER'
 }
 
 export const userRoles = [
-    {key : 'Power User',value : 'OWNER'},
+    { key: 'Power User', value: 'OWNER' },
     // {key : '',value : 'ADMIN'},
-    {key : 'Collaborator',value : 'USER'},
-    {key : 'Spectator',value : 'GUEST'},
+    { key: 'Collaborator', value: 'USER' },
+    { key: 'Spectator', value: 'GUEST' },
+];
+
+export const flowTypes = [
+    { key: 'Company', value: 'company' },
+    { key: 'Person', value: 'person' },
+    { key: 'Task', value: 'task' },
 ]

@@ -2,6 +2,8 @@ import { Box, Typography, Grid, Card, CardContent, Select, MenuItem } from '@mui
 import React, { useState } from 'react';
 import { colorPalette, monthOptions } from '../../Utils/Constants';
 import DashboardBar from '../../ChartComponents/DashboardBar';
+import DashboardDoughnut from '../../ChartComponents/DashboardDoughnut';
+import { overAllCustomerHealthColors } from '../../Utils/DashboardConstants';
 
 function chipStyle(selected: boolean) {
     return {
@@ -40,17 +42,31 @@ const DashboardCompass = () => {
     //* At Risk ARR
 
     const netMrrChurn = [
-        { month: 'Jan', churn: 1.5 },
-        { month: 'Feb', churn: 2.5 },
-        { month: 'Mar', churn: 1.0 },
-        // Add more data points
+        {
+            value: '05/06/2024', Dashboard: 10, Login: 20, 'Add to Cart': 7,
+        },
+        {
+            value: '15/06/2024', Dashboard: 15, Login: 12, 'Add to Cart': 10,
+        },
+        {
+            value: '22/06/2024', Dashboard: 8, Login: 22, 'Add to Cart': 4,
+        },
     ];
 
-    const expansionRevenue = [
-        { month: 'Jan', revenue: 11 },
-        { month: 'Feb', revenue: 3 },
-        { month: 'Mar', revenue: 7 },
-    ];
+    const payingCustomers: any[] = [
+        {
+            "name": "Good",
+            "value": 1
+        },
+        {
+            "name": "Average",
+            "value": 3
+        },
+        {
+            "name": "Poor",
+            "value": 0
+        }
+    ]
 
     return (
         <Box sx={{ height: 'calc(100vh - 68px)', padding: '10px 20px', overflowY: 'auto', textAlign: 'start' }} >
@@ -85,16 +101,16 @@ const DashboardCompass = () => {
                 <Grid container spacing={4} >
                     <Grid item xs={3} >
                         <Box sx={blockStyle} >
-                            <Typography fontSize={13} fontWeight={600} >Net Retention Rate</Typography>
+                            <Typography fontSize={13} fontWeight={600} >Net Retention Revenue</Typography>
                             <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.primary }} fontWeight={600} >
-                                91.75%
+                                $140K
                             </Typography>
                             <Typography fontSize={13} >For Selected Month</Typography>
                         </Box>
                     </Grid>
                     <Grid item xs={3} >
                         <Box sx={blockStyle} >
-                            <Typography fontSize={13} fontWeight={600} >Ending ARR</Typography>
+                            <Typography fontSize={13} fontWeight={600} >New MRR</Typography>
                             <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.primary }} fontWeight={600} >
                                 $304K
                             </Typography>
@@ -122,39 +138,28 @@ const DashboardCompass = () => {
                 </Grid>
 
                 <Grid style={{ marginTop: '20px' }} container spacing={4} >
-                    <Grid item xs={6} >
-                        <Box sx={blockStyle} >
-                            <Typography fontSize={13} fontWeight={600} >Renewable</Typography>
+                    <Grid item xs={9} >
+                        <Box sx={{ ...blockStyle, height: '330px' }} >
+                            <Typography textAlign={'start'} fontWeight={600} >Event Usage</Typography>
+                            <DashboardBar
+                                dataKeys={['Dashboard', 'Add to Cart', 'Login']}
+                                colors={['#E9D3FF', colorPalette.primary, colorPalette.fsGray, colorPalette.darkBackground]}
+                                data={netMrrChurn}
+                            />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={3} >
+                        <Box sx={{ ...blockStyle, height: '135px' }} >
+                            <Typography fontSize={13} fontWeight={600} >Paying Customers</Typography>
+                            <DashboardDoughnut colors={overAllCustomerHealthColors} data={payingCustomers} />
+                            {/* <Typography fontSize={13} ><b>92%</b> are paying customers</Typography> */}
+                        </Box>
+                        <Box marginTop={'20px'} sx={{ ...blockStyle, height: '135px' }} >
+                            <Typography fontSize={13} fontWeight={600} >New Paying Customers</Typography>
                             <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.primary }} fontWeight={600} >
-                                4
+                                116
                             </Typography>
-                            <Typography fontSize={13} >of <b>43</b> companies are in renewal</Typography>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={6} >
-                        <Box sx={blockStyle} >
-                            <Typography fontSize={13} fontWeight={600} >Renewable</Typography>
-                            <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.primary }} fontWeight={600} >
-                                $103K
-                            </Typography>
-                            <Typography fontSize={13} >of <b>1450K</b> (10% of ARR)</Typography>
-                        </Box>
-                    </Grid>
-                </Grid>
-
-                <Grid container spacing={4} >
-                    <Grid item xs={6} >
-                        <Box sx={{ ...blockStyle, height: '300px' }} marginTop={'20px'} >
-                            <Typography fontWeight={600} >Net MRR Churn</Typography>
-                            <Typography fontSize={13} >For all Months</Typography>
-                            <DashboardBar dataKey='churn' color={colorPalette.primary} data={netMrrChurn} />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={6} >
-                        <Box sx={{ ...blockStyle, height: '300px' }} marginTop={'20px'} >
-                            <Typography fontWeight={600} >Expansion Revenue</Typography>
-                            <Typography fontSize={13} >For all Months</Typography>
-                            <DashboardBar dataKey='revenue' color={colorPalette.primary} data={expansionRevenue} />
+                            <Typography fontSize={13} >New customers in June 2024</Typography>
                         </Box>
                     </Grid>
                 </Grid>

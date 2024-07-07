@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import LeftBarComponent from '../Components/LeftBarComponent'
 import { sideBarListType } from '../Utils/types'
-import { Box } from '@mui/material'
+import { Box, Tab, Tabs } from '@mui/material'
 import PeopleComponent from '../Components/CustomersComponents/PeopleComponent'
 import CompaniesComponent from '../Components/CustomersComponents/CompaniesComponent'
 import { useNavigate } from 'react-router'
+import { colorPalette } from '../Utils/Constants'
 
 const sideBarData: sideBarListType[] = [
   { label: 'Companies', value: 'companies' },
@@ -32,7 +33,8 @@ function ContactLayout() {
   const CustomerBody = () => {
     return (
       <Box>
-        {selectedTab === 'people' ? PeopleTab() : CompaniesTab()}
+        {/* {selectedTab === 'people' ? PeopleTab() : CompaniesTab()} */}
+        {value === '2' ? PeopleTab() : CompaniesTab()}
       </Box>
     )
   }
@@ -49,14 +51,32 @@ function ContactLayout() {
     )
   }
 
+  const [value, setValue] = React.useState('1');
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
+
   return (
-    <Box sx={{ display: 'flex' }} >
-      <LeftBarComponent
+    <Box>
+      <Box sx={{ width: '100%', background: colorPalette.textSecondary }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          textColor="secondary"
+          indicatorColor="secondary"
+          aria-label="secondary tabs example"
+        >
+          <Tab value="1" label="Company" />
+          <Tab value="2" label="People" />
+        </Tabs>
+      </Box>
+      {/* <LeftBarComponent
         header='Customers'
         list={sideBarData}
         selected={selectedTab}
         callback={handleTabChange}
-      />
+      /> */}
       <Box sx={{ width: '100%' }} >
         {CustomerBody()}
       </Box>

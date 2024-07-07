@@ -538,6 +538,7 @@ function CreateSurvey(props: any) {
       <Box display={'flex'} >
         <Box width={isWorkflowPublished === true ? '100%' : '77%'} >
           <FeedbackCanvas
+            source='survey'
             published={isWorkflowPublished}
             flow={surveyFlow}
             config={componentConfig}

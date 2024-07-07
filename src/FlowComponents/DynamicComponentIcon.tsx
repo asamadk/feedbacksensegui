@@ -12,8 +12,18 @@ import AppsIcon from '@mui/icons-material/Apps';
 import CallIcon from '@mui/icons-material/Call';
 import StarsIcon from '@mui/icons-material/Stars';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown';
 import { getIconColorById } from '../Utils/FeedbackUtils';
+import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import UpdateIcon from '@mui/icons-material/Update';
+import SegmentIcon from '@mui/icons-material/Segment';
+import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import EditAttributesIcon from '@mui/icons-material/EditAttributes';
+import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import MoodIcon from '@mui/icons-material/Mood';
 
 function DynamicComponentIcon(props : any) {
   return (
@@ -31,6 +41,16 @@ function DynamicComponentIcon(props : any) {
         {props.id === 11 && <CallIcon sx={{ color: getIconColorById(props?.id) }} />}
         {props.id === 12 && <StarsIcon sx={{ color: getIconColorById(props?.id) }} />}
         {props.id === 13 && <CalendarMonthIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 15 && <AddBoxIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 16 && <UpdateIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 17 && <SegmentIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 18 && <HourglassBottomIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 19 && <FormatListBulletedIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 20 && <NotificationsIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 21 && <AssignmentIndIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 22 && <EditAttributesIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 23 && <NoteAltIcon sx={{ color: getIconColorById(props?.id) }} />}
+        {props.id === 24 && <MoodIcon sx={{ color: getIconColorById(props?.id) }} />}
     </>
   );
 }

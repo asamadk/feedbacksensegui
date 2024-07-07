@@ -156,7 +156,7 @@ function SelectedThemeTest({ selectedTheme }: any) {
             <Box sx={{ position: 'relative', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '70%' }} >
                 <Box margin={'20px'} >
                     <Typography marginBottom={'20px'} fontSize={'26px'} color={selectedTheme?.color[0]} fontWeight={200} >
-                        We love FeedbackSense!
+                        We love RetainSense!
                     </Typography>
                     <input
                         style={inputStyleCSS}

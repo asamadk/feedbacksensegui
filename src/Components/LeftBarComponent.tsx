@@ -11,7 +11,7 @@ type propType = {
 }
 
 const mainContainer = {
-    background: colorPalette.secondary,
+    background: colorPalette.textSecondary,
     width: '18%',
     minWidth: '210px',
     height: 'calc(100vh - 40px)',

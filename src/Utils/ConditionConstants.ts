@@ -51,13 +51,13 @@ export function getMetricOptions(metric: string) {
         data.forEach(d => {
             res.push({ label: d.name, value: d.id });
         });
-    } else if (metric === 'riskStage'){
+    } else if (metric === 'riskStage') {
         const state = store.getState();
         const data: any[] = state.riskStage;
         data.forEach(d => {
             res.push({ label: d.name, value: d.id });
         });
-    }else if (metric === 'loginFrequency') {
+    } else if (metric === 'loginFrequency') {
         res.push({ label: 'Daily', value: 'daily' });
         res.push({ label: 'Monthly', value: 'monthly' });
     }
@@ -137,3 +137,99 @@ export function healthOperators(val: string) {
         }
     }
 };
+
+
+export const fieldOptions: any = {
+    company: [
+        { label: 'Name', value: 'name' },
+        { label: 'Website', value: 'website' },
+        { label: 'Industry', value: 'industry' },
+        { label: 'Contract Status', value: 'contractStatus' },
+        { label: 'Status', value: 'status' },
+        { label: 'Next renewal date', value: 'nextRenewalDate' },
+        { label: 'Total contract amount', value: 'totalContractAmount' },
+        { label: 'Address', value: 'address' },
+        { label: 'Health Score', value: 'healthScore' },
+        { label: 'NPS Score', value: 'npsScore' },
+        { label: 'CSAT Score', value: 'csatScore' },
+        { label: 'Average NPS Score', value: 'avgNpsScore' },
+        { label: 'Average CSAT Score', value: 'avgCsatScore' },
+        { label: 'Usage Frequency', value: 'usageFrequency' },
+        { label: 'Last Contacted Date', value: 'lastContactDate' },
+    ],
+    task: [
+        { label: 'Title', value: 'title' },
+        { label: 'Description', value: 'description' },
+        { label: 'Priority', value: 'priority' },
+        { label: 'Due Date', value: 'dueDate' },
+        { label: 'Status', value: 'status' },
+    ],
+    person: [
+        { label: 'First Name', value: 'firstName' },
+        { label: 'Last Name', value: 'lastName' },
+        { label: 'Email', value: 'email' },
+        { label: 'Phone', value: 'phone' },
+        { label: 'Title', value: 'title' },
+        { label: 'Role', value: 'role' },
+        { label: 'Communication Preference', value: 'communicationPreferences' },
+        { label: 'Last contacted date', value: 'lastContactedDate' },
+        { label: 'Training Completed', value: 'trainingCompleted' },
+    ]
+};
+
+export const fieldInputTypes: any = {
+    company: {
+        contractStatus: 'select',
+        nextRenewalDate: 'date',
+        totalContractAmount: 'number',
+        healthScore: 'number',
+        npsScore: 'number',
+        csatScore: 'number',
+        avgNpsScore: 'number',
+        avgCsatScore: 'number',
+        lastContactDate: 'date',
+        usageFrequency : 'select',
+        status: 'select'
+    },
+    task: {
+        dueDate: 'date',
+        priority: 'select',
+        status: 'select'
+    },
+    person: {
+        lastContactedDate: 'date',
+        trainingCompleted: 'select'
+    }
+};
+
+export const selectOptions: any = {
+    company: {
+        contractStatus: ['Paying', 'Free', 'Churned'],
+        status: ['Active', 'Inactive'],
+        usageFrequency : ['Daily','Weekly','BiWeekly','Monthly']
+    },
+    task: {
+        priority: ['Low', 'Medium', 'High', 'Urgent'],
+        status: ['Open', 'InProgress', 'Completed', 'Cancelled']
+    },
+    person: {
+        trainingCompleted: ['true', 'false']
+    }
+};
+
+export const dateLiteralsOptions = [
+    {label : 'Last 12 Months',value : 'last_12_months'},
+    {label : 'Last 30 Days',value : 'last_30_days'},
+    {label : 'Last 6 Months',value : 'last_6_months'},
+    {label : 'Last 60 Days',value : 'last_60_days'},
+    {label : 'Last 90 Days',value : 'last_90_days'},
+    {label : 'Last Month',value : 'last_month'},
+    {label : 'Last Week',value : 'last_week'},
+    {label : 'This Month',value : 'this_month'},
+    {label : 'This Week',value : 'this_week'},
+    {label : 'This Year',value : 'this_year'},
+    {label : 'Today',value : 'today'},
+    {label : 'Yesterday',value : 'yesterday'},
+    // {label : 'Last 12 Months',value : 'last_12_months'},
+    // {label : 'Last 12 Months',value : 'last_12_months'},
+]

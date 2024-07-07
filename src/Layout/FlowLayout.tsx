@@ -1,9 +1,10 @@
-import { Box } from '@mui/material'
+import { Box, Tab, Tabs } from '@mui/material'
 import React, { useState } from 'react'
 import LeftBarComponent from '../Components/LeftBarComponent'
 import { sideBarListType } from '../Utils/types';
 import FlowDashboard from '../Components/FlowLayoutComponents/FlowDashboard';
 import FlowTemplateDashboard from '../Components/FlowLayoutComponents/FlowTemplateDashboard';
+import { colorPalette } from '../Utils/Constants';
 
 const sideBarData: sideBarListType[] = [
   { label: 'Flows', value: 'flows' },
@@ -12,22 +13,32 @@ const sideBarData: sideBarListType[] = [
 
 function FlowLayout() {
 
-  const [selectedTab, setSelectedTab] = useState<'flows' | 'templates'>('flows');
+  const [value, setValue] = React.useState('1');
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
   return (
-    <Box sx={{ display: 'flex' }} >
-      <LeftBarComponent
-        header='Automation'
-        list={sideBarData}
-        selected={selectedTab}
-        callback={(val: 'flows' | 'templates') => setSelectedTab(val)}
-      />
+    <>
+      <Box sx={{ width: '100%', background: colorPalette.textSecondary }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          textColor="secondary"
+          indicatorColor="secondary"
+          aria-label="secondary tabs example"
+        >
+          <Tab value="1" label="Flows" />
+          {/* <Tab value="2" label="Templates" /> */}
+        </Tabs>
+      </Box>
       <Box sx={{ width: '100%' }} >
         <FlowDashboard
-          type={selectedTab}
+          type={value === '1' ? 'flows' : 'templates'}
         />
       </Box>
-    </Box>
+    </>
   )
 }
 

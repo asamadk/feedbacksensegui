@@ -3,14 +3,16 @@ import React from 'react'
 import { colorPalette } from '../Utils/Constants'
 import { useSelector } from 'react-redux';
 
-function FSLoader(props: {show : boolean}) {
+function GlobalLoader() {
+
+  const loading = useSelector((state: any) => state.loading);
 
   return (
     <>
-      {props.show && (
+      {loading && (
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={props.show}
+          open={loading}
         >
           <CircularProgress
             size={34}
@@ -29,4 +31,4 @@ function FSLoader(props: {show : boolean}) {
   )
 }
 
-export default FSLoader
+export default GlobalLoader
