@@ -9,6 +9,7 @@ import { FilterCondition } from '../Utils/types';
 import CustomTooltip from '../Components/CustomTooltip';
 import QuestionFilter from '../Components/OverAllResults/QuestionFilter';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
+import { colorPalette } from '../Utils/Constants';
 
 function AnalysisFiltersModal(props: any) {
 
@@ -100,7 +101,7 @@ function AnalysisFiltersModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={modalStyle(defaultColor?.secondaryColor)}>
+                <Box sx={modalStyle(colorPalette.background)}>
                     <Box sx={modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Apply Filters

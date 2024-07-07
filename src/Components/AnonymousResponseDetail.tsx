@@ -173,6 +173,20 @@ function DynamicComponentSingleResponse({ id, data }: any) {
                     <Typography>{`${data?.data?.value}`}</Typography>
                 </Box>
             </>}
+            {(id === 9) && <>
+                <Box display={'flex'} >
+                    <DynamicComponentIcon
+                        id={id}
+                        bgColor={getIconColorById(id)}
+                    />
+                    <Box sx={questionStyle} >
+                        <Typography>{data?.compData?.question}</Typography>
+                    </Box>
+                </Box>
+                <Box sx={answerContainer(colorPalette.secondary)} >
+                    <Typography>{`${data?.data?.value}`}</Typography>
+                </Box>
+            </>}
             {(id === 11) && <>
                 <Box display={'flex'} >
                     <DynamicComponentIcon

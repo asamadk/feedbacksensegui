@@ -69,6 +69,7 @@ function SurveyGeneralSettings() {
     }
 
     const handleVisibility = () => {
+        console.log("🚀 ~ handleVisibility ~ settings:", settings)
         if(settings != null && settings[ADD_CUSTOM_LOGO] === 'true'){
             getLogo();
         }else{

@@ -4,6 +4,7 @@ import { modalButtonContainerStyle, modalHeaderStyle, modalStyle } from '../Styl
 import CloseIcon from '@mui/icons-material/Close';
 import { useSelector } from 'react-redux';
 import { outlinedButton } from '../Styles/ButtonStyle';
+import { colorPalette } from '../Utils/Constants';
 
 function SurveyLogsModal(props: any) {
 
@@ -17,7 +18,7 @@ function SurveyLogsModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={modalStyle(defaultColor?.secondaryColor)}>
+                <Box sx={modalStyle(colorPalette.background)}>
                     <Box sx={modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             Survey Logs

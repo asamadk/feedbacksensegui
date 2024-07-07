@@ -17,9 +17,9 @@ import { useSelector } from 'react-redux'
 // <!-- End of feedbacksense code -->`;
 
 let integrationCode = `
-    Exciting News! We're working on an amazing new feature to enhance your experience with FeedbackSense. 
+    Exciting News! We're working on an amazing new feature to enhance your experience with RetainSense. 
     Stay tuned for its release, coming soon! We can't wait to share it with you and help you bring 
-    FeedbackSense to your website or app. Thank you for your continued support!"`
+    RetainSense to your website or app. Thank you for your continued support!"`
 
 function SurveySettingsWeb() {
 
@@ -28,9 +28,9 @@ function SurveySettingsWeb() {
     return (
         <Box sx={LayoutStyles.globalSettingSubContainers(defaultColor?.primaryColor)} >
             <Box textAlign={'start'} >
-                <Typography color={'#f1f1f1'} sx={{ marginBottom: '5px' }} >Install FeedbackSense on your own (Comming Soon) </Typography>
+                <Typography color={'#f1f1f1'} sx={{ marginBottom: '5px' }} >Install RetainSense on your own (Comming Soon) </Typography>
                 <Typography color={'#808080'} sx={{ marginBottom: '10px' }} >
-                    Add the FeedbackSense snippet using one of the methods below so you can start collecting website and in-product surveys feedback.
+                    Add the RetainSense snippet using one of the methods below so you can start collecting website and in-product surveys feedback.
                 </Typography>
                 <Box >
                 <CopyBlock

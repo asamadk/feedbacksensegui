@@ -39,7 +39,7 @@ function CreateSurvey(props: any) {
 
   const snackbarRef: any = useRef(null);
   const dispatch = useDispatch<any>();
-  const navigate = useNavigate();
+  
   const childRef = useRef<any>(null);
 
   const { surveyId } = useParams();
@@ -538,6 +538,7 @@ function CreateSurvey(props: any) {
       <Box display={'flex'} >
         <Box width={isWorkflowPublished === true ? '100%' : '77%'} >
           <FeedbackCanvas
+            source='survey'
             published={isWorkflowPublished}
             flow={surveyFlow}
             config={componentConfig}

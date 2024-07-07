@@ -84,3 +84,11 @@ export interface joyrideState {
     steps: Step[];
     stepIndex : number
 }
+
+export type sideBarListType = {
+    label : string,
+    value : string
+}
+
+export type companyFieldType = 'owner' | 'nextRenewalDate' | 'status' | 'contractStatus' | 'address' | 'name' | 'website' | 'industry' | 'lastContactDate';
+export type personFieldType = 'lastName' | 'firstName' | 'email' | 'phone' | 'title' | 'communicationPreferences' | 'lastContactedDate' | 'company';

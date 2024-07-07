@@ -328,7 +328,7 @@ function SinglePlan({ plan, checkout, handleGetAccessClick, billing }: any) {
             <Grid item xs={12} sx={{ backgroundColor : colorPalette.background, textAlign: 'start',boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px', mx: 'auto', mt: { xs: 6, sm: 8 }, maxWidth: '2xl', borderRadius: '6px', display: { xs: 'block', lg: 'flex' }, width: { lg: 'none' } }}>
                 <Grid item xs={12} lg={7} sx={{ p: 2, padding: '40px' }}>
                     <Typography variant="h5" component="h3" sx={{ fontWeight: 'bold', color: 'text.primary', fontSize: '2xl', mb: 3 }}>
-                        FeedbackSense {plan?.name}
+                    RetainSense {plan?.name}
                     </Typography>
                     <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: 'base', mb: 3 }}>
                         {planDesc?.description}

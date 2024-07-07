@@ -26,7 +26,9 @@ const surveyBlockMainContainer = {
     borderRadius: '5px',
     cursor: 'pointer',
     height: '197px',
-    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
+    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
+    border : `1px ${colorPalette.textSecondary} solid`,
+    background : colorPalette.textSecondary
 }
 
 function SurveyBlock(props: any) {
@@ -175,7 +177,7 @@ function SurveyBlock(props: any) {
     }
 
     return (
-        <Box sx={{ ...surveyBlockMainContainer, backgroundColor: colorPalette.background }} >
+        <Box sx={surveyBlockMainContainer} >
             <Box
                 sx={{ display: 'flex', justifyContent: 'space-between', padding: '10px', height: '50px' }}
             >
@@ -197,7 +199,7 @@ function SurveyBlock(props: any) {
                             onClick={handleOpenSurvey}
                             sx={{ color: colorPalette.textPrimary, width: '50px' }}
                         >
-                            <EditIcon />
+                            <EditIcon fontSize='small' />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='More' >

@@ -19,7 +19,6 @@ const CssTextField = styled(TextField)(textFieldStyle);
 function DateSelectorModal(props: any) {
 
   const createLogicRef = useRef<any>(null); // Create a ref for the child component
-  const defaultColor = useSelector((state: any) => state.colorReducer);
   const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
   useEffect(() => {

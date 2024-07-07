@@ -33,7 +33,7 @@ const buttonContainerStyles = {
 
 const mainContainerStyle = {
     padding: '15px 20px',
-    backgroundColor: Constants.colorPalette.textSecondary,
+    backgroundColor: Constants.colorPalette.background,
     height: 'calc(100vh - 30px)',
     overflowY: 'scroll',
 }
@@ -88,7 +88,7 @@ function SurveysPanel(props: any) {
     useEffect(() => {
         if (initialized === false) {
             getSurveys();
-            getUserList();
+            // getUserList();
             initialized = true;
         }
     }, [forceRerender]);
@@ -132,30 +132,6 @@ function SurveysPanel(props: any) {
         setSurveys(unfilteredSurveys);
         if (folderId !== '0') {
             setSurveys((surveys) => surveys.filter(survey => survey.folder_id === folderId));
-        }
-    }
-
-    const getUserList = async (): Promise<void> => {
-        try {
-            if (userState == null || userState.length < 1) {
-                setLoading(true);
-                let { data } = await axios.get(Endpoints.getUserListAPI(), { withCredentials: true });
-                setLoading(false);
-                if (data?.statusCode !== 200) {
-                    snackbarRef?.current?.show(data?.message, 'error');
-                    return;
-                }
-
-                if (data.data != null) {
-                    dispatch(setUsers(data.data))
-                }
-            }
-        } catch (error: any) {
-            setLoading(false);
-            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            if (error?.response?.data?.message === Constants.USER_UNAUTH_TEXT) {
-                FeedbackUtils.handleLogout();
-            }
         }
     }
 
@@ -313,7 +289,7 @@ function SurveysPanel(props: any) {
                         <Box sx={{ ...buttonContainerStyles, marginBottom: userRole === 'GUEST' ? '20px' : '' }} >
                             <Box>
                                 <Typography
-                                    sx={{ textAlign: 'start', color: Constants.colorPalette.textPrimary, marginTop: '20px' }}
+                                    sx={{ textAlign: 'start', color: Constants.colorPalette.textPrimary, marginTop: '11px' }}
                                     variant='h5'
                                     title={props?.folder}
                                 >
@@ -321,7 +297,7 @@ function SurveysPanel(props: any) {
                                     {props?.folder?.length > 100 ? '...' : ''}
                                 </Typography>
                             </Box>
-                            <Box display={'flex'} marginTop={'9px'} >
+                            <Box display={'flex'} >
                                 <Box sx={{ display: 'flex', marginTop: '10px' }} >
                                     <InputLabel sx={{ marginRight: '5px', marginTop: '5px' }} >Owned By : </InputLabel>
                                     <Select

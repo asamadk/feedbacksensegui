@@ -74,12 +74,12 @@ function SingleSurveyAction(props: any) {
     }
 
 
-    const handleShareSurvey = () => {
-        let surveyData = props?.survey;
-        navigator.clipboard.writeText(getShareSurveyLink(window.location.host, surveyData?.id));
-        snackbarRef?.current?.show('Survey link copied.', 'success');
-        props.close();
-    }
+    // const handleShareSurvey = () => {
+    //     let surveyData = props?.survey;
+    //     navigator.clipboard.writeText(getShareSurveyLink(window.location.host, surveyData?.id));
+    //     snackbarRef?.current?.show('Survey link copied.', 'success');
+    //     props.close();
+    // }
 
     const handleDuplicateSurvey = async () => {
         if (!CoreUtils.isComponentVisible(userRole, componentName.CREATE_SURVEY_BUTTON)) {
@@ -135,9 +135,9 @@ function SingleSurveyAction(props: any) {
                 <MenuItem onClick={handleDisableEnableSurvey}>
                     {props?.survey?.is_published === 1 ? 'Unpublish' : 'Publish'}
                 </MenuItem>
-                <MenuItem onClick={handleShareSurvey}>
+                {/* <MenuItem onClick={handleShareSurvey}>
                     Share
-                </MenuItem >
+                </MenuItem > */}
                 <MenuItem onClick={handleDuplicateSurvey} >
                     Duplicate
                 </MenuItem>

@@ -19,7 +19,7 @@ function Support() {
         <Box sx={{ ...settingLayoutStyle, backgroundColor: defaultColor?.backgroundColor }} >
             <Box >
                 <iframe
-                    style={{ width: '50%', height: '500px' }}
+                    style={{ width: '50%', height: 'calc(100vh - 207px)' }}
                     id="zsfeedbackFrame"
                     name="zsfeedbackFrame"
                     scrolling="no"

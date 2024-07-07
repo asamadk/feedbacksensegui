@@ -71,8 +71,8 @@ function NodeComponent(props: any) {
         props.onNodeSelection(selectedCompId, uId);
     }
 
-    return (
-        <>
+    function SurveyNode() {
+        return <>
             {
                 props.compId !== 14 ?
                     <Box textAlign={'start'} display={'flex'} overflow={'hidden'} onDoubleClick={handleEditButtonClick}>
@@ -85,8 +85,8 @@ function NodeComponent(props: any) {
                         </Box>
                         <Box >
                             <Typography>{props.label}</Typography>
-                            <Typography 
-                                sx={{ color: colorPalette.textPrimary, fontSize: '12px',marginTop : '15px' }} 
+                            <Typography
+                                sx={{ color: colorPalette.textPrimary, fontSize: '12px', marginTop: '15px' }}
                             >
                                 {props.description?.substring(0, 120)}
                                 {props.description?.length > 120 ? '...' : ''}
@@ -103,11 +103,41 @@ function NodeComponent(props: any) {
                         <IconButton sx={{ width: '50px', height: '50px', marginTop: '25px' }} onClick={handleShowComponentSelectorModal} >
                             <AddCircleOutlineIcon sx={{ width: '50px', height: '50px' }} />
                         </IconButton>
-                        <IconButton onClick={handleOpenMoreClick} sx={{ marginTop: '25px', width: '45px',height : '45px' }} >
+                        <IconButton onClick={handleOpenMoreClick} sx={{ marginTop: '25px', width: '45px', height: '45px' }} >
                             <MoreVertIcon sx={{ color: getIconColorById(props.compId) }} />
                         </IconButton>
                     </Box>
             }
+        </>
+    }
+
+    function AutomationNode() {
+        return <>
+            <Box textAlign={'start'} justifyContent={'space-between'} display={'flex'} overflow={'hidden'} onDoubleClick={handleEditButtonClick}>
+                {showError && <NodeError message={errorMsg} />}
+                <Box sx={{ display: 'flex', marginTop: '5px' }} >
+                    <Box sx={commonLogoStyle} >
+                        <DynamicComponentIcon id={props.compId} />
+                    </Box>
+                    <Typography>{props.label}</Typography>
+                </Box>
+                <Box>
+                    <IconButton onClick={handleOpenMoreClick} >
+                        <MoreVertIcon sx={{ color: getIconColorById(props.compId) }} />
+                    </IconButton>
+                </Box>
+            </Box>
+            <Typography sx={{ fontSize: '12px', textAlign: 'start' }} > {props.description}</Typography>
+        </>
+    }
+
+    function DynamicNode() {
+        return props.source === 'flow' ? AutomationNode() : SurveyNode();
+    }
+
+    return (
+        <>
+            {DynamicNode()}
             <NodeComponentMore
                 anchor={anchorEl}
                 open={open}

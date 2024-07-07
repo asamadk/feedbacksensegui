@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
-import { colorPalette, USER_UNAUTH_TEXT } from '../Utils/Constants';
+import { colorPalette, USER_UNAUTH_TEXT, userRoles } from '../Utils/Constants';
 import { handleLogout } from '../Utils/FeedbackUtils';
 import axios from 'axios';
 import { inviteUserAPI } from '../Utils/Endpoints';
@@ -22,20 +22,12 @@ const textFieldStyleCSS = {
 
 function InviteMemberModal(props: any) {
 
-    const roles = [
-        'OWNER',
-        'ADMIN',
-        'USER',
-        'GUEST'
-    ]
-
-    const defaultColor = useSelector((state: any) => state.colorReducer);
     const settings = useSelector((state: any) => state.settings);
     const snackbarRef: any = useRef(null);
 
     const [loading, setLoading] = React.useState(false);
     const [userRole, setUserRole] = useState<'OWNER' | 'ADMIN' | 'USER' | 'GUEST'>('OWNER');
-    const [teamRolesFeatureActive, setTeamRolesFeatureActive] = React.useState(false);
+    const [teamRolesFeatureActive, setTeamRolesFeatureActive] = React.useState(true);
     const [emails, setEmail] = useState<string>('');
 
     useEffect(() => {
@@ -43,11 +35,11 @@ function InviteMemberModal(props: any) {
     },[]);
 
     const handlePlanVisibility = () => {
-        if (settings != null && settings[TEAM_ROLES] === 'true') {
-            setTeamRolesFeatureActive(true);
-        } else {
-            setTeamRolesFeatureActive(false);
-        }
+        // if (settings != null && settings[TEAM_ROLES] === 'true') {
+        //     setTeamRolesFeatureActive(true);
+        // } else {
+        //     setTeamRolesFeatureActive(false);
+        // }
     }
 
     const handleTeamMemberInvite = async () => {
@@ -91,7 +83,7 @@ function InviteMemberModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyle(defaultColor?.secondaryColor)}>
+                <Box sx={ModalStyles.modalStyle(colorPalette.background)}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2" >
                             Invite your team members !
@@ -128,8 +120,8 @@ function InviteMemberModal(props: any) {
                                 onChange={(e: any) => setUserRole(e.target.value)}
                             >
                                 {
-                                    roles?.map((role: string) => (
-                                        <MenuItem value={role}>{role}</MenuItem>
+                                    userRoles?.map((role) => (
+                                        <MenuItem value={role.value}>{role.key}</MenuItem>
                                     ))
                                 }
                             </Select>

@@ -1,0 +1,291 @@
+import { Box, Button, Checkbox, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography, styled } from '@mui/material'
+import React, { useEffect, useRef, useState } from 'react'
+import DeleteIcon from '@mui/icons-material/Delete';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import SearchIcon from '@mui/icons-material/Search';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { textFieldStyle } from '../../Styles/InputStyles';
+import { colorPalette } from '../../Utils/Constants';
+import { containedButton, outlinedButton } from '../../Styles/ButtonStyle';
+import { useNavigate } from 'react-router';
+import CreateCompanyModal from '../../Modals/ContactModals/CreateCompanyModal';
+import axios from 'axios';
+import { deletePersonURL, getPersonListURL } from '../../Utils/Endpoints';
+import { genericModalData } from '../../Utils/types';
+import GenericModal from '../../Modals/GenericModal';
+import { getPersonName, handleUnAuth } from '../../Utils/FeedbackUtils';
+import { paginationStyle, tableBodyText, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
+
+const CssTextField = styled(TextField)(textFieldStyle);
+
+const headerContainer = {
+    borderBottom: `1px ${colorPalette.textSecondary} solid`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '0px 20px'
+}
+
+const col: string[] = ['Full Name', 'Email', 'Company', 'Created Date', 'Actions'];
+
+function PeopleComponent(props: { type: 'people' | 'companies' }) {
+
+    const navigate = useNavigate();
+    const snackbarRef: any = useRef(null);
+
+    const [page, setPage] = useState(0);
+    const [showDeleteButton, setShowDeleteButton] = useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const [peopleList, setPeopleList] = useState<any[]>([]);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [totalCount, setTotalCount] = useState(0);
+    const [searchStr, setSearchStr] = useState('');
+    const [showGenericModal, setShowGenericModal] = React.useState(false);
+    const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
+
+    useEffect(() => {
+        fetchPeople();
+    }, [page]);
+
+    useEffect(() => {
+        const count = peopleList.filter(p => p.checked).length;
+        setShowDeleteButton(count > 0);
+    }, [peopleList]);
+
+    async function fetchPeople() {
+        try {
+            setLoading(true);
+            const { data } = await axios.get(getPersonListURL(page, 20, searchStr), { withCredentials: true });
+            if (data.data) {
+                const res = data.data;
+                setTotalCount(res.count);
+                setPeopleList(res?.list?.map((person: any) => ({ ...person, checked: false })));  // Ensure 'checked' field is initialized
+            }
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+        }
+    }
+
+    function handleOpenPeopleDetail(personId: any) {
+        let selectedPerson = null;
+        peopleList.forEach(person => {
+            if (personId === person.id) {
+                selectedPerson = person;
+            }
+        })
+        navigate(`/contacts/person/detail/${personId}`, { state: selectedPerson });
+    }
+
+    function handleCreateModalClose(data: any) {
+        setShowCreateModal(false);
+        if (data.refresh === true) {
+            fetchPeople();
+        }
+    }
+
+    function handleDeleteClick() {
+        setShowGenericModal(true);
+        let genDeleteObj: genericModalData = {
+            header: 'Delete',
+            warning: 'Are you sure you want to delete the selected companies',
+            description: 'Warning: There\'s no turning back! I acknowledge that',
+            successButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+            type: 'home'
+        }
+        setGenericModalObj(genDeleteObj);
+    }
+
+    const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+        setPage(newPage);
+        const subContainer = document.getElementById('person-table-container');
+        if (subContainer) {
+            subContainer.scrollTop = 0;
+        }
+    };
+
+    function handleSearch(e: any) {
+        const key = e.key
+        if (key === 'Enter') {
+            fetchPeople();
+        }
+    }
+
+    function handleSearchInputChange(e: any) {
+        setSearchStr(e.target.value);
+    }
+
+    function handleCheckboxChange(event: any, companyId: string) {
+        const isChecked = event.target.checked;
+        let tmp: any[] = [];
+        if (companyId === 'all') {
+            tmp = peopleList.map(person => {
+                person.checked = isChecked
+                return person;
+            });
+        } else {
+            tmp = peopleList.map(person => {
+                if (person.id === companyId) {
+                    person.checked = isChecked
+                }
+                return person;
+            });
+        }
+        setPeopleList(tmp);
+    }
+
+    async function handleSuccessButtonClick() {
+        setShowGenericModal(false);
+        const deletePeopleList: string[] = [];
+        peopleList.forEach(person => {
+            if (person.checked === true) {
+                deletePeopleList.push(person.id);
+            }
+        });
+        try {
+            setLoading(true);
+            await axios.post(deletePersonURL(), deletePeopleList, { withCredentials: true });
+            snackbarRef?.current?.show('Companies Deleted', 'success');
+            fetchPeople();
+            setLoading(false);
+        } catch (error) {
+            snackbarRef?.current?.show('Something went wrong', 'error');
+            setLoading(false);
+            handleUnAuth(error);
+        }
+    }
+
+    return (
+        <Box>
+            <Box sx={headerContainer} >
+                <Box>
+                    {/* <Button
+                        disabled={!showDeleteButton}
+                        className='create-new-survey-button'
+                        sx={outlinedButton}
+                        style={{ width: 'fit-content', textTransform: 'none' }}
+                        startIcon={<DeleteIcon />}
+                        variant='outlined'
+                        onClick={handleDeleteClick}
+                    >
+                        Delete
+                    </Button> */}
+                </Box>
+                <Box>
+                    <CssTextField
+                        size='small'
+                        sx={{ input: { color: colorPalette.darkBackground }, marginTop: '10px' }}
+                        placeholder={`Search ${props.type}`}
+                        onChange={handleSearchInputChange}
+                        onKeyDown={handleSearch}
+                        InputProps={{
+                            endAdornment: <IconButton onClick={fetchPeople} ><SearchIcon sx={{ color: colorPalette.darkBackground, paddingLeft: '5px' }} /></IconButton>
+                        }}
+                    />
+                    <Button
+                        className='create-new-survey-button'
+                        sx={containedButton}
+                        style={{ width: 'fit-content', textTransform: 'none', marginLeft: '10px' }}
+                        startIcon={<PersonAddIcon />}
+                        variant='contained'
+                        onClick={() => setShowCreateModal(true)}
+                    >
+                        Create Person
+                    </Button>
+                    <IconButton onClick={handleDeleteClick} sx={{ marginTop: '10px' }} disabled={!showDeleteButton} >
+                        <DeleteIcon />
+                    </IconButton>
+                </Box>
+            </Box>
+            <Box sx={{ padding: '20px' }} >
+                <TableContainer
+                    className='person-table-container'
+                    sx={{ ...tableContainerStyle, height: 'calc(100vh - 145px)' }}
+                >
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead>
+                            <TableRow >
+                                {col?.map((column: string) => (
+                                    <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary }} key={column}>
+                                        {
+                                            column !== 'Full Name' ? column :
+                                                <>
+                                                    <Checkbox
+                                                        color='secondary'
+                                                        onClick={(e) => handleCheckboxChange(e, 'all')}
+                                                    />
+                                                    {column}
+                                                </>
+                                        }
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody >
+                            {
+                                peopleList?.map(person => (
+                                    <TableRow key={person.id} >
+                                        <TableCell sx={tableCellStyle} >
+                                            <Checkbox
+                                                onChange={(e) => handleCheckboxChange(e, person.id)}
+                                                checked={person?.checked}
+                                                color='secondary'
+                                            />
+                                            <b>{getPersonName(person)}</b>
+                                        </TableCell>
+                                        <TableCell sx={tableCellStyle} >
+                                            <Typography sx={tableBodyText} >{person.email}</Typography>
+                                        </TableCell>
+                                        <TableCell sx={tableCellStyle} >
+                                            <Typography sx={{ ...tableBodyText }} >
+                                                {person.company.name}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell sx={tableCellStyle} >
+                                            <Typography sx={tableBodyText} >{new Date(person.created_at).toDateString()}</Typography>
+                                        </TableCell>
+                                        <TableCell sx={tableCellStyle} >
+                                            <IconButton onClick={() => handleOpenPeopleDetail(person.id)} size='small' >
+                                                <ArrowForwardIosIcon fontSize='small' />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            }
+                        </TableBody>
+                    </Table>
+
+                    <TablePagination
+                        rowsPerPageOptions={[20]}
+                        component="div"
+                        count={totalCount}
+                        rowsPerPage={20}
+                        page={page}
+                        sx={paginationStyle}
+                        showFirstButton={true}
+                        showLastButton={true}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={() => { }}
+                    />
+                </TableContainer>
+            </Box>
+            {
+                showCreateModal &&
+                <CreateCompanyModal
+                    data={null}
+                    type='people'
+                    open={showCreateModal}
+                    close={handleCreateModalClose}
+                />
+            }
+            <GenericModal
+                payload={genericModalObj}
+                close={() => setShowGenericModal(false)}
+                open={showGenericModal}
+                callback={handleSuccessButtonClick}
+            />
+        </Box>
+    )
+}
+
+export default PeopleComponent

@@ -33,7 +33,9 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
         if (settings != null && settings[TEAM_ROLES] === 'true') {
             setTeamRolesFeatureActive(true);
         } else {
-            setTeamRolesFeatureActive(false);
+            //TODO handle it "Stopping from accesing roles"
+            // setTeamRolesFeatureActive(false);
+            setTeamRolesFeatureActive(true);
         }
     }
 
@@ -75,7 +77,7 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={{ ...ModalStyles.modalStyle(defaultColor?.secondaryColor) }}>
+                <Box sx={{ ...ModalStyles.modalStyle(colorPalette.background) }}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             User Details
@@ -114,8 +116,8 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                                             onChange={handleOwnerChange}
                                         >
                                             {
-                                                roles?.map((role: string) => (
-                                                    <MenuItem value={role}>{role}</MenuItem>
+                                                roles?.map((role :any) => (
+                                                    <MenuItem value={role.value}>{role.key}</MenuItem>
                                                 ))
                                             }
                                         </Select>

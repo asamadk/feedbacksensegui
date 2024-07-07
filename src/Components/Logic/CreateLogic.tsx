@@ -19,7 +19,7 @@ const logicSelectContainer = {
     padding: '20px',
     marginTop: '20px',
     borderRadius: '6px',
-    backgroundColor: colorPalette.background,
+    backgroundColor: colorPalette.textSecondary,
     boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
 }
 
@@ -92,7 +92,7 @@ function CreateLogic(props: propType, ref: any) {
     }
 
     const populateOperator = () => {
-        if (props.type === 3 || props.type === 7 || props.type === 6 || props.type === 8) {
+        if (props.type === 3 || props.type === 7 || props.type === 6 || props.type === 8 || props.type === 9) {
             setOperators(singleAnswerOperators);
         } else if (props.type === 4) {
             setOperators(multipleAnswerOperators);

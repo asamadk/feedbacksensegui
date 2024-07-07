@@ -1,8 +1,10 @@
 import { Backdrop, CircularProgress } from '@mui/material'
 import React from 'react'
 import { colorPalette } from '../Utils/Constants'
+import { useSelector } from 'react-redux';
 
-function FSLoader(props: any) {
+function FSLoader(props: {show : boolean}) {
+
   return (
     <>
       {props.show && (

@@ -10,9 +10,7 @@ import DesignPreview from './Layout/DesignPreview';
 import Login from './Layout/Login';
 import * as Endpoint from './Utils/Endpoints'
 import MainBody from './Layout/MainBody';
-import OrgSettings from './Layout/OrgSettings';
 import ShareSurvey from './Layout/ShareSurvey';
-import SurveySettings from './Layout/SurveySettings';
 import UpgradeSubscription from './Layout/UpgradeSubscription';
 import LoginSuccess from './Layout/LoginSuccess';
 import SurveyDisplays from './SurveyEngine/Core/SurveyDisplays';
@@ -34,6 +32,17 @@ import IntegrationLayout from './Layout/IntegrationLayout';
 import DashboardsLayout from './Layout/DashboardsLayout';
 import SideBar from './Components/SideBar';
 import SettingsLayout from './Layout/SettingsLayout';
+import ContactLayout from './Layout/ContactLayout';
+import SegmentLayout from './Layout/SegmentLayout';
+import FlowLayout from './Layout/FlowLayout';
+import TasksLayout from './Layout/TasksLayout';
+import NotificationsLayout from './Layout/NotificationsLayout';
+import CompanyDetailPage from './Components/CustomersComponents/CompanyDetailPage';
+import PersonDetailPage from './Components/CustomersComponents/PersonDetailPage';
+import CreateFlow from './Layout/FlowDetailLayout';
+import FlowDetailLayout from './Layout/FlowDetailLayout';
+import GlobalAlert from './Components/GlobalAlert';
+import GlobalLoader from './Components/GlobalLoader';
 
 function App() {
 
@@ -41,8 +50,8 @@ function App() {
   let location = useLocation();
 
   const defaultColor = useSelector((state: any) => state.colorReducer);
-  const [showLeftBar,setShowLeftBar] = useState(true);
-  const [user, setUser] = useState(null);
+  const [showLeftBar, setShowLeftBar] = useState(true);
+  const [user, setUser] = useState<any>(null);
   const dataFetchedRef = useRef(false);
   const [liveSurvey, setLiveSurvey] = useState(false);
   const dispatch = useDispatch<any>();
@@ -61,20 +70,20 @@ function App() {
       dispatch(setUserRole(currentUser.role));
       if (currentUser.organization_id == null || currentUser.organization_id === '') {
         setUser(currentUser);
+        setShowLeftBar(false);
         navigate('/user/create/organization');
         return;
       }
+      const freeTypeWindow: any = window;
+      freeTypeWindow.feedbacksense.track('login');
       setUser(currentUser);
       navigate('/');
     } catch (err: any) {
       if (err?.response?.data?.statusCode === 404) {
         navigate(`/failure?message=${err.response?.data?.message}&code=${err?.response?.data?.statusCode}`);
       }
-      console.error('Error in auth', err);
     }
   };
-
-
 
   useEffect(() => {
     if (dataFetchedRef.current === true) return;
@@ -87,15 +96,18 @@ function App() {
 
   useEffect(() => {
     handleLeftBarVisibility();
-  },[location.pathname])
+  }, [location.pathname]);
 
   const handleLeftBarVisibility = () => {
-    console.log('handleLeftBarVisibility');
     let currentPath: string = location.pathname;
     if (currentPath.includes('/survey/detail/')) {
       setShowLeftBar(false);
     } else {
-      setShowLeftBar(true);
+      if (user?.organization_id == null || user?.organization_id === '') {
+        setShowLeftBar(false);
+      } else {
+        setShowLeftBar(true);
+      }
     }
   }
 
@@ -122,11 +134,11 @@ function App() {
               <Routes>
                 <Route
                   path='/'
-                  element={user ? <MainBody /> : <Navigate to={'/login'} />}
+                  element={user ? <DashboardsLayout /> : <Navigate to={'/login'} />}
                 />
                 <Route
                   path='/login'
-                  element={user ? <MainBody /> : <Login />}
+                  element={user ? <DashboardsLayout /> : <Login />}
                 />
                 <Route
                   path='/template'
@@ -140,26 +152,10 @@ function App() {
                   path='/template/details/:templateId'
                   element={user ? <TemplateDetailLayout /> : <Login />}
                 />
-                {/* <Route
-                  path='/org/general'
-                  element={user ? <OrgSettings tabset={0} /> : <Navigate to={'/login'} />}
-                />
                 <Route
-                  path='/org/teammates'
-                  element={user ? <OrgSettings tabset={1} /> : <Navigate to={'/login'} />}
+                  path='/flow/detail/create/:flowId'
+                  element={user ? <FlowDetailLayout /> : <Navigate to={'/login'} />}
                 />
-                <Route
-                  path='/org/subscription'
-                  element={user ? <OrgSettings tabset={2} /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/survey/global/settings/general'
-                  element={user ? <SurveySettings tabset={0} /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/survey/global/settings/web'
-                  element={user ? <SurveySettings tabset={1} /> : <Navigate to={'/login'} />}
-                /> */}
                 <Route
                   path='/survey/detail/create/:surveyId'
                   element={user ? <CreateSurvey /> : <Navigate to={'/login'} />}
@@ -200,6 +196,42 @@ function App() {
                   path='/dashboard'
                   element={user ? <DashboardsLayout /> : <Navigate to={'/login'} />}
                 />
+                <Route
+                  path='/surveys'
+                  element={user ? <MainBody /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/contacts/companies/detail/:id'
+                  element={user ? <CompanyDetailPage /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/contacts/person/detail/:id'
+                  element={user ? <PersonDetailPage /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/segment'
+                  element={user ? <SegmentLayout /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/flows'
+                  element={user ? <FlowLayout /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/tasks'
+                  element={user ? <TasksLayout /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/notifications'
+                  element={user ? <NotificationsLayout /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/companies'
+                  element={user ? <ContactLayout /> : <Navigate to={'/login'} />}
+                />
+                <Route
+                  path='/people'
+                  element={user ? <ContactLayout /> : <Navigate to={'/login'} />}
+                />
               </Routes>
             </Box>
           </Box>
@@ -237,6 +269,9 @@ function App() {
           />
         </Routes>
       </ThemeProvider>
+      
+      <GlobalAlert/>
+      <GlobalLoader/>
     </>
   );
 }

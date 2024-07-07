@@ -58,8 +58,8 @@ export const checkBeforeSaveSurveyFlow = (surveyId : string) : string => {
     return BASE_URL + `/survey/save/check/${surveyId}`;
 }
 
-export const getShareSurveyLink = (currentLocation : string,surveyId : any) : string => {
-    return `${currentLocation}/share/survey/${surveyId}`;
+export const getShareSurveyLink = (currentLocation : string,surveyId : any,personId : string) : string => {
+    return `${currentLocation}/share/survey/${surveyId}?person=${personId}`;
 }
 
 export const saveSurveyDesgin = (surveyId : string) : string => {
@@ -228,4 +228,219 @@ export const exportSurveyJsonAPI = (surveyId : string) => {
 
 export const updateEmbedConfigAPI = () => {
     return `${BASE_URL}/survey/config/embed`
+}
+
+export const addCompanyURL = () => {
+    return `${BASE_URL}/company/create/individual`
+}
+
+export const updateCompanyURL = () => {
+    return `${BASE_URL}/company/update`
+}
+
+export const getCompanyPeopleOptionURL = () => {
+    return `${BASE_URL}/company/select-options`
+}
+
+export const deleteCompanyURL = () => {
+    return `${BASE_URL}/company/delete`;
+}
+
+export const getCompanyIndividualURL = (companyId : string) => {
+    return `${BASE_URL}/company/get?companyId=${companyId}`;
+}
+
+export const getCompanySurveyResponseURL = (companyId : string) => {
+    return `${BASE_URL}/company/survey-response?companyId=${companyId}`;
+}
+
+export const getCompanySurveyMetricsURL = (companyId : string) => {
+    return `${BASE_URL}/company/survey-score-metrics?companyId=${companyId}`;
+}
+
+export const getPersonSurveyResponseURL = (personId : string) => {
+    return `${BASE_URL}/people/survey-response?personId=${personId}`;
+}
+
+export const getPersonSurveyMetricsURL = (personId : string) => {
+    return `${BASE_URL}/people/survey-score-metrics?personId=${personId}`;
+}
+
+export const deletePersonURL = () => {
+    return `${BASE_URL}/people/delete`;
+}
+
+export const updatePersonURL = () => {
+    return `${BASE_URL}/people/update`;
+}
+
+export const getCompanyListURL = (page : number,limit : number,searchStr : string) => {
+    return `${BASE_URL}/company/get/list?page=${page}&limit=${limit}&search=${searchStr}`
+}
+
+export const addPersonURL = () => {
+    return `${BASE_URL}/people/create/individual`
+}
+
+export const getPersonListURL = (page : number,limit : number,searchStr : string) => {
+    return `${BASE_URL}/people/get/list?page=${page}&limit=${limit}&search=${searchStr}`
+}
+
+export const getCompanyColumnURL = () => {
+    return `${BASE_URL}/company/column-metadata`
+}
+
+export const uploadBulkCompanyURL = () => {
+    return `${BASE_URL}/company/bulk/upload`
+}
+
+export const getCompanyPersonListURL = (peopleId : string) => {
+    return `${BASE_URL}/company/people/${peopleId}`
+}
+
+export const getCompanyHealthHistoryURL = (companyId : string) => {
+    return `${BASE_URL}/company/health-history-chart?companyId=${companyId}`
+}
+
+export const createTagURL = () => {
+    return `${BASE_URL}/tag/create`
+}
+
+export const getTagURL = () => {
+    return `${BASE_URL}/tag/list`
+}
+
+export const deleteTagURL = (companyId : string,tagId : number) => {
+    return `${BASE_URL}/tag/remove?companyId=${companyId}&tagId=${tagId}`
+}
+
+export const createTaskURL = () => {
+    return `${BASE_URL}/task/create`
+}
+
+export const updateTaskURL = () => {
+    return `${BASE_URL}/task/update`
+}
+
+export const getTaskURL = (
+    companyId: string | null, 
+    personId: string | null, 
+    status : string,
+    ownerId : string,
+    page: number, 
+    limit: number
+) => {
+    if(companyId == null){
+        companyId = '';
+    }
+    if(personId == null){
+        personId = '';
+    }
+    return `${BASE_URL}/task/get?page=${page}&limit=${limit}&companyId=${companyId}&personId=${personId}&status=${status}&ownerId=${ownerId}`
+}
+
+export const deleteTaskURL = (taskId : string) => {
+    return `${BASE_URL}/task/delete?taskId=${taskId}`
+}
+
+export const completeTaskURL = () => {
+    return `${BASE_URL}/task/complete-task`
+}
+
+export const getActivitiesURL = (personId : string,companyId : string) => {
+    return `${BASE_URL}/activity/get?companyId=${companyId}&personId=${personId}`
+}
+
+export const createNoteURL = () => {
+    return `${BASE_URL}/notes/create`
+}
+
+export const getNotesURL = (companyId: string | null, personId: string | null, page: number, limit: number) => {
+    if(companyId == null){
+        companyId = '';
+    }
+    if(personId == null){
+        personId = '';
+    }
+    return `${BASE_URL}/notes/get?page=${page}&limit=${limit}&companyId=${companyId}&personId=${personId}`;
+}
+
+export const deleteNotesURL = (noteId : string) => {
+    return `${BASE_URL}/notes/delete?noteId=${noteId}`
+}
+
+export const getUsageEventTypeURL = () => {
+    return `${BASE_URL}/usage-event-type/list`;
+}
+
+export const createUsageEventTypeURL = () => {
+    return `${BASE_URL}/usage-event-type/create`;
+}
+
+export const getUsageStatusURL = () => {
+    return `${BASE_URL}/usage-event/usage-status`;
+}
+
+export const deleteUsageEventTypeURL = (eventTypeId : string) => {
+    return `${BASE_URL}/usage-event-type/delete?usageEventTypeId=${eventTypeId}`;
+}
+
+export const getEventsOverTimeData = (interval : string,personId : string,companyId : string) => {
+    return `${BASE_URL}/usage-event/events-over-time?interval=${interval}&personId=${personId}&companyId=${companyId}`;
+}
+
+export const getTimeSpentDataURL = (interval : string,personId : string,companyId : string) => {
+    return `${BASE_URL}/usage-event/time-spent?interval=${interval}&personId=${personId}&companyId=${companyId}`;
+}
+
+export const getTopUsagePeopleURL = (interval : string,companyId : string) => {
+    return `${BASE_URL}/usage-event/top-people?interval=${interval}&companyId=${companyId}`;
+}
+
+export const createJourneyStageURL = () => {
+    return `${BASE_URL}/journey-stage/create`;
+}
+
+export const createJourneySubStageURL = () => {
+    return `${BASE_URL}/journey-stage/create-sub-stage`;
+}
+
+export const createRiskStageURL = () => {
+    return `${BASE_URL}/journey-stage/create-risk-stage`;
+}
+
+export const getJourneyStageURL = () => {
+    return `${BASE_URL}/journey-stage/get-stage`;
+}
+
+export const getJourneySubStageURL = () => {
+    return `${BASE_URL}/journey-stage/get-sub-stage`;
+}
+
+export const updateCompanyJourneyURL = () => {
+    return `${BASE_URL}/journey-stage/update-company`;
+}
+
+export const getHealthConfigURL = () => {
+    return `${BASE_URL}/health/get`;
+}
+
+export const createHealthConfigURL = () => {
+    return `${BASE_URL}/health/create`;
+}
+
+export const getClientCompassURL = (date :string,type : 'all' | 'my') => {
+    return `${BASE_URL}/dashboard/client-compass?date=${date}&type=${type}`
+}
+
+export const endpoints = {
+    flows : {
+        get : `${BASE_URL}/flow/all`,
+        create : `${BASE_URL}/flow/create`,
+        getOneById : (id : string | undefined) => `${BASE_URL}/flow/one?flowId=${id}`,
+        update : `${BASE_URL}/flow/update-attribute`,
+        updateJSON : `${BASE_URL}/flow/update-flow-json`,
+        publish : (id : string | undefined) => `${BASE_URL}/flow/publish?flowId=${id}`,
+        unpublish : (id : string | undefined) => `${BASE_URL}/flow/unpublish?flowId=${id}`
+    }
 }

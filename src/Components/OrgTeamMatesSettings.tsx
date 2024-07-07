@@ -11,7 +11,7 @@ import { genericModalData, userRoleType } from '../Utils/types';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { handleLogout } from '../Utils/FeedbackUtils';
-import { USER_UNAUTH_TEXT, colorPalette, componentList, componentName } from '../Utils/Constants';
+import { USER_UNAUTH_TEXT, colorPalette, componentList, componentName, userRoles } from '../Utils/Constants';
 import { deleteUserRoleAPI, getUserListAPI } from '../Utils/Endpoints';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
@@ -22,7 +22,7 @@ import { setUsers } from '../Redux/Reducers/usersReducer';
 const singleUserContainer = (bgColor: string) => {
   return {
     backgroundColor: bgColor,
-    borderRadius: '10px',
+    borderRadius: '5px',
     marginTop: '15px',
     padding: '10px',
     display: 'flex',
@@ -30,13 +30,6 @@ const singleUserContainer = (bgColor: string) => {
     boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
   }
 }
-
-const userRoles = [
-  'OWNER',
-  'ADMIN',
-  'USER',
-  'GUEST'
-]
 
 function OrgTeamMatesSettings() {
 
@@ -49,7 +42,7 @@ function OrgTeamMatesSettings() {
   const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
   const [selectedUser, setSelectedUser] = useState<any>({});
   const [loading, setLoading] = React.useState(false);
-  const defaultColor = useSelector((state: any) => state.colorReducer);
+  
   const userRole: userRoleType = useSelector((state: any) => state.userRole);
   const userState = useSelector((state: any) => state.users);
 
@@ -100,7 +93,7 @@ function OrgTeamMatesSettings() {
       warning: 'Warning: There\'s no turning back! I acknowledge that',
       successButtonText: 'Delete',
       cancelButtonText: 'Cancel',
-      description: 'The user will be removed from FeedbackSense.',
+      description: 'The user will be removed from RetainSense.',
       type: 'delete',
       data: {
         userId: userId
@@ -157,20 +150,20 @@ function OrgTeamMatesSettings() {
 
   const SingleUserList = (user: any) => {
     return (
-      <Box sx={singleUserContainer(colorPalette.secondary)} >
+      <Box sx={singleUserContainer(colorPalette.textSecondary)} >
         <Box display={'flex'} >
           <Avatar sx={{ bgcolor: colorPalette.darkBackground, width: 24, height: 24, fontSize: 14, mt: '15px', mr: '15px' }} alt={user?.name} src={user?.image} />
           <Box textAlign={'start'} >
             {
               user?.name.length > 0 ? 
-              <Typography variant='h6' color={colorPalette.textPrimary}>{user?.name}</Typography> :
-              <Typography variant='h6' color={colorPalette.textPrimary}>Not Logged-In</Typography>
+              <Typography variant='h6'>{user?.name}</Typography> :
+              <Typography variant='h6'>Not Logged-In</Typography>
             }
-            <Typography fontSize={'13px'} color={colorPalette.textPrimary} >{user?.email}</Typography>
+            <Typography fontSize={'13px'} >{user?.email}</Typography>
           </Box>
         </Box>
         <Box marginTop={'10px'} >
-          <Chip sx={{ width: '70px' }} label={user?.role} />
+          <Chip sx={{ width: '100px' }} label={userRoles.map(r => r.value === user?.role ? r.key : '') } />
           {
             CoreUtils.isComponentVisible(userRole, componentName.MANAGE_USER) &&
             <IconButton onClick={() => handleOpenDetailModal(user)} sx={{ marginLeft: '10px' }} >

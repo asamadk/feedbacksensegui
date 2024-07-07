@@ -1,18 +1,61 @@
 <!DOCTYPE html>
-<html lang="en" style="margin: 0;padding: 0;" >
+<html lang="en" style="margin: 0; padding: 0">
   <head>
     <meta charset="utf-8" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo&display=swap"
+      rel="stylesheet"
+    />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- <meta name="viewport" content="width=1024"> -->
     <meta name="theme-color" content="#000000" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    
-    <title>FeedbackSense</title>
+
+    <title>RetainSense</title>
+    <script>
+      var feedbacksense_options = {
+        organization_id: "9f216d18-6016-430d-afd6-5d1a6f25bfe8", //Do not change this
+        person: {
+          id: "hiba@fatima.com", //unique person identifier email address
+          identifierType: "email",
+          name: "Hiba Fatima",
+        },
+        company: {
+          id: "f5d2bb87-b6e4-40d9-9ff4-4aff73ffcf6f", //unique account identifier
+          name: "PowerRouter", //company name
+        },
+      };
+      window.feedbacksense_tmp_stack = [];
+      window["feedbacksense"] = {
+        go: function () {
+          return -1;
+        },
+        setAccountAttributes: function () {},
+        identify: function () {},
+        track: function (t) {
+          window.feedbacksense_tmp_stack.push({
+            activity: t,
+            personId: feedbacksense_options.person.id,
+            companyId: feedbacksense_options.company.id,
+            name: feedbacksense_options.person.name,
+            companyName: feedbacksense_options.company.name,
+            org: feedbacksense_options.organization_id,
+            createdDate: new Date().toISOString(),
+          });
+          return -1;
+        },
+      };
+      var e = document.createElement("script");
+      e.type = "text/javascript";
+      e.async = true;
+      e.src = "http://localhost:3001/usage/feedbacksense/v1";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(e, s);
+    </script>
   </head>
-  <body style="margin: 0;padding: 0;" >
+  <body style="margin: 0; padding: 0">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>

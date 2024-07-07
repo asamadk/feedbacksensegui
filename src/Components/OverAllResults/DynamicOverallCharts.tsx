@@ -7,6 +7,7 @@ import RatingScaleCharts from './OverAllCharts/RatingScaleCharts'
 import NPSCharts from './OverAllCharts/NPSCharts'
 import ContactFormCharts from './OverAllCharts/ContactFormCharts'
 import DateCharts from './OverAllCharts/DateCharts'
+import CSATChart from './OverAllCharts/CSATChart'
 
 type propsType = {
   id : number,
@@ -23,7 +24,7 @@ function DynamicOverallCharts(props : propsType) {
       {props.id === 6 && <SmileyScaleCharts id={props.id} data={props.data}/>}
       {props.id === 7 && <RatingScaleCharts id={props.id} data={props.data}/>}
       {props.id === 8 && <NPSCharts id={props.id} data={props.data}/>}
-      {props.id === 9 && <WelcomeChart id={props.id} data={props.data} />}
+      {props.id === 9 && <CSATChart id={props.id} data={props.data}/>}
       {props.id === 10 && <WelcomeChart id={props.id} data={props.data} />}
       {props.id === 11 && <ContactFormCharts id={props.id} data={props.data}/>}
       {props.id === 12 && <WelcomeChart id={props.id} data={props.data}/>}

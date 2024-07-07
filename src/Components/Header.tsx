@@ -10,13 +10,14 @@ import { genericModalData } from '../Utils/types';
 import { useDispatch } from 'react-redux';
 import { updateWorkflowDirty } from '../Redux/Actions/workflowDirtyActions';
 import { updateWorkflowCheck } from '../Redux/Actions/workflowCheckActions';
-import { colorPalette } from '../Utils/Constants';
+import { SURVEY_OPEN_SOURCE, colorPalette } from '../Utils/Constants';
 import MainHeaderTab from '../HeaderComponents/MainHeaderTab';
 
 function Header(props: any) {
 
     let navigate = useNavigate();
     let location = useLocation();
+    const { state } = useLocation();
     const dispatch = useDispatch<any>();
 
     const defaultColor = useSelector((state: any) => state.colorReducer);
@@ -68,24 +69,19 @@ function Header(props: any) {
                 setGenericModalObj(genDeleteObj);
                 return;
             }
-            navigate('/');
+            navigate('/surveys');
             setBackHome(true);
         }
     }
 
 
     const handleSuccessButtonClick = () => {
-        navigate('/');
+        navigate('/surveys');
         setShowGenericModal(false);
         const tempWorkflowDirty: any = {};
         tempWorkflowDirty[currentWorkflowId] = false;
         dispatch(updateWorkflowDirty(tempWorkflowDirty));
         dispatch(updateWorkflowCheck(tempWorkflowDirty));
-    }
-
-    const handleIconJoyrideOver = () => {
-        setIconJoyrideOver(null);
-        setIconJoyrideOver(true);
     }
 
     return (

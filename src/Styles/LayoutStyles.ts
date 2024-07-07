@@ -31,3 +31,37 @@ export const localSurveyNavbar = {
     textAlign: 'end',
     paddingRight: '10px'
 }
+
+export const taskStatusStyle = (status: 'Open' | 'InProgress' | 'Completed' | 'Cancelled') => {
+
+    let bgColor = colorPalette.secondary;
+    let color = colorPalette.primary;
+    if (status === 'Completed') {
+      bgColor = '#CBF0CB';
+      color = '#008000';
+    } else if (status === 'Cancelled') {
+      bgColor = '#ffe6e6';
+      color = '#ff0000';
+    }
+  
+    return {
+      background: bgColor,
+      color: color,
+      padding: '5px',
+      borderRadius: '6px',
+      fontWeight: '600',
+      width: 'fit-content',
+      cursor: 'pointer'
+    }
+  }
+
+ export const listStyleBlock = {
+    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
+    border: `1px ${colorPalette.textSecondary} solid`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '20px',
+    background: colorPalette.background,
+    borderRadius: '6px',
+    marginTop : '10px'
+}

@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import 'reactflow/dist/style.css';
 import { v4 as uuidv4, v4 } from "uuid";
-import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow,Edge, updateEdge, ReactFlowProvider } from 'reactflow'
+import { addEdge, applyEdgeChanges, Node, applyNodeChanges, Background, Controls, ReactFlow, Edge, updateEdge, ReactFlowProvider } from 'reactflow'
 import CustomNode from './CustomNode';
 import Notification from '../Utils/Notification';
 import { useDispatch } from 'react-redux';
@@ -65,14 +65,22 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
 
     const nodeTypes = useMemo(() => ({
-        selectorNode: (params: any) => <CustomNode edges={edges} onDelete={deleteNode} config={props.config} onNodeSelection={handleNodeSelection} {...params} />,
+        selectorNode: (params: any) =>
+            <CustomNode
+                edges={edges}
+                onDelete={deleteNode}
+                config={props.config}
+                onNodeSelection={handleNodeSelection}
+                source={props.source}
+                {...params}
+            />,
     }), [props.config, edges, isWorkflowPublished]);
 
     const getComponentStyle = (color: string): React.CSSProperties => {
         return {
             color: color,
-            width: '300px',
-            height: '120px',
+            width: props.source === 'flow' ? '250px' : '300px',
+            height: props.source === 'flow' ? '80px' : '120px',
             borderRadius: '3px',
             padding: '10px',
             boxShadow: '0px 0px 20px 3px rgba(0,0,0,0.20)',
@@ -132,7 +140,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
     useImperativeHandle(ref, () => ({
         createEdge: updateEdges,
-        getFlowData : getFlowData
+        getFlowData: getFlowData
     }));
 
     const updateEdges = (data: any, componentId: string, nodeIds: any[]) => {
@@ -371,12 +379,12 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
         return newNode;
     };
-    
+
     const getFlowData = () => {
-            if (reactFlowInstance) {
-                return reactFlowInstance.toObject();
-            }
-            return null;
+        if (reactFlowInstance) {
+            return reactFlowInstance.toObject();
+        }
+        return null;
     }
 
     const deleteNode = (id: string) => {
@@ -469,7 +477,11 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
     return (
         <>
             <ReactFlowProvider>
-                <Box sx={{ backgroundColor: colorPalette.background }} height={'calc(100vh - 128px)'} ref={reactFlowWrapper} >
+                <Box
+                    sx={{ backgroundColor: colorPalette.background }}
+                    height={props.source === 'flow' ? 'calc(100vh - 60px)' : 'calc(100vh - 128px)'}
+                    ref={reactFlowWrapper}
+                >
                     <ReactFlow
                         onConnect={onConnect}
                         onInit={setReactFlowInstance}

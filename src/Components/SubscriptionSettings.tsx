@@ -42,7 +42,7 @@ function SubscriptionSettings() {
     const subscriptionSubContainer = {
         color: colorPalette.darkBackground,
         borderRadius: '5px',
-        backgroundColor: colorPalette.secondary,
+        backgroundColor: colorPalette.textSecondary,
         padding: '20px',
         width: '80%',
         display: 'flex',
@@ -54,7 +54,7 @@ function SubscriptionSettings() {
         display: 'flex',
         justifyContent: 'space-between',
         marginBottom: '10px',
-        backgroundColor: colorPalette.secondary,
+        backgroundColor: colorPalette.textSecondary,
         borderRadius: '5px',
         padding: '10px 20px',
         boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px'
