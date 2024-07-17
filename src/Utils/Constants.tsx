@@ -332,7 +332,7 @@ export const automationComponentList = (recordType : string) => {
                 { id: 21, bgColor: '', header: 'Assign User', description: 'Assign Owner to Company', isAvailable: true },
                 { id: 22, bgColor: '', header: 'Set Attribute Value', description: 'Changes record\'s field value', isAvailable: true },
                 // { id: 23, bgColor: '', header: 'Add note to company', description: 'Create new note', isAvailable: true },
-                { id: 24, bgColor: '', header: 'Send Survey', description: 'Send survey via Email', isAvailable: true },
+                { id: 24, bgColor: '', header: 'Send Survey', description: 'Send survey via Email', isAvailable: recordType !== 'task' },
             ]
         },
     ]

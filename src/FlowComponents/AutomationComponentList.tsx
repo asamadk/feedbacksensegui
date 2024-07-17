@@ -25,7 +25,7 @@ const commonLogoStyle = {
     height: 'fit-content'
 }
 
-function AutomationComponentList(props : {change : any,recordType : string}) {
+function AutomationComponentList(props: { change: any, recordType: string }) {
 
     const onDragStart = (event: any, nodeType: any) => {
         event.dataTransfer.setData('text/plain', JSON.stringify(nodeType));
@@ -33,11 +33,10 @@ function AutomationComponentList(props : {change : any,recordType : string}) {
     };
 
     return (
-        <Box sx={{ backgroundColor: colorPalette.textSecondary, paddingTop: '10px', paddingBottom: '10px',borderTop : `4px ${colorPalette.background} solid` }}>
+        <Box sx={{ height: 'calc(100vh - 85px)', backgroundColor: colorPalette.textSecondary, paddingTop: '10px', paddingBottom: '10px', borderTop: `4px ${colorPalette.background} solid` }}>
             <Box margin={'0px 20px'} display={'flex'} justifyContent={'space-between'} >
                 <Typography fontWeight={600} marginTop={'7px'} >Components</Typography>
-                {/* <IconButton onClick={(e) => props.change()} ><CloseIcon/></IconButton> */}
-                <IconButton onClick={(e) => props.change()} ><KeyboardDoubleArrowRightIcon/></IconButton>
+                <IconButton onClick={(e) => props.change()} ><KeyboardDoubleArrowRightIcon /></IconButton>
             </Box>
             {
                 automationComponentList(props.recordType).map(components => {
@@ -62,7 +61,7 @@ function AutomationComponentList(props : {change : any,recordType : string}) {
                                                     sx={{ ...getCommonContainerStyle(), backgroundColor: colorPalette.background }}
                                                 >
                                                     <Box display={'flex'} >
-                                                        <Box sx={{...commonLogoStyle,color : colorPalette.primary}} >
+                                                        <Box sx={{ ...commonLogoStyle, color: colorPalette.primary }} >
                                                             <DynamicComponentIcon id={component.id} />
                                                         </Box>
                                                         <Typography

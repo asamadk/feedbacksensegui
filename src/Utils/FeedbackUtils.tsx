@@ -248,16 +248,16 @@ export const validateFlowComponent = (data: any, componentId: number | undefined
             const fields: { field: string, value: string }[] = data.fields;
             for (let i = 0; i < fields.length; i++) {
                 const tmp = fields[i];
-                if(
+                if (
                     tmp.field == null || tmp.field.length < 1 ||
                     tmp.value == null || tmp.value.length < 1
-                ){
+                ) {
                     return 'Please fill all the value';
                 }
             }
             break;
         case 24:
-            if(data.survey == null || data.survey.length < 1){
+            if (data.survey == null || data.survey.length < 1) {
                 return 'Please select a survey';
             }
             break;
@@ -557,7 +557,7 @@ export const getTwelveMonthAgoDate = () => {
 }
 
 export function getPersonName(person: any): string {
-    let name = 'N/A';
+    let name = 'None';
     if (person == null) { return name }
     if (person.firstName != null && person.firstName.length > 0) {
         name = person.firstName;
@@ -613,9 +613,27 @@ export function getAPIErrorMessage(error: any): string {
 
 export function getEmailRecipientDesc(recordType: string): string {
     if (recordType === 'task') {
-        return `Email will be sent to company's person of contact`;
+        return `Email will be sent to owner's email`;
     } else if (recordType === 'person') {
         return `Email will be send to person's email`;
     }
     return `Email will be sent to company's person of contact`
+}
+
+export function parseDataType(value: string): number | Date | boolean | string {
+    const numberValue = Number(value);
+    if (!isNaN(numberValue)) {
+        return numberValue;
+    }
+    const dateValue = new Date(value);
+    if (!isNaN(dateValue.getTime())) {
+        return dateValue;
+    }
+    const lowerValue = value.toLowerCase();
+    if (lowerValue === 'true') {
+        return true;
+    } else if (lowerValue === 'false') {
+        return false;
+    }
+    return value;
 }

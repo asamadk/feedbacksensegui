@@ -112,22 +112,40 @@ function NodeComponent(props: any) {
     }
 
     function AutomationNode() {
+
+        const actionButtonStyle = {
+            color: colorPalette.fsGray,
+            borderRadius : '50%',
+        }
+
         return <>
             <Box textAlign={'start'} justifyContent={'space-between'} display={'flex'} overflow={'hidden'} onDoubleClick={handleEditButtonClick}>
                 {showError && <NodeError message={errorMsg} />}
-                <Box sx={{ display: 'flex', marginTop: '5px' }} >
-                    <Box sx={commonLogoStyle} >
-                        <DynamicComponentIcon id={props.compId} />
-                    </Box>
-                    <Typography>{props.label}</Typography>
-                </Box>
                 <Box>
-                    <IconButton onClick={handleOpenMoreClick} >
-                        <MoreVertIcon sx={{ color: getIconColorById(props.compId) }} />
-                    </IconButton>
+                    <Box sx={{ display: 'flex', marginTop: '5px' }} >
+                        <Box sx={commonLogoStyle} >
+                            <DynamicComponentIcon id={props.compId} />
+                        </Box>
+                        <Typography>{props.label}</Typography>
+                    </Box>
+                    <Typography sx={{ fontSize: '12px', textAlign: 'start' }} > {props.description}</Typography>
+                </Box>
+                <Box >
+                    <Box>
+                        <IconButton size='small' onClick={handleEditButtonClick} >
+                            <EditRoundedIcon
+                                sx={actionButtonStyle}
+                                fontSize='small'
+                            />
+                        </IconButton>
+                    </Box>
+                    <Box>
+                        <IconButton size='small' onClick={handleDeleteButtonClick} >
+                            <DeleteRoundedIcon sx={actionButtonStyle} fontSize='small' />
+                        </IconButton>
+                    </Box>
                 </Box>
             </Box>
-            <Typography sx={{ fontSize: '12px', textAlign: 'start' }} > {props.description}</Typography>
         </>
     }
 

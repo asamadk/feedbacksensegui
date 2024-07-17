@@ -14,6 +14,8 @@ import ConditionBuilder, { ConditionBuilderRef } from '../Components/ConditionBu
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../Redux/Reducers/NotificationReducer';
 
+const CssTextField = styled(TextField)(textFieldStyle);
+
 function InsertRecordModal(props: any) {
 
     useEffect(() => {
@@ -25,9 +27,17 @@ function InsertRecordModal(props: any) {
     const userRole: userRoleType = useSelector((state: any) => state.userRole);
     const [insertType, setInsertType] = useState<'all' | 'some'>('all');
     const [conditionBlock, setConditionBlock] = useState<any>([[]]);
+    const [desc, setDesc] = useState('');
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
+
+        if (compConfig?.desc) {
+            setDesc(compConfig?.desc);
+        } else {
+            setDesc('');
+        }
+
         if (compConfig?.insertType) {
             setInsertType(compConfig?.insertType);
         } else {
@@ -58,7 +68,8 @@ function InsertRecordModal(props: any) {
 
         let obj = {
             conditionBlock: tmp,
-            insertType: insertType
+            insertType: insertType,
+            desc: desc
         }
 
         props.save(JSON.stringify(obj));
@@ -106,19 +117,33 @@ function InsertRecordModal(props: any) {
                                 />
                             </Box>
                             <Box sx={{ ...modalBodyContainerStyle, marginTop: '0px' }} >
-                                <Box padding={'15px'} color={'black'} >
+                                <Box padding={'15px'} color={'black'} fontSize={'12px'}>
+                                    <CssTextField
+                                        label='Description'
+                                        size='small'
+                                        fullWidth
+                                        value={desc}
+                                        onChange={(e) => setDesc(e.target.value)}
+                                    />
                                     <RadioGroup
                                         aria-labelledby="demo-radio-buttons-group-label"
                                         value={insertType}
                                         onChange={changeInsertType}
                                         name="radio-buttons-group"
+                                        sx={{ marginTop: '20px' }}
                                     >
                                         <FormControlLabel
                                             value="all"
+                                            name='n-1'
                                             control={<Radio color='secondary' size='small' />}
                                             label={`All ${props.header === 'Insert' ? 'inserted' : 'updated'} records`}
                                         />
-                                        <FormControlLabel value="some" control={<Radio color='secondary' size='small' />} label="Add Conditions" />
+                                        <FormControlLabel
+                                            value="some"
+                                            name='n-1'
+                                            control={<Radio color='secondary' size='small' />}
+                                            label="Add Conditions"
+                                        />
                                     </RadioGroup>
                                 </Box>
 
