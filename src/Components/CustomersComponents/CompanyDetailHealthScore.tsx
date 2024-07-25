@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { colorPalette } from '../../Utils/Constants';
 import { Box } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { parseDataType } from '../../Utils/FeedbackUtils';
+import { HEALTH_HISTORY } from '../../Utils/CustomSettingsConst';
+import UpgradePlanError from '../UpgradePlanError';
 
 const formatHealthText = (value: any) => {
     switch (value) {
@@ -14,7 +18,11 @@ const formatHealthText = (value: any) => {
 
 function CompanyDetailHealthScore({ data, loading }: { data: any[], loading: boolean }) {
 
+    const settings = useSelector((state: any) => state.settings);
+
     const [showUI, setShowUI] = useState(true);
+    const [visible, setVisible] = useState(true);
+
 
     useEffect(() => {
         if (data == null || data.length < 2) {
@@ -24,9 +32,21 @@ function CompanyDetailHealthScore({ data, loading }: { data: any[], loading: boo
         }
     }, [data]);
 
+    useEffect(() => {
+        handlePlanVisibility()
+    }, []);
+
+    const handlePlanVisibility = () => {
+        if (settings != null && parseDataType(settings[HEALTH_HISTORY]) === true) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
+
     function EmptyUI() {
         return <Box height={300} >
-            <img style={{height : '100%'}} src='/no-data.svg' alt='No Data'/>
+            <img style={{ height: '100%' }} src='/no-data.svg' alt='No Data' />
         </Box>
     }
 
@@ -55,8 +75,20 @@ function CompanyDetailHealthScore({ data, loading }: { data: any[], loading: boo
     }
 
     function ShowData() {
-        if (!loading && showUI) {
-            return ChartUI();
+        if (visible) {
+            if (!loading && showUI) {
+                return ChartUI();
+            }else{
+                return EmptyUI();
+            }
+        } else {
+            return (
+                <UpgradePlanError
+                    message='Upgrade plan to use health history'
+                    desc='This feature is available in "Company" & "Enterprise" plans'
+                    showButton={false}
+                />
+            )
         }
         return EmptyUI();
     }

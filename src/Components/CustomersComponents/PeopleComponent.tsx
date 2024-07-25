@@ -11,10 +11,11 @@ import { useNavigate } from 'react-router';
 import CreateCompanyModal from '../../Modals/ContactModals/CreateCompanyModal';
 import axios from 'axios';
 import { deletePersonURL, getPersonListURL } from '../../Utils/Endpoints';
-import { genericModalData } from '../../Utils/types';
+import { genericModalData, userRoleType } from '../../Utils/types';
 import GenericModal from '../../Modals/GenericModal';
 import { getPersonName, handleUnAuth } from '../../Utils/FeedbackUtils';
 import { paginationStyle, tableBodyText, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
+import { useSelector } from 'react-redux';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -31,6 +32,7 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
 
     const navigate = useNavigate();
     const snackbarRef: any = useRef(null);
+    const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
     const [page, setPage] = useState(0);
     const [showDeleteButton, setShowDeleteButton] = useState(false);
@@ -182,19 +184,25 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                             endAdornment: <IconButton onClick={fetchPeople} ><SearchIcon sx={{ color: colorPalette.darkBackground, paddingLeft: '5px' }} /></IconButton>
                         }}
                     />
-                    <Button
-                        className='create-new-survey-button'
-                        sx={containedButton}
-                        style={{ width: 'fit-content', textTransform: 'none', marginLeft: '10px' }}
-                        startIcon={<PersonAddIcon />}
-                        variant='contained'
-                        onClick={() => setShowCreateModal(true)}
-                    >
-                        Create Person
-                    </Button>
-                    <IconButton onClick={handleDeleteClick} sx={{ marginTop: '10px' }} disabled={!showDeleteButton} >
-                        <DeleteIcon />
-                    </IconButton>
+                    {
+                        userRole !== 'GUEST' &&
+                        <Button
+                            className='create-new-survey-button'
+                            sx={containedButton}
+                            style={{ width: 'fit-content', textTransform: 'none', marginLeft: '10px' }}
+                            startIcon={<PersonAddIcon />}
+                            variant='contained'
+                            onClick={() => setShowCreateModal(true)}
+                        >
+                            Create Person
+                        </Button>
+                    }
+                    {
+                        userRole === 'OWNER' &&
+                        <IconButton onClick={handleDeleteClick} sx={{ marginTop: '10px' }} disabled={!showDeleteButton} >
+                            <DeleteIcon />
+                        </IconButton>
+                    }
                 </Box>
             </Box>
             <Box sx={{ padding: '20px' }} >

@@ -187,7 +187,7 @@ function MainHeaderIcons(props: { backToHome: boolean, joyRideOver : any }) {
                     className='get-in-touch'
                     startIcon={<CalendarMonthIcon />}
                     sx={{ ...transparentButton, marginTop: '5px', marginRight: '10px' }}
-                    onClick={() => window.open('https://calendly.com/feedbacksense/demo', '__blank')}
+                    onClick={() => window.open('https://calendly.com/retainsense/30min', '__blank')}
                 >
                     Get in touch
                 </Button>

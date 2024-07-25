@@ -1,0 +1,19 @@
+I have a saas tool that is a customer management tool, churn management tool & automation tool.
+I am sharing its features and you give me all practical use cases of real world 
+* Add / View / Update company
+* Add / View / Update People (Each company has multiple people)
+* Each company has a health score and the condition of calculating health score are configurable
+* Contract status of company
+* Journey stage of company
+* Onboarding & Risk stage of company
+* Product Usage frequency of company
+* Event tracking of company's product and of their users
+* Tasks for companies & people
+* CSM Notes for companies
+* Surveys for companies including (NPS,CSAT)
+* Sentiment analysis of surveys
+* Analysis of Time spent by company's users in their app
+* Analysis of all the things that we store including health score, at risk companies, churn rate, retention rate,this quarter renewal companies
+* Automation workflow with insert/update trigger on company,people & tasks (update trigger can also contain a criteria condition which records have to satisfy)
+* Other automation components like "Wait for component", "create new task", "send email", "send survey", "assign user","update record (change attribute value)"
+* Survey capability , create survey with different types of questions "single answer", "multi choice", "smiley", "rating", "nps", "csat", "contact form", "Date form"

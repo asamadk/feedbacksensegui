@@ -10,13 +10,12 @@ import Notification from '../Utils/Notification';
 import axios from 'axios';
 import { updateUserRoleAPI } from '../Utils/Endpoints';
 import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
-import { handleLogout } from '../Utils/FeedbackUtils';
+import { handleLogout, parseDataType } from '../Utils/FeedbackUtils';
 import { TEAM_ROLES } from '../Utils/CustomSettingsConst';
 import UpgradePlanError from '../Components/UpgradePlanError';
 
 function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
 
-    const defaultColor = useSelector((state: any) => state.colorReducer);
     const settings = useSelector((state: any) => state.settings);
 
     const snackbarRef: any = useRef(null);
@@ -30,12 +29,10 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
     }, []);
 
     const handlePlanVisibility = () => {
-        if (settings != null && settings[TEAM_ROLES] === 'true') {
+        if (parseDataType(settings[TEAM_ROLES]) === true) {
             setTeamRolesFeatureActive(true);
         } else {
-            //TODO handle it "Stopping from accesing roles"
-            // setTeamRolesFeatureActive(false);
-            setTeamRolesFeatureActive(true);
+            setTeamRolesFeatureActive(false);
         }
     }
 
@@ -77,7 +74,7 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={{ ...ModalStyles.modalStyle(colorPalette.background) }}>
+                <Box sx={{ ...ModalStyles.modalStyle(colorPalette.background),color : 'black' }}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
                         <Typography id="modal-modal-title" variant="h5" component="h2">
                             User Details
@@ -95,10 +92,10 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                                 src={user?.image}
                             />
                             <Box textAlign={'start'} >
-                                <Typography variant='h6' color={colorPalette.darkBackground}>{user?.name}</Typography>
-                                <Typography color={colorPalette.darkBackground} >{user?.email}</Typography>
-                                <Typography color={colorPalette.darkBackground} >{user?.role}</Typography>
-                                <Typography color={colorPalette.darkBackground} >{new Date(user?.created_at).toString()}</Typography>
+                                <Typography variant='h6' color={'black'}>{user?.name}</Typography>
+                                <Typography color={'black'} >{user?.email}</Typography>
+                                <Typography color={'black'} >{user?.role}</Typography>
+                                <Typography color={'black'} >{new Date(user?.created_at).toString()}</Typography>
                             </Box>
                         </Box>
                         {
@@ -124,11 +121,6 @@ function UserDetailsModal({ open, close, user, roles, updateUser }: any) {
                                     </Box>
                                 </Box> :
                                 <Box textAlign={'center'} marginTop={'20px'} >
-                                    <UpgradePlanError
-                                        message='Upgrade for Teammates roles'
-                                        desc='Manage teammates roles right from here, Upgrade to Pro Plan to access this resource.'
-                                        showButton={true}
-                                    />
                                 </Box>
                         }
                     </Box>

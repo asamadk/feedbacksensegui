@@ -201,7 +201,7 @@ export default function UpgradeSubscription() {
         const options = {
             key: reqBody.key,
             subscription_id: subId,
-            name: 'FeedbackSense',
+            name: 'RetainSense',
             description: '',
             image: '/Feedback Sense Logo-01.png',
             callback_url: reqBody.callbackURL,

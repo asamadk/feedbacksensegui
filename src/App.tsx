@@ -39,10 +39,10 @@ import TasksLayout from './Layout/TasksLayout';
 import NotificationsLayout from './Layout/NotificationsLayout';
 import CompanyDetailPage from './Components/CustomersComponents/CompanyDetailPage';
 import PersonDetailPage from './Components/CustomersComponents/PersonDetailPage';
-import CreateFlow from './Layout/FlowDetailLayout';
 import FlowDetailLayout from './Layout/FlowDetailLayout';
 import GlobalAlert from './Components/GlobalAlert';
 import GlobalLoader from './Components/GlobalLoader';
+import HomeLayout from './Layout/HomeLayout';
 
 function App() {
 
@@ -58,6 +58,10 @@ function App() {
 
   const getUser = async () => {
     try {
+      if(user != null){
+        handleLeftBarVisibility();
+        return;
+      }
       let currentPath: string = window.location.pathname;
       if (currentPath.includes('/share/survey/') === true) {
         setLiveSurvey(true);
@@ -74,10 +78,9 @@ function App() {
         navigate('/user/create/organization');
         return;
       }
-      const freeTypeWindow: any = window;
-      freeTypeWindow.feedbacksense.track('login');
+      handleLeftBarVisibility();
       setUser(currentUser);
-      navigate('/');
+      navigate('/home');
     } catch (err: any) {
       if (err?.response?.data?.statusCode === 404) {
         navigate(`/failure?message=${err.response?.data?.message}&code=${err?.response?.data?.statusCode}`);
@@ -90,13 +93,13 @@ function App() {
     let currentPath: string = window.location.pathname;
     if (ignoreAuthPaths.includes(currentPath)) { return; }
     getUser();
-    handleLeftBarVisibility();
+    // handleLeftBarVisibility();
     dataFetchedRef.current = true;
   }, []);
 
-  useEffect(() => {
-    handleLeftBarVisibility();
-  }, [location.pathname]);
+  // useEffect(() => {
+  //   handleLeftBarVisibility();
+  // }, [location.pathname]);
 
   const handleLeftBarVisibility = () => {
     let currentPath: string = location.pathname;
@@ -120,158 +123,74 @@ function App() {
     }
   });
 
+  function AuthHandler(component: JSX.Element): JSX.Element {
+    return user ? component : <Login />;
+  }
+
   return (
     <>
       <ThemeProvider theme={lightTheme} >
-        {liveSurvey === false && <div style={{ backgroundColor: defaultColor?.backgroundColor }} className="App">
-          <Box display={'flex'} >
-            {
-              user && showLeftBar &&
-              <SideBar loggedIn={user != null} />
-            }
-            <Box width={'100%'} >
-              <Header loggedIn={user != null} />
-              <Routes>
-                <Route
-                  path='/'
-                  element={user ? <DashboardsLayout /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/login'
-                  element={user ? <DashboardsLayout /> : <Login />}
-                />
-                <Route
-                  path='/template'
-                  element={user ? <TemplateLayout /> : <Login />}
-                />
-                <Route
-                  path='/settings'
-                  element={user ? <SettingsLayout /> : <Login />}
-                />
-                <Route
-                  path='/template/details/:templateId'
-                  element={user ? <TemplateDetailLayout /> : <Login />}
-                />
-                <Route
-                  path='/flow/detail/create/:flowId'
-                  element={user ? <FlowDetailLayout /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/survey/detail/create/:surveyId'
-                  element={user ? <CreateSurvey /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/survey/detail/design/:surveyId'
-                  element={user ? <DesignPreview /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/survey/detail/share/:surveyId'
-                  element={user ? <ShareSurvey /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/survey/detail/analyze/:surveyId'
-                  element={user ? <AnalyzeSurvey /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/survey/detail/configure/:surveyId'
-                  element={user ? <ConfigureSurvey /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/upgrade/plan'
-                  element={user ? <UpgradeSubscription /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/support'
-                  element={user ? <Support /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/user/create/organization'
-                  element={<LoginSuccess />}
-                />
-                <Route
-                  path='/integration'
-                  element={user ? <IntegrationLayout /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/dashboard'
-                  element={user ? <DashboardsLayout /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/surveys'
-                  element={user ? <MainBody /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/contacts/companies/detail/:id'
-                  element={user ? <CompanyDetailPage /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/contacts/person/detail/:id'
-                  element={user ? <PersonDetailPage /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/segment'
-                  element={user ? <SegmentLayout /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/flows'
-                  element={user ? <FlowLayout /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/tasks'
-                  element={user ? <TasksLayout /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/notifications'
-                  element={user ? <NotificationsLayout /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/companies'
-                  element={user ? <ContactLayout /> : <Navigate to={'/login'} />}
-                />
-                <Route
-                  path='/people'
-                  element={user ? <ContactLayout /> : <Navigate to={'/login'} />}
-                />
-              </Routes>
+        {liveSurvey === false &&
+          <div style={{ backgroundColor: defaultColor?.backgroundColor }} className="App">
+            <Box display={'flex'} >
+              {
+                user && showLeftBar &&
+                <SideBar loggedIn={user != null} />
+              }
+              <Box width={'100%'} >
+                <Header loggedIn={user != null} />
+                <Routes>
+                  <Route path='/' element={AuthHandler(<HomeLayout />)} />
+                  <Route path='/home' element={AuthHandler(<HomeLayout />)} />
+                  <Route path='/login' element={AuthHandler(<DashboardsLayout />)} />
+                  <Route path='/template' element={AuthHandler(<TemplateLayout />)} />
+                  <Route path='/settings' element={AuthHandler(<SettingsLayout />)} />
+                  <Route path='/template/details/:templateId' element={AuthHandler(<TemplateDetailLayout />)} />
+                  <Route path='/flow/detail/create/:flowId' element={AuthHandler(<FlowDetailLayout />)} />
+                  <Route path='/survey/detail/create/:surveyId' element={AuthHandler(<CreateSurvey />)} />
+                  <Route path='/survey/detail/design/:surveyId' element={AuthHandler(<DesignPreview />)} />
+                  <Route path='/survey/detail/share/:surveyId' element={AuthHandler(<ShareSurvey />)} />
+                  <Route path='/survey/detail/analyze/:surveyId' element={AuthHandler(<AnalyzeSurvey />)} />
+                  <Route path='/survey/detail/configure/:surveyId' element={AuthHandler(<ConfigureSurvey />)} />
+                  <Route path='/upgrade/plan' element={AuthHandler(<UpgradeSubscription />)} />
+                  <Route path='/support' element={AuthHandler(<Support />)} />
+                  <Route path='/user/create/organization' element={<LoginSuccess />} />
+                  <Route path='/integration' element={AuthHandler(<IntegrationLayout />)} />
+                  <Route path='/dashboard' element={AuthHandler(<DashboardsLayout />)} />
+                  <Route path='/surveys' element={AuthHandler(<MainBody />)} />
+                  <Route path='/contacts/companies/detail/:id' element={AuthHandler(<CompanyDetailPage />)} />
+                  <Route path='/contacts/person/detail/:id' element={AuthHandler(<PersonDetailPage />)} />
+                  <Route path='/segment' element={AuthHandler(<SegmentLayout />)} />
+                  <Route path='/flows' element={AuthHandler(<FlowLayout />)} />
+                  <Route path='/tasks' element={AuthHandler(<TasksLayout />)} />
+                  <Route path='/notifications' element={AuthHandler(<NotificationsLayout />)} />
+                  <Route path='/companies' element={AuthHandler(<ContactLayout />)} />
+                  <Route path='/people' element={AuthHandler(<ContactLayout />)} />
+                </Routes>
+              </Box>
             </Box>
-          </Box>
-        </div>}
+          </div>}
       </ThemeProvider>
+
       {liveSurvey === true &&
         <ThemeProvider theme={lightTheme} >
-          <div>
-            <Routes>
-              <Route path='/share/survey/:effectiveSurveyId' element={<SurveyDisplays source='live' mode='live' />} />
-            </Routes>
-            <Routes>
-              <Route path='/share/survey/preview/:effectiveSurveyId' element={<PreviewSurveyLayout />} />
-            </Routes>
-          </div>
+          <Routes>
+            <Route path='/share/survey/:effectiveSurveyId' element={<SurveyDisplays source='live' mode='live' />} />
+            <Route path='/share/survey/preview/:effectiveSurveyId' element={<PreviewSurveyLayout />} />
+          </Routes>
         </ThemeProvider>
       }
       <ThemeProvider theme={lightTheme} >
         <Routes>
-          <Route
-            path='/payment/success'
-            element={<PaymentSuccess />}
-          />
-          <Route
-            path='/failure'
-            element={<HttpFailureComponent />}
-          />
-          <Route
-            path='/invite'
-            element={<ProcessInvite />}
-          />
-          <Route
-            path='/sign-up'
-            element={<SignUpLayout />}
-          />
+          <Route path='/payment/success' element={<PaymentSuccess />} />
+          <Route path='/failure' element={<HttpFailureComponent />} />
+          <Route path='/invite' element={<ProcessInvite />} />
+          <Route path='/sign-up' element={<SignUpLayout />} />
         </Routes>
       </ThemeProvider>
-      
-      <GlobalAlert/>
-      <GlobalLoader/>
+
+      <GlobalAlert />
+      <GlobalLoader />
     </>
   );
 }

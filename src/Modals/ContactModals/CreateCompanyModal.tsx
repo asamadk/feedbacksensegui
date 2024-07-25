@@ -36,7 +36,6 @@ const CustomSelect = styled(Select)(muiSelectStyle);
 function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' | 'companies', data: any }) {
 
     const snackbarRef: any = useRef(null);
-    const settings = useSelector((state: any) => state.settings);
     const companiesState = useSelector((state: any) => state.companies);
     const users = useSelector((state: any) => state.users);
 

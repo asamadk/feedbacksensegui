@@ -621,6 +621,7 @@ export function getEmailRecipientDesc(recordType: string): string {
 }
 
 export function parseDataType(value: string): number | Date | boolean | string {
+    if(value == null){return value;}
     const numberValue = Number(value);
     if (!isNaN(numberValue)) {
         return numberValue;
@@ -629,11 +630,15 @@ export function parseDataType(value: string): number | Date | boolean | string {
     if (!isNaN(dateValue.getTime())) {
         return dateValue;
     }
-    const lowerValue = value.toLowerCase();
+    const lowerValue = value?.toLowerCase();
     if (lowerValue === 'true') {
         return true;
     } else if (lowerValue === 'false') {
         return false;
     }
     return value;
+}
+
+export function getRandomNumber(limit :number) {
+    return Math.floor(Math.random() * limit);
 }

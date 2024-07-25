@@ -8,11 +8,13 @@ import { v4 as uuidv4 } from "uuid";
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import styled from '@emotion/styled';
 import { colorPalette, dateAnswerOperators, multipleAnswerOperators, singleAnswerOperators, textAnswerOperators } from '../../Utils/Constants';
-import { answerNotNeededSet } from '../../Utils/FeedbackUtils';
+import { answerNotNeededSet, parseDataType } from '../../Utils/FeedbackUtils';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import InfoIcon from '@mui/icons-material/Info';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useSelector } from 'react-redux';
+import { SKIP_LOGIC_FEATURE } from '../../Utils/CustomSettingsConst';
+import UpgradePlanError from '../UpgradePlanError';
 
 
 const logicSelectContainer = {
@@ -57,18 +59,30 @@ type propType = {
 
 function CreateLogic(props: propType, ref: any) {
 
+    const settings = useSelector((state: any) => state.settings);
+
     const [logicList, setLogicList] = useState<logicType[]>([]);
     const [operators, setOperators] = useState<string[]>([]);
 
     //display variables
     const [showAnswerList, setShowAnswerList] = useState(false);
     const [showAutoComplete, setShowAutoComplete] = useState(false);
+    const [visible,setVisible] = useState(false);
 
     useEffect(() => {
+        handlePlanVisibility();
         populateOperator();
         populateData();
         populateDisplayFlags();
     }, [props.data]);
+
+    const handlePlanVisibility = () => {
+        if (settings != null && parseDataType(settings[SKIP_LOGIC_FEATURE]) === true) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
 
     const populateDisplayFlags = () => {
         setShowAnswerList(false);
@@ -222,7 +236,7 @@ function CreateLogic(props: propType, ref: any) {
     return (
         <>
             {
-                props.open === true &&
+                visible && props.open === true &&
                 <Box sx={modalLogicStyle} >
                     <Typography>Add logic</Typography>
                     <Typography
@@ -266,6 +280,17 @@ function CreateLogic(props: propType, ref: any) {
                         >+ Add new logic</Typography>
                     </Box>
                 </Box>
+            }
+            {
+                !visible && props.open === true && 
+                <Box textAlign={'center'} >
+                    <UpgradePlanError
+                        message='Upgrade plan to use survey conditions'
+                        desc='This feature is available in "Company" & "Enterprise" plans'
+                        showButton={false}
+                    />
+                </Box>
+
             }
         </>
     )

@@ -68,7 +68,7 @@ function ShareSurvey() {
       const qrCodeDataURL = canvas.toDataURL('image/png');
       const anchor = document.createElement('a');
       anchor.href = qrCodeDataURL;
-      anchor.download = 'FEEDBACKSENSE_SURVEY_QR_CODE.png';
+      anchor.download = 'RETAIN_SENSE_SURVEY_QR_CODE.png';
       anchor.click();
     };
   };

@@ -4,7 +4,7 @@ import * as LayoutStyles from '../Styles/LayoutStyles'
 import { useSelector } from 'react-redux';
 import { containedButton } from '../Styles/ButtonStyle';
 import styled from '@emotion/styled';
-import { handleLogout, validateLogoImageFile } from '../Utils/FeedbackUtils';
+import { handleLogout, parseDataType, validateLogoImageFile } from '../Utils/FeedbackUtils';
 import CancelIcon from '@mui/icons-material/Cancel';
 import FSLoader from './FSLoader';
 import Notification from '../Utils/Notification';
@@ -37,7 +37,7 @@ function SurveyGeneralSettings() {
     const settings = useSelector((state: any) => state.settings);
     const userRole: userRoleType = useSelector((state: any) => state.userRole);
     const snackbarRef: any = useRef(null);
-    
+
     const [genericModalObj, setGenericModalObj] = useState<genericModalData>();
     const [loading, setLoading] = useState(false);
     const [imageData, setImageData] = useState<string>();
@@ -69,10 +69,9 @@ function SurveyGeneralSettings() {
     }
 
     const handleVisibility = () => {
-        console.log("🚀 ~ handleVisibility ~ settings:", settings)
-        if(settings != null && settings[ADD_CUSTOM_LOGO] === 'true'){
+        if (settings != null && parseDataType(settings[ADD_CUSTOM_LOGO]) === true) {
             getLogo();
-        }else{
+        } else {
             setShowUpgrade(true);
         }
     }
@@ -160,7 +159,7 @@ function SurveyGeneralSettings() {
             !showUpgrade && CoreUtils.isComponentVisible(userRole, componentName.UPLOAD_LOGO) && <>
                 <Box sx={{ display: 'flex' }} >
                     <Box>
-                        <Typography color={colorPalette.darkBackground} sx={{ marginBottom: '10px',textAlign : 'start' }} >Company Logo</Typography>
+                        <Typography color={colorPalette.darkBackground} sx={{ marginBottom: '10px', textAlign: 'start' }} >Company Logo</Typography>
                         <Typography color={colorPalette.darkBackground} fontSize={'12px'} >Max size : 1MB | Type : PNG,JPG</Typography>
                         <Button
                             component="label"
@@ -194,7 +193,7 @@ function SurveyGeneralSettings() {
     }
 
     return (
-        <Box style={{ display: 'flex' }} sx={{...LayoutStyles.globalSettingSubContainers(colorPalette.background),height : 'calc(100vh - 80px)'}} >
+        <Box style={{ display: 'flex' }} sx={{ ...LayoutStyles.globalSettingSubContainers(colorPalette.background), height: 'calc(100vh - 80px)' }} >
             {showUpgradeScreen()}
             {showUploadLogoScreen()}
             <FSLoader show={loading} />

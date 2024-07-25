@@ -25,8 +25,7 @@ function Login() {
 
     //TODO redirect to book a meeting
     const handleNoLogin = () => {
-        // navigate('/sign-up');
-        window.open('https://www.feedbacksense.io/support')
+        window.open('https://www.retainsense.com/support')
     }
 
     return (

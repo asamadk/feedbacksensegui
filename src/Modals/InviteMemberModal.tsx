@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import Notification from '../Utils/Notification';
 import { LoadingButton } from '@mui/lab';
 import { colorPalette, USER_UNAUTH_TEXT, userRoles } from '../Utils/Constants';
-import { handleLogout } from '../Utils/FeedbackUtils';
+import { handleLogout, parseDataType } from '../Utils/FeedbackUtils';
 import axios from 'axios';
 import { inviteUserAPI } from '../Utils/Endpoints';
 import { textFieldStyle } from '../Styles/InputStyles';
@@ -22,8 +22,8 @@ const textFieldStyleCSS = {
 
 function InviteMemberModal(props: any) {
 
-    const settings = useSelector((state: any) => state.settings);
     const snackbarRef: any = useRef(null);
+    const settings = useSelector((state: any) => state.settings);
 
     const [loading, setLoading] = React.useState(false);
     const [userRole, setUserRole] = useState<'OWNER' | 'ADMIN' | 'USER' | 'GUEST'>('OWNER');
@@ -32,14 +32,14 @@ function InviteMemberModal(props: any) {
 
     useEffect(() => {
         handlePlanVisibility();
-    },[]);
+    }, []);
 
     const handlePlanVisibility = () => {
-        // if (settings != null && settings[TEAM_ROLES] === 'true') {
-        //     setTeamRolesFeatureActive(true);
-        // } else {
-        //     setTeamRolesFeatureActive(false);
-        // }
+        if (parseDataType(settings[TEAM_ROLES]) === true) {
+            setTeamRolesFeatureActive(true);
+        } else {
+            setTeamRolesFeatureActive(false);
+        }
     }
 
     const handleTeamMemberInvite = async () => {
@@ -85,8 +85,8 @@ function InviteMemberModal(props: any) {
             >
                 <Box sx={ModalStyles.modalStyle(colorPalette.background)}>
                     <Box sx={ModalStyles.modalHeaderStyle} >
-                        <Typography id="modal-modal-title" variant="h5" component="h2" >
-                            Invite your team members !
+                        <Typography color={'black'} id="modal-modal-title" variant="h5" component="h2" >
+                            Invite your team members
                         </Typography>
                         <IconButton sx={{ color: colorPalette.darkBackground }} >
                             <CloseIcon onClick={handleClose} />
@@ -109,7 +109,7 @@ function InviteMemberModal(props: any) {
 
                     <Box marginTop={'20px'} >
                         <InputLabel id="demo-simple-select-label" sx={{ mb: '5px' }} >Choose Role</InputLabel>
-                        <Tooltip title={teamRolesFeatureActive ? '' : 'Please upgrade to PRO plan if yoy want to change user roles'} >
+                        <Tooltip title={teamRolesFeatureActive ? '' : 'Please upgrade if you want to change user roles'} >
                             <Select
                                 disabled={!teamRolesFeatureActive}
                                 labelId="demo-simple-select-label"

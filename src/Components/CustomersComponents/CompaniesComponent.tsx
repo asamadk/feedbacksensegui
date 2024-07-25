@@ -15,9 +15,10 @@ import { deleteCompanyURL, getCompanyListURL } from '../../Utils/Endpoints';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getHealthScoreName, handleUnAuth } from '../../Utils/FeedbackUtils';
 import GenericModal from '../../Modals/GenericModal';
-import { genericModalData } from '../../Utils/types';
+import { genericModalData, userRoleType } from '../../Utils/types';
 import { getHealthScoreStyle, paginationStyle, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 import { taskStatusStyle } from '../../Styles/LayoutStyles';
+import { useSelector } from 'react-redux';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -37,6 +38,7 @@ function CompaniesComponent() {
 
   const [loading, setLoading] = useState(false);
   const col: string[] = ['Name', 'Website','Contract Status','Owner', 'Health Score', 'Lifecycle Stage', 'Action'];
+  const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
   const [companies, setCompanies] = useState<any[]>([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -168,19 +170,25 @@ function CompaniesComponent() {
               endAdornment: <SearchIcon sx={{ color: colorPalette.darkBackground, paddingLeft: '5px' }} />
             }}
           />
-          <Button
-            className='create-new-survey-button'
-            sx={containedButton}
-            style={{ width: 'fit-content', textTransform: 'none', marginLeft: '10px' }}
-            startIcon={<BusinessIcon />}
-            variant='contained'
-            onClick={() => setShowCreateModal(true)}
-          >
-            Create Company
-          </Button>
-          <IconButton onClick={handleDeleteClick} sx={{marginTop : '10px'}} disabled={!showDeleteButton} >
-            <DeleteIcon/>
-          </IconButton>
+          {
+            userRole !== 'GUEST' &&
+            <Button
+              className='create-new-survey-button'
+              sx={containedButton}
+              style={{ width: 'fit-content', textTransform: 'none', marginLeft: '10px' }}
+              startIcon={<BusinessIcon />}
+              variant='contained'
+              onClick={() => setShowCreateModal(true)}
+            >
+              Create Company
+            </Button>
+          }
+          {
+            userRole === 'OWNER' &&
+            <IconButton onClick={handleDeleteClick} sx={{marginTop : '10px'}} disabled={!showDeleteButton} >
+              <DeleteIcon/>
+            </IconButton>
+          }
         </Box>
       </Box>
       <Box sx={{ padding: '10px 20px' }} >

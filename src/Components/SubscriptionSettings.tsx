@@ -28,7 +28,6 @@ function SubscriptionSettings() {
 
     const handleUpgradePlanClick = () => {
         navigate('/upgrade/plan');
-        // window.open('https://www.feedbacksense.io/pricing', '__blank')
     }
 
     const handleSuccessButtonClick = () => {
@@ -36,7 +35,7 @@ function SubscriptionSettings() {
     }
 
     const handleCancelSubscription = () => {
-        window.open('https://www.feedbacksense.io/ticket', '__blank')
+        window.open('https://retainsense.com/support', '__blank')
     }
 
     const subscriptionSubContainer = {

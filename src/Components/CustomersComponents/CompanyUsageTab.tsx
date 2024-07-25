@@ -8,10 +8,13 @@ import { tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
 import UsageEventDetailChart from '../../ChartComponents/UsageEventDetailChart';
 import UsageTimeSpent from '../../ChartComponents/UsageTimeSpent';
-import { handleUnAuth } from '../../Utils/FeedbackUtils';
+import { handleUnAuth, parseDataType } from '../../Utils/FeedbackUtils';
 import axios from 'axios';
 import { getEventsOverTimeData, getTimeSpentDataURL, getTopUsagePeopleURL } from '../../Utils/Endpoints';
 import FSLoader from '../FSLoader';
+import { useSelector } from 'react-redux';
+import { PRODUCT_USAGE_TRACKING, TEAM_ROLES } from '../../Utils/CustomSettingsConst';
+import UpgradePlanError from '../UpgradePlanError';
 
 const usageContainer = {
   border: `1px ${colorPalette.textSecondary} solid`,
@@ -40,24 +43,35 @@ const col: string[] = ['Name', 'Company', 'Total Events', 'Active Days'];
 
 function CompanyUsageTab(props: { companyId: string | null, personId: string | null }) {
 
-  const snackbarRef: any = useRef(null);
+  const settings = useSelector((state: any) => state.settings);
+
   const [loading, setLoading] = useState(false);
   const [usageDurationVal, setUsageDurationValue] = useState<string>('last_90_days');
   const [events, setEvents] = useState([]);
   const [eventDetails, setEventDetails] = useState<any[]>([]);
   const [timeSpentData, setTimeSpentData] = useState([]);
   const [people, setPeople] = useState<any[]>([]);
+  const [visible, setVisible] = useState(true);
 
   let init = false;
 
   useEffect(() => {
-    if (init === false) {
-      fetchEventsOverTime();
-      fetchTimeSpentOverTime();
-      fetchTopUsagePeople();
-      init = true;
-    }
+    handlePlanVisibility();
   }, [usageDurationVal]);
+
+  const handlePlanVisibility = () => {
+    if (settings != null && parseDataType(settings[PRODUCT_USAGE_TRACKING]) === true) {
+      setVisible(true);
+      if (init === false) {
+        fetchEventsOverTime();
+        fetchTimeSpentOverTime();
+        fetchTopUsagePeople();
+        init = true;
+      }
+    } else {
+      setVisible(false);
+    }
+  }
 
   function populateDataForEventDetails(data: any) {
     const labelCount = new Map<string, number>();
@@ -80,7 +94,7 @@ function CompanyUsageTab(props: { companyId: string | null, personId: string | n
       })
     });
 
-    transformedData.sort((a :any, b :any) => b.percentage - a.percentage);
+    transformedData.sort((a: any, b: any) => b.percentage - a.percentage);
     const top20Records = transformedData.slice(0, 20);
 
     setEventDetails(top20Records);
@@ -147,109 +161,122 @@ function CompanyUsageTab(props: { companyId: string | null, personId: string | n
     }
   }
 
+
   return (
-    <Box sx={{ height: 'calc(100vh - 170px)', overflowY: 'scroll' }} padding={'20px 40px'} >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }} >
-        <Typography variant='h5' >Usage Report</Typography>
-        <Box>
-          <label style={{ color: colorPalette.fsGray, marginRight: '10px' }} >Show usage for :</label>
-          <Select
-            size='small'
-            id="demo-simple-select"
-            value={usageDurationVal}
-            onChange={(e) => setUsageDurationValue(e.target.value)}
-          >
-            {getUsageTimeFilter().map(fil => <MenuItem value={fil.value}>{fil.label}</MenuItem>)}
-          </Select>
-        </Box>
-      </Box>
+    <>
+      {
+        visible ?
+          <Box sx={{ height: 'calc(100vh - 170px)', overflowY: 'scroll' }} padding={'20px 40px'} >
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }} >
+              <Typography variant='h5' >Usage Report</Typography>
+              <Box>
+                <label style={{ color: colorPalette.fsGray, marginRight: '10px' }} >Show usage for :</label>
+                <Select
+                  size='small'
+                  id="demo-simple-select"
+                  value={usageDurationVal}
+                  onChange={(e) => setUsageDurationValue(e.target.value)}
+                >
+                  {getUsageTimeFilter().map(fil => <MenuItem value={fil.value}>{fil.label}</MenuItem>)}
+                </Select>
+              </Box>
+            </Box>
 
-      <Typography textAlign={'start'} variant='h6' margin={'20px 0px'} ><SsidChartIcon fontSize={'small'} />Events Over Time</Typography>
-      <Box sx={usageContainer} >
-        <UsageEventDetailChart data={events} />
-      </Box>
+            <Typography textAlign={'start'} variant='h6' margin={'20px 0px'} ><SsidChartIcon fontSize={'small'} />Events Over Time</Typography>
+            <Box sx={usageContainer} >
+              <UsageEventDetailChart data={events} />
+            </Box>
 
-      <Box sx={{ textAlign: 'start', marginTop: '50px' }} >
-        <Typography variant='h6' ><EmojiEventsIcon fontSize='small' />Event Details</Typography>
-        <Box sx={{ flexGrow: 1, color: colorPalette.fsGray, fontSize: '10px' }}>
-          <Grid sx={{ marginTop: '5px' }} container spacing={3}>
-            <Grid item xs>
-              <Typography>Event Name</Typography>
-            </Grid>
-            <Grid item xs={6}></Grid>
-            <Grid sx={{ textAlign: 'end' }} item xs>
-              <Typography>Instances</Typography>
-            </Grid>
-          </Grid>
-          <Box sx={{ padding: '20px' }} >
-            {
-              eventDetails?.map(e => (
-                <Grid sx={{ marginTop: '10px' }} container spacing={3}>
+            <Box sx={{ textAlign: 'start', marginTop: '50px' }} >
+              <Typography variant='h6' ><EmojiEventsIcon fontSize='small' />Event Details</Typography>
+              <Box sx={{ flexGrow: 1, color: colorPalette.fsGray, fontSize: '10px' }}>
+                <Grid sx={{ marginTop: '5px' }} container spacing={3}>
                   <Grid item xs>
-                    <Typography sx={{ color: colorPalette.primary }} >{e.label}</Typography>
+                    <Typography>Event Name</Typography>
                   </Grid>
-                  <Grid item xs={6}>
-                    <BorderLinearProgress variant="determinate" value={e.percentage} />
-                  </Grid>
+                  <Grid item xs={6}></Grid>
                   <Grid sx={{ textAlign: 'end' }} item xs>
-                    <Typography>{e.oldData}/{e.newData}</Typography>
+                    <Typography>Instances</Typography>
                   </Grid>
                 </Grid>
-              ))
+                <Box sx={{ padding: '20px' }} >
+                  {
+                    eventDetails?.map(e => (
+                      <Grid sx={{ marginTop: '10px' }} container spacing={3}>
+                        <Grid item xs>
+                          <Typography sx={{ color: colorPalette.primary }} >{e.label}</Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <BorderLinearProgress variant="determinate" value={e.percentage} />
+                        </Grid>
+                        <Grid sx={{ textAlign: 'end' }} item xs>
+                          <Typography>{e.oldData}/{e.newData}</Typography>
+                        </Grid>
+                      </Grid>
+                    ))
+                  }
+                </Box>
+              </Box>
+            </Box>
+
+            <Box sx={{ marginTop: '50px', textAlign: 'start' }} >
+              <Typography variant='h6' ><ViewStreamIcon fontSize='small' />Time Spent in App Over Time</Typography>
+              <Typography sx={{ fontSize: '12px', color: colorPalette.fsGray }} >Time unit : Hours</Typography>
+              <Box sx={{ ...usageContainer, marginTop: '10px' }} >
+                <UsageTimeSpent data={timeSpentData} />
+              </Box>
+            </Box>
+
+            {
+              props.companyId != null &&
+              <Box sx={{ marginTop: '50px', textAlign: 'start' }} >
+                <Typography variant='h6' marginBottom={'10px'} ><Groups2Icon fontSize='small' />Top Contacts</Typography>
+                <TableContainer sx={tableContainerStyle} >
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow >
+                        {col?.map((column: string) => (
+                          <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary }} key={column}>
+                            {column}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {
+                        people?.map(person => (
+                          <TableRow key={person.id} >
+                            <TableCell sx={tableCellStyle} >
+                              {person.personName}
+                            </TableCell>
+                            <TableCell sx={tableCellStyle} >
+                              {person.company}
+                            </TableCell>
+                            <TableCell sx={tableCellStyle} >
+                              {person.totalEvents}
+                            </TableCell>
+                            <TableCell sx={tableCellStyle} >
+                              {person.activeDays}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      }
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
             }
+            <FSLoader show={loading} />
+          </Box> :
+          <Box marginTop={'20px'} >
+            <UpgradePlanError
+              message='Upgrade your plan to access Product Usage Feature'
+              desc='This feature is available in company and Enterprise plan'
+              showButton={false}
+            />
           </Box>
-        </Box>
-      </Box>
-
-      <Box sx={{ marginTop: '50px', textAlign: 'start' }} >
-        <Typography variant='h6' ><ViewStreamIcon fontSize='small' />Time Spent in App Over Time</Typography>
-        <Typography sx={{fontSize : '12px',color : colorPalette.fsGray}} >Time unit : Hours</Typography>
-        <Box sx={{ ...usageContainer, marginTop: '10px' }} >
-          <UsageTimeSpent data={timeSpentData} />
-        </Box>
-      </Box>
-
-      {
-        props.companyId != null &&
-        <Box sx={{ marginTop: '50px', textAlign: 'start' }} >
-          <Typography variant='h6' marginBottom={'10px'} ><Groups2Icon fontSize='small' />Top Contacts</Typography>
-          <TableContainer sx={tableContainerStyle} >
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow >
-                  {col?.map((column: string) => (
-                    <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary }} key={column}>
-                      {column}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {
-                  people?.map(person => (
-                    <TableRow key={person.id} >
-                      <TableCell sx={tableCellStyle} >
-                        {person.personName}
-                      </TableCell>
-                      <TableCell sx={tableCellStyle} >
-                        {person.company}
-                      </TableCell>
-                      <TableCell sx={tableCellStyle} >
-                        {person.totalEvents}
-                      </TableCell>
-                      <TableCell sx={tableCellStyle} >
-                        {person.activeDays}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                }
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
       }
-      <FSLoader show={loading} />
-    </Box>
+    </>
   )
 }
 
