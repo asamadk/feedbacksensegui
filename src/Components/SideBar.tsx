@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router';
 import InviteMemberModal from '../Modals/InviteMemberModal';
 import SettingsModal from './SettingsModal';
 import { userRoleType } from '../Utils/types';
-import { colorPalette } from '../Utils/Constants';
+import { colorPalette, settingIds } from '../Utils/Constants';
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -80,7 +80,7 @@ function SideBar(props: any) {
                 navigate('/flows');
                 break;
             case SIDE_BAR_IDS.SETTINGS:
-                navigate('/settings');
+                navigate('/settings/home');
                 break;
             case SIDE_BAR_IDS.TASKS:
                 navigate('/tasks');
@@ -98,12 +98,40 @@ function SideBar(props: any) {
         setAnchorEl(event.currentTarget);
     }
 
+    useEffect(() => {
+        const path = window.location.pathname;
+        if(path === '/home'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.HOME));
+        }else if(path === '/surveys'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.SURVEYS));
+        }else if(path === '/companies' || path.includes('companies') || path.includes('person')){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.CONTACTS));
+        }else if(path === '/segment'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.SEGMENT));
+        }else if(path === '/dashboard'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.DASHBOARD));
+        }else if(path === '/flows'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.FLOWS));
+        }else if(path.includes('/settings')){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.SETTINGS));
+        }else if(path === '/tasks'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.TASKS));
+        }else if(path === '/notifications'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.NOTIFICATION));
+        }
+    },[window.location.pathname])
+
     return (
         <Box className='sidebar-main-container' >
             <Box>
                 <Box className='sidebar-icon-container' >
-                    <Box sx={{backgroundColor : colorPalette.darkBackground,borderRadius : '5px',height : '35px'}} >
-                        <img className='sidebar-icons logo' src='/logo-churn-original.png' alt='Logo' />
+                    <Box sx={{backgroundColor : colorPalette.darkBackground,borderRadius : '5px',height : '40px'}} >
+                        <img 
+                            style={{marginTop : '7px'}}
+                            className='sidebar-icons logo' 
+                            src='/logo-churn-original.png' 
+                            alt='Logo' 
+                        />
                     </Box>
                 </Box>
                 <Box className={sideBarPos === SIDE_BAR_IDS.HOME ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >

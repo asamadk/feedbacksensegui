@@ -9,14 +9,6 @@ import { setLoader } from '../Redux/Reducers/LoadingReducer';
 import { getRandomNumber, handleUnAuth } from '../Utils/FeedbackUtils';
 import { endpoints, getCompanyPeopleOptionURL, getCustomSettingsAPI, getJourneyStageURL, getSubscriptionDetailHome, getUserListAPI } from '../Utils/Endpoints';
 import axios from 'axios';
-import { setCompanyList } from '../Redux/Reducers/companyReducer';
-import { setPeopleOptions } from '../Redux/Reducers/peopleOptionReducer';
-import { setGlobalStages } from '../Redux/Reducers/journeyStageReducer';
-import { setGlobalSubStages } from '../Redux/Reducers/journeySubStageReducer';
-import { setGlobalRiskStages } from '../Redux/Reducers/riskStageReducer';
-import { showNotification } from '../Redux/Reducers/NotificationReducer';
-import { setUsers } from '../Redux/Reducers/usersReducer';
-import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetailReducer';
 import { useCases } from '../StaticResources/useCases';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import RouteIcon from '@mui/icons-material/Route';
@@ -28,110 +20,23 @@ function HomeLayout() {
   const dispatch = useDispatch();
 
   const user = useSelector((state: any) => state.currentUser);
-  const globalStage = useSelector((state: any) => state.stage);
-  const companiesState = useSelector((state: any) => state.companies);
-  const userState = useSelector((state: any) => state.users);
-  const subscriptionState = useSelector((state: any) => state.subscriptionDetail);
   const [stepVal, setStepVal] = useState(2);
   const [showVideo, setShowVideo] = useState(false);
 
-  let init = false;
-
   useEffect(() => {
-    if (init === false) {
-      initialize();
-      init = true;
-    }
+    getOnboardingStatus();
   }, []);
-
-
-  async function initialize() {
-    try {
-      dispatch(setLoader(true));
-      await Promise.all([
-        fetchCompanyPersonOptions(),
-        fetchStages(),
-        getUserList(),
-        getSubscriptionDetails(),
-        getOnboardingStatus(),
-        fetchCustomSettings()
-      ]);
-      dispatch(setLoader(false));
-    } catch (error) {
-      dispatch(setLoader(false));
-      handleUnAuth(error);
-    }
-  }
-
-  async function fetchCompanyPersonOptions() {
-    if (companiesState == null || companiesState.length < 1) {
-      const { data } = await axios.get(getCompanyPeopleOptionURL(), { withCredentials: true });
-      const res = data.data;
-      if (res) {
-        if (res.companies) {
-          dispatch(setCompanyList(res.companies));
-        }
-        if (res.people) {
-          dispatch(setPeopleOptions(res.people));
-        }
-      }
-    }
-  }
-
-  async function fetchStages() {
-    if (globalStage == null || globalStage.length < 1) {
-      const { data } = await axios.get(getJourneyStageURL(), { withCredentials: true });
-      if (data.data) {
-        const res = data.data;
-        dispatch(setGlobalStages(res.stage));
-        dispatch(setGlobalSubStages(res.onboarding));
-        dispatch(setGlobalRiskStages(res.risk));
-      }
-    }
-  }
-
-  const getUserList = async (): Promise<void> => {
-    if (userState == null || userState.length < 1) {
-      let { data } = await axios.get(getUserListAPI(), { withCredentials: true });
-      if (data?.statusCode !== 200) {
-        dispatch(showNotification(data?.message, 'error'));
-        return;
-      }
-      if (data.data != null) {
-        dispatch(setUsers(data.data))
-      }
-    }
-  }
-
-  const getSubscriptionDetails = async () => {
-    if (subscriptionState == null) {
-      let { data } = await axios.get(getSubscriptionDetailHome(), { withCredentials: true });
-      if (data.statusCode !== 200) {
-        dispatch(showNotification(data?.message, 'error'));
-        return;
-      }
-
-      let resData: any[] = data.data;
-      if (resData != null) {
-        dispatch(setSubscriptionDetailRedux(resData));
-      }
-    }
-  }
-
-  const fetchCustomSettings = async () => {
-    const { data } = await axios.get(getCustomSettingsAPI(), { withCredentials: true });
-    const tempSettings = data?.data;
-    dispatch(setCustomSettings(tempSettings));
-  }
 
   async function getOnboardingStatus() {
     try {
+      dispatch(setLoader(true));
       const { data } = await axios.get(endpoints.home.onboarding, { withCredentials: true })
       if (data.data) {
         setStepVal(data.data);
       }
+      dispatch(setLoader(false));
     } catch (error) {
-      console.log("🚀 ~ getOnboardingStatus ~ error:", error)
+      dispatch(setLoader(false));
     }
   }
 

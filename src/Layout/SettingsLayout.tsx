@@ -41,39 +41,44 @@ const sidebarTabStye = {
     headingP: { color: '#454545', fontSize: '13px', fontWeight: 500 },
 }
 
-function SettingsLayout() {
+function SettingsLayout(props: { pos: string }) {
 
-    // const navigate = useNavigate();
-    const [selectedPos, setSelectedPos] = useState(settingIds.HOME);
+    const navigate = useNavigate();
+    const [selectedPos, setSelectedPos] = useState(props.pos);
     const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
-    //TODO create settings layout URL based navigation instead of JS based
     useEffect(() => {
-        handleTabHighlight(selectedPos);
-    }, [])
-
-    useEffect(() => {
-        if(userRole === 'OWNER'){
-            setSelectedPos(settingIds.HOME)
-            handleTabHighlight(settingIds.HOME)
-        }else{
-            setSelectedPos(settingIds.ACCOUNT)
-            handleTabHighlight(settingIds.ACCOUNT)
-        }
-    },[userRole]);
+        setSelectedPos(props.pos);
+        handleTabHighlight(props.pos);
+    }, [props.pos, userRole])
 
     function handleSettingsClickFromChild(id: string) {
-        handleSettingsClick({
-            target: {
-                id: id
-            }
-        });
+        handleSettingsClick({ target: { id: id } });
     }
 
     const handleSettingsClick = (event: any) => {
         const id: string = event.target.id;
-        handleTabNavigate(id);
-        handleTabHighlight(id);
+
+        let path = 'home';
+        if (settingIds.LOGO === id) {
+            path = 'logo';
+        } else if (settingIds.CUSTOMER_HUB === id) {
+            path = 'hub';
+        } else if (settingIds.DATA_MODELER === id) {
+            path = 'modeler';
+        } else if (settingIds.HEALTH_DESIGNER === id) {
+            path = 'health';
+        } else if (settingIds.TEAM === id) {
+            path = 'users';
+        } else if (settingIds.BILL === id) {
+            path = 'billing';
+        } else if (settingIds.TICKET === id) {
+            path = 'ticket';
+        } else if (settingIds.ACCOUNT === id) {
+            path = 'account';
+        }
+
+        navigate(`/settings/${path}`);
     }
 
     const handleTabHighlight = (id: string) => {
@@ -86,10 +91,6 @@ function SettingsLayout() {
                 item?.classList.remove('selected-tab');
             }
         }
-    }
-
-    const handleTabNavigate = (id: string) => {
-        setSelectedPos(id);
     }
 
     return (

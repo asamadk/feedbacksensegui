@@ -22,7 +22,7 @@ import PreviewSurveyLayout from './Layout/PreviewSurveyLayout';
 import { useSelector } from 'react-redux';
 import HttpFailureComponent from './Components/HttpFailure/HttpFailureComponent';
 import ProcessInvite from './Layout/ProcessInvite';
-import { ignoreAuthPaths } from './Utils/Constants';
+import { ignoreAuthPaths, settingIds } from './Utils/Constants';
 import { setUserRole } from './Redux/Actions/userRoleAction';
 import { useDispatch } from 'react-redux';
 import { setCurrentUsers } from './Redux/Reducers/currentUserReducer';
@@ -43,6 +43,17 @@ import FlowDetailLayout from './Layout/FlowDetailLayout';
 import GlobalAlert from './Components/GlobalAlert';
 import GlobalLoader from './Components/GlobalLoader';
 import HomeLayout from './Layout/HomeLayout';
+import { setLoader } from './Redux/Reducers/LoadingReducer';
+import { handleUnAuth } from './Utils/FeedbackUtils';
+import { setCompanyList } from './Redux/Reducers/companyReducer';
+import { setPeopleOptions } from './Redux/Reducers/peopleOptionReducer';
+import { setGlobalStages } from './Redux/Reducers/journeyStageReducer';
+import { setGlobalSubStages } from './Redux/Reducers/journeySubStageReducer';
+import { setGlobalRiskStages } from './Redux/Reducers/riskStageReducer';
+import { showNotification } from './Redux/Reducers/NotificationReducer';
+import { setUsers } from './Redux/Reducers/usersReducer';
+import { setSubscriptionDetailRedux } from './Redux/Reducers/subscriptionDetailReducer';
+import { setCustomSettings } from './Redux/Reducers/customSettingsReducer';
 
 function App() {
 
@@ -50,15 +61,19 @@ function App() {
   let location = useLocation();
 
   const defaultColor = useSelector((state: any) => state.colorReducer);
+  const globalStage = useSelector((state: any) => state.stage);
+  const companiesState = useSelector((state: any) => state.companies);
+  const userState = useSelector((state: any) => state.users);
+  const subscriptionState = useSelector((state: any) => state.subscriptionDetail);
+
   const [showLeftBar, setShowLeftBar] = useState(true);
   const [user, setUser] = useState<any>(null);
-  const dataFetchedRef = useRef(false);
   const [liveSurvey, setLiveSurvey] = useState(false);
   const dispatch = useDispatch<any>();
 
   const getUser = async () => {
     try {
-      if(user != null){
+      if (user != null) {
         handleLeftBarVisibility();
         return;
       }
@@ -78,9 +93,13 @@ function App() {
         navigate('/user/create/organization');
         return;
       }
-      handleLeftBarVisibility();
+      if (currentUser != null) {
+        handleLeftBarVisibility();
+      } else {
+        setShowLeftBar(false);
+        dispatch(setCurrentUsers(null));
+      }
       setUser(currentUser);
-      navigate('/home');
     } catch (err: any) {
       if (err?.response?.data?.statusCode === 404) {
         navigate(`/failure?message=${err.response?.data?.message}&code=${err?.response?.data?.statusCode}`);
@@ -89,29 +108,103 @@ function App() {
   };
 
   useEffect(() => {
-    if (dataFetchedRef.current === true) return;
-    let currentPath: string = window.location.pathname;
-    if (ignoreAuthPaths.includes(currentPath)) { return; }
     getUser();
-    // handleLeftBarVisibility();
-    dataFetchedRef.current = true;
-  }, []);
-
-  // useEffect(() => {
-  //   handleLeftBarVisibility();
-  // }, [location.pathname]);
+  }, [location.pathname]);
 
   const handleLeftBarVisibility = () => {
     let currentPath: string = location.pathname;
     if (currentPath.includes('/survey/detail/')) {
       setShowLeftBar(false);
     } else {
-      if (user?.organization_id == null || user?.organization_id === '') {
-        setShowLeftBar(false);
-      } else {
-        setShowLeftBar(true);
+      setShowLeftBar(true);
+    }
+  }
+
+  let init = false;
+
+  useEffect(() => {
+    if (init === false) {
+      initialize();
+      init = true;
+    }
+  }, []);
+
+
+  async function initialize() {
+    try {
+      dispatch(setLoader(true));
+      await Promise.all([
+        fetchCompanyPersonOptions(),
+        fetchStages(),
+        getUserList(),
+        getSubscriptionDetails(),
+        fetchCustomSettings()
+      ]);
+      dispatch(setLoader(false));
+    } catch (error) {
+      dispatch(setLoader(false));
+    }
+  }
+
+  async function fetchCompanyPersonOptions() {
+    if (companiesState == null || companiesState.length < 1) {
+      const { data } = await axios.get(Endpoint.getCompanyPeopleOptionURL(), { withCredentials: true });
+      const res = data.data;
+      if (res) {
+        if (res.companies) {
+          dispatch(setCompanyList(res.companies));
+        }
+        if (res.people) {
+          dispatch(setPeopleOptions(res.people));
+        }
       }
     }
+  }
+
+  async function fetchStages() {
+    if (globalStage == null || globalStage.length < 1) {
+      const { data } = await axios.get(Endpoint.getJourneyStageURL(), { withCredentials: true });
+      if (data.data) {
+        const res = data.data;
+        dispatch(setGlobalStages(res.stage));
+        dispatch(setGlobalSubStages(res.onboarding));
+        dispatch(setGlobalRiskStages(res.risk));
+      }
+    }
+  }
+
+  const getUserList = async (): Promise<void> => {
+    if (userState == null || userState.length < 1) {
+      let { data } = await axios.get(Endpoint.getUserListAPI(), { withCredentials: true });
+      if (data?.statusCode !== 200) {
+        dispatch(showNotification(data?.message, 'error'));
+        return;
+      }
+      if (data.data != null) {
+        dispatch(setUsers(data.data))
+      }
+    }
+  }
+
+  const getSubscriptionDetails = async () => {
+    if (subscriptionState == null) {
+      let { data } = await axios.get(Endpoint.getSubscriptionDetailHome(), { withCredentials: true });
+      if (data.statusCode !== 200) {
+        dispatch(showNotification(data?.message, 'error'));
+        return;
+      }
+
+      let resData: any[] = data.data;
+      if (resData != null) {
+        dispatch(setSubscriptionDetailRedux(resData));
+      }
+    }
+  }
+
+  const fetchCustomSettings = async () => {
+    const { data } = await axios.get(Endpoint.getCustomSettingsAPI(), { withCredentials: true });
+    const tempSettings = data?.data;
+    dispatch(setCustomSettings(tempSettings));
   }
 
   const lightTheme = createTheme({
@@ -144,7 +237,17 @@ function App() {
                   <Route path='/home' element={AuthHandler(<HomeLayout />)} />
                   <Route path='/login' element={AuthHandler(<DashboardsLayout />)} />
                   <Route path='/template' element={AuthHandler(<TemplateLayout />)} />
-                  <Route path='/settings' element={AuthHandler(<SettingsLayout />)} />
+                  <Route path='/settings'>
+                    <Route path='home' element={AuthHandler(<SettingsLayout pos={settingIds.HOME} />)} />
+                    <Route path='logo' element={AuthHandler(<SettingsLayout pos={settingIds.LOGO} />)} />
+                    <Route path='hub' element={AuthHandler(<SettingsLayout pos={settingIds.CUSTOMER_HUB} />)} />
+                    <Route path='modeler' element={AuthHandler(<SettingsLayout pos={settingIds.DATA_MODELER} />)} />
+                    <Route path='health' element={AuthHandler(<SettingsLayout pos={settingIds.HEALTH_DESIGNER} />)} />
+                    <Route path='users' element={AuthHandler(<SettingsLayout pos={settingIds.TEAM} />)} />
+                    <Route path='billing' element={AuthHandler(<SettingsLayout pos={settingIds.BILL} />)} />
+                    <Route path='ticket' element={AuthHandler(<SettingsLayout pos={settingIds.TICKET} />)} />
+                    <Route path='account' element={AuthHandler(<SettingsLayout pos={settingIds.ACCOUNT} />)} />
+                  </Route>
                   <Route path='/template/details/:templateId' element={AuthHandler(<TemplateDetailLayout />)} />
                   <Route path='/flow/detail/create/:flowId' element={AuthHandler(<FlowDetailLayout />)} />
                   <Route path='/survey/detail/create/:surveyId' element={AuthHandler(<CreateSurvey />)} />
