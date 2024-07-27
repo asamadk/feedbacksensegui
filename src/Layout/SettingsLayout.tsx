@@ -10,6 +10,7 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import RedeemIcon from '@mui/icons-material/Redeem';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 
@@ -27,6 +28,7 @@ import HealthDesignerLayout from './HealthDesignerLayout';
 import HomeSettings from '../Components/HomeSettings';
 import { useSelector } from 'react-redux';
 import { userRoleType } from '../Utils/types';
+import RedeemCodeLayout from './RedeemCodeLayout';
 
 const sideBarStyle = {
     background: colorPalette.secondary,
@@ -76,6 +78,8 @@ function SettingsLayout(props: { pos: string }) {
             path = 'ticket';
         } else if (settingIds.ACCOUNT === id) {
             path = 'account';
+        } else if (settingIds.REDEEM === id) {
+            path = 'redeem';
         }
 
         navigate(`/settings/${path}`);
@@ -173,6 +177,10 @@ function SettingsLayout(props: { pos: string }) {
                         <AccountCircleIcon id={settingIds.ACCOUNT} />
                         <p id={settingIds.ACCOUNT}  >My Account</p>
                     </Box>
+                    <Box className='tabs' id={settingIds.REDEEM} onClick={handleSettingsClick} >
+                        <RedeemIcon id={settingIds.REDEEM} />
+                        <p id={settingIds.REDEEM}  >Redeem</p>
+                    </Box>
                 </Box>
             </Box>
 
@@ -187,6 +195,7 @@ function SettingsLayout(props: { pos: string }) {
                 {selectedPos === settingIds.TICKET && <Support />}
                 {selectedPos === settingIds.DATA_MODELER && <DataModelerLayout />}
                 {selectedPos === settingIds.HEALTH_DESIGNER && <HealthDesignerLayout />}
+                {selectedPos === settingIds.REDEEM && <RedeemCodeLayout />}
             </Box>
         </Box>
     )

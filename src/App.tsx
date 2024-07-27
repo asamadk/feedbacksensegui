@@ -1,6 +1,6 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
-import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import {  Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import './App.css';
 import Header from './Components/Header';
 import AnalyzeSurvey from './Layout/AnalyzeSurvey';
@@ -54,6 +54,7 @@ import { showNotification } from './Redux/Reducers/NotificationReducer';
 import { setUsers } from './Redux/Reducers/usersReducer';
 import { setSubscriptionDetailRedux } from './Redux/Reducers/subscriptionDetailReducer';
 import { setCustomSettings } from './Redux/Reducers/customSettingsReducer';
+import RedeemLayout from './Layout/RedeemLayout';
 
 function App() {
 
@@ -113,7 +114,7 @@ function App() {
 
   const handleLeftBarVisibility = () => {
     let currentPath: string = location.pathname;
-    if (currentPath.includes('/survey/detail/')) {
+    if (currentPath.includes('/survey/detail/') || currentPath.includes('/flow/detail/')) {
       setShowLeftBar(false);
     } else {
       setShowLeftBar(true);
@@ -236,6 +237,7 @@ function App() {
                   <Route path='/' element={AuthHandler(<HomeLayout />)} />
                   <Route path='/home' element={AuthHandler(<HomeLayout />)} />
                   <Route path='/login' element={AuthHandler(<DashboardsLayout />)} />
+                  <Route path='/redeem/appsumo' element={<RedeemLayout/>} />
                   <Route path='/template' element={AuthHandler(<TemplateLayout />)} />
                   <Route path='/settings'>
                     <Route path='home' element={AuthHandler(<SettingsLayout pos={settingIds.HOME} />)} />
@@ -247,6 +249,7 @@ function App() {
                     <Route path='billing' element={AuthHandler(<SettingsLayout pos={settingIds.BILL} />)} />
                     <Route path='ticket' element={AuthHandler(<SettingsLayout pos={settingIds.TICKET} />)} />
                     <Route path='account' element={AuthHandler(<SettingsLayout pos={settingIds.ACCOUNT} />)} />
+                    <Route path='redeem' element={AuthHandler(<SettingsLayout pos={settingIds.REDEEM} />)} />
                   </Route>
                   <Route path='/template/details/:templateId' element={AuthHandler(<TemplateDetailLayout />)} />
                   <Route path='/flow/detail/create/:flowId' element={AuthHandler(<FlowDetailLayout />)} />
@@ -264,7 +267,10 @@ function App() {
                   <Route path='/contacts/companies/detail/:id' element={AuthHandler(<CompanyDetailPage />)} />
                   <Route path='/contacts/person/detail/:id' element={AuthHandler(<PersonDetailPage />)} />
                   <Route path='/segment' element={AuthHandler(<SegmentLayout />)} />
-                  <Route path='/flows' element={AuthHandler(<FlowLayout />)} />
+                  <Route path='/flows'>
+                    <Route path='publish' element={AuthHandler(<FlowLayout mode='publish' />)} />
+                    <Route path='draft' element={AuthHandler(<FlowLayout mode='draft' />)} />
+                  </Route>
                   <Route path='/tasks' element={AuthHandler(<TasksLayout />)} />
                   <Route path='/notifications' element={AuthHandler(<NotificationsLayout />)} />
                   <Route path='/companies' element={AuthHandler(<ContactLayout />)} />

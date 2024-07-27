@@ -53,7 +53,7 @@ function CreateAutomation() {
     const [comUiId, setCompUiId] = React.useState<string>('');
     const [openEditModal, setOpenEditModal] = React.useState(false);
     const [saveFlowTemp, setSaveFlowTemp] = React.useState<any>();
-    const [showList, setShowList] = useState(true);
+    const [showList, setShowList] = useState(false);
 
     const workflowDirty = useSelector((state: any) => state.workflowDirty);
     const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
@@ -409,7 +409,7 @@ function CreateAutomation() {
                     >
                         {flowDetail?.is_published === true ? 'Unpublish' : 'Publish'}
                     </Button>
-                    <IconButton onClick={() => navigate('/flows')} sx={{ position: 'relative', top: '5px', marginLeft: '5px' }} >
+                    <IconButton onClick={() => navigate(-1)} sx={{ position: 'relative', top: '5px', marginLeft: '5px' }} >
                         <CloseIcon />
                     </IconButton>
                 </Box>

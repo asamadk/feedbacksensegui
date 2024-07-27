@@ -466,7 +466,8 @@ export const settingIds = {
     CUSTOMER_HUB: 'CUSTOMER_HUB',
     ANALYTICS: 'ANALYTICS',
     DATA_MODELER: 'DATA_MODELER',
-    HEALTH_DESIGNER: 'HEALTH_DESIGNER'
+    HEALTH_DESIGNER: 'HEALTH_DESIGNER',
+    REDEEM : 'REDEEM'
 }
 
 export const userRoles = [

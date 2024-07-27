@@ -72,9 +72,20 @@ function Login() {
                         >
                             Do not have an account ?
                             <span
-                                style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                                style={{ textDecoration: 'underline', cursor: 'pointer',color : colorPalette.primary }}
                                 onClick={handleNoLogin}
                             > Learn More</span>
+                        </Typography>
+                        <Typography
+                            marginTop={'5px'}
+                        >
+                            Redeem AppSumo coupon?
+                            <span
+                                style={{ textDecoration: 'underline', cursor: 'pointer',color : colorPalette.primary }}
+                                onClick={() => navigate('/redeem/appsumo')}
+                            >
+                                Click Here
+                            </span>
                         </Typography>
                     </Box>
                 </Box>

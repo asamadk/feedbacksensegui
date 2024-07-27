@@ -1,17 +1,10 @@
 import { Box, Tab, Tabs } from '@mui/material'
 import React, { useState } from 'react'
-import LeftBarComponent from '../Components/LeftBarComponent'
-import { sideBarListType } from '../Utils/types';
 import FlowDashboard from '../Components/FlowLayoutComponents/FlowDashboard';
-import FlowTemplateDashboard from '../Components/FlowLayoutComponents/FlowTemplateDashboard';
 import { colorPalette } from '../Utils/Constants';
 
-const sideBarData: sideBarListType[] = [
-  { label: 'Flows', value: 'flows' },
-  { label: 'Templates', value: 'templates' },
-]
 
-function FlowLayout() {
+function FlowLayout(props : {mode : 'publish' | 'draft'}) {
 
   const [value, setValue] = React.useState('1');
 
@@ -30,11 +23,11 @@ function FlowLayout() {
           aria-label="secondary tabs example"
         >
           <Tab value="1" label="Flows" />
-          {/* <Tab value="2" label="Templates" /> */}
         </Tabs>
       </Box>
       <Box sx={{ width: '100%' }} >
         <FlowDashboard
+          mode={props.mode}
           type={value === '1' ? 'flows' : 'templates'}
         />
       </Box>

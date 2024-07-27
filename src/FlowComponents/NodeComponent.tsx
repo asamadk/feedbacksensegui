@@ -1,4 +1,4 @@
-import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import { Box, Divider, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import DynamicComponentIcon from './DynamicComponentIcon'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
@@ -114,37 +114,33 @@ function NodeComponent(props: any) {
     function AutomationNode() {
 
         const actionButtonStyle = {
-            color: colorPalette.fsGray,
-            borderRadius : '50%',
+            borderRadius: '50%',
+            border: `1px ${colorPalette.primary} solid`,
+            padding: '2px',
+            color: colorPalette.primary
         }
 
         return <>
-            <Box textAlign={'start'} justifyContent={'space-between'} display={'flex'} overflow={'hidden'} onDoubleClick={handleEditButtonClick}>
+            <Box onDoubleClick={handleEditButtonClick}>
                 {showError && <NodeError message={errorMsg} />}
-                <Box>
-                    <Box sx={{ display: 'flex', marginTop: '5px' }} >
-                        <Box sx={commonLogoStyle} >
-                            <DynamicComponentIcon id={props.compId} />
-                        </Box>
-                        <Typography>{props.label}</Typography>
+                <Box sx={{ display: 'flex',justifyContent: 'space-between' }} >
+                    <Box display={'flex'} >
+                        <DynamicComponentIcon id={props.compId} />
+                        <Typography marginLeft={'5px'} >{props.label}</Typography>
                     </Box>
-                    <Typography sx={{ fontSize: '12px', textAlign: 'start' }} > {props.description}</Typography>
-                </Box>
-                <Box >
                     <Box>
                         <IconButton size='small' onClick={handleEditButtonClick} >
                             <EditRoundedIcon
-                                sx={actionButtonStyle}
-                                fontSize='small'
+                                sx={{ ...actionButtonStyle, fontSize: '14px' }}
                             />
                         </IconButton>
-                    </Box>
-                    <Box>
                         <IconButton size='small' onClick={handleDeleteButtonClick} >
-                            <DeleteRoundedIcon sx={actionButtonStyle} fontSize='small' />
+                            <DeleteRoundedIcon sx={{ ...actionButtonStyle, fontSize: '14px' }} fontSize='small' />
                         </IconButton>
                     </Box>
                 </Box>
+                <Divider sx={{marginTop : '5px',background : colorPalette.secondary}} />
+                <Typography sx={{ fontSize: '12px', textAlign: 'start',marginTop : '5px' }} > {props.description}</Typography>
             </Box>
         </>
     }

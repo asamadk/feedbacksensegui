@@ -445,5 +445,8 @@ export const endpoints = {
     },
     home : {
         onboarding : `${BASE_URL}/home/onboarding`
+    },
+    auth : {
+        appSumoCoupon : `${BASE_URL}/auth/appsumo/init`
     }
 }

@@ -77,7 +77,7 @@ function SideBar(props: any) {
                 navigate('/dashboard');
                 break;
             case SIDE_BAR_IDS.FLOWS:
-                navigate('/flows');
+                navigate('/flows/publish');
                 break;
             case SIDE_BAR_IDS.SETTINGS:
                 navigate('/settings/home');
@@ -110,7 +110,7 @@ function SideBar(props: any) {
             dispatch(setSideBarPosition(SIDE_BAR_IDS.SEGMENT));
         }else if(path === '/dashboard'){
             dispatch(setSideBarPosition(SIDE_BAR_IDS.DASHBOARD));
-        }else if(path === '/flows'){
+        }else if(path.includes('/flows')){
             dispatch(setSideBarPosition(SIDE_BAR_IDS.FLOWS));
         }else if(path.includes('/settings')){
             dispatch(setSideBarPosition(SIDE_BAR_IDS.SETTINGS));
