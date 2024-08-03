@@ -107,6 +107,11 @@ function CreateTaskModal(props: any) {
         }
     }
 
+    function handleCompanyChange(e :any){
+        setCompany(e.target.value);
+        setPerson('');
+    }
+
     return (
         <>
             <Modal
@@ -115,7 +120,7 @@ function CreateTaskModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={verticalModalStyle(colorPalette.background)}>
+                <Box sx={verticalModalStyle(colorPalette.background)} >
                     <Box sx={modalHeaderStyle} >
                         <Box>
                             <Typography id="modal-modal-title" variant="h5" component="h2" >
@@ -127,7 +132,7 @@ function CreateTaskModal(props: any) {
                         </IconButton>
                     </Box>
 
-                    <Box >
+                    <Box>
                         <Box marginTop={'20px'} >
                             <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Title*</Typography>
                             <CssTextField
@@ -189,7 +194,7 @@ function CreateTaskModal(props: any) {
                                         size='small'
                                         placeholder='company'
                                         value={company}
-                                        onChange={(e) => setCompany(e.target.value as string)}
+                                        onChange={handleCompanyChange}
                                         fullWidth
                                     >
                                         {

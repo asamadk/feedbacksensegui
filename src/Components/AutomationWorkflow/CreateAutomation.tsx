@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, TextField, Typography, styled } from '@mui/material'
+import { Box, Button, IconButton, Menu, MenuItem, Popover, TextField, Typography, styled } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import FSLoader from '../FSLoader'
 import Notification from '../../Utils/Notification'
@@ -10,8 +10,13 @@ import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutl
 import CheckIcon from '@mui/icons-material/Check';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { textFieldStyle } from '../../Styles/InputStyles';
-import { containedButton, getOutlinedButtonBG } from '../../Styles/ButtonStyle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { containedButton, getOutlinedButtonBG, outlinedButton } from '../../Styles/ButtonStyle';
 import DoneIcon from '@mui/icons-material/Done';
 import FeedbackCanvas from '../../FlowComponents/FeedbackCanvas';
 import FeedbackComponentList from '../../FlowComponents/FeedbackComponentList';
@@ -40,11 +45,13 @@ function CreateAutomation() {
     const dispatch = useDispatch<any>();
     const childRef = useRef<any>(null);
     const navigate = useNavigate();
-
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [deleteAnchorEl, setDeleteAnchorEl] = React.useState<null | HTMLElement>(null);
     const [showGenericModal, setShowGenericModal] = React.useState(false);
     const [genericModalObj, setGenericModalObj] = React.useState<genericModalData>();
     const [loading, setLoading] = React.useState(false);
     const [flowDetail, setFlowDetail] = React.useState<any>();
+    const [oldName, setOldName] = useState('');
     const [showFlowName, setShowFlowName] = React.useState(true);
     const [isWorkflowPublished, setIsWorkflowPublished] = React.useState(false);
     const [flow, setFlow] = React.useState<any>();
@@ -54,7 +61,8 @@ function CreateAutomation() {
     const [openEditModal, setOpenEditModal] = React.useState(false);
     const [saveFlowTemp, setSaveFlowTemp] = React.useState<any>();
     const [showList, setShowList] = useState(false);
-
+    const open = Boolean(anchorEl);
+    const showDelete = Boolean(deleteAnchorEl);
     const workflowDirty = useSelector((state: any) => state.workflowDirty);
     const currentWorkflowId = useSelector((state: any) => state.currentWorkflow);
 
@@ -65,6 +73,11 @@ function CreateAutomation() {
             init = true;
         }
     }, []);
+
+    function hideDeletePopover() {
+        setDeleteAnchorEl(null);
+        setAnchorEl(null);
+    }
 
     async function fetchAutomationFlow() {
         try {
@@ -111,7 +124,6 @@ function CreateAutomation() {
             };
             setLoading(true);
             const { data } = await axios.post(endpoints.flows.update, payload, { withCredentials: true });
-            console.log("🚀 ~ handleSaveNameClick ~ data:", data)
             setLoading(false);
             if (data.statusCode !== 200) {
                 dispatch(showNotification(data?.message, 'error'))
@@ -119,8 +131,8 @@ function CreateAutomation() {
             }
             dispatch(showNotification(data?.message, 'success'))
             handleCloseEditName(false);
+            setOldName(flowDetail.name);
         } catch (error) {
-            console.log("🚀 ~ handleSaveNameClick ~ error:", error)
             handleUnAuth(error);
             setLoading(false);
         }
@@ -128,6 +140,9 @@ function CreateAutomation() {
 
     const handleCloseEditName = (rerender: boolean) => {
         setShowFlowName(true);
+        if (rerender && oldName.length > 0) {
+            setFlowDetail((prevDetail: any) => ({ ...prevDetail, name: oldName }));
+        }
     }
 
     const handleSaveButtonClick = () => {
@@ -187,7 +202,7 @@ function CreateAutomation() {
     async function unPublishAutomationFlow() {
         try {
             dispatch(setLoader(true));
-            const {data} = await axios.post(endpoints.flows.unpublish(flowDetail.id), {}, { withCredentials: true });
+            const { data } = await axios.post(endpoints.flows.unpublish(flowDetail.id), {}, { withCredentials: true });
             setFlowDetail(data?.data);
             setIsWorkflowPublished(false);
             dispatch(showNotification('Flow unpublished', 'success'));
@@ -344,13 +359,70 @@ function CreateAutomation() {
     }
 
     const handleEditNameClick = () => {
+        setOldName(flowDetail?.name);
         setShowFlowName(false);
+    }
+
+    async function handleDeleteWorkflow() {
+        try {
+            if (flowId == null) { return; }
+            const { data } = await axios.delete(endpoints.flows.delete(flowId), { withCredentials: true });
+            dispatch(showNotification(data?.message, 'success'));
+            hideDeletePopover();
+            navigate(-1);
+        } catch (error) {
+            dispatch(showNotification('Something went wrong', 'error'));
+            dispatch(setLoader(false));
+        }
+    }
+
+    function ComponentListAdd() {
+
+        const handleClose = () => {
+            setShowList(false)
+        };
+
+        return (
+            <>
+                {
+                    !flowDetail?.is_published ?
+                        <Box sx={{ transform: 'translateZ(0px)', flexGrow: 1 }}>
+                            {
+                                !showList ?
+                                    <IconButton
+                                        onClick={(e) => setShowList(true)}
+                                        size='small'
+                                        sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                                    >
+                                        <AddCircleIcon
+                                            fontSize='large'
+                                            sx={{ color: colorPalette.primary, fontSize: '50px' }}
+                                        />
+                                    </IconButton> :
+                                    <IconButton
+                                        onClick={handleClose}
+                                        size='small'
+                                        sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                                    >
+                                        <CancelIcon
+                                            fontSize='large'
+                                            sx={{ color: colorPalette.primary, fontSize: '50px' }}
+                                        />
+                                    </IconButton>
+                            }
+                        </Box> : <></>
+                }
+            </>
+        )
     }
 
     return (
         <Box sx={{ backgroundColor: colorPalette.background, height: 'calc(100vh - 0px)' }} >
             <Box sx={{ ...localSurveyNavbar, border: 'none' }} >
                 <Box display={'flex'} >
+                    <IconButton onClick={() => navigate(-1)} sx={{ marginTop: '5px', marginLeft: '5px' }} >
+                        <ArrowBackIcon />
+                    </IconButton>
                     {showFlowName &&
                         <Typography
                             style={{ position: 'relative', top: '15px', paddingLeft: '20px', cursor: 'pointer', fontSize: '17px' }}
@@ -370,7 +442,7 @@ function CreateAutomation() {
                             value={flowDetail?.name}
                             variant="outlined"
                             size='small'
-                            onChange={(e) => handleFlowNameChange(e)}
+                            onChange={(e) => {handleFlowNameChange(e);}}
                             style={{ width: '300px', paddingTop: '5px', paddingLeft: '10px' }}
                         />
                     }
@@ -396,6 +468,7 @@ function CreateAutomation() {
                             style={{ width: '110px', marginRight: '10px' }}
                             sx={getOutlinedButtonBG(colorPalette.textSecondary)}
                             variant="text"
+                            size='small'
                         >
                             Save
                         </Button>
@@ -406,12 +479,62 @@ function CreateAutomation() {
                         style={{ width: '110px' }}
                         sx={containedButton}
                         variant="contained"
+                        size='small'
                     >
                         {flowDetail?.is_published === true ? 'Unpublish' : 'Publish'}
                     </Button>
-                    <IconButton onClick={() => navigate(-1)} sx={{ position: 'relative', top: '5px', marginLeft: '5px' }} >
-                        <CloseIcon />
-                    </IconButton>
+                    {
+                        flowDetail?.is_published === false &&
+                        <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} sx={{ marginLeft: '10px', marginTop: '5px' }} size='small' >
+                            <ArrowDropDownIcon />
+                        </IconButton>
+                    }
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={() => setAnchorEl(null)}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={(e) => setDeleteAnchorEl(e.currentTarget)}>
+                            <DeleteIcon />
+                            Delete
+                        </MenuItem>
+                    </Menu>
+                    <Popover
+                        id={showDelete ? 'simple-popover' : undefined}
+                        open={showDelete}
+                        anchorEl={deleteAnchorEl}
+                        onClose={() => setDeleteAnchorEl(null)}
+                        anchorOrigin={{
+                            vertical: 'center',
+                            horizontal: 'left',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                    >
+                        <Box sx={{ padding: '10px', textAlign: 'end' }} >
+                            <Typography>Are you sure you want to delete this flow ?</Typography>
+                            <Box>
+                                <Button
+                                    onClick={hideDeletePopover}
+                                    sx={{ ...outlinedButton, marginRight: '5px' }}
+                                    size='small'
+                                    variant='outlined'
+                                >Cancel</Button>
+                                <Button
+                                    onClick={handleDeleteWorkflow}
+                                    size='small'
+                                    variant='contained'
+                                    sx={containedButton}
+                                >Delete</Button>
+                            </Box>
+                        </Box>
+                    </Popover>
                 </Box>
             </Box>
             <Box display={'flex'} >
@@ -428,28 +551,11 @@ function CreateAutomation() {
                         ref={childRef}
                     />
                 </Box>
-                {
-                    showList === false &&
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            right: 0,
-                            marginTop: '20px',
-                            background: colorPalette.primary,
-                            padding: '10px',
-                            borderRadius: '6px 0px 0px 6px',
-                            color: colorPalette.background,
-                            cursor: 'pointer'
-                        }}
-                        onClick={() => setShowList(true)}
-                    >
-                        <KeyboardDoubleArrowLeftIcon />
-                    </Box>
-                }
+                {ComponentListAdd()}
                 {
                     isWorkflowPublished === false && showList === true &&
                     <Box sx={{ overflowY: 'scroll', height: 'calc(100vh - 60px)' }} width={'20%'} >
-                        <AutomationComponentList recordType={flowDetail?.type} change={() => setShowList(false)} />
+                        <AutomationComponentList recordType={flowDetail?.type} />
                     </Box>
                 }
             </Box>

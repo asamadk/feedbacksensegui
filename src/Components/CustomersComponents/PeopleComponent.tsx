@@ -14,8 +14,10 @@ import { deletePersonURL, getPersonListURL } from '../../Utils/Endpoints';
 import { genericModalData, userRoleType } from '../../Utils/types';
 import GenericModal from '../../Modals/GenericModal';
 import { getPersonName, handleUnAuth } from '../../Utils/FeedbackUtils';
-import { paginationStyle, tableBodyText, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
+import { tableBodyText, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setPeopleOptions } from '../../Redux/Reducers/peopleOptionReducer';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -32,6 +34,9 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
 
     const navigate = useNavigate();
     const snackbarRef: any = useRef(null);
+    const dispatch = useDispatch();
+
+    const peopleState :any[] = useSelector((state: any) => state.people);
     const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
     const [page, setPage] = useState(0);
@@ -149,6 +154,7 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
             await axios.post(deletePersonURL(), deletePeopleList, { withCredentials: true });
             snackbarRef?.current?.show('Companies Deleted', 'success');
             fetchPeople();
+            dispatch(setPeopleOptions(peopleState.filter(comp => !deletePeopleList.includes(comp.id))))
             setLoading(false);
         } catch (error) {
             snackbarRef?.current?.show('Something went wrong', 'error');
@@ -269,7 +275,6 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                         count={totalCount}
                         rowsPerPage={20}
                         page={page}
-                        sx={paginationStyle}
                         showFirstButton={true}
                         showLastButton={true}
                         onPageChange={handleChangePage}

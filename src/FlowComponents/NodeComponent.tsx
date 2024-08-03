@@ -18,10 +18,17 @@ const commonLogoStyle = {
 
 function NodeComponent(props: any) {
 
+    const [description , setDescription] = useState('');
+
     useEffect(() => {
         const componentConfigMap: Map<string, object> = props.config;
         if (componentConfigMap != null) {
-            const componentConfig = componentConfigMap.get(props.uniqueId);
+            const componentConfig :any | undefined = componentConfigMap.get(props.uniqueId);
+            if(componentConfig != null && componentConfig?.desc && componentConfig?.desc?.length > 0){
+                setDescription(componentConfig?.desc)
+            }else{
+                setDescription(props.description);
+            }
             const validatedComp = validateFlowComponent(componentConfig, props.compId);
             const validatedLogic = validateComponentLogic(componentConfig, props.uniqueId, props.compId, props.edges);
             if (validatedComp != null) {
@@ -139,8 +146,10 @@ function NodeComponent(props: any) {
                         </IconButton>
                     </Box>
                 </Box>
-                <Divider sx={{marginTop : '5px',background : colorPalette.secondary}} />
-                <Typography sx={{ fontSize: '12px', textAlign: 'start',marginTop : '5px' }} > {props.description}</Typography>
+                {/* <Divider sx={{background : colorPalette.secondary}} /> */}
+                <Typography sx={{ fontSize: '12px', textAlign: 'start' }} > 
+                    {description.length > 85 ? description.substring(0,85) + '...' : description}
+                </Typography>
             </Box>
         </>
     }

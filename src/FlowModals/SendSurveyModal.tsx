@@ -17,6 +17,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { getSurveyList } from '../Utils/Endpoints';
 import axios from 'axios';
 import VariablesModal from './VariablesModal';
+import DynamicComponentIcon from '../FlowComponents/DynamicComponentIcon';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -108,16 +109,20 @@ function SendSurveyModal(props: any) {
                 <Box sx={flowModalStyleComponents(colorPalette.background)}>
                     <Box width={'100%'}>
                         <Box sx={automationModalHeaderStyle} >
-                            <Box></Box>
-                            <Typography margin={'5px'} id="modal-modal-title" fontSize={'18px'} component="h2">
-                                {props.header}
-                            </Typography>
-                            <IconButton  >
-                                <CloseIcon sx={{ color: 'white' }} onClick={props.close} />
+                            <Box display={'flex'} >
+                                <Box marginTop={'7px'} marginLeft={'10px'} >
+                                    <DynamicComponentIcon id={props.compId} />
+                                </Box>
+                                <Typography fontWeight={600} margin={'5px'} fontSize={'18px'} id="modal-modal-title" component="h2">
+                                    {props.header}
+                                </Typography>
+                            </Box>
+                            <IconButton sx={{ color: 'black' }} >
+                                <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
 
-                        <Box height={'calc(100vh - 330px)'} sx={{ overflowY: 'scroll' }}>
+                        <Box height={'calc(100vh - 100px)'} sx={{ overflowY: 'scroll' }}>
                             <Box padding={'10px'} >
                                 <ModalSnippets text={'To make changes, please un-publish the workflow'} published={props.isPublished} />
                                 <ModalSnippets

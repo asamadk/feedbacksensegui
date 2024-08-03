@@ -441,7 +441,8 @@ export const endpoints = {
         update : `${BASE_URL}/flow/update-attribute`,
         updateJSON : `${BASE_URL}/flow/update-flow-json`,
         publish : (id : string | undefined) => `${BASE_URL}/flow/publish?flowId=${id}`,
-        unpublish : (id : string | undefined) => `${BASE_URL}/flow/unpublish?flowId=${id}`
+        unpublish : (id : string | undefined) => `${BASE_URL}/flow/unpublish?flowId=${id}`,
+        delete  : (id : string | undefined) => `${BASE_URL}/flow/remove?flowId=${id}`,
     },
     home : {
         onboarding : `${BASE_URL}/home/onboarding`

@@ -114,7 +114,7 @@ function CompanyDetailTab({ company }: any) {
     });
     tmp.push({
       icon: <LocalAtmIcon sx={iconStyle} />,
-      label: 'Total Contract Amount',
+      label: 'Amount',
       value: company.totalContractAmount != null ? numeral(company.totalContractAmount).format('0a').toUpperCase() : '$0',
       edit: false
     });
@@ -195,6 +195,7 @@ function CompanyDetailTab({ company }: any) {
       setHealthScoreLoading(false);
     } catch (error) {
       setHealthScoreLoading(false);
+      handleUnAuth(error);
     }
   }
 

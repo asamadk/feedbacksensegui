@@ -13,11 +13,16 @@ import ContactsIcon from '@mui/icons-material/Contacts';
 import EditPersonAttributeModal from './EditPersonAttributeModal';
 import { personFieldType } from '../../Utils/types';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { setPeopleOptions } from '../../Redux/Reducers/peopleOptionReducer';
 
 const iconStyle = { fontWeight: 500, marginRight: '10px', color: colorPalette.fsGray };
 
 function PersonDetailTab({ person }: any) {
 
+    const dispatch = useDispatch();
+    const peopleState: any[] = useSelector((state: any) => state.people);
     const [details, setDetails] = useState<any[]>([]);
     const [showEdit, setShowEdit] = useState(false);
     const [fieldType, setFieldType] = useState<personFieldType>('firstName');
@@ -30,10 +35,26 @@ function PersonDetailTab({ person }: any) {
     }, [person]);
 
     function handlePersonUpdate(data: any) {
+        console.log("🚀 ~ handlePersonUpdate ~ data:", data)
         setShowEdit(false);
         if (data == null) { return; }
         for (const key in data) {
             person[key] = data[key];
+        }
+        if (data.firstName != null || data.lastName != null) {
+            dispatch(setPeopleOptions(peopleState.map(person => {
+                if (data.id === person.id) {
+                    if (data.firstName != null) {
+                        return { ...person, firstName: data.firstName }
+                    } else if (data.lastName != null) {
+                        return { ...person, lastName: data.lastName }
+                    } else {
+                        return person;
+                    }
+                } else {
+                    return person;
+                }
+            })));
         }
         populateAttributes();
     }
@@ -81,7 +102,7 @@ function PersonDetailTab({ person }: any) {
             value: person?.company?.name,
             edit: false,
             // edit: true,
-            type : 'company'
+            type: 'company'
         });
         tmp.push({
             icon: <ContactPhoneIcon sx={iconStyle} />,
@@ -130,7 +151,7 @@ function PersonDetailTab({ person }: any) {
                                 {/* <Typography>{d.value}</Typography> */}
                                 <Typography
                                     fontWeight={d.edit === true ? 600 : 500}
-                                    sx={{ color: colorPalette.textPrimary, cursor: d.edit === true ? 'pointer' : 'default' }}
+                                    sx={{ color: 'black', cursor: d.edit === true ? 'pointer' : 'default' }}
                                     onClick={() => handleEditAttribute(d.edit, d.label, d.value, d.type)}
                                 >{d.value}</Typography>
                             </Grid>

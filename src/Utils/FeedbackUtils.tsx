@@ -465,7 +465,7 @@ export const validateEmail = (email: string) => {
 
 export const ConfigurePageTabList = [
     { id: 1, name: 'GENERAL' },
-    { id: 1, name: 'EMBED' },
+    // { id: 1, name: 'EMBED' },
 ]
 
 export const modalTabList = [
@@ -608,7 +608,7 @@ export function getHealthScoreName(count: number) {
 }
 
 export function getAPIErrorMessage(error: any): string {
-    return error?.response?.data?.message || ''
+    return error?.response?.data?.message || 'Something went wrong'
 }
 
 export function getEmailRecipientDesc(recordType: string): string {

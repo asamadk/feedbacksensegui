@@ -1,5 +1,5 @@
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import { modalButtonContainerStyle, modalHeaderStyle, modalStyle } from '../Styles/ModalStyle'
 import { colorPalette } from '../Utils/Constants'
@@ -8,6 +8,15 @@ import { useDispatch } from 'react-redux';
 import { setLoader } from '../Redux/Reducers/LoadingReducer';
 
 function OnboardingVideoModal(props: { open: boolean, close: any }) {
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setLoader(true));
+        setTimeout(() => {
+            dispatch(setLoader(false));
+        },3000);
+    },[]);
 
     return (
         <>

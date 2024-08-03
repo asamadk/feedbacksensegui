@@ -32,7 +32,7 @@ const ConditionBuilder = forwardRef<ConditionBuilderRef, ConditionBuilderProps>(
 
   const [conditions, setConditions] = useState<any[][]>([[]]);
 
-  const operators = ['Equal', 'Not Equals', 'Less Than', 'Greater That', 'Less Than or Equal', 'Greater Than or Equal', 'Contains'];
+  const operators = ['Equal', 'Not Equals', 'Less Than', 'Greater Than', 'Less Than or Equal', 'Greater Than or Equal', 'Contains'];
 
   useImperativeHandle(ref, () => ({
     getState: () => conditions,

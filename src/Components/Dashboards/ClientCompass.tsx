@@ -10,6 +10,7 @@ import FilterModal from '../../Modals/FilterModal';
 import { getClientCompassURL } from '../../Utils/Endpoints';
 import axios from 'axios';
 import { handleUnAuth } from '../../Utils/FeedbackUtils';
+import CustomTooltip from '../CustomTooltip';
 
 function chipStyle(selected: boolean) {
   return {
@@ -138,21 +139,30 @@ function ClientCompass() {
         <Grid container spacing={4} >
           <Grid height={'250px'} item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Total ACV</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Total Contract Value</Typography>
+                <CustomTooltip text='Total contract value of all paying customers' />
+              </Box>
               <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.primary }} fontWeight={600} >{contractValue}</Typography>
               <Typography fontSize={13} >All Paying Companies</Typography>
             </Box>
           </Grid>
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Overall Customer Health</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Overall Customer Health</Typography>
+                <CustomTooltip text='Aggregate Health score of all paying customers' />
+              </Box>
               <GraphSkeleton loading={loading} />
               <DashboardDoughnut colors={overAllCustomerHealthColors} data={overAllCustomerHealth} />
             </Box>
           </Grid>
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Companies by Customer Journey Stage</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Companies by Customer Journey Stage</Typography>
+                <CustomTooltip text='Aggregate customer journey stage of all paying customers' />
+              </Box>
               <DashboardDoughnut colors={getCstmrJrnyStgScoreColor()} data={customerJourneyStage} />
             </Box>
           </Grid>
@@ -171,27 +181,39 @@ function ClientCompass() {
         <Grid container spacing={4} >
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Current Quarter Renewable Companies</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Current Quarter Renewable Companies</Typography>
+                <CustomTooltip text='Shows count of companies whose contract is ending this quarter' />
+              </Box>
               <Typography marginTop={'10px'} sx={{ color: colorPalette.primary }} variant='h4' fontWeight={600} >{qtrRenewalCompanies}</Typography>
               <Typography fontSize={13} >All Paying Companies</Typography>
             </Box>
           </Grid>
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Current Quarter Renewable ACV</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Current Quarter Renewable Amount</Typography>
+                <CustomTooltip text='Shows total contract amount expiring this quarter' />
+              </Box>
               <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.primary }} fontWeight={600} >{qtrRenewalContractVal}</Typography>
               <Typography fontSize={13} >All Paying Companies</Typography>
             </Box>
           </Grid>
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Current Quarter Renewable Health</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Current Quarter Renewable Health</Typography>
+                <CustomTooltip text='Shows aggregate health of companies whose contract is expiring this quarter.' />
+              </Box>
               <DashboardDoughnut colors={overAllCustomerHealthColors} data={quarterCustomerHealth} />
             </Box>
           </Grid>
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Overdue Renewals</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Overdue Renewals</Typography>
+                <CustomTooltip text='Shows number of companies whose contract has expired this quarter and is not yet renewed.' />
+              </Box>
               <Typography marginTop={'10px'} variant='h4' sx={{ color: colorPalette.darkBackground }} fontWeight={600} >{overdueRenewals}</Typography>
               <Typography fontSize={13} >This Quarter</Typography>
             </Box>
@@ -200,7 +222,10 @@ function ClientCompass() {
         <Grid sx={{ marginTop: '5px' }} container spacing={4} >
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Current Quarter Renewals at Risk</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Current Quarter Renewals at Risk</Typography>
+                <CustomTooltip text='Shows number of companies whose contract is expiring this quarter and their risk stage is set to anything other than None.' />
+              </Box>
               <Typography marginTop={'10px'} sx={{ color: colorPalette.darkBackground }} variant='h4' fontWeight={600} >{qtrRiskRenewal}</Typography>
             </Box>
           </Grid>
@@ -243,25 +268,37 @@ function ClientCompass() {
           </Grid> */}
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Latest NPS Score</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Latest NPS Score</Typography>
+                <CustomTooltip text='Shows NPS score based on the latest survey data.' />
+              </Box>
               <DashboardDoughnut colors={npsColors} data={npsScore} />
             </Box>
           </Grid>
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Average NPS Score</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Average NPS Score</Typography>
+                <CustomTooltip text='Averaging NPS score of all the past survey responses.' />
+              </Box>
               <DashboardDoughnut colors={npsColors} data={avgNpsScore} />
             </Box>
           </Grid>
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Latest CSAT Score</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Latest CSAT Score</Typography>
+                <CustomTooltip text='Shows CSAT score based on the latest survey data.' />
+              </Box>
               <DashboardDoughnut colors={npsColors} data={csatScore} />
             </Box>
           </Grid>
           <Grid item xs={3} >
             <Box sx={blockStyle} >
-              <Typography fontSize={13} fontWeight={600} >Average CSAT Score</Typography>
+              <Box display={'flex'} justifyContent={'center'} >
+                <Typography fontSize={13} fontWeight={600} >Average CSAT Score</Typography>
+                <CustomTooltip text='Averaging CSAT score of all the past survey responses.' />
+              </Box>
               <DashboardDoughnut colors={npsColors} data={avgCsatScore} />
             </Box>
           </Grid>

@@ -37,7 +37,7 @@ function FlowDashboard(props: { type: 'flows' | 'templates', mode: 'publish' | '
     const dispatch = useDispatch<any>();
 
     const [typeFilter, setTypeFilter] = useState('all');
-    const [modeFilter, setModeFilter] = useState<'publish' | 'unpublish'>('publish');
+    const [modeFilter, setModeFilter] = useState<'publish' | 'draft'>('publish');
     const [showModal, setShowModal] = useState(false);
     const [type, setType] = useState<'flows' | 'templates'>(props.type);
     const [flows, setFlows] = useState<any[]>([]);
@@ -46,12 +46,8 @@ function FlowDashboard(props: { type: 'flows' | 'templates', mode: 'publish' | '
     let init = false;
 
     useEffect(() => {
-        if (props.mode === 'draft') {
-            setModeFilter('unpublish');
-        } else {
-            setModeFilter('publish');
-        }
         if (init === false) {
+            setModeFilter(props.mode);
             setType(props.type);
             fetchFlows();
             init = true;
@@ -59,7 +55,7 @@ function FlowDashboard(props: { type: 'flows' | 'templates', mode: 'publish' | '
     }, []);
 
     useEffect(() => {
-        handleFilters();
+        handleFilters(typeFilter, modeFilter, unfilteredFlows);
     }, [typeFilter, modeFilter]);
 
     async function fetchFlows() {
@@ -69,6 +65,7 @@ function FlowDashboard(props: { type: 'flows' | 'templates', mode: 'publish' | '
             if (data.data) {
                 setFlows(data.data);
                 setUnfilteredFlows(data.data);
+                handleFilters(typeFilter, props.mode, data.data);
             }
             dispatch(setLoader(false));
         } catch (error) {
@@ -87,16 +84,20 @@ function FlowDashboard(props: { type: 'flows' | 'templates', mode: 'publish' | '
         if (data.refresh === true) { fetchFlows(); }
     }
 
-    function handleFilters() {
+    function handleFilters(
+        tempTypeFilter: string,
+        tmpModeFilter: "publish" | "draft",
+        tmpUnfilteredFlows: any[]
+    ) {
         const filteredData: any[] = [];
-        unfilteredFlows.forEach(fl => {
+        tmpUnfilteredFlows.forEach(fl => {
             // Filter by type
-            const typeCondition = (typeFilter != null && typeFilter !== 'all' && typeFilter.length > 0)
-                ? fl.type === typeFilter
-                : typeFilter === 'all';
+            const typeCondition = (tempTypeFilter != null && tempTypeFilter !== 'all' && tempTypeFilter.length > 0)
+                ? fl.type === tempTypeFilter
+                : tempTypeFilter === 'all';
 
-            // Filter by publish/unpublish
-            const modeCondition = (modeFilter === 'publish')
+            // Filter by publish/draft
+            const modeCondition = (tmpModeFilter === 'publish')
                 ? fl.is_published === true
                 : fl.is_published === false;
 
@@ -110,7 +111,7 @@ function FlowDashboard(props: { type: 'flows' | 'templates', mode: 'publish' | '
     }
 
 
-    function handleModeFilter(e: any, val: 'publish' | 'unpublish') {
+    function handleModeFilter(e: any, val: 'publish' | 'draft') {
         if (val != null && val?.length > 0) {
             setModeFilter(val);
             if (val === 'publish') {
@@ -130,8 +131,8 @@ function FlowDashboard(props: { type: 'flows' | 'templates', mode: 'publish' | '
                 sx={{ height: '40px', marginRight: '10px' }}
                 onChange={handleModeFilter}
             >
-                <ToggleButton value="publish">Published</ToggleButton>
-                <ToggleButton value="unpublish">Unpublished</ToggleButton>
+                <ToggleButton sx={{ width: '70px' }} value="publish">Publish</ToggleButton>
+                <ToggleButton sx={{ width: '70px' }} value="draft">Draft</ToggleButton>
             </ToggleButtonGroup>
         )
     }
@@ -145,7 +146,7 @@ function FlowDashboard(props: { type: 'flows' | 'templates', mode: 'publish' | '
             minWidth: '250px',
             background: props.mode === 'publish' ? '#CBF0CB' : '#F6F6F6',
             cursor: 'pointer',
-            textAlign : 'center'
+            textAlign: 'center'
         }
 
         const subColor = props.mode === 'publish' ? '#008000' : colorPalette.fsGray
@@ -154,7 +155,7 @@ function FlowDashboard(props: { type: 'flows' | 'templates', mode: 'publish' | '
             <Box onClick={() => handleFlowOpen(flow.id)} sx={blockStyle} >
                 <Typography textAlign={'start'} >{flow.name}</Typography>
                 <Typography textAlign={'start'} color={subColor} fontSize={'small'} >
-                    <DataArrayIcon sx={{ position: 'relative', top: '4px' }} fontSize='small' /> 
+                    <DataArrayIcon sx={{ position: 'relative', top: '4px' }} fontSize='small' />
                     {flow.type}
                 </Typography>
                 <Typography textAlign={'start'} color={subColor} fontSize={'small'} >
@@ -162,7 +163,7 @@ function FlowDashboard(props: { type: 'flows' | 'templates', mode: 'publish' | '
                     {flow.user.name}
                 </Typography>
                 <Typography textAlign={'start'} color={subColor} fontSize={'small'} >
-                    <LanguageIcon sx={{ position: 'relative', top: '4px' }} fontSize='small' /> 
+                    <LanguageIcon sx={{ position: 'relative', top: '4px' }} fontSize='small' />
                     {new Date(flow.createdAt).toDateString()}
                 </Typography>
             </Box>
@@ -203,9 +204,17 @@ function FlowDashboard(props: { type: 'flows' | 'templates', mode: 'publish' | '
                 </Box>
             </Box>
             <Box sx={bodyContainer} >
-                <Box sx={{ padding: '10px 20px', display: 'flex', flexWrap: 'wrap'}} >
-                    {flows.map(flow => WorkflowBlock(flow))}
-                </Box>
+                {
+                    flows.length > 0 &&
+                    <Box sx={{ padding: '10px 20px', display: 'flex', flexWrap: 'wrap' }} >
+                        {flows.map(flow => WorkflowBlock(flow))}
+                    </Box>
+                }
+                {flows.length < 1 && <>
+                    <Box textAlign={'center'} height={300} >
+                        <img style={{ height: 300 }} src='/no-data.svg' alt='No Data' />
+                    </Box>
+                </>}
             </Box>
             {
                 showModal &&

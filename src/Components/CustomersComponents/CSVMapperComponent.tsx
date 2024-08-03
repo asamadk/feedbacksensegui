@@ -9,12 +9,17 @@ import { getCompanyColumnURL, uploadBulkCompanyURL } from "../../Utils/Endpoints
 import { modalButtonContainerStyle } from "../../Styles/ModalStyle";
 import { containedButton, outlinedButton } from "../../Styles/ButtonStyle";
 import { LoadingButton } from "@mui/lab";
+import { useDispatch } from "react-redux";
+import { setCompanyList } from "../../Redux/Reducers/companyReducer";
+import { useSelector } from "react-redux";
 
 const CustomSelect = styled(Select)(muiSelectStyle);
 
 function CSVMapperComponent(props: { columns: string[], close: any,csv : string }) {
 
+    const dispatch = useDispatch();
     const snackbarRef: any = useRef(null);
+    const companiesState = useSelector((state: any) => state.companies);
 
     const [selectFsField, setSelectedFsField] = useState<string[]>([]);
     const [selectCsvField, setSelectedCsvField] = useState<string[]>([]);
@@ -112,6 +117,10 @@ function CSVMapperComponent(props: { columns: string[], close: any,csv : string 
             formData.append('fsFields', selectFsField as any);
             formData.append('csvField', selectCsvField as any);
             const { data } = await axios.post(uploadBulkCompanyURL(),formData,{withCredentials : true});
+            if(data.data){
+                const companyList = data.data;
+                dispatch(setCompanyList([...companiesState,companyList]));
+            }
             snackbarRef?.current.show('File uploaded.','success');
             setLoading(false);
             props.close(true);

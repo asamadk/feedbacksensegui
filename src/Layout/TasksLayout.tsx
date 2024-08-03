@@ -12,10 +12,10 @@ import GenericModal from '../Modals/GenericModal';
 import CreateTaskModal from '../Modals/ContactModals/CreateTaskModa';
 import axios from 'axios';
 import { completeTaskURL, deleteTaskURL, getTaskURL } from '../Utils/Endpoints';
-import { handleUnAuth } from '../Utils/FeedbackUtils';
+import { getPersonName, handleUnAuth } from '../Utils/FeedbackUtils';
 import { useSelector } from 'react-redux';
 
-const col: string[] = ['Task', 'Description', 'Person', 'Company', 'Assigned To', 'Due Date', 'Status', 'Action'];
+const col: string[] = ['Task', 'Association', 'Owner', 'Due Date', 'Status', 'Action'];
 
 function TasksLayout() {
 
@@ -210,12 +210,14 @@ function TasksLayout() {
                   taskList?.map(task => (
                     <TableRow key={task.id} >
                       <TableCell sx={tableCellStyle} >
-                        <Tooltip title='Complete Task' >
+                        {/* <Tooltip title='Complete Task' >
                           <Checkbox onChange={() => completeTask(task.id, task.status)} checked={task.status === 'Completed'} color='secondary' />
+                        </Tooltip> */}
+                        <Tooltip title={task.title} >
+                          <b>
+                            {task.title?.length > 50 ? task.title.substring(0,50) + '...' : task.title }
+                          </b>
                         </Tooltip>
-                        <b>{task.title}</b>
-                      </TableCell>
-                      <TableCell sx={tableCellStyle} >
                         <Tooltip title={task.description} >
                           <p style={{ margin: 0 }} >
                             {task.description?.length > 50 ? task.description.substring(0, 50) + '...' : task.description}
@@ -223,16 +225,14 @@ function TasksLayout() {
                         </Tooltip>
                       </TableCell>
                       <TableCell sx={tableCellStyle} >
-                        {task.person[0]?.firstName || 'None'}
-                      </TableCell>
-                      <TableCell sx={tableCellStyle} >
-                        {task.company[0]?.name || 'None'}
+                        <p style={{margin : '2px 5px'}} ><b>Company : </b> {task.company[0]?.name || 'None'}</p>
+                        <p style={{margin : '2px 5px'}} ><b>Person : </b>{getPersonName(task.person[0])}</p>
                       </TableCell>
                       <TableCell sx={tableCellStyle} >
                         {task.owner?.name}
                       </TableCell>
                       <TableCell sx={tableCellStyle} >
-                        {task.dueDate}
+                        {new Date(task.dueDate).toDateString()}
                       </TableCell>
                       <TableCell sx={tableCellStyle} >
                         <Box sx={{ ...taskStatusStyle(task.status), width: '70px', textAlign: 'center' }} >

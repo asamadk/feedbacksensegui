@@ -221,7 +221,7 @@ function CompanyUsageTab(props: { companyId: string | null, personId: string | n
 
             <Box sx={{ marginTop: '50px', textAlign: 'start' }} >
               <Typography variant='h6' ><ViewStreamIcon fontSize='small' />Time Spent in App Over Time</Typography>
-              <Typography sx={{ fontSize: '12px', color: colorPalette.fsGray }} >Time unit : Hours</Typography>
+              <Typography sx={{ fontSize: '12px', color: colorPalette.fsGray }} >Time unit : <b>Minutes</b></Typography>
               <Box sx={{ ...usageContainer, marginTop: '10px' }} >
                 <UsageTimeSpent data={timeSpentData} />
               </Box>

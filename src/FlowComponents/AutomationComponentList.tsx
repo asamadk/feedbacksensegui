@@ -25,7 +25,7 @@ const commonLogoStyle = {
     height: 'fit-content'
 }
 
-function AutomationComponentList(props: { change: any, recordType: string }) {
+function AutomationComponentList(props: { recordType: string }) {
 
     const onDragStart = (event: any, nodeType: any) => {
         event.dataTransfer.setData('text/plain', JSON.stringify(nodeType));
@@ -36,7 +36,6 @@ function AutomationComponentList(props: { change: any, recordType: string }) {
         <Box sx={{ height: 'calc(100vh - 85px)', backgroundColor: colorPalette.textSecondary, paddingTop: '10px', paddingBottom: '10px', borderTop: `4px ${colorPalette.background} solid` }}>
             <Box margin={'0px 20px'} display={'flex'} justifyContent={'space-between'} >
                 <Typography fontWeight={600} marginTop={'7px'} >Components</Typography>
-                <IconButton onClick={(e) => props.change()} ><KeyboardDoubleArrowRightIcon /></IconButton>
             </Box>
             {
                 automationComponentList(props.recordType).map(components => {

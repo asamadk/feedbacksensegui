@@ -37,6 +37,7 @@ function HomeLayout() {
       dispatch(setLoader(false));
     } catch (error) {
       dispatch(setLoader(false));
+      handleUnAuth(error);
     }
   }
 
@@ -104,7 +105,7 @@ function HomeLayout() {
   ];
 
   return (
-    <Box height={'calc(100vh - 20px)'} sx={{ overflowY: 'auto' }} p={'10px'} >
+    <Box height={'calc(100vh - 22px)'} sx={{ overflowY: 'auto' }} p={'10px'} >
 
       <Box display={'flex'} justifyContent={'space-between'}>
         <Box m={2} textAlign={'start'} >

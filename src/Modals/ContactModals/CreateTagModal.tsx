@@ -60,6 +60,10 @@ function CreateTagModal(props: any) {
             name: value,
             status: status
         }
+        if(value.length > 20){
+            snackbarRef?.current?.show('Long Tag name not supported', 'warning');
+            return;
+        }
         if (
             payload.companyId == null || payload.companyId.length < 1 ||
             payload.name == null || payload.name.length < 1 ||

@@ -25,7 +25,7 @@ function DashboardsLayout() {
         >
           <Tab value="1" label="Client Compass" />
           {/* <Tab value="2" label="Usage Console" /> */}
-          <Tab value="3" label="Revenue Compass" />
+          {/* <Tab value="3" label="Revenue Compass" /> */}
         </Tabs>
       </Box>
       {value === '1' && <ClientCompass />}

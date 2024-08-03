@@ -13,6 +13,7 @@ import { containedButton, outlinedButton } from '../Styles/ButtonStyle';
 import { muiSelectStyle, textFieldStyle } from '../Styles/InputStyles';
 import { dateLiteralsOptions, fieldInputTypes, fieldOptions, selectOptions } from '../Utils/ConditionConstants';
 import { showNotification } from '../Redux/Reducers/NotificationReducer';
+import DynamicComponentIcon from '../FlowComponents/DynamicComponentIcon';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 const CustomSelect = styled(Select)(muiSelectStyle);
@@ -40,19 +41,19 @@ function UpdateRecordModal(props: any) {
         if (compConfig?.fields) {
             setFields(compConfig?.fields);
         } else {
-            setFields([{field : '',value : ''}]);
+            setFields([{ field: '', value: '' }]);
         }
     }
 
     const handleSave = () => {
         let obj = {
             desc: desc,
-            fields : fields
+            fields: fields
         }
         props.save(JSON.stringify(obj));
     }
 
-    const renderValueInput = (field :string,value : string,index :number) => {
+    const renderValueInput = (field: string, value: string, index: number) => {
         const inputType = fieldInputTypes[props.recordType][field];
 
         switch (inputType) {
@@ -62,7 +63,7 @@ function UpdateRecordModal(props: any) {
                         fullWidth
                         size='small'
                         value={value}
-                        onChange={(e) => changeValue(e.target.value,index)}
+                        onChange={(e) => changeValue(e.target.value, index)}
                         displayEmpty
                     >
                         <MenuItem value="" disabled>Select Value</MenuItem>
@@ -77,7 +78,7 @@ function UpdateRecordModal(props: any) {
                         fullWidth
                         size='small'
                         value={value}
-                        onChange={(e) => changeValue(e.target.value,index)}
+                        onChange={(e) => changeValue(e.target.value, index)}
                         displayEmpty
                     >
                         <MenuItem value="" disabled>Select Value</MenuItem>
@@ -93,7 +94,7 @@ function UpdateRecordModal(props: any) {
                         size='small'
                         type="number"
                         value={value}
-                        onChange={(e) => changeValue(e.target.value,index)}
+                        onChange={(e) => changeValue(e.target.value, index)}
                         placeholder="Value"
                     />
                 );
@@ -103,15 +104,15 @@ function UpdateRecordModal(props: any) {
                         fullWidth
                         size='small'
                         value={value}
-                        onChange={(e) => changeValue(e.target.value,index)}
+                        onChange={(e) => changeValue(e.target.value, index)}
                         placeholder="Value"
                     />
                 );
         }
     };
 
-    function changeField(field : string,index :number){
-        const tmp : {
+    function changeField(field: string, index: number) {
+        const tmp: {
             field: string;
             value: string;
         }[] = JSON.parse(JSON.stringify(fields));
@@ -119,8 +120,8 @@ function UpdateRecordModal(props: any) {
         setFields(tmp);
     }
 
-    function changeValue(value : string,index :number){
-        const tmp : {
+    function changeValue(value: string, index: number) {
+        const tmp: {
             field: string;
             value: string;
         }[] = JSON.parse(JSON.stringify(fields));
@@ -154,16 +155,20 @@ function UpdateRecordModal(props: any) {
                 <Box sx={flowModalStyleComponents(colorPalette.background)}>
                     <Box width={'100%'}>
                         <Box sx={automationModalHeaderStyle} >
-                            <Box></Box>
-                            <Typography margin={'5px'} id="modal-modal-title" fontSize={'18px'} component="h2">
-                                {props.header}
-                            </Typography>
-                            <IconButton  >
-                                <CloseIcon sx={{ color: 'white' }} onClick={props.close} />
+                            <Box display={'flex'} >
+                                <Box marginTop={'7px'} marginLeft={'10px'} >
+                                    <DynamicComponentIcon id={props.compId} />
+                                </Box>
+                                <Typography fontWeight={600} margin={'5px'} fontSize={'18px'} id="modal-modal-title" component="h2">
+                                    {props.header}
+                                </Typography>
+                            </Box>
+                            <IconButton sx={{ color: 'black' }} >
+                                <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
 
-                        <Box height={'calc(100vh - 330px)'} sx={{ overflowY: 'scroll' }}>
+                        <Box height={'calc(100vh - 100px)'} sx={{ overflowY: 'scroll' }}>
                             <Box padding={'10px'} >
                                 <ModalSnippets text={'To make changes, please un-publish the workflow'} published={props.isPublished} />
                                 <ModalSnippets
@@ -187,7 +192,7 @@ function UpdateRecordModal(props: any) {
                                                 <label style={{ color: 'gray' }} >Record Field</label>
                                                 <CustomSelect
                                                     value={f.field}
-                                                    onChange={(e) => changeField(e.target.value as string,index)}
+                                                    onChange={(e) => changeField(e.target.value as string, index)}
                                                     fullWidth size='small'
                                                 >
                                                     {
@@ -198,7 +203,7 @@ function UpdateRecordModal(props: any) {
                                             <Box width={'48%'} >
                                                 <label style={{ color: 'gray' }} >Record value</label>
                                                 <Box>
-                                                    {renderValueInput(f.field,f.value,index)}
+                                                    {renderValueInput(f.field, f.value, index)}
                                                 </Box>
                                             </Box>
                                             <Box width={'2%'} >

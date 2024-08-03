@@ -28,7 +28,7 @@ function CreateNotesModal(props: any) {
     const [desc, setDesc] = useState('');
     const [loading, setLoading] = useState(false);
     const [person, setPerson] = useState(props.personId);
-    const [company, setCompany] = useState('');
+    const [company, setCompany] = useState(props.companyId);
     const [owner, setOwner] = useState('');
     const [id, setId] = useState<string | null>(null);
     const [visibility, setVisibility] = useState('public');
@@ -67,13 +67,13 @@ function CreateNotesModal(props: any) {
         props.close({ refresh: false });
     }
 
-    function getCompanyId():string{
+    function getCompanyId(): string {
         let compId = '';
-        if(props.companyId != null && props.companyId.length > 0){
+        if (props.companyId != null && props.companyId.length > 0) {
             compId = props.companyId;
-        }else{
-            peopleOptions.forEach((p : any) => {
-                if(p?.id === props.personId){
+        } else {
+            peopleOptions.forEach((p: any) => {
+                if (p?.id === props.personId) {
                     compId = p.company.id;
                     return;
                 }
@@ -88,7 +88,7 @@ function CreateNotesModal(props: any) {
             desc: desc,
             owner: owner,
             visibility: visibility,
-            person:  person,
+            person: person,
             company: getCompanyId(),
             id: id
         }
@@ -171,45 +171,48 @@ function CreateNotesModal(props: any) {
                         </CustomSelect>
                     </Box>
 
-                    <Box marginTop={'20px'} >
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
-                            <Box sx={{ width: '49%' }} >
-                                <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Person</Typography>
-                                <CustomSelect
-                                    size='small'
-                                    placeholder='plan'
-                                    fullWidth
-                                    disabled={props.personId != null}
-                                    value={person}
-                                    onChange={(e) => setPerson(e.target.value as string)}
-                                >
-                                    {
-                                        peopleOptions?.map((people: any) => 
-                                            people.company.id === props.companyId &&
-                                            <MenuItem value={people.id} >{`${people.firstName} ${people.lastName}`}</MenuItem>
-                                        )
-                                    }
-                                </CustomSelect>
-                            </Box>
-                            <Box sx={{ width: '49%' }} >
-                                <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Company</Typography>
-                                <CustomSelect
-                                    disabled={true}
-                                    size='small'
-                                    placeholder='plan'
-                                    value={props.companyId}
-                                    onChange={(e) => setCompany(e.target.value as string)}
-                                    fullWidth
-                                >
-                                    {
-                                        companiesOptions?.map((company: any) =>
-                                            <MenuItem value={company.id} >{company.name}</MenuItem>
-                                        )
-                                    }
-                                </CustomSelect>
+                    {
+                        props.personId == null &&
+                        <Box marginTop={'20px'} >
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
+                                <Box sx={{ width: '49%' }} >
+                                    <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Person</Typography>
+                                    <CustomSelect
+                                        size='small'
+                                        placeholder='plan'
+                                        fullWidth
+                                        disabled={props.personId != null}
+                                        value={person}
+                                        onChange={(e) => setPerson(e.target.value as string)}
+                                    >
+                                        {
+                                            peopleOptions?.map((people: any) =>
+                                                people.company.id === props.companyId &&
+                                                <MenuItem value={people.id} >{`${people.firstName} ${people.lastName}`}</MenuItem>
+                                            )
+                                        }
+                                    </CustomSelect>
+                                </Box>
+                                <Box sx={{ width: '49%' }} >
+                                    <Typography sx={{ color: colorPalette.fsGray, fontSize: '12px' }} >Company</Typography>
+                                    <CustomSelect
+                                        disabled={true}
+                                        size='small'
+                                        placeholder='plan'
+                                        value={company}
+                                        onChange={(e) => setCompany(e.target.value as string)}
+                                        fullWidth
+                                    >
+                                        {
+                                            companiesOptions?.map((company: any) =>
+                                                <MenuItem value={company.id} >{company.name}</MenuItem>
+                                            )
+                                        }
+                                    </CustomSelect>
+                                </Box>
                             </Box>
                         </Box>
-                    </Box>
+                    }
 
                     <Box sx={modalButtonContainerStyle} >
                         <Button

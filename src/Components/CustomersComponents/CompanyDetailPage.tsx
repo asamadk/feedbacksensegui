@@ -18,10 +18,13 @@ import CreateCompanyModal from '../../Modals/ContactModals/CreateCompanyModal';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import EditCompanyAttributeModal from './EditCompanyAttributeModal';
 import { getHealthScoreColor, getHealthScoreStyle } from '../../Styles/TableStyle';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { setCompanyList } from '../../Redux/Reducers/companyReducer';
 
 function CompanyDetailPage() {
 
-    const snackbarRef: any = useRef(null);
+    const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -30,6 +33,7 @@ function CompanyDetailPage() {
     const [company, setCompany] = useState(location.state);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [openActivities, setOpenActivities] = useState(false);
+    const companiesState :any[] = useSelector((state: any) => state.companies);
     const [showEdit, setShowEdit] = useState(false);
 
     useEffect(() => {
@@ -79,6 +83,16 @@ function CompanyDetailPage() {
             tmpCompany[key] = data[key];
         }
         setCompany(JSON.parse(JSON.stringify(tmpCompany)));
+        dispatch(setCompanyList(companiesState.map(company => {
+            if(company.id !== data.id){
+                return company;
+            }else{
+                return {
+                    ...company,
+                    name : data.name
+                }
+            }
+        })));
       }
 
     return (

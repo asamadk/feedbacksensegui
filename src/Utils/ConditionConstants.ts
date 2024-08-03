@@ -1,4 +1,5 @@
 import store from "../Redux/store";
+import { industryOptions } from "./CompanyConstant";
 
 export const healthScoreMetrics = [
     { label: 'Contract Status', value: 'contractStatus', type: 'options', table: 'company', relation: false, path: '' },
@@ -147,7 +148,7 @@ export const fieldOptions: any = {
         { label: 'Contract Status', value: 'contractStatus' },
         { label: 'Status', value: 'status' },
         { label: 'Next renewal date', value: 'nextRenewalDate' },
-        { label: 'Total contract amount', value: 'totalContractAmount' },
+        { label: 'Amount', value: 'totalContractAmount' },
         { label: 'Address', value: 'address' },
         { label: 'Health Score', value: 'healthScore' },
         { label: 'NPS Score', value: 'npsScore' },
@@ -182,14 +183,15 @@ export const fieldInputTypes: any = {
         contractStatus: 'select',
         nextRenewalDate: 'date',
         totalContractAmount: 'number',
-        healthScore: 'number',
+        healthScore: 'select',
         npsScore: 'number',
         csatScore: 'number',
         avgNpsScore: 'number',
         avgCsatScore: 'number',
         lastContactDate: 'date',
         usageFrequency : 'select',
-        status: 'select'
+        status: 'select',
+        industry : 'select'
     },
     task: {
         dueDate: 'date',
@@ -206,7 +208,9 @@ export const selectOptions: any = {
     company: {
         contractStatus: ['Paying', 'Free', 'Churned'],
         status: ['Active', 'Inactive'],
-        usageFrequency : ['Daily','Weekly','BiWeekly','Monthly']
+        usageFrequency : ['Daily','Weekly','BiWeekly','Monthly'],
+        healthScore : ['Good','Poor','Average'],
+        industry : industryOptions.map(i => i.value)
     },
     task: {
         priority: ['Low', 'Medium', 'High', 'Urgent'],
