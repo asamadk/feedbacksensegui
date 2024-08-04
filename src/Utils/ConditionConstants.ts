@@ -189,9 +189,9 @@ export const fieldInputTypes: any = {
         avgNpsScore: 'number',
         avgCsatScore: 'number',
         lastContactDate: 'date',
-        usageFrequency : 'select',
+        usageFrequency: 'select',
         status: 'select',
-        industry : 'select'
+        industry: 'select'
     },
     task: {
         dueDate: 'date',
@@ -206,11 +206,27 @@ export const fieldInputTypes: any = {
 
 export const selectOptions: any = {
     company: {
-        contractStatus: ['Paying', 'Free', 'Churned'],
-        status: ['Active', 'Inactive'],
-        usageFrequency : ['Daily','Weekly','BiWeekly','Monthly'],
-        healthScore : ['Good','Poor','Average'],
-        industry : industryOptions.map(i => i.value)
+        contractStatus: [
+            { label: 'Paying', value: 'Paying' },
+            { label: 'Free', value: 'Free' },
+            { label: 'Churned', value: 'Churned' },
+        ],
+        status: [
+            { label: 'Active', value: 'Active' },
+            { label: 'Inactive', value: 'Inactive' },
+        ],
+        usageFrequency: [
+            { label: 'Daily', value: 'Daily' },
+            { label: 'Weekly', value: 'Weekly' },
+            { label: 'BiWeekly', value: 'BiWeekly' },
+            { label: 'Monthly', value: 'Monthly' }
+        ],
+        healthScore: [
+            { label: 'Good', value: '100' },
+            { label: 'Poor', value: '0' },
+            { label: 'Average', value: '50' },
+        ],
+        industry: industryOptions.map(i => { return { label: i.value, value: i.value } })
     },
     task: {
         priority: ['Low', 'Medium', 'High', 'Urgent'],
@@ -222,18 +238,18 @@ export const selectOptions: any = {
 };
 
 export const dateLiteralsOptions = [
-    {label : 'Last 12 Months',value : 'last_12_months'},
-    {label : 'Last 30 Days',value : 'last_30_days'},
-    {label : 'Last 6 Months',value : 'last_6_months'},
-    {label : 'Last 60 Days',value : 'last_60_days'},
-    {label : 'Last 90 Days',value : 'last_90_days'},
-    {label : 'Last Month',value : 'last_month'},
-    {label : 'Last Week',value : 'last_week'},
-    {label : 'This Month',value : 'this_month'},
-    {label : 'This Week',value : 'this_week'},
-    {label : 'This Year',value : 'this_year'},
-    {label : 'Today',value : 'today'},
-    {label : 'Yesterday',value : 'yesterday'},
+    { label: 'Last 12 Months', value: 'last_12_months' },
+    { label: 'Last 30 Days', value: 'last_30_days' },
+    { label: 'Last 6 Months', value: 'last_6_months' },
+    { label: 'Last 60 Days', value: 'last_60_days' },
+    { label: 'Last 90 Days', value: 'last_90_days' },
+    { label: 'Last Month', value: 'last_month' },
+    { label: 'Last Week', value: 'last_week' },
+    { label: 'This Month', value: 'this_month' },
+    { label: 'This Week', value: 'this_week' },
+    { label: 'This Year', value: 'this_year' },
+    { label: 'Today', value: 'today' },
+    { label: 'Yesterday', value: 'yesterday' },
     // {label : 'Last 12 Months',value : 'last_12_months'},
     // {label : 'Last 12 Months',value : 'last_12_months'},
 ]

@@ -68,7 +68,7 @@ function UpdateRecordModal(props: any) {
                     >
                         <MenuItem value="" disabled>Select Value</MenuItem>
                         {selectOptions[props.recordType][field].map((option: any) => (
-                            <MenuItem key={option} value={option}>{option}</MenuItem>
+                            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                         ))}
                     </Select>
                 );
