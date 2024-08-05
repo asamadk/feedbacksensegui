@@ -1,4 +1,4 @@
-import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import { Box, Divider, IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import DynamicComponentIcon from './DynamicComponentIcon'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
@@ -18,10 +18,17 @@ const commonLogoStyle = {
 
 function NodeComponent(props: any) {
 
+    const [description , setDescription] = useState('');
+
     useEffect(() => {
         const componentConfigMap: Map<string, object> = props.config;
         if (componentConfigMap != null) {
-            const componentConfig = componentConfigMap.get(props.uniqueId);
+            const componentConfig :any | undefined = componentConfigMap.get(props.uniqueId);
+            if(componentConfig != null && componentConfig?.desc && componentConfig?.desc?.length > 0){
+                setDescription(componentConfig?.desc)
+            }else{
+                setDescription(props.description);
+            }
             const validatedComp = validateFlowComponent(componentConfig, props.compId);
             const validatedLogic = validateComponentLogic(componentConfig, props.uniqueId, props.compId, props.edges);
             if (validatedComp != null) {
@@ -112,22 +119,38 @@ function NodeComponent(props: any) {
     }
 
     function AutomationNode() {
+
+        const actionButtonStyle = {
+            borderRadius: '50%',
+            border: `1px ${colorPalette.primary} solid`,
+            padding: '2px',
+            color: colorPalette.primary
+        }
+
         return <>
-            <Box textAlign={'start'} justifyContent={'space-between'} display={'flex'} overflow={'hidden'} onDoubleClick={handleEditButtonClick}>
+            <Box onDoubleClick={handleEditButtonClick}>
                 {showError && <NodeError message={errorMsg} />}
-                <Box sx={{ display: 'flex', marginTop: '5px' }} >
-                    <Box sx={commonLogoStyle} >
+                <Box sx={{ display: 'flex',justifyContent: 'space-between' }} >
+                    <Box display={'flex'} >
                         <DynamicComponentIcon id={props.compId} />
+                        <Typography marginLeft={'5px'} >{props.label}</Typography>
                     </Box>
-                    <Typography>{props.label}</Typography>
+                    <Box>
+                        <IconButton size='small' onClick={handleEditButtonClick} >
+                            <EditRoundedIcon
+                                sx={{ ...actionButtonStyle, fontSize: '14px' }}
+                            />
+                        </IconButton>
+                        <IconButton size='small' onClick={handleDeleteButtonClick} >
+                            <DeleteRoundedIcon sx={{ ...actionButtonStyle, fontSize: '14px' }} fontSize='small' />
+                        </IconButton>
+                    </Box>
                 </Box>
-                <Box>
-                    <IconButton onClick={handleOpenMoreClick} >
-                        <MoreVertIcon sx={{ color: getIconColorById(props.compId) }} />
-                    </IconButton>
-                </Box>
+                {/* <Divider sx={{background : colorPalette.secondary}} /> */}
+                <Typography sx={{ fontSize: '12px', textAlign: 'start' }} > 
+                    {description.length > 85 ? description.substring(0,85) + '...' : description}
+                </Typography>
             </Box>
-            <Typography sx={{ fontSize: '12px', textAlign: 'start' }} > {props.description}</Typography>
         </>
     }
 

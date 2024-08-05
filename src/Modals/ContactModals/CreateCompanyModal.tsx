@@ -17,6 +17,9 @@ import { addCompanyURL, addPersonURL } from '../../Utils/Endpoints';
 import CSVMapperComponent from '../../Components/CustomersComponents/CSVMapperComponent';
 import { getMetricOptions } from '../../Utils/ConditionConstants';
 import { getAPIErrorMessage, handleUnAuth } from '../../Utils/FeedbackUtils';
+import { useDispatch } from 'react-redux';
+import { setCompanyList } from '../../Redux/Reducers/companyReducer';
+import { setPeopleOptions } from '../../Redux/Reducers/peopleOptionReducer';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -35,9 +38,10 @@ const CustomSelect = styled(Select)(muiSelectStyle);
 
 function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' | 'companies', data: any }) {
 
+    const dispatch = useDispatch();
     const snackbarRef: any = useRef(null);
-    const settings = useSelector((state: any) => state.settings);
     const companiesState = useSelector((state: any) => state.companies);
+    const peopleState = useSelector((state: any) => state.people);
     const users = useSelector((state: any) => state.users);
 
     const [loading, setLoading] = useState(false);
@@ -135,6 +139,15 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
         try {
             setLoading(true);
             const { data } = await axios.post(addPersonURL(), payload, { withCredentials: true });
+            if(data.data){
+                const singlePerson = data.data;
+                const tmp = {
+                    id : singlePerson.id,
+                    firstName : singlePerson.firstName,
+                    lastName : singlePerson.lastName
+                }
+                dispatch(setPeopleOptions([...peopleState,tmp]));
+            }
             snackbarRef?.current?.show(data?.message, 'success');
             setLoading(false);
             props.close({ refresh: true });
@@ -171,6 +184,15 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
             setLoading(true);
             const { data } = await axios.post(addCompanyURL(), payload, { withCredentials: true });
             snackbarRef?.current?.show(data?.message, 'success');
+            if(data.data){
+                const singleCompany = data.data;
+                const tmp = {
+                    id : singleCompany.id,
+                    name : singleCompany.name
+                }
+                dispatch(setCompanyList([...companiesState,tmp]))
+                
+            }
             setLoading(false);
             props.close({ refresh: true });
         } catch (err) {

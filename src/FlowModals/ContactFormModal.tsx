@@ -107,7 +107,7 @@ function ContactFormModal(props: any) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={ModalStyles.modalStyleComponents(defaultColor?.secondaryColor)}>
+                <Box sx={ModalStyles.modalStyleComponents(colorPalette.background)}>
                     <Box width={'40%'} marginRight={10} sx={{ overflowY: 'scroll' }}>
                         <Box sx={ModalStyles.modalHeaderStyle} >
                             <Typography id="modal-modal-title" variant="h5" component="h2">

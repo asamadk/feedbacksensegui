@@ -7,6 +7,7 @@ import { AI_TEXT_ANALYSIS, WORD_CLOUD } from '../../../Utils/CustomSettingsConst
 import UpgradePlanError from '../../UpgradePlanError'
 import { colorPalette } from '../../../Utils/Constants'
 import CustomWordCloud from './WordCloud'
+import { parseDataType } from '../../../Utils/FeedbackUtils'
 
 const mainContainer = {
     marginTop: '20px',
@@ -47,13 +48,13 @@ function TextAnswerChart(props: propsType) {
     }, [currentPage, data?.statsArr, answersPerPage]);
 
     const handleVisibility = () => {
-        if (settings != null && settings[AI_TEXT_ANALYSIS] === 'true') {
+        if (parseDataType(settings[AI_TEXT_ANALYSIS]) === true) {
             setShowAiAnalysis(true);
         } else {
             setShowAiAnalysis(false);
         }
 
-        if (settings != null && settings[WORD_CLOUD] === 'true') {
+        if (parseDataType(settings[WORD_CLOUD]) === true) {
             setShowWordCloud(true);
         } else {
             setShowWordCloud(false);

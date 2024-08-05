@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import { createUsageEventTypeURL } from '../../Utils/Endpoints';
-import { handleUnAuth } from '../../Utils/FeedbackUtils';
+import { getAPIErrorMessage, handleUnAuth } from '../../Utils/FeedbackUtils';
 import { Box, Button, IconButton, MenuItem, Modal, Select, TextField, Typography, styled } from '@mui/material';
 import { modalButtonContainerStyle, modalHeaderStyle, modalStyle } from '../../Styles/ModalStyle';
 import { colorPalette } from '../../Utils/Constants';
@@ -68,7 +68,7 @@ function CreateEventTypeModal(props: any) {
             props.close({ refresh: true });
             setLoading(false);
         } catch (error) {
-            snackbarRef?.current?.show('Something went wrong', 'error');
+            snackbarRef?.current?.show(getAPIErrorMessage(error), 'error');
             setLoading(false);
             handleUnAuth(error);
         }

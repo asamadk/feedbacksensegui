@@ -184,7 +184,7 @@ function OrgTeamMatesSettings() {
   return (
     <Box sx={{...LayoutStyles.globalSettingSubContainers('#ffffff'),height : 'calc(100vh - 80px)'}} >
       <Box sx={{ display: 'flex', marginBottom: '50px', justifyContent: 'space-between' }} >
-        <Typography variant='h5' color={colorPalette.darkBackground} marginTop={'10px'} >Users</Typography>
+        <Typography variant='h5' color={'black'} marginTop={'10px'} >Users</Typography>
         {
           CoreUtils.isComponentVisible(userRole, componentName.TEAMMATES_INVITE) &&
           <Button

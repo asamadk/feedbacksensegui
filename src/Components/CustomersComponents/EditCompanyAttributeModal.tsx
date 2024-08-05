@@ -9,22 +9,27 @@ import { companyFieldType } from '../../Utils/types';
 import { textFieldStyle } from '../../Styles/InputStyles';
 import { getMetricOptions } from '../../Utils/ConditionConstants';
 import { useSelector } from 'react-redux';
-import { handleUnAuth } from '../../Utils/FeedbackUtils';
+import { getPersonName, handleUnAuth } from '../../Utils/FeedbackUtils';
 import axios from 'axios';
-import { updateCompanyURL } from '../../Utils/Endpoints';
+import { getCompanyPersonListURL, updateCompanyURL } from '../../Utils/Endpoints';
 import { industryOptions } from '../../Utils/CompanyConstant';
+import { useDispatch } from 'react-redux';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
 function EditCompanyAttributeModal(props: { open: boolean, close: any, type: companyFieldType, value: any, companyId: string, update: any }) {
 
     const globalUsers = useSelector((state: any) => state.users);
+    const [companyPeople, setCompanyPeople] = useState<any[]>([]);
 
     let init = false;
     useEffect(() => {
         if (init === true) { return; }
         init = true;
         setLocalVal(props.value)
+        if (props.type === 'pointOfContact') {
+            fetchPeopleOfCompany();
+        }
     }, []);
 
     const snackbarRef: any = useRef(null);
@@ -38,6 +43,21 @@ function EditCompanyAttributeModal(props: { open: boolean, close: any, type: com
 
     function handleValueUpdate(event: any) {
         setLocalVal(event.target.value);
+    }
+
+    async function fetchPeopleOfCompany() {
+        try {
+            setLoading(true);
+            const { data } = await axios.get(getCompanyPersonListURL(props.companyId), { withCredentials: true });
+            if (data.data) {
+                setCompanyPeople(data.data);
+            }
+            setLoading(false);
+        } catch (error: any) {
+            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
+            setLoading(false);
+            handleUnAuth(error);
+        }
     }
 
     function save() {
@@ -56,14 +76,17 @@ function EditCompanyAttributeModal(props: { open: boolean, close: any, type: com
             }
             payload['totalContractAmount'] = contractAmount;
         }
+        console.log("🚀 ~ save ~ payload:", payload)
 
         try {
             setLoading(true);
             axios.post(updateCompanyURL(), payload, { withCredentials: true })
             setLoading(false);
-            if(props.type === 'owner'){
+            if (props.type === 'owner') {
                 props.update(getUserName());
-            }else{
+            } else if (props.type === 'pointOfContact') {
+                props.update(getCompanyPersonName());
+            } else {
                 props.update(payload);
             }
             snackbarRef?.current?.show('Saved', 'Success');
@@ -73,11 +96,21 @@ function EditCompanyAttributeModal(props: { open: boolean, close: any, type: com
         }
     }
 
-    function getUserName(){
+    function getUserName() {
         let name = '';
-        globalUsers?.map((user :any) => {
-            if(localVal === user.id){
-                name = user.name; 
+        globalUsers?.map((user: any) => {
+            if (localVal === user.id) {
+                name = user.name;
+            }
+        });
+        return name;
+    }
+
+    function getCompanyPersonName() {
+        let name = '';
+        companyPeople?.map(person => {
+            if (localVal === person.id) {
+                name = getPersonName(person);
             }
         });
         return name;
@@ -90,6 +123,18 @@ function EditCompanyAttributeModal(props: { open: boolean, close: any, type: com
                 <Select onChange={handleValueUpdate} fullWidth value={localVal} size='small' >
                     {
                         globalUsers?.map((user: any) => <MenuItem value={user.id} >{user.name}</MenuItem>)
+                    }
+                </Select>
+            </>
+        } else if (props.type === 'pointOfContact') {
+            return <>
+                <Typography sx={{ marginTop: '20px', fontSize: '13px', color: colorPalette.fsGray }} >
+                    Point of Contact
+                </Typography>
+                <Select onChange={handleValueUpdate} displayEmpty fullWidth value={localVal} size='small' >
+                    <MenuItem disabled value='' >Select Person</MenuItem>
+                    {
+                        companyPeople?.map(person => <MenuItem value={person.id} >{getPersonName(person)}</MenuItem>)
                     }
                 </Select>
             </>

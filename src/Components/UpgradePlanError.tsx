@@ -19,7 +19,7 @@ function UpgradePlanError({ message,desc,showButton }: { message: string,desc : 
                 sx={{ color: colorPalette.primary,fontSize : 50 }} 
             />
             <Typography 
-                color={colorPalette.darkBackground} 
+                color={'black'} 
                 variant='h5'
                 fontWeight={500}
             >

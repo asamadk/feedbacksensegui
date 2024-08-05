@@ -157,7 +157,6 @@ function SurveyListPage() {
     useEffect(() => {
         if (init === false) {
             getFolders(false);
-            fetchCustomSettings();
             if (CoreUtils.isComponentVisible(userRole, componentName.SUBSCRIPTION)) {
                 getSubscriptionDetails();
             }
@@ -177,23 +176,6 @@ function SurveyListPage() {
         // } else {
         //     setShowFolder(false);
         // }
-    }
-
-    const fetchCustomSettings = async () => {
-        try {
-            setLoading(true);
-            const { data } = await axios.get(Endpoints.getCustomSettingsAPI(), { withCredentials: true });
-            setLoading(false);
-            const tempSettings = data?.data;
-            dispatch(setCustomSettings(tempSettings));
-            handlePlanVisibility(tempSettings);
-        } catch (error: any) {
-            snackbarRef?.current?.show(error?.response?.data?.message, 'error');
-            setLoading(false);
-            if (error?.response?.data?.message === USER_UNAUTH_TEXT) {
-                FeedbackUtils.handleLogout();
-            }
-        }
     }
 
     const updateActiveSurveyCount = () => {

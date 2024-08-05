@@ -8,7 +8,6 @@ import CreateTaskModal from '../../Modals/ContactModals/CreateTaskModa';
 import FSLoader from '../FSLoader';
 import Notification from '../../Utils/Notification';
 import { handleUnAuth } from '../../Utils/FeedbackUtils';
-import axios from 'axios';
 import { deleteTaskURL, getTaskURL, updateTaskURL } from '../../Utils/Endpoints';
 import GenericModal from '../../Modals/GenericModal';
 import { taskStatusStyle } from '../../Styles/LayoutStyles';

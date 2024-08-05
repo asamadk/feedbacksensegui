@@ -1,5 +1,5 @@
-import { Box, Chip, Grid, IconButton, Tooltip, Typography } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import { Box, Chip, Grid, Typography } from '@mui/material'
+import { useEffect, useRef, useState } from 'react'
 import KeyIcon from '@mui/icons-material/Key';
 import InfoIcon from '@mui/icons-material/Info';
 import TabIcon from '@mui/icons-material/Tab';
@@ -7,27 +7,21 @@ import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import { colorPalette } from '../../Utils/Constants';
-import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
-import PersonIcon from '@mui/icons-material/Person';
+import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
-import ForkRightIcon from '@mui/icons-material/ForkRight';
 import NearMeIcon from '@mui/icons-material/NearMe';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import SellIcon from '@mui/icons-material/Sell';
 import CreateTagModal from '../../Modals/ContactModals/CreateTagModal';
 import numeral from 'numeral';
-import { getHealthScoreName, getLineChartColor, handleUnAuth } from '../../Utils/FeedbackUtils';
-import EditIcon from '@mui/icons-material/Edit';
+import { getHealthScoreName, getPersonName, handleUnAuth, parseDataType } from '../../Utils/FeedbackUtils';
 import EditJourneyModal from '../../Modals/ContactModals/EditJourneyModal';
-import CompanyFieldTable from './CompanyFieldTable';
 import CompanyDetailHealthScore from './CompanyDetailHealthScore';
 import { getHealthScoreStyle } from '../../Styles/TableStyle';
 import axios from 'axios';
 import { deleteTagURL, getCompanyHealthHistoryURL } from '../../Utils/Endpoints';
 import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
 import EditCompanyAttributeModal from './EditCompanyAttributeModal';
 import RouteIcon from '@mui/icons-material/Route';
 import FlagCircleIcon from '@mui/icons-material/FlagCircle';
@@ -35,26 +29,19 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { companyFieldType } from '../../Utils/types';
 import FactoryIcon from '@mui/icons-material/Factory';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
-import AddIcon from '@mui/icons-material/Add';
 import Notification from '../../Utils/Notification';
 import FSLoader from '../FSLoader';
+import { useSelector } from 'react-redux';
+import { COMPANY_TAG } from '../../Utils/CustomSettingsConst';
+import UpgradePlanError from '../UpgradePlanError';
 
 const iconStyle = { fontWeight: 500, marginRight: '10px', color: colorPalette.fsGray };
-
-const tagStyle = {
-  marginLeft: '20px',
-  marginTop: '10px',
-  border: `1px ${colorPalette.background} solid`,
-  borderRadius: '5px',
-  padding: '5px',
-  color: colorPalette.primary,
-  background: colorPalette.secondary,
-  cursor: 'pointer'
-}
 
 function CompanyDetailTab({ company }: any) {
 
   const snackbarRef: any = useRef(null);
+  const settings = useSelector((state: any) => state.settings);
+
   const [loading, setLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showJourneyModal, setShowJourneyModal] = useState(false);
@@ -66,11 +53,13 @@ function CompanyDetailTab({ company }: any) {
   const [selectedField, setSelectedField] = useState('');
   const [selectedFieldData, setSelectedFieldData] = useState<any>('')
   const [fieldType, setFieldType] = useState<companyFieldType>('owner');
+  const [visible,setVisible] = useState(true);
 
   let init = false;
   useEffect(() => {
     if (init === false) {
       getHealthScoreTimeline();
+      handlePlanVisibility();
       init = true;
     }
   }, [])
@@ -78,6 +67,14 @@ function CompanyDetailTab({ company }: any) {
   useEffect(() => {
     populateAttributes();
   }, [company]);
+
+  const handlePlanVisibility = () => {
+    if (settings != null && parseDataType(settings[COMPANY_TAG]) === true) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }
 
   function populateAttributes() {
     const tmp = [];
@@ -87,6 +84,13 @@ function CompanyDetailTab({ company }: any) {
       value: company?.owner?.name,
       edit: true,
       type: 'owner'
+    });
+    tmp.push({
+      icon: <ConnectWithoutContactIcon sx={iconStyle} />,
+      label: 'Point of contact',
+      value: getPersonName(company.pointOfContact) || 'None',
+      edit: true,
+      type: 'pointOfContact'
     });
     tmp.push({
       icon: <InfoIcon sx={iconStyle} />,
@@ -110,7 +114,7 @@ function CompanyDetailTab({ company }: any) {
     });
     tmp.push({
       icon: <LocalAtmIcon sx={iconStyle} />,
-      label: 'Total Contract Amount',
+      label: 'Amount',
       value: company.totalContractAmount != null ? numeral(company.totalContractAmount).format('0a').toUpperCase() : '$0',
       edit: false
     });
@@ -191,6 +195,7 @@ function CompanyDetailTab({ company }: any) {
       setHealthScoreLoading(false);
     } catch (error) {
       setHealthScoreLoading(false);
+      handleUnAuth(error);
     }
   }
 
@@ -222,6 +227,8 @@ function CompanyDetailTab({ company }: any) {
       setFieldType(type);
       if (type === 'owner') {
         setSelectedFieldData(company?.owner?.id);
+      } else if (type === 'pointOfContact') {
+        setSelectedField(company?.pointOfContact?.id || '');
       } else {
         setSelectedFieldData(val);
       }
@@ -259,6 +266,9 @@ function CompanyDetailTab({ company }: any) {
     if (fieldType === 'owner') {
       company.owner = {};
       company.owner.name = data;
+    } else if (fieldType === 'pointOfContact') {
+      company.pointOfContact = {};
+      company.pointOfContact.firstName = data;
     } else {
       for (const key in data) {
         company[key] = data[key];
@@ -335,25 +345,33 @@ function CompanyDetailTab({ company }: any) {
           </Box>
           <Box marginTop={'50px'} >
             <Typography sx={{ textAlign: 'start' }} variant='h5' ><SellIcon />Tags</Typography>
-            <Box sx={{ flexWrap: 'wrap' }} display={'flex'} padding={'10px'}>
-              {
-                tagList?.map((tag: any) => (<>
-                  <Chip
-                    sx={{ marginRight: '4px', marginTop: '5px' }}
-                    variant='outlined'
-                    label={tag.name}
-                    onDelete={() => handleTagDelete(tag.id)}
-                  />
-                </>))
-              }
-              <Chip
-                clickable
-                onClick={() => setShowCreateModal(true)}
-                sx={{ marginRight: '4px', marginTop: '5px' }}
-                variant='filled'
-                label="Add Tags +"
+            {
+              visible ? 
+              <Box sx={{ flexWrap: 'wrap' }} display={'flex'} padding={'10px'}>
+                {
+                  tagList?.map((tag: any) => (<>
+                    <Chip
+                      sx={{ marginRight: '4px', marginTop: '5px' }}
+                      variant='outlined'
+                      label={tag.name}
+                      onDelete={() => handleTagDelete(tag.id)}
+                    />
+                  </>))
+                }
+                <Chip
+                  clickable
+                  onClick={() => setShowCreateModal(true)}
+                  sx={{ marginRight: '4px', marginTop: '5px' }}
+                  variant='filled'
+                  label="Add Tags +"
+                />
+              </Box> :
+              <UpgradePlanError
+                message='Upgrade plan to use company tags'
+                desc='This feature is available in "Company" & "Enterprise" plans'
+                showButton={false}
               />
-            </Box>
+            }
           </Box>
         </Box>
       </Box>

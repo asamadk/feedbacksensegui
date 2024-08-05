@@ -35,17 +35,11 @@ export const verticalModalStyle = (bgColor: string) => {
 export const flowModalStyleComponents = (bgColor: string) => {
     return {
         position: 'absolute' as 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        // height: '70%',
-        height : 'calc(100vh - 235px)',
-        width : '50%',
+        height : '100vh',
+        width : '40%',
         bgcolor: bgColor,
         boxShadow: 24,
         color: colorPalette.textPrimary,
-        borderRadius: '5px',
-        // p: 2,
         display: 'flex'
     }
 }
@@ -63,12 +57,12 @@ export const modalStyleComponents = (bgColor: string) => {
 };
 
 export const workflowLiveWarning = {
-    backgroundColor: '#cc3300',
+    backgroundColor: '#ffb3b3',
     borderRadius: '4px',
     padding: '10px',
     marginBottom: '5px',
     marginTop: '5px',
-    color : colorPalette.secondary
+    color : '#800000'
 }
 
 export const modalHeaderStyle = {
@@ -79,9 +73,9 @@ export const modalHeaderStyle = {
 export const automationModalHeaderStyle = {
     display: 'flex',
     justifyContent: 'space-between',
-    background : colorPalette.primary,
+    background : colorPalette.textSecondary,
     borderRadius : '5px 5px 0px 0px',
-    color : 'white'
+    color : 'black'
 }
 
 export const modalButtonContainerStyle = {

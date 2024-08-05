@@ -16,7 +16,7 @@ import GenericModal from '../Modals/GenericModal';
 import { handleUnAuth } from '../Utils/FeedbackUtils';
 import { globalSettingSubContainers } from '../Styles/LayoutStyles';
 
-function CustomEventsView(props : {back : any}) {
+function CustomEventsView(props: { back: any }) {
 
     const col: string[] = ['Event Name', 'Event Type', 'Action'];
     const navigate = useNavigate();
@@ -54,6 +54,7 @@ function CustomEventsView(props : {back : any}) {
             setLoading(false);
         } catch (error) {
             setLoading(false);
+            handleUnAuth(error);
         }
     }
 
@@ -88,21 +89,21 @@ function CustomEventsView(props : {back : any}) {
         setDeletePayload({ ...deletePayload, data: {} });
         setShowDeleteModal(false);
         try {
-          setLoading(true);
-          await axios.delete(deleteUsageEventTypeURL(typeId), { withCredentials: true });
-          snackbarRef?.current?.show('Event type deleted', 'success');
-          setEvents(events.filter(t => t.id !== typeId));
-          setLoading(false);
+            setLoading(true);
+            await axios.delete(deleteUsageEventTypeURL(typeId), { withCredentials: true });
+            snackbarRef?.current?.show('Event type deleted', 'success');
+            setEvents(events.filter(t => t.id !== typeId));
+            setLoading(false);
         } catch (error) {
-          snackbarRef?.current?.show('Something went wrong', 'error');
-          setLoading(false);
-          handleUnAuth(error);
+            snackbarRef?.current?.show('Something went wrong', 'error');
+            setLoading(false);
+            handleUnAuth(error);
         }
-      }
+    }
 
     return (
         <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between',marginBottom : '10px' }} >
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }} >
                 <Box display={'flex'}>
                     <IconButton onClick={handleBackButtonClick}  >
                         <ArrowBackIcon sx={{ color: colorPalette.darkBackground }} />
@@ -119,43 +120,45 @@ function CustomEventsView(props : {back : any}) {
                 </Box>
             </Box>
             <Box sx={{ ...globalSettingSubContainers('#ffffff'), height: 'calc(100vh - 130px)', textAlign: 'start', overflowY: 'scroll' }} >
-                <Box>
-                    <TableContainer sx={{ ...tableContainerStyle, height: 'calc(100vh - 125px)' }} >
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead >
-                                <TableRow >
-                                    {col?.map((column: string) => (
-                                        <TableCell sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary }} key={column}>
-                                            {column}
+                <TableContainer sx={{ ...tableContainerStyle, height: 'calc(100vh - 125px)' }} >
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead >
+                            <TableRow >
+                                {col?.map((column: string) => (
+                                    <TableCell 
+                                        width={column === 'Event Name' ? '80%' : '10%'}
+                                        sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary }} 
+                                        key={column}
+                                    >
+                                        {column}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {
+                                events?.map(event => (
+                                    <TableRow key={event.id} >
+                                        <TableCell width={'80%'} sx={tableCellStyle} >
+                                            {event.eventName}
                                         </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {
-                                    events?.map(event => (
-                                        <TableRow key={event.id} >
-                                            <TableCell sx={tableCellStyle} >
-                                                {event.eventName}
-                                            </TableCell>
-                                            <TableCell sx={tableCellStyle} >
-                                                {event.eventType}
-                                            </TableCell>
-                                            <TableCell sx={tableCellStyle} >
-                                                <IconButton onClick={() => handleEditClick(event)} size='small' >
-                                                    <EditIcon sx={{ color: colorPalette.fsGray }} fontSize='small' />
-                                                </IconButton>
-                                                <IconButton onClick={() => handleDeleteClick(event.id)} size='small' >
-                                                    <DeleteIcon sx={{ color: colorPalette.fsGray }} fontSize='small' />
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                }
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Box>
+                                        <TableCell width={'10%'} sx={tableCellStyle} >
+                                            {event.eventType}
+                                        </TableCell>
+                                        <TableCell width={'10%'} sx={tableCellStyle} >
+                                            <IconButton onClick={() => handleEditClick(event)} size='small' >
+                                                <EditIcon sx={{ color: colorPalette.fsGray }} fontSize='small' />
+                                            </IconButton>
+                                            <IconButton onClick={() => handleDeleteClick(event.id)} size='small' >
+                                                <DeleteIcon sx={{ color: colorPalette.fsGray }} fontSize='small' />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Box>
             <FSLoader show={loading} />
             <Notification ref={snackbarRef} />

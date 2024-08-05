@@ -16,18 +16,31 @@ function getProductUsageSnippetURL(){
 
 export const getProductUsageScript = (orgId : string) => {
     return `<script>
-    var feedbacksense_options = {
-      organization_id: "${orgId}", //Do not change this
-      person: {
-        id: "john@doe.com", //unique person identifier email address
-        identifierType: "email",
-        name: "John Doe",
-      },
-      company: {
-        id: "ibx9-ax2w-axi13-xx4t", //unique account identifier
-        name: "Acme", //company name
-      },
-    }
-    window.feedbacksense_tmp_stack = [];window["feedbacksense"] = {go: function () {return -1;},setAccountAttributes: function () {},identify: function () {},track: function (t) {window.feedbacksense_tmp_stack.push({activity: t,personId: feedbacksense_options.person.id,companyId: feedbacksense_options.company.id,name: feedbacksense_options.person.name,companyName: feedbacksense_options.company.name,org: feedbacksense_options.organization_id,createdDate: new Date().toISOString(),});return -1;},};var e = document.createElement("script");e.type = "text/javascript";e.async = true;e.src = "${getProductUsageSnippetURL()}";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(e, s);</script>
-`;
+      var feedbacksense_options = {
+        organization_id: "${orgId}", //Do not change this
+        person: {
+          id: "john@doe.com", //Replace with person email address
+          identifierType: "email",
+          name: "John Doe", //Replace with person name
+        },
+        company: {
+          id: "ibx9-ax2w-axi13-xx4t",
+          name: "Acme",
+        },
+      }
+      window.feedbacksense_tmp_stack = [];
+      window["feedbacksense"] = {
+        go: function () {return -1;},
+        setAccountAttributes: function () {},
+        identify: function () {},
+        track: function (t) {window.feedbacksense_tmp_stack.push({activity: t,personId: feedbacksense_options.person.id,companyId: feedbacksense_options.company.id,name: feedbacksense_options.person.name,companyName: feedbacksense_options.company.name,org: feedbacksense_options.organization_id,createdDate: new Date().toISOString(),});
+          return -1;
+        },
+      };
+      var e = document.createElement("script");
+      e.type = "text/javascript";
+      e.async = true;
+      e.src = "${getProductUsageSnippetURL()}";
+      var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(e, s);
+  </script>`;
 }

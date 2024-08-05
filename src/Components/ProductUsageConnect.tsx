@@ -1,11 +1,9 @@
 import { Box, IconButton, Typography } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router';
 import { colorPalette } from '../Utils/Constants';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { CopyBlock } from 'react-code-blocks';
 import { BASE_URL, getUsageStatusURL } from '../Utils/Endpoints';
-import LoopIcon from '@mui/icons-material/Loop';
 import { getProductUsageScript } from '../Utils/EventConstants';
 import { useSelector } from 'react-redux';
 import { globalSettingSubContainers } from '../Styles/LayoutStyles';
@@ -39,7 +37,6 @@ function ProductUsageConnect(props: { back: any }) {
     } catch (error) {
       snackbarRef?.current?.show('Something went wrong','error')
       setLoading(false);
-      console.log("🚀 ~ fetchConnectionStatus ~ error:", error);
       handleUnAuth(error);
     }
   }
@@ -77,7 +74,7 @@ function ProductUsageConnect(props: { back: any }) {
           user engagement details to RetainSense's account)
         </Typography>
         <Typography color={colorPalette.fsGray} >
-          Replace the highlighted line's values marked in <b style={{ color: 'green' }} >green</b> with your data
+          Replace the Person Id & Person's name with your data
         </Typography>
         <Box marginTop={'20px'} >
           <CopyBlock

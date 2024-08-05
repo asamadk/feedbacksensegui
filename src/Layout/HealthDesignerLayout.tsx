@@ -181,6 +181,35 @@ function HealthDesignerLayout() {
                 </Box>
             </Box>
             <Box sx={{ ...globalSettingSubContainers('#ffffff'), height: 'calc(100vh - 140px)', textAlign: 'center', overflowY: 'scroll' }} >
+            <Box marginTop={'20px'} textAlign={'start'} >
+                    <Box display={'flex'} >
+                        <Box sx={{ marginTop: '10px', marginRight: '10px', width: '15px', height: '15px', borderRadius: '50%', backgroundColor: '#FFA500' }} ></Box>
+                        <Box>
+                            <Typography variant='h6' fontWeight={600}>Average Health</Typography>
+                            <Typography>
+                                If neither good nor bad criteria are satisfied then company is in average health
+                            </Typography>
+                        </Box>
+                    </Box>
+                    <Box display={'flex'} >
+                        <Box sx={{ marginTop: '10px', marginRight: '10px', width: '15px', height: '15px', borderRadius: '50%', backgroundColor: '#008000' }} ></Box>
+                        <Box>
+                            <Typography variant='h6' fontWeight={600}>Good Health</Typography>
+                            <Typography>
+                                If All good criteria are satisfied then company is in good health
+                            </Typography>
+                        </Box>
+                    </Box>
+                    <Box display={'flex'} >
+                        <Box sx={{ marginTop: '10px', marginRight: '10px', width: '15px', height: '15px', borderRadius: '50%', backgroundColor: '#ff0000' }} ></Box>
+                        <Box>
+                            <Typography variant='h6' fontWeight={600}>Poor Health</Typography>
+                            <Typography>
+                                If any poor criteria is satisfied then company is in poor health
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Box>
                 <Box sx={{ textAlign: 'end', marginBottom: '10px' }} >
                     {
                         !editMode &&
@@ -308,7 +337,7 @@ function HealthDesignerLayout() {
                     Add Criteria
                 </Button>
 
-                <Box marginTop={'20px'} textAlign={'start'} >
+                {/* <Box marginTop={'20px'} textAlign={'start'} >
                     <Box display={'flex'} >
                         <Box sx={{ marginTop: '10px', marginRight: '10px', width: '15px', height: '15px', borderRadius: '50%', backgroundColor: '#FFA500' }} ></Box>
                         <Box>
@@ -336,8 +365,7 @@ function HealthDesignerLayout() {
                             </Typography>
                         </Box>
                     </Box>
-                </Box>
-
+                </Box> */}
             </Box>
             <FSLoader show={loading} />
             <Notification ref={snackbarRef} />

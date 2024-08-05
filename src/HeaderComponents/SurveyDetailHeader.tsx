@@ -18,7 +18,7 @@ const makeIconsUp = {
 }
 
 const tabsetList = [
-    { id: 1, name: 'Automation' },
+    { id: 1, name: 'Create' },
     { id: 2, name: 'Design' },
     { id: 3, name: 'Configure' },
     { id: 4, name: 'Share' },

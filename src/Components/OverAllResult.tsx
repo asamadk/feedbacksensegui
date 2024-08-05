@@ -10,7 +10,7 @@ import axios from 'axios';
 import FSLoader from './FSLoader';
 import { USER_UNAUTH_TEXT, colorPalette } from '../Utils/Constants';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { getDurationLabel, getTwelveMonthAgoDate, handleLogout } from '../Utils/FeedbackUtils';
+import { getDurationLabel, getTwelveMonthAgoDate, handleLogout, parseDataType } from '../Utils/FeedbackUtils';
 import Notification from '../Utils/Notification';
 import { useSelector } from 'react-redux';
 import { EXPORT_FEATURE } from '../Utils/CustomSettingsConst';
@@ -64,7 +64,7 @@ function OverAllResult(props: IndividualResponseProps) {
     }, []);
 
     const handleVisibility = () => {
-        if (settings[EXPORT_FEATURE] === 'false') {
+        if (parseDataType(settings[EXPORT_FEATURE]) === false) {
             setShowUpgrade(true);
         }
     }

@@ -12,6 +12,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import { containedButton, outlinedButton } from '../Styles/ButtonStyle';
 import { muiSelectStyle, textFieldStyle } from '../Styles/InputStyles';
 import { taskPriorityOptions } from '../Utils/CompanyConstant';
+import DynamicComponentIcon from '../FlowComponents/DynamicComponentIcon';
+import VariablesModal from './VariablesModal';
+import InfoIcon from '@mui/icons-material/Info';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 const CustomSelect = styled(Select)(muiSelectStyle);
@@ -33,7 +36,7 @@ function NewTaskModal(props: any) {
         populateCompConfig();
     }, [props.open]);
 
-    const dispatch = useDispatch();
+    const [showVar, setShowVar] = useState(false);
     const [desc, setDesc] = useState('');
     const [owner, setOwner] = useState('');
     const [priority, setPriority] = useState('');
@@ -43,8 +46,8 @@ function NewTaskModal(props: any) {
 
     const populateCompConfig = () => {
         const compConfig = getCompConfigFromUiId(props);
-        if (compConfig?.description) {
-            setDesc(compConfig?.description);
+        if (compConfig?.desc) {
+            setDesc(compConfig?.desc);
         } else {
             setDesc('');
         }
@@ -82,7 +85,7 @@ function NewTaskModal(props: any) {
 
     const handleSave = () => {
         let obj = {
-            description: desc,
+            desc: desc,
             title: title,
             taskDesc: taskDesc,
             owner: owner,
@@ -103,16 +106,20 @@ function NewTaskModal(props: any) {
                 <Box sx={flowModalStyleComponents(colorPalette.background)}>
                     <Box width={'100%'}>
                         <Box sx={automationModalHeaderStyle} >
-                            <Box></Box>
-                            <Typography margin={'5px'} id="modal-modal-title" fontSize={'18px'} component="h2">
-                                {props.header}
-                            </Typography>
-                            <IconButton  >
-                                <CloseIcon sx={{ color: 'white' }} onClick={props.close} />
+                            <Box display={'flex'} >
+                                <Box marginTop={'7px'} marginLeft={'10px'} >
+                                    <DynamicComponentIcon id={props.compId} />
+                                </Box>
+                                <Typography fontWeight={600} margin={'5px'} fontSize={'18px'} id="modal-modal-title" component="h2">
+                                    {props.header}
+                                </Typography>
+                            </Box>
+                            <IconButton sx={{ color: 'black' }} >
+                                <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
 
-                        <Box height={'calc(100vh - 330px)'} sx={{ overflowY: 'scroll' }}>
+                        <Box height={'calc(100vh - 100px)'} sx={{ overflowY: 'scroll' }}>
                             <Box padding={'10px'} >
                                 <ModalSnippets text={'To make changes, please un-publish the workflow'} published={props.isPublished} />
                                 <ModalSnippets
@@ -121,6 +128,12 @@ function NewTaskModal(props: any) {
                                 />
                             </Box>
                             <Box sx={{ ...modalBodyContainerStyle, marginTop: '0px', padding: '20px' }} >
+                                <Box sx={{ display: 'flex', justifyContent: 'start',marginBottom : '5px' }} >
+                                    <Typography sx={{ fontSize: '12px', color: colorPalette.fsGray }} >
+                                        <InfoIcon sx={{ position: 'relative', top: '3px', fontSize: '15px', marginRight: '5px' }} />
+                                        Company & Person will be automatically added to the task
+                                    </Typography>
+                                </Box>
                                 <CssTextField
                                     size='small'
                                     fullWidth
@@ -207,6 +220,10 @@ function NewTaskModal(props: any) {
                     </Box>
                 </Box>
             </Modal>
+            {
+                showVar &&
+                <VariablesModal recordType={props.recordType} open={showVar} close={() => setShowVar(false)} />
+            }
         </>
     )
 }

@@ -13,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { containedButton, outlinedButton } from '../Styles/ButtonStyle';
 import { textFieldStyle } from '../Styles/InputStyles';
 import VariablesModal from './VariablesModal';
+import DynamicComponentIcon from '../FlowComponents/DynamicComponentIcon';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -37,6 +38,18 @@ function SendEmailModal(props: any) {
         } else {
             setDesc('');
         }
+
+        if (compConfig?.subject) {
+            setSubject(compConfig?.subject);
+        } else {
+            setSubject('');
+        }
+
+        if (compConfig?.body) {
+            setBody(compConfig?.body);
+        } else {
+            setBody('');
+        }
     }
 
     const handleSave = () => {
@@ -45,8 +58,8 @@ function SendEmailModal(props: any) {
         }
         let obj = {
             desc: desc,
-            subject : subject,
-            body : body
+            subject: subject,
+            body: body
         }
         props.save(JSON.stringify(obj));
     }
@@ -63,21 +76,25 @@ function SendEmailModal(props: any) {
                 onClose={props.close}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-                sx={{zIndex : (theme) => theme.zIndex.drawer - 1}}
+                sx={{ zIndex: (theme) => theme.zIndex.drawer - 1 }}
             >
                 <Box sx={flowModalStyleComponents(colorPalette.background)}>
                     <Box width={'100%'}>
-                        <Box sx={automationModalHeaderStyle} >
-                            <Box></Box>
-                            <Typography margin={'5px'} id="modal-modal-title" fontSize={'18px'} component="h2">
-                                {props.header}
-                            </Typography>
-                            <IconButton  >
-                                <CloseIcon sx={{ color: 'white' }} onClick={props.close} />
+                    <Box sx={automationModalHeaderStyle} >
+                            <Box display={'flex'} >
+                                <Box marginTop={'7px'} marginLeft={'10px'} >
+                                    <DynamicComponentIcon id={props.compId}  />
+                                </Box>
+                                <Typography fontWeight={600} margin={'5px'} fontSize={'18px'} id="modal-modal-title" component="h2">
+                                    {props.header}
+                                </Typography>
+                            </Box>
+                            <IconButton sx={{ color: 'black' }} >
+                                <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
 
-                        <Box height={'calc(100vh - 330px)'} sx={{ overflowY: 'scroll' }}>
+                        <Box height={'calc(100vh - 100px)'} sx={{ overflowY: 'scroll' }}>
                             <Box padding={'10px'} >
                                 <ModalSnippets text={'To make changes, please un-publish the workflow'} published={props.isPublished} />
                                 <ModalSnippets
@@ -94,10 +111,20 @@ function SendEmailModal(props: any) {
                                     onChange={(e) => setDesc(e.target.value)}
                                     sx={{ marginBottom: '20px' }}
                                 />
-                                <Typography sx={{ fontSize: '12px', color: colorPalette.fsGray }} >
-                                    <InfoIcon sx={{ position: 'relative', top: '3px', fontSize: '15px', marginRight: '5px' }} />
-                                    {getEmailRecipientDesc(props.recordType)}
-                                </Typography>
+
+                                <Box sx={{display : 'flex',justifyContent : 'space-between'}} >
+                                    <Typography sx={{ fontSize: '12px', color: colorPalette.fsGray }} >
+                                        <InfoIcon sx={{ position: 'relative', top: '3px', fontSize: '15px', marginRight: '5px' }} />
+                                        {getEmailRecipientDesc(props.recordType)}
+                                    </Typography>
+                                    <Button 
+                                        onClick={() => setShowVar(true)} 
+                                        size='small' 
+                                        sx={{ ...outlinedButton, width: 'fit-content',marginTop : '0px' }} 
+                                    >
+                                        Add Field
+                                    </Button>
+                                </Box>
 
                                 <CssTextField
                                     size='small'
@@ -118,9 +145,6 @@ function SendEmailModal(props: any) {
                                     onChange={(e) => setBody(e.target.value)}
                                     sx={{ marginTop: '20px' }}
                                 />
-                                <Button onClick={() => setShowVar(true)} size='small' sx={{ ...outlinedButton, width: 'fit-content' }} >
-                                    Add Field
-                                </Button>
                             </Box>
                         </Box>
                         <Box sx={modalButtonContainerStyle} >
@@ -131,7 +155,7 @@ function SendEmailModal(props: any) {
                 </Box>
             </Modal>
             {
-                showVar && 
+                showVar &&
                 <VariablesModal recordType={props.recordType} open={showVar} close={() => setShowVar(false)} />
             }
         </>

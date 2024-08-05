@@ -1,12 +1,13 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Box, Button, Chip, IconButton, MenuItem, Select, TextField, styled } from '@mui/material';
-import { Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { containedButton, outlinedButton } from '../Styles/ButtonStyle';
 import { modalContainerStyle } from '../Styles/ModalStyle';
 import { colorPalette, dateLiterals } from '../Utils/Constants';
 import { dateLiteralsOptions, fieldInputTypes, fieldOptions, selectOptions } from '../Utils/ConditionConstants';
 import { DatePicker } from '@mui/lab';
 import { textFieldStyle } from '../Styles/InputStyles';
+import { parseDataType } from '../Utils/FeedbackUtils';
 
 const conditionGroupContainer = {
   ...modalContainerStyle,
@@ -18,7 +19,7 @@ const CssTextField = styled(TextField)(textFieldStyle);
 
 interface ConditionBuilderProps {
   recordType: string;
-  data :any
+  data: any
 }
 
 export interface ConditionBuilderRef {
@@ -27,21 +28,21 @@ export interface ConditionBuilderRef {
 
 
 
-const ConditionBuilder = forwardRef<ConditionBuilderRef, ConditionBuilderProps>(({ recordType,data }, ref) => {
+const ConditionBuilder = forwardRef<ConditionBuilderRef, ConditionBuilderProps>(({ recordType, data }, ref) => {
 
   const [conditions, setConditions] = useState<any[][]>([[]]);
 
-  const operators = ['Equal', 'Not Equals', 'Less Than', 'Greater That', 'Less Than or Equal', 'Greater Than or Equal', 'Contains'];
+  const operators = ['Equal', 'Not Equals', 'Less Than', 'Greater Than', 'Less Than or Equal', 'Greater Than or Equal', 'Contains'];
 
   useImperativeHandle(ref, () => ({
     getState: () => conditions,
   }));
 
   useEffect(() => {
-    if(data){
+    if (data) {
       setConditions(data || [[]]);
     }
-  },[data]);
+  }, [data]);
 
   function addGroupCondition() {
     const tmp = JSON.parse(JSON.stringify(conditions));
@@ -69,7 +70,7 @@ const ConditionBuilder = forwardRef<ConditionBuilderRef, ConditionBuilderProps>(
 
   function addData(indexMain: number, indexSub: number, data: any, type: 'field' | 'operator' | 'value') {
     const tmp: any[][] = JSON.parse(JSON.stringify(conditions));
-    tmp[indexMain][indexSub][type] = data;
+    tmp[indexMain][indexSub][type] = parseDataType(data);
     if (tmp[indexMain][indexSub]['where'] == null) {
       tmp[indexMain][indexSub]['where'] = 'AND'
     }
@@ -101,7 +102,7 @@ const ConditionBuilder = forwardRef<ConditionBuilderRef, ConditionBuilderProps>(
           >
             <MenuItem value="" disabled>Select Value</MenuItem>
             {selectOptions[recordType][conditions[indexMain][indexSub]['field']].map((option: any) => (
-              <MenuItem key={option} value={option}>{option}</MenuItem>
+              <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
             ))}
           </Select>
         );
@@ -145,36 +146,43 @@ const ConditionBuilder = forwardRef<ConditionBuilderRef, ConditionBuilderProps>(
 
   function Condition(showChip: boolean, indexMain: number, indexSub: number, onRemove: any) {
     return (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: '10px' }}>
-        <Select
-          sx={{ width: '30%' }}
-          size='small'
-          value={conditions[indexMain][indexSub]['field']}
-          onChange={(e) => addData(indexMain, indexSub, e.target.value, 'field')}
-          displayEmpty
-        >
-          <MenuItem value="" disabled>Select Field</MenuItem>
-          {fieldOptions[recordType].map((option: any) => (
-            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-          ))}
-        </Select>
+      <>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: '10px', justifyContent: 'space-evenly' }}>
+          <Select
+            sx={{ width: '30%' }}
+            size='small'
+            value={conditions[indexMain][indexSub]['field'] || ''}
+            onChange={(e) => addData(indexMain, indexSub, e.target.value, 'field')}
+            displayEmpty
+          >
+            <MenuItem value="" disabled>Select Field</MenuItem>
+            {fieldOptions[recordType].map((option: any) => (
+              <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+            ))}
+          </Select>
 
-        <Select
-          sx={{ width: '20%' }}
-          size='small'
-          value={conditions[indexMain][indexSub]['operator']}
-          onChange={(e) => addData(indexMain, indexSub, e.target.value, 'operator')}
-          displayEmpty
-        >
-          <MenuItem value="" disabled>Select Operator</MenuItem>
-          {operators.map((op) => (
-            <MenuItem key={op} value={op}>{op}</MenuItem>
-          ))}
-        </Select>
-        {renderValueInput(indexMain, indexSub)}
-        <IconButton onClick={() => onRemove()}><RemoveIcon /></IconButton>
-        {showChip && <WhereClause change={() => changeWhere(indexMain, indexSub)} type={conditions[indexMain][indexSub]['where'] || 'AND'} />}
-      </Box>
+          <Select
+            sx={{ width: '20%' }}
+            size='small'
+            value={conditions[indexMain][indexSub]['operator'] || ''}
+            onChange={(e) => addData(indexMain, indexSub, e.target.value, 'operator')}
+            displayEmpty
+          >
+            <MenuItem value="" disabled>Select Operator</MenuItem>
+            {operators.map((op) => (
+              <MenuItem key={op} value={op}>{op}</MenuItem>
+            ))}
+          </Select>
+          {renderValueInput(indexMain, indexSub)}
+          <IconButton onClick={() => onRemove()}><DeleteIcon /></IconButton>
+        </Box>
+        {showChip &&
+          <WhereClause
+            change={() => changeWhere(indexMain, indexSub)}
+            type={conditions[indexMain][indexSub]['where'] || 'AND'}
+          />
+        }
+      </>
     )
   }
 
@@ -229,8 +237,15 @@ export default ConditionBuilder;
 
 function WhereClause(props: { type: 'AND' | 'OR', change: any }) {
   return (
-    <Box sx={{ padding: '5px', width: 'fit-content', margin: 'auto', marginTop: '10px' }} >
-      <Chip onClick={props.change} sx={{ cursor: 'pointer' }} size='small' color='secondary' variant='outlined' label={props.type} />
+    <Box sx={{ padding: '5px', width: 'fit-content', margin: 'auto', marginTop: '5px',marginBottom : '5px' }} >
+      <Chip 
+        onClick={props.change} 
+        sx={{ cursor: 'pointer' }} 
+        size='small' 
+        color='secondary' 
+        variant='filled' 
+        label={props.type} 
+      />
     </Box>
   )
 }

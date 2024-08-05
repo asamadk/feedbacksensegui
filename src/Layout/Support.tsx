@@ -1,19 +1,24 @@
 import { Box, IconButton, Typography } from '@mui/material';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import { settingLayoutStyle, settingsHeaderTextStyle } from '../Styles/LayoutStyles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router';
 import { colorPalette } from '../Utils/Constants';
+import { useDispatch } from 'react-redux';
+import { setLoader } from '../Redux/Reducers/LoadingReducer';
 
 function Support() {
 
-    let navigation = useNavigate();
-
+    const dispatch = useDispatch();
     const defaultColor = useSelector((state: any) => state.colorReducer);
-    const handleBackButtonClick = () => {
-        navigation('/');
-    }
+
+    useEffect(() => {
+        dispatch(setLoader(true));
+        setTimeout(() => {
+            dispatch(setLoader(false));
+        },2000);
+    },[]);
 
     return (
         <Box sx={{ ...settingLayoutStyle, backgroundColor: defaultColor?.backgroundColor }} >

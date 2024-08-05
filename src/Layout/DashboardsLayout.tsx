@@ -1,117 +1,11 @@
-import React, { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import FSLoader from '../Components/FSLoader';
-import Notification from '../Utils/Notification';
-import { handleUnAuth } from '../Utils/FeedbackUtils';
-import axios from 'axios';
-import { getCompanyPeopleOptionURL, getJourneyStageURL, getJourneySubStageURL, getSubscriptionDetailHome, getUserListAPI } from '../Utils/Endpoints';
-import { setCompanyList } from '../Redux/Reducers/companyReducer';
-import { setPeopleOptions } from '../Redux/Reducers/peopleOptionReducer';
-import { setGlobalStages } from '../Redux/Reducers/journeyStageReducer';
-import { setGlobalSubStages } from '../Redux/Reducers/journeySubStageReducer';
+import React from 'react'
 import { Box, Tab, Tabs } from '@mui/material';
-import { PERM_ISSUE_TEXT, colorPalette } from '../Utils/Constants';
+import { colorPalette } from '../Utils/Constants';
 import ClientCompass from '../Components/Dashboards/ClientCompass';
 import UsageCompass from '../Components/Dashboards/UsageCompass';
-import { setGlobalRiskStages } from '../Redux/Reducers/riskStageReducer';
-import { setUsers } from '../Redux/Reducers/usersReducer';
 import DashboardCompass from '../Components/Dashboards/DashboardCompass';
-import { setSubscriptionDetailRedux } from '../Redux/Reducers/subscriptionDetailReducer';
-import FSProgressLoader from '../Components/FSProgressLoader';
 
 function DashboardsLayout() {
-
-  const snackbarRef: any = useRef(null);
-  const dispatch = useDispatch();
-
-  const globalStage = useSelector((state: any) => state.stage);
-  const companiesState = useSelector((state: any) => state.companies);
-  const userState = useSelector((state: any) => state.users);
-  const subscriptionState = useSelector((state: any) => state.subscriptionDetail);
-
-  const [loading, setLoading] = React.useState(false);
-
-  let init = false;
-
-  useEffect(() => {
-    if (init === false) {
-      initialize();
-      init = true;
-    }
-  }, []);
-
-
-  async function initialize() {
-    try {
-      setLoading(true);
-      await Promise.all([
-        fetchCompanyPersonOptions(),
-        fetchStages(),
-        getUserList(),
-        getSubscriptionDetails()
-      ]);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      handleUnAuth(error);
-    }
-  }
-
-  async function fetchCompanyPersonOptions() {
-    if (companiesState == null || companiesState.length < 1) {
-      const { data } = await axios.get(getCompanyPeopleOptionURL(), { withCredentials: true });
-      const res = data.data;
-      if (res) {
-        if (res.companies) {
-          dispatch(setCompanyList(res.companies));
-        }
-        if (res.people) {
-          dispatch(setPeopleOptions(res.people));
-        }
-      }
-    }
-  }
-
-  async function fetchStages() {
-    if (globalStage == null || globalStage.length < 1) {
-      const { data } = await axios.get(getJourneyStageURL(), { withCredentials: true });
-      if (data.data) {
-        const res = data.data;
-        dispatch(setGlobalStages(res.stage));
-        dispatch(setGlobalSubStages(res.onboarding));
-        dispatch(setGlobalRiskStages(res.risk));
-      }
-    }
-  }
-
-  const getUserList = async (): Promise<void> => {
-    if (userState == null || userState.length < 1) {
-      let { data } = await axios.get(getUserListAPI(), { withCredentials: true });
-      if (data?.statusCode !== 200) {
-        snackbarRef?.current?.show(data?.message, 'error');
-        return;
-      }
-      if (data.data != null) {
-        dispatch(setUsers(data.data))
-      }
-    }
-  }
-
-  const getSubscriptionDetails = async () => {
-    if (subscriptionState == null) {
-      let { data } = await axios.get(getSubscriptionDetailHome(), { withCredentials: true });
-      if (data.statusCode !== 200) {
-        snackbarRef?.current?.show(data?.message, 'error');
-        return;
-      }
-
-      let resData: any[] = data.data;
-      if (resData != null) {
-        dispatch(setSubscriptionDetailRedux(resData));
-      }
-    }
-  }
 
   const [value, setValue] = React.useState('1');
 
@@ -131,15 +25,12 @@ function DashboardsLayout() {
         >
           <Tab value="1" label="Client Compass" />
           {/* <Tab value="2" label="Usage Console" /> */}
-          <Tab value="3" label="Revenue Compass" />
+          {/* <Tab value="3" label="Revenue Compass" /> */}
         </Tabs>
       </Box>
       {value === '1' && <ClientCompass />}
       {value === '2' && <UsageCompass />}
       {value === '3' && <DashboardCompass />}
-      {/* <FSLoader show={loading} /> */}
-      <FSProgressLoader  show={loading} />
-      <Notification ref={snackbarRef} />
     </>
   )
 }

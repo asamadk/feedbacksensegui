@@ -36,10 +36,10 @@ export default function SettingsModal(props: any) {
           <Typography><b>{currentUserState?.name}</b></Typography>
           <Typography color={colorPalette.textPrimary}>{currentUserState?.email}</Typography>
         </Box>
-        <MenuItem onClick={() => window.open('https://help.feedbacksense.io/')} >
+        <MenuItem onClick={() => window.open('https://help.retainsense.com/')} >
           <HelpCenterIcon sx={{color : colorPalette.primary,marginRight : '10px'}} />Help Center
         </MenuItem>
-        <MenuItem onClick={() => window.open('https://calendly.com/feedbacksense/demo')} >
+        <MenuItem onClick={() => window.open('https://calendly.com/retainsense/30min')} >
           <CallIcon sx={{color : colorPalette.primary,marginRight : '10px'}} />Get in touch
         </MenuItem>
         <MenuItem onClick={handleLogout} >

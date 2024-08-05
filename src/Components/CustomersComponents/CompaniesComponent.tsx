@@ -15,9 +15,12 @@ import { deleteCompanyURL, getCompanyListURL } from '../../Utils/Endpoints';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getHealthScoreName, handleUnAuth } from '../../Utils/FeedbackUtils';
 import GenericModal from '../../Modals/GenericModal';
-import { genericModalData } from '../../Utils/types';
-import { getHealthScoreStyle, paginationStyle, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
+import { genericModalData, userRoleType } from '../../Utils/types';
+import { getHealthScoreStyle, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 import { taskStatusStyle } from '../../Styles/LayoutStyles';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setCompanyList } from '../../Redux/Reducers/companyReducer';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -32,11 +35,13 @@ const headerContainer = {
 function CompaniesComponent() {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const snackbarRef: any = useRef(null);
 
-  const snackbarRef :any = useRef(null);
-
+  const companiesState :any[] = useSelector((state: any) => state.companies);
   const [loading, setLoading] = useState(false);
-  const col: string[] = ['Name', 'Website','Contract Status','Owner', 'Health Score', 'Lifecycle Stage', 'Action'];
+  const col: string[] = ['Name', 'Website', 'Contract Status', 'Owner', 'Health Score', 'Lifecycle Stage', 'Action'];
+  const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
   const [companies, setCompanies] = useState<any[]>([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -135,6 +140,7 @@ function CompaniesComponent() {
       await axios.post(deleteCompanyURL(), deleteCompaniesList, { withCredentials: true });
       snackbarRef?.current?.show('Companies Deleted', 'success');
       fetchCompanies();
+      dispatch(setCompanyList(companiesState.filter(comp => !deleteCompaniesList.includes(comp.id))))
       setLoading(false);
     } catch (error) {
       snackbarRef?.current?.show('Something went wrong', 'error');
@@ -143,11 +149,11 @@ function CompaniesComponent() {
     }
   }
 
-  function getColumnAlignment(column : string){
-    if(
-      column === 'checkbox' || column === 'Name' 
+  function getColumnAlignment(column: string) {
+    if (
+      column === 'checkbox' || column === 'Name'
       || column === 'Website' || column === 'Contract Status' || column === 'Owner'
-    ){
+    ) {
       return 'start';
     }
     return 'center';
@@ -168,19 +174,25 @@ function CompaniesComponent() {
               endAdornment: <SearchIcon sx={{ color: colorPalette.darkBackground, paddingLeft: '5px' }} />
             }}
           />
-          <Button
-            className='create-new-survey-button'
-            sx={containedButton}
-            style={{ width: 'fit-content', textTransform: 'none', marginLeft: '10px' }}
-            startIcon={<BusinessIcon />}
-            variant='contained'
-            onClick={() => setShowCreateModal(true)}
-          >
-            Create Company
-          </Button>
-          <IconButton onClick={handleDeleteClick} sx={{marginTop : '10px'}} disabled={!showDeleteButton} >
-            <DeleteIcon/>
-          </IconButton>
+          {
+            userRole !== 'GUEST' &&
+            <Button
+              className='create-new-survey-button'
+              sx={containedButton}
+              style={{ width: 'fit-content', textTransform: 'none', marginLeft: '10px' }}
+              startIcon={<BusinessIcon />}
+              variant='contained'
+              onClick={() => setShowCreateModal(true)}
+            >
+              Create Company
+            </Button>
+          }
+          {
+            userRole === 'OWNER' &&
+            <IconButton onClick={handleDeleteClick} sx={{ marginTop: '10px' }} disabled={!showDeleteButton} >
+              <DeleteIcon />
+            </IconButton>
+          }
         </Box>
       </Box>
       <Box sx={{ padding: '10px 20px' }} >
@@ -189,8 +201,8 @@ function CompaniesComponent() {
             <TableHead>
               <TableRow>
                 {col.map((column: string) => (
-                  <TableCell 
-                    sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary, textAlign: getColumnAlignment(column) }} 
+                  <TableCell
+                    sx={{ ...tableCellStyle, fontWeight: '600', background: colorPalette.textSecondary, textAlign: getColumnAlignment(column) }}
                     key={column}
                   >
                     {
@@ -245,7 +257,6 @@ function CompaniesComponent() {
               }
             </TableBody>
           </Table>
-
           {
             companies.length > 0 &&
             <TablePagination
@@ -254,7 +265,6 @@ function CompaniesComponent() {
               count={totalCount}
               rowsPerPage={20}
               page={page}
-              sx={paginationStyle}
               showFirstButton={true}
               showLastButton={true}
               onPageChange={handleChangePage}

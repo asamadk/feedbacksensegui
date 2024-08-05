@@ -12,7 +12,7 @@ import axios from 'axios';
 import { deleteTaskURL, getTaskURL } from '../../Utils/Endpoints';
 import GenericModal from '../../Modals/GenericModal';
 import { taskStatusStyle } from '../../Styles/LayoutStyles';
-import { paginationStyle, tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
+import {  tableCellStyle, tableContainerStyle } from '../../Styles/TableStyle';
 
 function CompanyTaskTab(props: { companyId: string | null, personId: string | null }) {
 
@@ -196,7 +196,6 @@ function CompanyTaskTab(props: { companyId: string | null, personId: string | nu
               rowsPerPage={20}
               page={page}
               onPageChange={handleChangePage}
-              // sx={{ ...paginationStyle, right: '10px' }}
               onRowsPerPageChange={() => { }}
             />
           }

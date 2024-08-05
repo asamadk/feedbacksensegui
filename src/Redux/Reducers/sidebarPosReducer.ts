@@ -1,6 +1,6 @@
 export const SET_POSITION = 'SET_POSITION';
 
-export const sideBarReducer = (state = 'Dashboard', action: any) => {
+export const sideBarReducer = (state = 'Home', action: any) => {
     switch (action.type) {
         case SET_POSITION:
             return action.pos;

@@ -389,7 +389,7 @@ const FeedbackCanvas = forwardRef((props: any, ref: any) => {
 
     const deleteNode = (id: string) => {
         if (isWorkflowPublished === true) {
-            snackbarRef?.current?.show('Cannot delete publish surveys.', 'error');
+            snackbarRef?.current?.show(`Cannot delete in published ${props.source}.`, 'error');
             return;
         }
         if (id != null) {

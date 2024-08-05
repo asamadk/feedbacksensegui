@@ -5,6 +5,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import MergeIcon from '@mui/icons-material/Merge';
 import SegmentIcon from '@mui/icons-material/Segment';
 import AutoModeIcon from '@mui/icons-material/AutoMode';
+import HomeIcon from '@mui/icons-material/Home';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -20,7 +21,7 @@ import { useNavigate } from 'react-router';
 import InviteMemberModal from '../Modals/InviteMemberModal';
 import SettingsModal from './SettingsModal';
 import { userRoleType } from '../Utils/types';
-import { colorPalette } from '../Utils/Constants';
+import { colorPalette, settingIds } from '../Utils/Constants';
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -34,6 +35,7 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
 }));
 
 const SIDE_BAR_IDS = {
+    HOME: 'Home',
     SURVEYS: 'Surveys',
     FLOWS: 'Automation',
     CONTACTS: 'Contacts',
@@ -58,6 +60,9 @@ function SideBar(props: any) {
     const handlePositionChange = (sideBarId: string) => {
         dispatch(setSideBarPosition(sideBarId));
         switch (sideBarId) {
+            case SIDE_BAR_IDS.HOME:
+                navigate('/home')
+                break;
             case SIDE_BAR_IDS.SURVEYS:
                 navigate('/surveys');
                 break;
@@ -72,10 +77,10 @@ function SideBar(props: any) {
                 navigate('/dashboard');
                 break;
             case SIDE_BAR_IDS.FLOWS:
-                navigate('/flows');
+                navigate('/flows/publish');
                 break;
             case SIDE_BAR_IDS.SETTINGS:
-                navigate('/settings');
+                navigate('/settings/home');
                 break;
             case SIDE_BAR_IDS.TASKS:
                 navigate('/tasks');
@@ -93,14 +98,47 @@ function SideBar(props: any) {
         setAnchorEl(event.currentTarget);
     }
 
+    useEffect(() => {
+        const path = window.location.pathname;
+        if(path === '/home'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.HOME));
+        }else if(path === '/surveys'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.SURVEYS));
+        }else if(path === '/companies' || path.includes('companies') || path.includes('person')){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.CONTACTS));
+        }else if(path === '/segment'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.SEGMENT));
+        }else if(path === '/dashboard'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.DASHBOARD));
+        }else if(path.includes('/flows')){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.FLOWS));
+        }else if(path.includes('/settings')){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.SETTINGS));
+        }else if(path === '/tasks'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.TASKS));
+        }else if(path === '/notifications'){
+            dispatch(setSideBarPosition(SIDE_BAR_IDS.NOTIFICATION));
+        }
+    },[window.location.pathname])
+
     return (
         <Box className='sidebar-main-container' >
             <Box>
-                {/* <Box className='sidebar-icon-container' >
-                    <Box sx={{backgroundColor : colorPalette.darkBackground,borderRadius : '6px'}} >
-                        <img className='sidebar-icons logo' src='/logo-churn-original.png' alt='Logo' />
+                <Box className='sidebar-icon-container' >
+                    <Box sx={{backgroundColor : colorPalette.darkBackground,borderRadius : '5px',height : '40px'}} >
+                        <img 
+                            style={{marginTop : '7px'}}
+                            className='sidebar-icons logo' 
+                            src='/logo-churn-original.png' 
+                            alt='Logo' 
+                        />
                     </Box>
-                </Box> */}
+                </Box>
+                <Box className={sideBarPos === SIDE_BAR_IDS.HOME ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                    <LightTooltip title={SIDE_BAR_IDS.HOME} placement="right-start" arrow>
+                        <HomeIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.HOME)} className='sidebar-icons' />
+                    </LightTooltip>
+                </Box>
                 <Box className={sideBarPos === SIDE_BAR_IDS.DASHBOARD ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
                     <LightTooltip title={SIDE_BAR_IDS.DASHBOARD} placement="right-start" arrow>
                         <DashboardIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.DASHBOARD)} className='sidebar-icons' />
@@ -121,17 +159,22 @@ function SideBar(props: any) {
                         <FormatListBulletedIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.TASKS)} className='sidebar-icons' />
                     </LightTooltip>
                 </Box>
-                <Box className={sideBarPos === SIDE_BAR_IDS.FLOWS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
-                    <LightTooltip title={SIDE_BAR_IDS.FLOWS} placement="right-start" arrow>
-                        {/* <MergeIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.FLOWS)} className='sidebar-icons' /> */}
-                        <AutoFixHighIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.FLOWS)} className='sidebar-icons' />
-                    </LightTooltip>
-                </Box>
-                <Box className={sideBarPos === SIDE_BAR_IDS.SURVEYS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
-                    <LightTooltip title={SIDE_BAR_IDS.SURVEYS} placement="right-start" arrow>
-                        <SentimentVerySatisfiedIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.SURVEYS)} className='sidebar-icons' />
-                    </LightTooltip>
-                </Box>
+                {
+                    userRole === 'OWNER' &&
+                    <Box className={sideBarPos === SIDE_BAR_IDS.FLOWS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                        <LightTooltip title={SIDE_BAR_IDS.FLOWS} placement="right-start" arrow>
+                            <AutoFixHighIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.FLOWS)} className='sidebar-icons' />
+                        </LightTooltip>
+                    </Box>
+                }
+                {
+                    userRole === 'OWNER' &&
+                    <Box className={sideBarPos === SIDE_BAR_IDS.SURVEYS ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >
+                        <LightTooltip title={SIDE_BAR_IDS.SURVEYS} placement="right-start" arrow>
+                            <SentimentVerySatisfiedIcon onClick={() => handlePositionChange(SIDE_BAR_IDS.SURVEYS)} className='sidebar-icons' />
+                        </LightTooltip>
+                    </Box>
+                }
             </Box>
             <Box>
                 {/* <Box className={sideBarPos === SIDE_BAR_IDS.NOTIFICATION ? 'selected-side-bar-icon' : 'sidebar-icon-container'} >

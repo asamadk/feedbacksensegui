@@ -16,6 +16,8 @@ import { setLoader } from '../Redux/Reducers/LoadingReducer';
 import InfoIcon from '@mui/icons-material/Info';
 import { getSurveyList } from '../Utils/Endpoints';
 import axios from 'axios';
+import VariablesModal from './VariablesModal';
+import DynamicComponentIcon from '../FlowComponents/DynamicComponentIcon';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -31,14 +33,17 @@ function SendSurveyModal(props: any) {
     const [desc, setDesc] = useState('');
     const [surveyList, setSurveyList] = useState<any[]>([]);
     const [survey, setSurvey] = useState('');
+    const [subject, setSubject] = useState('');
+    const [body, setBody] = useState('');
+    const [showVar, setShowVar] = useState(false);
 
     let init = false;
     useEffect(() => {
-        if(init === false){
+        if (init === false) {
             getSurveys();
         }
         init = true;
-    },[]);
+    }, []);
 
     const getSurveys = async (): Promise<void> => {
         try {
@@ -69,12 +74,26 @@ function SendSurveyModal(props: any) {
             setSurvey('');
         }
 
+        if (compConfig?.subject) {
+            setSubject(compConfig?.subject);
+        } else {
+            setSubject('');
+        }
+
+        if (compConfig?.body) {
+            setBody(compConfig?.body);
+        } else {
+            setBody('');
+        }
+
     }
 
     const handleSave = () => {
         let obj = {
             desc: desc,
-            survey : survey
+            survey: survey,
+            subject: subject,
+            body: body
         }
         props.save(JSON.stringify(obj));
     }
@@ -90,16 +109,20 @@ function SendSurveyModal(props: any) {
                 <Box sx={flowModalStyleComponents(colorPalette.background)}>
                     <Box width={'100%'}>
                         <Box sx={automationModalHeaderStyle} >
-                            <Box></Box>
-                            <Typography margin={'5px'} id="modal-modal-title" fontSize={'18px'} component="h2">
-                                {props.header}
-                            </Typography>
-                            <IconButton  >
-                                <CloseIcon sx={{ color: 'white' }} onClick={props.close} />
+                            <Box display={'flex'} >
+                                <Box marginTop={'7px'} marginLeft={'10px'} >
+                                    <DynamicComponentIcon id={props.compId} />
+                                </Box>
+                                <Typography fontWeight={600} margin={'5px'} fontSize={'18px'} id="modal-modal-title" component="h2">
+                                    {props.header}
+                                </Typography>
+                            </Box>
+                            <IconButton sx={{ color: 'black' }} >
+                                <CloseIcon onClick={props.close} />
                             </IconButton>
                         </Box>
 
-                        <Box height={'calc(100vh - 330px)'} sx={{ overflowY: 'scroll' }}>
+                        <Box height={'calc(100vh - 100px)'} sx={{ overflowY: 'scroll' }}>
                             <Box padding={'10px'} >
                                 <ModalSnippets text={'To make changes, please un-publish the workflow'} published={props.isPublished} />
                                 <ModalSnippets
@@ -116,22 +139,53 @@ function SendSurveyModal(props: any) {
                                     onChange={(e) => setDesc(e.target.value)}
                                     sx={{ marginBottom: '20px' }}
                                 />
-                                <Select 
-                                    value={survey} 
-                                    onChange={(e) => setSurvey(e.target.value)} 
-                                    displayEmpty 
-                                    size='small' 
-                                    fullWidth 
+                                <label style={{ fontSize: '12px', color: 'black' }} >Survey</label>
+                                <Select
+                                    value={survey}
+                                    onChange={(e) => setSurvey(e.target.value)}
+                                    displayEmpty
+                                    size='small'
+                                    fullWidth
                                 >
                                     <MenuItem value={''} disabled >Select Survey</MenuItem>
                                     {
                                         surveyList?.map(s => <MenuItem value={s?.id} >{s?.name}</MenuItem>)
                                     }
                                 </Select>
-                                <Typography sx={{fontSize : '12px',color : colorPalette.fsGray}} >
-                                    <InfoIcon sx={{position : 'relative',top : '3px',fontSize : '15px',marginRight : '5px'}} /> 
-                                    {getEmailRecipientDesc(props.recordType)}
-                                </Typography>
+
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }} >
+                                    <Typography sx={{ fontSize: '12px', color: colorPalette.fsGray }} >
+                                        <InfoIcon sx={{ position: 'relative', top: '3px', fontSize: '15px', marginRight: '5px' }} />
+                                        {getEmailRecipientDesc(props.recordType)}
+                                    </Typography>
+                                    <Button
+                                        onClick={() => setShowVar(true)}
+                                        size='small'
+                                        sx={{ ...outlinedButton, width: 'fit-content', marginTop: '0px' }}
+                                    >
+                                        Add Field
+                                    </Button>
+                                </Box>
+
+                                <CssTextField
+                                    size='small'
+                                    fullWidth
+                                    label='Subject'
+                                    value={subject}
+                                    onChange={(e) => setSubject(e.target.value)}
+                                    sx={{ marginTop: '20px' }}
+                                />
+
+                                <CssTextField
+                                    size='small'
+                                    fullWidth
+                                    multiline
+                                    label='Body'
+                                    value={body}
+                                    rows={8}
+                                    onChange={(e) => setBody(e.target.value)}
+                                    sx={{ marginTop: '20px' }}
+                                />
                             </Box>
                         </Box>
                         <Box sx={modalButtonContainerStyle} >
@@ -141,6 +195,10 @@ function SendSurveyModal(props: any) {
                     </Box>
                 </Box>
             </Modal>
+            {
+                showVar &&
+                <VariablesModal recordType={props.recordType} open={showVar} close={() => setShowVar(false)} />
+            }
         </>
     )
 }

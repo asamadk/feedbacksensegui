@@ -128,6 +128,8 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'Stage' | 'Onboar
         if (!validateSaveResult(finalSave)) {
             return;
         }
+        console.log("🚀 ~ handleSave ~ finalSave:", finalSave)
+
         try {
             setLoading(true);
             let URL = createRiskStageURL();
@@ -140,7 +142,6 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'Stage' | 'Onboar
             snackbarRef?.current?.show('Journey Saved', 'success');
             setLoading(false);
         } catch (error: any) {
-            console.log("🚀 ~ handleSave ~ error:", error)
             snackbarRef?.current?.show('Something went wrong', 'error');
             setLoading(false);
             handleUnAuth(error);
@@ -185,7 +186,7 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'Stage' | 'Onboar
     }
 
     function addStages() {
-        const newStage = { id: stages.length, name: '', position: stages.length, isEnabled: true, isEnd: false };
+        const newStage = { id: '', name: '', position: stages.length, isEnabled: true, isEnd: false };
         setStages([...stages, newStage]);
     }
 
@@ -224,7 +225,7 @@ function CustomerJourneyModeler(props: { backClick: any, type: 'Stage' | 'Onboar
                     {stages.map((stage, index) => (
                         <div
                             style={containerStyle}
-                            key={stage.id}
+                            key={index}
                             draggable={editMode}
                             onDragStart={(e) => handleDragStart(e, index)}
                             onDragOver={(e) => handleDragOver(e)}
