@@ -22,9 +22,11 @@ function HomeLayout() {
   const user = useSelector((state: any) => state.currentUser);
   const [stepVal, setStepVal] = useState(2);
   const [showVideo, setShowVideo] = useState(false);
+  const [todayDate,setTodayDate] = useState(new Date().toDateString());
 
   useEffect(() => {
     getOnboardingStatus();
+    setTodayDate(new Date().toDateString())
   }, []);
 
   async function getOnboardingStatus() {
@@ -110,7 +112,7 @@ function HomeLayout() {
       <Box display={'flex'} justifyContent={'space-between'}>
         <Box m={2} textAlign={'start'} >
           <Typography variant='h6' fontWeight={600} >Welcome back, {user.name}</Typography>
-          <Typography fontSize={'small'} color={colorPalette.fsGray} >{new Date().toDateString()}</Typography>
+          <Typography fontSize={'small'} color={colorPalette.fsGray} >{todayDate}</Typography>
         </Box>
         <Box m={2} display={'flex'} >
           <Box >
