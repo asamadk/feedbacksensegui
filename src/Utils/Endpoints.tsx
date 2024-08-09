@@ -448,6 +448,7 @@ export const endpoints = {
         onboarding : `${BASE_URL}/home/onboarding`
     },
     auth : {
-        appSumoCoupon : `${BASE_URL}/auth/appsumo/init`
+        appSumoCoupon : `${BASE_URL}/auth/appsumo/init`,
+        localLogin : `${BASE_URL}/auth/local/login`
     }
 }

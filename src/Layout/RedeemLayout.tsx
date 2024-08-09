@@ -9,29 +9,34 @@ import { showNotification } from '../Redux/Reducers/NotificationReducer';
 import { setLoader } from '../Redux/Reducers/LoadingReducer';
 import axios from 'axios';
 import { endpoints } from '../Utils/Endpoints';
+import { useNavigate } from 'react-router';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
 function RedeemLayout() {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [coupon, setCoupon] = useState('');
     const [name, setName] = useState('');
     const [orgName, setOrgName] = useState('');
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     async function applyCoupon() {
         const payload = {
             name: name,
             coupon: coupon,
             orgName: orgName,
-            email: email
+            email: email,
+            password : password
         }
         if (
             email == null || email.length < 1 ||
             orgName == null || orgName.length < 1 ||
             coupon == null || coupon.length < 1 ||
-            name == null || name.length < 1
+            name == null || name.length < 1 ||
+            password == null || password.length < 1
         ) {
             dispatch(showNotification('Please fill all values', 'error'));
             return;
@@ -40,6 +45,7 @@ function RedeemLayout() {
             dispatch(setLoader(true));
             const { data } = await axios.post(endpoints.auth.appSumoCoupon, payload);
             dispatch(showNotification(data?.message, 'success'));
+            navigate('/login')
             dispatch(setLoader(false));
         } catch (error: any) {
             dispatch(showNotification(error?.response?.data?.message, 'error'));
@@ -120,6 +126,16 @@ function RedeemLayout() {
                     <CssTextField
                         sx={{ marginTop: '10px' }}
                         size='small'
+                        label='Password'
+                        type='password'
+                        fullWidth
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <br />
+                    <CssTextField
+                        sx={{ marginTop: '10px' }}
+                        size='small'
                         label='AppSumo Code'
                         fullWidth
                         value={coupon}
@@ -131,7 +147,19 @@ function RedeemLayout() {
                     >
                         Apply Coupon
                     </Button>
-
+                    <Typography
+                            fontSize={'small'}
+                            textAlign={'center'}
+                            marginTop={'5px'}
+                        >
+                            Visit login page? 
+                            <span
+                                style={{ textDecoration: 'underline', cursor: 'pointer', color: colorPalette.primary }}
+                                onClick={() => navigate('/login')}
+                            >
+                                Click Here
+                            </span>
+                        </Typography>
                 </Box>
             </Box>
         </Box>
