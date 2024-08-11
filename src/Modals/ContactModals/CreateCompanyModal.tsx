@@ -141,10 +141,14 @@ function CreateCompanyModal(props: { open: boolean, close: any, type: 'people' |
             const { data } = await axios.post(addPersonURL(), payload, { withCredentials: true });
             if(data.data){
                 const singlePerson = data.data;
+                console.log("🚀 ~ handleCreateIndividualPerson ~ singlePerson:", singlePerson)
                 const tmp = {
                     id : singlePerson.id,
                     firstName : singlePerson.firstName,
-                    lastName : singlePerson.lastName
+                    lastName : singlePerson.lastName,
+                    company : {
+                        id : singlePerson.company
+                    }
                 }
                 dispatch(setPeopleOptions([...peopleState,tmp]));
             }

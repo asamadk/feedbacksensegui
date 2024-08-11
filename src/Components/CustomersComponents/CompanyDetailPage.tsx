@@ -115,13 +115,13 @@ function CompanyDetailPage() {
                     </Box>
                 </Box>
                 <Box display={'flex'} >
-                    <Box marginTop={'7px'} >
+                    {/* <Box marginTop={'7px'} >
                         <QuickActions
                             activities={handleActivities}
                             delete={handleDelete}
                             handleEdit={handleEdit}
                         />
-                    </Box>
+                    </Box> */}
                     <IconButton onClick={() => (navigate(-1))} sx={{ width: '50px', marginLeft: '10px' }} >
                         <CloseIcon />
                     </IconButton>
@@ -241,7 +241,6 @@ function QuickActions(props: { handleEdit: any, activities: any, delete: any }) 
             >
                 {/* <MenuItem onClick={handleEdit} id='edit' >Edit/Update</MenuItem> */}
                 <MenuItem onClick={handleActivities} id='activities' >View Activities</MenuItem>
-                {/* <MenuItem onClick={handleActivities} id='renew' >Renew Contract</MenuItem> */}
                 {/* <MenuItem onClick={handleDelete} id='delete' sx={{ color: 'red' }} >Delete</MenuItem> */}
             </Menu>
         </>

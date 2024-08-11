@@ -18,6 +18,7 @@ import { tableBodyText, tableCellStyle, tableContainerStyle } from '../../Styles
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setPeopleOptions } from '../../Redux/Reducers/peopleOptionReducer';
+import { setLoader } from '../../Redux/Reducers/LoadingReducer';
 
 const CssTextField = styled(TextField)(textFieldStyle);
 
@@ -36,12 +37,11 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
     const snackbarRef: any = useRef(null);
     const dispatch = useDispatch();
 
-    const peopleState :any[] = useSelector((state: any) => state.people);
+    const peopleState: any[] = useSelector((state: any) => state.people);
     const userRole: userRoleType = useSelector((state: any) => state.userRole);
 
     const [page, setPage] = useState(0);
     const [showDeleteButton, setShowDeleteButton] = useState(false);
-    const [loading, setLoading] = React.useState(false);
     const [peopleList, setPeopleList] = useState<any[]>([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [totalCount, setTotalCount] = useState(0);
@@ -60,16 +60,16 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
 
     async function fetchPeople() {
         try {
-            setLoading(true);
+            dispatch(setLoader(true));
             const { data } = await axios.get(getPersonListURL(page, 20, searchStr), { withCredentials: true });
             if (data.data) {
                 const res = data.data;
                 setTotalCount(res.count);
                 setPeopleList(res?.list?.map((person: any) => ({ ...person, checked: false })));  // Ensure 'checked' field is initialized
             }
-            setLoading(false);
+            dispatch(setLoader(false));
         } catch (error) {
-            setLoading(false);
+            dispatch(setLoader(false));
         }
     }
 
@@ -150,15 +150,15 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
             }
         });
         try {
-            setLoading(true);
+            dispatch(setLoader(true));
             await axios.post(deletePersonURL(), deletePeopleList, { withCredentials: true });
             snackbarRef?.current?.show('Companies Deleted', 'success');
             fetchPeople();
             dispatch(setPeopleOptions(peopleState.filter(comp => !deletePeopleList.includes(comp.id))))
-            setLoading(false);
+            dispatch(setLoader(false));
         } catch (error) {
             snackbarRef?.current?.show('Something went wrong', 'error');
-            setLoading(false);
+            dispatch(setLoader(false));
             handleUnAuth(error);
         }
     }
@@ -167,17 +167,6 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
         <Box>
             <Box sx={headerContainer} >
                 <Box>
-                    {/* <Button
-                        disabled={!showDeleteButton}
-                        className='create-new-survey-button'
-                        sx={outlinedButton}
-                        style={{ width: 'fit-content', textTransform: 'none' }}
-                        startIcon={<DeleteIcon />}
-                        variant='outlined'
-                        onClick={handleDeleteClick}
-                    >
-                        Delete
-                    </Button> */}
                 </Box>
                 <Box>
                     <CssTextField
