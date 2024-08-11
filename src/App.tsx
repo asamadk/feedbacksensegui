@@ -114,7 +114,11 @@ function App() {
 
   const handleLeftBarVisibility = () => {
     let currentPath: string = location.pathname;
-    if (currentPath.includes('/survey/detail/') || currentPath.includes('/flow/detail/')) {
+    if (
+      currentPath.includes('/survey/detail/') || 
+      currentPath.includes('/flow/detail/') || 
+      currentPath.includes('user/create/organization')
+    ) {
       setShowLeftBar(false);
     } else {
       setShowLeftBar(true);
