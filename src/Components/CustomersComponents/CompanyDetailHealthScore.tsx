@@ -90,7 +90,6 @@ function CompanyDetailHealthScore({ data, loading }: { data: any[], loading: boo
                 />
             )
         }
-        return EmptyUI();
     }
 
     return (

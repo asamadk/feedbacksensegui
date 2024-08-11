@@ -14,6 +14,9 @@ import { createHealthConfigURL, getHealthConfigURL } from '../Utils/Endpoints';
 import { handleUnAuth } from '../Utils/FeedbackUtils';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { healthScoreMetrics } from '../Utils/ConditionConstants';
+import { useDispatch } from 'react-redux';
+import { setLoader } from '../Redux/Reducers/LoadingReducer';
+import { useSelector } from 'react-redux';
 
 type rowType = {
     metric: string,
@@ -30,8 +33,10 @@ type rowType = {
 
 function HealthDesignerLayout() {
 
+    const dispatch = useDispatch();
     const snackbarRef: any = useRef(null);
-    const [loading, setLoading] = useState(false);
+  
+    const loading = useSelector((state: any) => state.loading);
     const [col, setCol] = useState<string[]>(['Metric', 'Good Health Criteria', 'Poor Health Criteria']);
     const [rows, setRows] = useState<rowType[]>([]);
     const [editMode, setEditMode] = useState(false);
@@ -51,7 +56,7 @@ function HealthDesignerLayout() {
 
     async function fetchHealthCriteria() {
         try {
-            setLoading(true);
+            dispatch(setLoader(true));
             const { data } = await axios.get(getHealthConfigURL(), { withCredentials: true });
             if (data.data) {
                 setHealthData(data.data);
@@ -59,9 +64,9 @@ function HealthDesignerLayout() {
                     setRows(JSON.parse(data?.data?.config));
                 }
             }
-            setLoading(false);
+            dispatch(setLoader(false));
         } catch (error) {
-            setLoading(false);
+            dispatch(setLoader(false));
             handleUnAuth(error);
         }
     }
@@ -115,12 +120,14 @@ function HealthDesignerLayout() {
                 config: JSON.stringify(rows),
                 id: healthData.id
             }
+            dispatch(setLoader(true));
             await axios.post(createHealthConfigURL(), payload, { withCredentials: true });
             snackbarRef?.current?.show('Health Updated', 'success');
             setEditMode(false);
+            dispatch(setLoader(false));
         } catch (error) {
             snackbarRef?.current?.show('Something went wrong', 'error');
-            setLoading(false);
+            dispatch(setLoader(false));
             handleUnAuth(error);
         }
     }
@@ -148,13 +155,13 @@ function HealthDesignerLayout() {
 
     async function recalculateHealthScore() {
         try {
-            setLoading(true);
+            dispatch(setLoader(true));
             //TODO run API to recalculate health score
             snackbarRef?.current?.show('Health Score will be updated soon', 'success');
-            setLoading(false);
+            dispatch(setLoader(false));
         } catch (error) {
             snackbarRef?.current?.show('Something went wrong', 'error');
-            setLoading(false);
+            dispatch(setLoader(false));
             handleUnAuth(error);
         }
     }
@@ -168,10 +175,13 @@ function HealthDesignerLayout() {
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
                 <Box display={'flex'} justifyContent={'space-between'} width={'100%'} textAlign={'start'} marginLeft={'5px'}>
                     <Box>
-                        <Typography variant='h5' >
+                        <Typography fontWeight={600} variant='h5' >
                             Health Designer
                         </Typography>
-                        <Typography sx={{ fontSize: '15px', marginBottom: '10px' }} >Customize how health score is calculated for your companies</Typography>
+                        <Typography 
+                            sx={{ fontSize: '14px', marginBottom: '10px' }} >
+                                Customize how health score is calculated for your companies
+                        </Typography>
                     </Box>
                     {/* <Box>
                         <Button onClick={recalculateHealthScore} endIcon={<ReplayIcon />} sx={getOutlinedButtonBG(colorPalette.textSecondary)} >
@@ -367,7 +377,6 @@ function HealthDesignerLayout() {
                     </Box>
                 </Box> */}
             </Box>
-            <FSLoader show={loading} />
             <Notification ref={snackbarRef} />
         </Box>
     )
