@@ -82,6 +82,7 @@ function SurveyListPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const settings = useSelector((state: any) => state.settings);
     const [openInviteModal, setOpenInviteModal] = React.useState(false);
     const [openCreateFolderModal, setOpenCreateFolderModal] = React.useState(false);
     const [folderManualClose, setFolderManualClose] = React.useState(false);
@@ -168,14 +169,10 @@ function SurveyListPage() {
         updateActiveSurveyCount();
     }, [surveyState]);
 
-    const handlePlanVisibility = (tempSettings: any) => {
-        //TODO uncomment this section (commenting this just for testing) and remove the first setState
-        setShowFolder(true);
-        // if (tempSettings != null && tempSettings[FOLDER_FEATURE_ACTIVE] === 'true') {
-        //     setShowFolder(true);
-        // } else {
-        //     setShowFolder(false);
-        // }
+    const handlePlanVisibility = () => {
+        if (FeedbackUtils.parseDataType(settings[FOLDER_FEATURE_ACTIVE]) === true) {
+            setShowFolder(true);
+        }
     }
 
     const updateActiveSurveyCount = () => {
@@ -396,6 +393,7 @@ function SurveyListPage() {
 
     useEffect(() => {
         handleJoyrideVisibility();
+        handlePlanVisibility();
     }, []);
 
     const handleJoyrideVisibility = () => {
