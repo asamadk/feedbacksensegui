@@ -43,7 +43,7 @@ function LoginSuccess() {
     createOrgForUser();
   }
 
-  const createOrgForUser = async () => {
+  const createOrgForUser = async () => {    
     if (newOrgName?.length < 1 || address?.length < 1 || country?.length < 1 || pin.length < 1) {
       snackbarRef?.current?.show('Please fill all the values.', 'error');
       return;
@@ -62,11 +62,7 @@ function LoginSuccess() {
         snackbarRef?.current?.show(data?.message, 'error');
         return;
       }
-
-      if (data.statusCode === 200) {
-        // navigate('/');
-        window.location.reload();
-      }
+      navigate('/');
     } catch (error: any) {
       snackbarRef?.current?.show(error?.response?.data?.message, 'error');
       if (error?.response?.data?.message === USER_UNAUTH_TEXT) {

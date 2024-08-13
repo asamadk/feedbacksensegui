@@ -17,7 +17,7 @@ const CssTextField = styled(TextField)(textFieldStyle);
 function ProcessInvite() {
 
     let init = { status: false };
-
+    const [password, setPassword] = useState('');
     const defaultColor = useSelector((state: any) => state.colorReducer);
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -54,7 +54,7 @@ function ProcessInvite() {
                 {inviteResponse === 0 && <Box></Box>}
                 {inviteResponse === 200 && <SuccessDisplay
                     defaultColor={defaultColor}
-                    next={() => handleAcceptInvite(false)}
+                    next={(password :string,name :string) => handleAcceptInvite(false,password,name)}
                     reject={handleReject}
                     message={inviteMessage}
                 />}
@@ -65,26 +65,47 @@ function ProcessInvite() {
                 </Box>}
                 {inviteResponse === 409 && <ConfirmationDisplay
                     defaultColor={defaultColor}
-                    next={() => handleAcceptInvite(true)}
+                    next={(password :string,name :string) => handleAcceptInvite(true,password,name)}
                     reject={handleReject}
                 />}
             </>
         )
     }
 
-    const handleAcceptInvite = async(deleteUser : boolean) => {
+    const handleAcceptInvite = async (
+        deleteUser: boolean,
+        password :string,
+        name :string
+    ) => {
         try {
             setLoading(true);
+            const payload = {
+                deleteUser : deleteUser,
+                password : password,
+                name :name
+            }
+
+            if(password == null || password.length < 8){
+                snackbarRef?.current?.show('Please provide a valid password', 'error');
+                return;
+            }
+
+
+            if(name == null || name.length < 1){
+                snackbarRef?.current?.show('Please provide your name', 'error');
+                return;
+            }
+
             const { data } = await axios.post(
                 acceptCleanInviteAPI(code as string),
-                { deleteUser : deleteUser }, 
+                payload,
                 { withCredentials: true });
             snackbarRef?.current?.show(data?.message, 'success');
             setTimeout(() => {
                 navigate('/login')
-            },1000);
+            }, 1000);
             setLoading(false);
-        } catch (error : any) {
+        } catch (error: any) {
             setLoading(false);
             snackbarRef?.current?.show(error?.response?.data?.message, 'error');
             setLoading(false);
@@ -98,7 +119,7 @@ function ProcessInvite() {
     return (
         <>
             <Box
-                sx={{ backgroundColor: defaultColor?.backgroundColor,color : colorPalette.darkBackground, textAlign: 'center' }}
+                sx={{ backgroundColor: defaultColor?.backgroundColor, color: colorPalette.darkBackground, textAlign: 'center' }}
                 height={'calc(100vh - 57px)'}
             >
                 <Box padding={'10%'}>
@@ -114,23 +135,52 @@ function ProcessInvite() {
 export default ProcessInvite
 
 function SuccessDisplay({ defaultColor, next, reject, message }: any) {
+
+    const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
+
     return (
-        <Box sx={{ ...LayoutStyles.globalSettingSubContainers(defaultColor?.primaryColor), marginTop: 0, textAlign: 'start' }} >
+        <Box sx={{ ...LayoutStyles.globalSettingSubContainers(colorPalette.textSecondary), marginTop: 0, textAlign: 'start' }} >
             <Typography
+                color={'black'}
                 variant='h6'
-                marginBottom={'20px'}
             >{message}</Typography>
             <Typography
                 color={colorPalette.primary}
             >
                 Click the button below to join
             </Typography>
+            <Box marginTop={'10px'} >
+                <CssTextField
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    size='small'
+                    label='Name'
+                    fullWidth
+                    sx={{ marginTop: '10px', width: '300px' }}
+                />
+            </Box>
+            <Box marginTop={'10px'} >
+                <CssTextField
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    size='small'
+                    label='Password'
+                    type='password'
+                    fullWidth
+                    sx={{ marginTop: '10px', width: '300px' }}
+                />
+                <Typography sx={{ fontSize: '12px', color: 'gray',marginLeft : '5px' }} >
+                    Password should be at least 8 characters
+                </Typography>
+            </Box>
             <Box sx={{ textAlign: 'start', marginTop: '10px' }} >
                 <Button
                     style={{ width: 'fit-content', marginRight: '15px' }}
                     sx={containedButton}
                     variant="contained"
-                    onClick={next}
+                    onClick={() => next(password,name)}
+                    disabled={password.length < 8}
                 >
                     Join
                 </Button>
@@ -151,6 +201,8 @@ function ConfirmationDisplay({ defaultColor, next, reject }: any) {
 
     const [validVal, setValidVal] = useState('');
     const [proceed, setProceed] = useState(false);
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
 
     useMemo(() => {
         if (validVal === 'continue') {
@@ -161,19 +213,11 @@ function ConfirmationDisplay({ defaultColor, next, reject }: any) {
     }, [validVal]);
 
     return (
-        <Box sx={{ ...LayoutStyles.globalSettingSubContainers(defaultColor?.primaryColor), marginTop: 0, textAlign: 'start' }} >
-            <Typography
-                variant='h4'
-                color={colorPalette.darkBackground}
-                marginBottom={'20px'}
-            >You are about to join a team</Typography>
+        <Box sx={{ ...LayoutStyles.globalSettingSubContainers(colorPalette.textSecondary), marginTop: 0, textAlign: 'start' }} >
             <Typography
                 variant='h6'
-                color={colorPalette.darkBackground}
-                marginBottom={'10px'}
-            >
-                Removing resources
-            </Typography>
+                color={'black'}
+            >You are about to join a team, Removing resources</Typography>
             <Typography
                 color={colorPalette.primary}
             >
@@ -189,13 +233,37 @@ function ConfirmationDisplay({ defaultColor, next, reject }: any) {
                 value={validVal}
                 onChange={(e) => setValidVal(e.target.value)}
             />
+            <Box marginTop={'10px'} >
+                <CssTextField
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    size='small'
+                    label='Name'
+                    fullWidth
+                    sx={{ marginTop: '10px', width: '300px' }}
+                />
+            </Box>
+            <Box marginTop={'10px'} >
+                <CssTextField
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    size='small'
+                    label='Password'
+                    type='password'
+                    fullWidth
+                    sx={{ marginTop: '10px', width: '300px' }}
+                />
+                <Typography sx={{ fontSize: '12px', color: 'gray',marginLeft : '5px' }} >
+                    Password should be at least 8 characters
+                </Typography>
+            </Box>
             <Box sx={{ textAlign: 'start', marginTop: '10px' }} >
                 <Button
                     style={{ width: 'fit-content', marginRight: '15px' }}
                     sx={containedButton}
                     variant="contained"
-                    disabled={!proceed}
-                    onClick={next}
+                    disabled={!proceed || password.length < 8}
+                    onClick={() => next(password,name)}
                 >
                     Accept
                 </Button>
