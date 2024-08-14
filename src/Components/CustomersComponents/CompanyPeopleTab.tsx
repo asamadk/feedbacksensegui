@@ -114,7 +114,7 @@ function CompanyPeopleTab() {
                       {person.email}
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
-                      {person.company.name}
+                      {person?.company?.name}
                     </TableCell>
                     <TableCell sx={tableCellStyle} >
                       {new Date(person.created_at).toLocaleDateString()}

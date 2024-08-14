@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import LeftBarComponent from '../Components/LeftBarComponent'
 import { sideBarListType } from '../Utils/types'
 import { Box, Tab, Tabs } from '@mui/material'
@@ -16,16 +16,18 @@ function ContactLayout() {
 
   const navigate = useNavigate();
 
-  const getInitialTab = () => {
+  useEffect(() => {
     const path = window.location.pathname;
-    if (path === '/people') return 'people';
-    if (path === '/companies') return 'companies';
-    return 'companies';
-  };
+    if (path === '/people'){
+      setSelectedTab('people');
+    }else if (path === '/companies'){
+      setSelectedTab('companies');
+    }
+  },[window.location.pathname]);
 
-  const [selectedTab, setSelectedTab] = useState<'companies' | 'people'>(getInitialTab());
+  const [selectedTab, setSelectedTab] = useState<'companies' | 'people'>('companies');
 
-  const handleTabChange = (val: 'companies' | 'people') => {
+  const handleTabChange = (e :any,val :any) => {
     setSelectedTab(val);
     navigate(`/${val}`);
   };
@@ -33,8 +35,7 @@ function ContactLayout() {
   const CustomerBody = () => {
     return (
       <Box>
-        {/* {selectedTab === 'people' ? PeopleTab() : CompaniesTab()} */}
-        {value === '2' ? PeopleTab() : CompaniesTab()}
+        {selectedTab === 'people' ? PeopleTab() : CompaniesTab()}
       </Box>
     )
   }
@@ -51,32 +52,20 @@ function ContactLayout() {
     )
   }
 
-  const [value, setValue] = React.useState('1');
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-
   return (
     <Box>
       <Box sx={{ width: '100%', background: colorPalette.textSecondary }}>
         <Tabs
-          value={value}
-          onChange={handleChange}
+          value={selectedTab}
+          onChange={handleTabChange}
           textColor="secondary"
           indicatorColor="secondary"
           aria-label="secondary tabs example"
         >
-          <Tab value="1" label="Company" />
-          <Tab value="2" label="People" />
+          <Tab value="companies" label="Company" />
+          <Tab value="people" label="People" />
         </Tabs>
       </Box>
-      {/* <LeftBarComponent
-        header='Customers'
-        list={sideBarData}
-        selected={selectedTab}
-        callback={handleTabChange}
-      /> */}
       <Box sx={{ width: '100%' }} >
         {CustomerBody()}
       </Box>

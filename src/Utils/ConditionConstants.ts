@@ -200,7 +200,8 @@ export const fieldInputTypes: any = {
     },
     person: {
         lastContactedDate: 'date',
-        trainingCompleted: 'select'
+        trainingCompleted: 'select',
+        communicationPreferences: 'select'
     }
 };
 
@@ -229,11 +230,28 @@ export const selectOptions: any = {
         industry: industryOptions.map(i => { return { label: i.value, value: i.value } })
     },
     task: {
-        priority: ['Low', 'Medium', 'High', 'Urgent'],
-        status: ['Open', 'InProgress', 'Completed', 'Cancelled']
+        priority: [
+            { label: 'Low', value: 'Low' },
+            { label: 'Medium', value: 'Medium' },
+            { label: 'High', value: 'High' },
+            { label: 'Urgent', value: 'Urgent' },
+        ],
+        status: [
+            { label: 'Open', value: 'Open' },
+            { label: 'InProgress', value: 'InProgress' },
+            { label: 'Completed', value: 'Completed' },
+            { label: 'Cancelled', value: 'Cancelled' },
+        ]
     },
     person: {
-        trainingCompleted: ['true', 'false']
+        trainingCompleted: [
+            {label : 'True',value : 'true'},
+            {label : 'False',value : 'false'},
+        ],
+        communicationPreferences: [
+            {label : 'Phone',value : 'Phone'},
+            {label : 'Email',value : 'Email'},
+        ]
     }
 };
 

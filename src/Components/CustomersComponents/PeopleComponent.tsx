@@ -241,7 +241,7 @@ function PeopleComponent(props: { type: 'people' | 'companies' }) {
                                         </TableCell>
                                         <TableCell sx={tableCellStyle} >
                                             <Typography sx={{ ...tableBodyText }} >
-                                                {person.company.name}
+                                                {person?.company?.name}
                                             </Typography>
                                         </TableCell>
                                         <TableCell sx={tableCellStyle} >
