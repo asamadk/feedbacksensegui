@@ -104,7 +104,7 @@ function SideBar(props: any) {
             dispatch(setSideBarPosition(SIDE_BAR_IDS.HOME));
         }else if(path === '/surveys'){
             dispatch(setSideBarPosition(SIDE_BAR_IDS.SURVEYS));
-        }else if(path === '/companies' || path.includes('companies') || path.includes('person')){
+        }else if(path === '/companies' || path.includes('companies') || path.includes('people')){
             dispatch(setSideBarPosition(SIDE_BAR_IDS.CONTACTS));
         }else if(path === '/segment'){
             dispatch(setSideBarPosition(SIDE_BAR_IDS.SEGMENT));

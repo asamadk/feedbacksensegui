@@ -120,7 +120,7 @@ function ShareSurvey() {
                 onChange={(e) => setPerson(e.target.value)}
               >
                 <MenuItem value='' disabled >Select Person</MenuItem>
-                {peopleOptions.map(p => p.company.id === company && <MenuItem value={p.id} >{getPersonName(p)}</MenuItem>)}
+                {peopleOptions.map(p => p?.company?.id === company && <MenuItem value={p?.id} >{getPersonName(p)}</MenuItem>)}
               </Select>
             </Box>
             <Box>
