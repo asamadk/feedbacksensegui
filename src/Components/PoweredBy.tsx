@@ -17,8 +17,8 @@ function PoweredBy(props: any) {
         props.imgData == null ?
           <Box sx={{ display: 'flex', background: '#ffffff', padding: '5px 10px', borderRadius: '6px',justifyContent : 'center' }} >
             <Typography marginTop={'3px'} fontSize={'12px'} color={'black'} marginRight={'5px'} >Powered by</Typography>
-            <Typography fontWeight={900} fontSize={'16px'} color={colorPalette.primary} >feedback</Typography>
-            <Typography fontWeight={900} fontSize={'16px'} color={colorPalette.primary} >sense</Typography>
+            <Typography fontWeight={900} fontSize={'16px'} color={colorPalette.primary} >Retain</Typography>
+            <Typography fontWeight={900} fontSize={'16px'} color={colorPalette.primary} >Sense</Typography>
           </Box> :
           <>
             <img style={{ height: '50px', borderRadius: '6px' }} src={props.imgData} alt="Uploaded Preview" />
