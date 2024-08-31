@@ -146,8 +146,7 @@ function NodeComponent(props: any) {
                         </IconButton>
                     </Box>
                 </Box>
-                {/* <Divider sx={{background : colorPalette.secondary}} /> */}
-                <Typography sx={{ fontSize: '12px', textAlign: 'start' }} > 
+                <Typography sx={{ fontSize: '12px', textAlign: 'start',color : colorPalette.fsGray }} > 
                     {description.length > 85 ? description.substring(0,85) + '...' : description}
                 </Typography>
             </Box>

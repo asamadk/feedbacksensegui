@@ -25,7 +25,6 @@ function SendEmailModal(props: any) {
         populateCompConfig();
     }, [props.open]);
 
-    const dispatch = useDispatch();
     const [desc, setDesc] = useState('');
     const [subject, setSubject] = useState('');
     const [body, setBody] = useState('');

@@ -8,21 +8,33 @@ import CloseIcon from '@mui/icons-material/Close';
 const getCommonContainerStyle = () => {
     return {
         margin: '10px',
-        borderRadius: '5px',
+        borderRadius: '6px',
         textAlign: 'start',
         padding: '10px',
         display: 'flex',
         justifyContent: 'space-between',
-        overflowY: 'hidden',
         cursor: 'pointer',
-        // boxShadow: 'rgba(0, 0, 0, 0.08) 0px 2px 4px',
         border: `1px ${colorPalette.secondary} solid`
     }
 }
 
 const commonLogoStyle = {
-    marginRight: '10px',
+    marginRight: '5px',
     height: 'fit-content'
+}
+
+const mainContainer = {
+    height: 'calc(100vh - 86px)',
+    paddingTop: '10px',
+    paddingBottom: '10px',
+    borderLeft: `2px ${colorPalette.textSecondary} solid`
+}
+
+const componentHeaderStyle = {
+    marginTop: '10px',
+    background: colorPalette.textSecondary,
+    padding: '10px 20px',
+    textAlign: 'start'
 }
 
 function AutomationComponentList(props: { recordType: string }) {
@@ -33,7 +45,7 @@ function AutomationComponentList(props: { recordType: string }) {
     };
 
     return (
-        <Box sx={{ height: 'calc(100vh - 85px)', backgroundColor: colorPalette.textSecondary, paddingTop: '10px', paddingBottom: '10px', borderTop: `4px ${colorPalette.background} solid` }}>
+        <Box sx={mainContainer}>
             <Box margin={'0px 20px'} display={'flex'} justifyContent={'space-between'} >
                 <Typography fontWeight={600} marginTop={'7px'} >Components</Typography>
             </Box>
@@ -44,8 +56,8 @@ function AutomationComponentList(props: { recordType: string }) {
                             key={components.id}
                             className={components.name}
                         >
-                            <Box marginTop={'10px'} sx={{ background: colorPalette.secondary, padding: '10px 20px', color: colorPalette.primary, textAlign: 'start' }} >
-                                <Typography>{components.name}</Typography>
+                            <Box sx={componentHeaderStyle}>
+                                <Typography fontWeight={600} >{components.name}</Typography>
                             </Box>
                             {
                                 components.components.map(component => {
@@ -59,14 +71,20 @@ function AutomationComponentList(props: { recordType: string }) {
                                                     draggable={true}
                                                     sx={{ ...getCommonContainerStyle(), backgroundColor: colorPalette.background }}
                                                 >
-                                                    <Box display={'flex'} >
-                                                        <Box sx={{ ...commonLogoStyle, color: colorPalette.primary }} >
-                                                            <DynamicComponentIcon id={component.id} />
+                                                    <Box>
+                                                        <Box display={'flex'} >
+                                                            <Box sx={commonLogoStyle} >
+                                                                <DynamicComponentIcon id={component.id} />
+                                                            </Box>
+                                                            <Typography fontSize={15}>{component.header}</Typography>
                                                         </Box>
-                                                        <Typography
-                                                            color={colorPalette.primary}
-                                                            fontSize={15}
-                                                        >{component.header}</Typography>
+                                                        <Typography 
+                                                            fontSize={'13px'} 
+                                                            color={colorPalette.fsGray} 
+                                                            marginLeft={'5px'}
+                                                        >
+                                                            {component.description}
+                                                        </Typography>
                                                     </Box>
                                                 </Box>
                                             }
