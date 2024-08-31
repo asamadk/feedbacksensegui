@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import {  Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import './App.css';
+import mixpanel from "mixpanel-browser";
 import Header from './Components/Header';
 import AnalyzeSurvey from './Layout/AnalyzeSurvey';
 import ConfigureSurvey from './Layout/ConfigureSurvey';
@@ -96,6 +97,14 @@ function App() {
       }
       if (currentUser != null) {
         handleLeftBarVisibility();
+        //Mixpanel Analytics
+        if(process.env.REACT_APP_ENV === 'prod'){
+          mixpanel.identify(currentUser?.id);
+          mixpanel.people.set({
+            '$name': currentUser?.name,
+            '$email': currentUser?.email,
+          });
+        }
       } else {
         setShowLeftBar(false);
         dispatch(setCurrentUsers(null));
@@ -115,8 +124,8 @@ function App() {
   const handleLeftBarVisibility = () => {
     let currentPath: string = location.pathname;
     if (
-      currentPath.includes('/survey/detail/') || 
-      currentPath.includes('/flow/detail/') || 
+      currentPath.includes('/survey/detail/') ||
+      currentPath.includes('/flow/detail/') ||
       currentPath.includes('user/create/organization')
     ) {
       setShowLeftBar(false);
@@ -241,7 +250,7 @@ function App() {
                   <Route path='/' element={AuthHandler(<HomeLayout />)} />
                   <Route path='/home' element={AuthHandler(<HomeLayout />)} />
                   <Route path='/login' element={AuthHandler(<DashboardsLayout />)} />
-                  <Route path='/redeem/appsumo' element={<RedeemLayout/>} />
+                  <Route path='/redeem/appsumo' element={<RedeemLayout />} />
                   <Route path='/template' element={AuthHandler(<TemplateLayout />)} />
                   <Route path='/settings'>
                     <Route path='home' element={AuthHandler(<SettingsLayout pos={settingIds.HOME} />)} />

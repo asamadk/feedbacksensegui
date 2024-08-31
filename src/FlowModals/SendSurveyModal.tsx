@@ -34,7 +34,6 @@ function SendSurveyModal(props: any) {
     const [surveyList, setSurveyList] = useState<any[]>([]);
     const [survey, setSurvey] = useState('');
     const [subject, setSubject] = useState('');
-    const [body, setBody] = useState('');
     const [showVar, setShowVar] = useState(false);
 
     let init = false;
@@ -79,21 +78,13 @@ function SendSurveyModal(props: any) {
         } else {
             setSubject('');
         }
-
-        if (compConfig?.body) {
-            setBody(compConfig?.body);
-        } else {
-            setBody('');
-        }
-
     }
 
     const handleSave = () => {
         let obj = {
             desc: desc,
             survey: survey,
-            subject: subject,
-            body: body
+            subject: subject
         }
         props.save(JSON.stringify(obj));
     }
@@ -139,19 +130,6 @@ function SendSurveyModal(props: any) {
                                     onChange={(e) => setDesc(e.target.value)}
                                     sx={{ marginBottom: '20px' }}
                                 />
-                                <label style={{ fontSize: '12px', color: 'black' }} >Survey</label>
-                                <Select
-                                    value={survey}
-                                    onChange={(e) => setSurvey(e.target.value)}
-                                    displayEmpty
-                                    size='small'
-                                    fullWidth
-                                >
-                                    <MenuItem value={''} disabled >Select Survey</MenuItem>
-                                    {
-                                        surveyList?.map(s => <MenuItem value={s?.id} >{s?.name}</MenuItem>)
-                                    }
-                                </Select>
 
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }} >
                                     <Typography sx={{ fontSize: '12px', color: colorPalette.fsGray }} >
@@ -167,23 +145,25 @@ function SendSurveyModal(props: any) {
                                     </Button>
                                 </Box>
 
+                                <Select
+                                    sx={{marginTop : '10px'}}
+                                    value={survey}
+                                    onChange={(e) => setSurvey(e.target.value)}
+                                    displayEmpty
+                                    size='small'
+                                    fullWidth
+                                >
+                                    <MenuItem value={''} disabled >Select Survey</MenuItem>
+                                    {
+                                        surveyList?.map(s => <MenuItem value={s?.id} >{s?.name}</MenuItem>)
+                                    }
+                                </Select>
                                 <CssTextField
                                     size='small'
                                     fullWidth
                                     label='Subject'
                                     value={subject}
                                     onChange={(e) => setSubject(e.target.value)}
-                                    sx={{ marginTop: '20px' }}
-                                />
-
-                                <CssTextField
-                                    size='small'
-                                    fullWidth
-                                    multiline
-                                    label='Body'
-                                    value={body}
-                                    rows={8}
-                                    onChange={(e) => setBody(e.target.value)}
                                     sx={{ marginTop: '20px' }}
                                 />
                             </Box>

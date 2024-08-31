@@ -450,5 +450,10 @@ export const endpoints = {
     auth : {
         appSumoCoupon : `${BASE_URL}/auth/appsumo/init`,
         localLogin : `${BASE_URL}/auth/local/login`
+    },
+    integration : {
+        googleAuthURL : `${BASE_URL}/integration/google/auth/url`,
+        googleDisconnectAuth : `${BASE_URL}/integration/google/disconnect`,
+        checkGoogleStatus : `${BASE_URL}/integration/google/check`,
     }
 }
